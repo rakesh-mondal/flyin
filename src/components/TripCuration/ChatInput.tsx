@@ -58,6 +58,6 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
       </div>
     </div>
   );
-};
+}
 
 export default ChatInput;

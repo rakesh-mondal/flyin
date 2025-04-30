@@ -147,17 +147,26 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
         {/* Flight Suggestions */}
         <div className="mt-12 w-full max-w-5xl overflow-hidden">
           <h2 className="mb-4 text-xl font-medium text-gray-900">Discover Middle Eastern Experiences</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
-            {flightSuggestions.map(suggestion => (
-              <SuggestionCard 
-                key={suggestion.id}
-                title={suggestion.title}
-                image={suggestion.image}
-                type={suggestion.type}
-                departure={`From ${suggestion.departure}`}
-                onClick={() => onSearch(suggestion.title)}
-              />
-            ))}
+          <div className="relative w-full">
+            {/* Left gradient fade */}
+            <div className="absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+            
+            {/* Scrollable container */}
+            <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+              {flightSuggestions.map(suggestion => (
+                <SuggestionCard 
+                  key={suggestion.id}
+                  title={suggestion.title}
+                  image={suggestion.image}
+                  type={suggestion.type}
+                  departure={`From ${suggestion.departure}`}
+                  onClick={() => onSearch(suggestion.title)}
+                />
+              ))}
+            </div>
+            
+            {/* Right gradient fade */}
+            <div className="absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
           </div>
         </div>
       </div>

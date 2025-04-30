@@ -26,7 +26,7 @@ export default function SuggestionCard({ title, image, type, price, departure, o
 
   return (
     <div 
-      className="group relative h-44 w-72 shrink-0 cursor-pointer overflow-hidden rounded-xl transition-transform duration-300 hover:scale-[1.02]"
+      className="group relative h-40 w-64 shrink-0 cursor-pointer overflow-hidden rounded-xl transition-transform duration-300 hover:scale-[1.02]"
       onClick={onClick}
     >
       {/* Background image with fallback */}
@@ -65,7 +65,7 @@ export default function SuggestionCard({ title, image, type, price, departure, o
       
       {/* Content */}
       <div className="absolute bottom-0 left-0 p-4 text-white z-10">
-        <h3 className="text-xl font-medium leading-tight">{title}</h3>
+        <h3 className="text-lg font-medium leading-tight">{title}</h3>
         
         <div className="mt-1 flex items-center space-x-2 text-sm">
           {price && <span className="font-semibold">${price}</span>}
