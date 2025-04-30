@@ -117,7 +117,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               className={cn(
                 "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
                 "placeholder:text-gray-500 focus:outline-none",
-                isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-2 focus:ring-primary/50" : "border-gray-200",
+                isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-1 focus:ring-primary/50" : "border border-gray-200",
               )}
               value={query}
               onChange={(e) => setQuery(e.target.value)}

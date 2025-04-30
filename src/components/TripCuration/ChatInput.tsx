@@ -37,7 +37,7 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
           placeholder="Ask a question..."
           className={cn(
             "h-14 w-full rounded-full bg-gray-100 px-6 pr-16 text-lg",
-            "placeholder:text-gray-500 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/50 relative z-10",
+            "placeholder:text-gray-500 focus:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-primary/50 relative z-10",
             isInputFocused ? "border-transparent shadow-lg" : "border border-gray-300"
           )}
           value={userMessage}
