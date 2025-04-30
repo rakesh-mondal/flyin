@@ -18,7 +18,7 @@ export default function SuggestionCard({ title, image, type, price, departure, o
 
   // Use a proper image element to detect load/error events
   React.useEffect(() => {
-    const img = new window.Image();
+    const img = new Image();
     img.src = image;
     img.onload = () => setImageLoaded(true);
     img.onerror = () => setImageError(true);
