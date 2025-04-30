@@ -1,17 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Mic } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
-
-const backgroundImages = [
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=2000', // Mountain landscape with sun rays
-  'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=2000', // Ocean waves
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=2000', // Airplane wing above clouds
-  'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=80&w=2000', // Aerial view of coastline
-  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&q=80&w=2000', // Person looking at mountain vista
-];
 
 const flightSuggestions = [
   { id: 1, title: 'Weekend in Paris', image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?auto=format&fit=crop&q=80', type: 'Trending', departure: 'JFK' },
@@ -30,20 +23,11 @@ const searchIntents = [
 
 export default function TravelCanvas({ onSearch }: { onSearch: (query: string) => void }) {
   const [query, setQuery] = useState('');
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [currentPlaceholder, setCurrentPlaceholder] = useState(searchIntents[0]);
   const [isTyping, setIsTyping] = useState(true);
   const [typingText, setTypingText] = useState('');
-
-  // Background image rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Rotating placeholder effect
   useEffect(() => {
@@ -88,24 +72,9 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      {/* Background image with smooth transition */}
-      <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
-        {backgroundImages.map((image, index) => (
-          <div
-            key={index}
-            className={cn(
-              "absolute inset-0 bg-cover bg-center transition-opacity duration-2000",
-              index === currentBgIndex ? "opacity-100" : "opacity-0"
-            )}
-            style={{ backgroundImage: `url(${image})` }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-black/60" /> {/* Darker overlay for better text visibility */}
-      </div>
-
+    <div className="relative h-screen w-full overflow-hidden bg-white">
       {/* Main content */}
-      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-white">
+      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-gray-900">
         {/* Personalized greeting */}
         <h1 className="mb-4 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
           Hello Rakesh,
@@ -127,8 +96,8 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               type="text"
               placeholder={currentPlaceholder}
               className={cn(
-                "h-14 w-full rounded-full bg-black/20 px-6 pr-12 text-lg",
-                "placeholder:text-white/70 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-white/50",
+                "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg",
+                "placeholder:text-gray-500 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/50",
               )}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -140,14 +109,14 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
                 type="button" 
                 size="icon" 
                 variant="ghost" 
-                className="h-10 w-10 rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                className="h-10 w-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-900"
               >
                 <Mic className="h-5 w-5" />
               </Button>
               <Button 
                 type="submit" 
                 size="icon" 
-                className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/80"
+                className="h-10 w-10 rounded-full bg-primary text-white hover:bg-primary/90"
               >
                 <Search className="h-5 w-5" />
               </Button>
@@ -157,7 +126,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
 
         {/* Flight Suggestions */}
         <div className="mt-12 w-full max-w-5xl overflow-hidden">
-          <h2 className="mb-4 text-xl font-medium">Discover Flight Deals</h2>
+          <h2 className="mb-4 text-xl font-medium text-gray-900">Discover Flight Deals</h2>
           <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
             {flightSuggestions.map(suggestion => (
               <SuggestionCard 
