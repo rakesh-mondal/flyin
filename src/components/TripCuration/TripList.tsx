@@ -26,6 +26,11 @@ const mockFlights = [
     fees: 60,
     carbonFootprint: '2.3 tonnes',
     tags: ['Direct Flight'],
+    // Added properties for TripDetail component
+    title: 'Cultural Dubai Experience',
+    destination: 'Dubai, UAE',
+    dates: 'June 10 - June 16, 2025',
+    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80',
   },
   {
     id: 2,
@@ -46,6 +51,11 @@ const mockFlights = [
     fees: 53,
     carbonFootprint: '1.9 tonnes',
     tags: ['Lowest Price'],
+    // Added properties for TripDetail component
+    title: 'Magical Istanbul',
+    destination: 'Istanbul, Turkey',
+    dates: 'July 5 - July 12, 2025',
+    image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&q=80',
   },
   {
     id: 3,
@@ -66,6 +76,11 @@ const mockFlights = [
     fees: 60,
     carbonFootprint: '2.1 tonnes',
     tags: ['Award Winning'],
+    // Added properties for TripDetail component
+    title: 'Magical Doha',
+    destination: 'Doha, Qatar',
+    dates: 'September 8 - September 15, 2025',
+    image: 'https://images.unsplash.com/photos/a-kdjff86zE?auto=format&fit=crop&q=80',
   }
 ];
 

@@ -11,6 +11,9 @@ interface TripDetailProps {
   onBack: () => void;
 }
 
+// Default fallback image for trips without images
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1501446529957-6226bd447c46?auto=format&fit=crop&q=80';
+
 export default function TripDetail({ trip, onBack }: TripDetailProps) {
   const handleBookFlight = () => {
     toast.success("Flight reserved successfully!", {
@@ -18,13 +21,19 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
     });
   };
 
+  // Ensure we have a valid title
+  const tripTitle = trip.title || `${trip.arrivalCity || 'Destination'} Journey`;
+  
+  // Ensure we have a valid destination
+  const tripDestination = trip.destination || (trip.arrivalCity ? `${trip.arrivalCity}, ${trip.arrivalCode}` : 'Unknown Destination');
+
   return (
     <div className="flex h-screen w-full flex-col bg-apple-gray text-apple-black">
       {/* Header with background image */}
       <div className="relative h-52">
         <img 
-          src={trip.image} 
-          alt={trip.destination}
+          src={trip.image || DEFAULT_IMAGE} 
+          alt={tripDestination}
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -41,10 +50,10 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         
         {/* Title overlay */}
         <div className="absolute bottom-0 left-0 w-full p-6 text-white">
-          <h1 className="text-3xl font-medium">{trip.title}</h1>
+          <h1 className="text-3xl font-medium">{tripTitle}</h1>
           <p className="mt-1 flex items-center text-lg">
             <PlaneTakeoff className="mr-1.5 h-4 w-4" />
-            {trip.destination}
+            {tripDestination}
           </p>
         </div>
       </div>
@@ -78,15 +87,20 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         </div>
 
         {/* Flight details */}
-        {trip.flight && (
+        {/* Check for either trip.flight or if trip itself is a flight */}
+        {(trip.flight || trip.airline) && (
           <div className="mt-4 rounded-lg bg-white p-5 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">Flight Details</h2>
             
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-baseline">
-                  <span className="text-lg font-medium">{trip.flight.departure.split(' ')[1]}</span>
-                  <span className="ml-2 text-sm text-gray-500">{trip.flight.departure.split(' ')[0]}</span>
+                  <span className="text-lg font-medium">
+                    {(trip.flight?.departure || trip.departureTime || '').split(' ')[1]}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-500">
+                    {(trip.flight?.departure || trip.departureTime || '').split(' ')[0]}
+                  </span>
                 </div>
                 <div className="mt-1">
                   <PlaneTakeoff className="inline h-4 w-4 text-gray-500" />
@@ -98,17 +112,23 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
                   <Separator className="absolute top-1/2 h-0.5 w-full -translate-y-1/2 bg-gray-300" />
                   <div className="relative flex justify-center">
                     <span className="rounded bg-white px-2 text-xs text-gray-500">
-                      {trip.flight.duration}
+                      {trip.flight?.duration || trip.duration || ''}
                     </span>
                   </div>
                 </div>
-                <p className="mt-1 text-center text-sm font-medium">{trip.flight.airline}</p>
+                <p className="mt-1 text-center text-sm font-medium">
+                  {trip.flight?.airline || trip.airline || ''}
+                </p>
               </div>
               
               <div>
                 <div className="flex items-baseline">
-                  <span className="text-lg font-medium">{trip.flight.arrival.split(' ')[1]}</span>
-                  <span className="ml-2 text-sm text-gray-500">{trip.flight.arrival.split(' ')[0]}</span>
+                  <span className="text-lg font-medium">
+                    {(trip.flight?.arrival || trip.arrivalTime || '').split(' ')[1]}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-500">
+                    {(trip.flight?.arrival || trip.arrivalTime || '').split(' ')[0]}
+                  </span>
                 </div>
                 <div className="mt-1">
                   <PlaneLanding className="inline h-4 w-4 text-gray-500" />
