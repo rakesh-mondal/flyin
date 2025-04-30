@@ -1,7 +1,7 @@
 
 'use client';
 import { cn } from '@/lib/utils';
-import { motion, Transition } from 'motion';
+import { motion, type Transition } from 'framer-motion';
 
 export type GlowEffectProps = {
   className?: string;
