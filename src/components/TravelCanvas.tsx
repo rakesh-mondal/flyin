@@ -6,11 +6,11 @@ import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
 
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80', // Mountain landscape with sun rays
-  'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80', // Ocean waves
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80', // Airplane wing above clouds
-  'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=80', // Aerial view of coastline
-  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&q=80', // Person looking at mountain vista
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=2000', // Mountain landscape with sun rays
+  'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=2000', // Ocean waves
+  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=2000', // Airplane wing above clouds
+  'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=80&w=2000', // Aerial view of coastline
+  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&q=80&w=2000', // Person looking at mountain vista
 ];
 
 const flightSuggestions = [
@@ -101,7 +101,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
             style={{ backgroundImage: `url(${image})` }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/50" /> {/* Darker overlay for better text visibility */}
+        <div className="absolute inset-0 bg-black/60" /> {/* Darker overlay for better text visibility */}
       </div>
 
       {/* Main content */}
