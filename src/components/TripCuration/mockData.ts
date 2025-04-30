@@ -26,7 +26,7 @@ export const mockTrips = [
   {
     id: 2,
     destination: 'Istanbul, Turkey',
-    title: 'Turkish Cultural Journey',
+    title: 'Magical Istanbul',
     price: 2800,
     dates: 'July 5 - July 12, 2025',
     duration: '7 nights',
@@ -48,7 +48,7 @@ export const mockTrips = [
   {
     id: 3,
     destination: 'Cairo, Egypt',
-    title: 'Pyramids & Nile Adventure',
+    title: 'Ancient Cairo',
     price: 3100,
     dates: 'August 12 - August 19, 2025',
     duration: '7 nights',

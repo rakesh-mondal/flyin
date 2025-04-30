@@ -31,7 +31,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
 
   useEffect(() => {
     const thinkingMessages = [
-      "Finding the perfect matches for you...",
+      "Finding the perfect Middle Eastern destinations for you...",
       "Checking availability for your dates...",
       "Curating personalized experiences...",
       "Finding the best value options..."
@@ -50,14 +50,20 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
       setTrips(mockTrips);
       
       // Set AI response based on search query
-      if (searchQuery.toLowerCase().includes('beach')) {
-        setMessage("Here are some beautiful beach destinations for your getaway. I've focused on places with pristine shores and excellent weather.");
-      } else if (searchQuery.toLowerCase().includes('mountains')) {
-        setMessage("I found these mountain retreats that offer stunning views and great hiking opportunities.");
-      } else if (searchQuery.toLowerCase().includes('paris') || searchQuery.toLowerCase().includes('france')) {
-        setMessage("Paris is beautiful year-round. Here are some options I think you'll love, with excellent accommodations near major attractions.");
+      if (searchQuery.toLowerCase().includes('dubai')) {
+        setMessage("Dubai offers a perfect blend of modernity and tradition. I've curated these experiences with luxury accommodations and unique cultural activities.");
+      } else if (searchQuery.toLowerCase().includes('istanbul') || searchQuery.toLowerCase().includes('turkey')) {
+        setMessage("Istanbul is where East meets West. These journeys highlight the rich history and vibrant culture of this fascinating city at the crossroads of civilizations.");
+      } else if (searchQuery.toLowerCase().includes('cairo') || searchQuery.toLowerCase().includes('egypt')) {
+        setMessage("Explore the wonders of ancient Egypt with these carefully selected trips to Cairo. Experience the pyramids and the rich cultural heritage of this historic destination.");
+      } else if (searchQuery.toLowerCase().includes('doha') || searchQuery.toLowerCase().includes('qatar')) {
+        setMessage("Discover the modern marvels and traditional charm of Doha. These journeys offer luxury accommodations and unique cultural experiences in Qatar's capital.");
+      } else if (searchQuery.toLowerCase().includes('beach')) {
+        setMessage("The Middle East has some stunning beaches. I've selected some options with beautiful shorelines along the Arabian Gulf and Red Sea.");
+      } else if (searchQuery.toLowerCase().includes('culture')) {
+        setMessage("The Middle East is rich in cultural experiences. These journeys focus on historical sites, local traditions, and authentic cultural immersion.");
       } else {
-        setMessage(`Based on your interest in "${searchQuery}", I've curated these personalized journeys that I think you'll love.`);
+        setMessage(`Based on your interest in "${searchQuery}", I've curated these Middle Eastern journeys that I think you'll love.`);
       }
     }, 2500);
 

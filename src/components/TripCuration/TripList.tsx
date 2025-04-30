@@ -4,84 +4,83 @@ import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
 import AIInsights from './AIInsights';
 
-// Mock flight data
+// Mock flight data for Middle Eastern destinations
 const mockFlights = [
   {
     id: 1,
-    airline: 'Delta Airlines',
-    airlineCode: 'DL',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Delta-Logo.png',
+    airline: 'Emirates',
+    airlineCode: 'EK',
+    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Emirates-Logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
-    departureTime: '08:45 AM',
-    arrivalCity: 'Rome',
-    arrivalCode: 'FCO',
-    arrivalTime: '11:20 PM',
-    duration: '8h 35m',
+    departureTime: '10:25 AM',
+    arrivalCity: 'Dubai',
+    arrivalCode: 'DXB',
+    arrivalTime: '8:15 AM',
+    duration: '12h 50m',
     stops: 0,
-    price: 875,
-    baseFare: 720,
-    taxes: 95,
+    price: 1245,
+    baseFare: 1050,
+    taxes: 135,
     fees: 60,
-    carbonFootprint: '1.2 tonnes',
-    tags: ['Fastest Route'],
+    carbonFootprint: '2.3 tonnes',
+    tags: ['Direct Flight'],
   },
   {
     id: 2,
-    airline: 'United Airlines',
-    airlineCode: 'UA',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/09/United-Airlines-Logo.png',
+    airline: 'Turkish Airlines',
+    airlineCode: 'TK',
+    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Turkish-Airlines-Logo.png',
     departureCity: 'New York',
-    departureCode: 'EWR',
-    departureTime: '10:15 AM',
-    arrivalCity: 'Rome',
-    arrivalCode: 'FCO',
-    arrivalTime: '02:45 PM',
-    duration: '9h 30m',
-    stops: 1,
-    layoverInfo: '2h 15m in London (LHR)',
-    price: 748,
-    baseFare: 590,
+    departureCode: 'JFK',
+    departureTime: '7:15 PM',
+    arrivalCity: 'Istanbul',
+    arrivalCode: 'IST',
+    arrivalTime: '12:30 PM',
+    duration: '10h 15m',
+    stops: 0,
+    price: 978,
+    baseFare: 820,
     taxes: 105,
     fees: 53,
-    carbonFootprint: '1.4 tonnes',
+    carbonFootprint: '1.9 tonnes',
     tags: ['Lowest Price'],
   },
   {
     id: 3,
-    airline: 'Lufthansa',
-    airlineCode: 'LH',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/11/Lufthansa-Logo.png',
+    airline: 'Qatar Airways',
+    airlineCode: 'QR',
+    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Qatar-Airways-Logo.png',
     departureCity: 'New York',
-    departureCode: 'JFK',
-    departureTime: '06:30 PM',
-    arrivalCity: 'Rome',
-    arrivalCode: 'FCO',
-    arrivalTime: '09:15 AM',
-    duration: '8h 45m',
+    departureCode: 'EWR',
+    departureTime: '10:30 PM',
+    arrivalCity: 'Doha',
+    arrivalCode: 'DOH',
+    arrivalTime: '6:15 PM',
+    duration: '12h 45m',
     stops: 0,
-    price: 920,
-    baseFare: 750,
-    taxes: 110,
+    price: 1190,
+    baseFare: 990,
+    taxes: 140,
     fees: 60,
-    carbonFootprint: '0.9 tonnes',
-    tags: ['Eco-Friendly'],
+    carbonFootprint: '2.1 tonnes',
+    tags: ['Award Winning'],
   }
 ];
 
-// Mock AI insights
+// Mock AI insights for Middle Eastern travel
 const mockInsights = [
   {
     type: 'info' as const,
-    content: 'Booking 3 weeks in advance is usually cheapest for New York to Rome routes.'
+    content: 'The best time to visit Dubai is between November and March when the weather is pleasant.'
   },
   {
     type: 'price-drop' as const,
-    content: 'Prices for this route are currently 12% lower than average for September.'
+    content: 'Flights to Istanbul are currently 15% lower than average for June.'
   },
   {
     type: 'warning' as const,
-    content: 'Rome airports may experience delays in September due to seasonal maintenance.'
+    content: 'Summer temperatures in the Middle East can exceed 40°C (104°F). Consider booking activities in the morning or evening.'
   }
 ];
 
