@@ -19,6 +19,8 @@ const Insight = ({ type, content }: InsightProps) => {
         return <TrendingDown className="h-4 w-4 text-green-500" />;
       case 'price-rise':
         return <TrendingUp className="h-4 w-4 text-red-500" />;
+      default:
+        return <Info className="h-4 w-4 text-blue-500" />;
     }
   };
 
@@ -32,6 +34,8 @@ const Insight = ({ type, content }: InsightProps) => {
         return 'bg-green-50';
       case 'price-rise':
         return 'bg-red-50';
+      default:
+        return 'bg-blue-50';
     }
   };
 
