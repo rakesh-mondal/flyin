@@ -59,9 +59,9 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-4 py-5">
         {/* Flight summary */}
-        <div className="border-b border-gray-200 bg-white p-5">
+        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center space-x-4">
               <div>
@@ -89,7 +89,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         {/* Flight details */}
         {/* Check for either trip.flight or if trip itself is a flight */}
         {(trip.flight || trip.airline) && (
-          <div className="mt-4 rounded-lg bg-white p-5 shadow-sm">
+          <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">Flight Details</h2>
             
             <div className="flex items-center justify-between">
@@ -137,7 +137,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
             </div>
 
             {/* Airplane details */}
-            <div className="mt-5 rounded-md bg-gray-50 p-3 text-sm">
+            <div className="mt-5 rounded-md bg-gray-50 p-4 text-sm">
               <p className="font-medium">Boeing 787 Dreamliner</p>
               <div className="mt-1 flex justify-between text-gray-600">
                 <span>Seat: Economy Premium</span>
@@ -148,7 +148,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         )}
 
         {/* Transparency section */}
-        <div className="mt-4 rounded-lg bg-white p-5 shadow-sm">
+        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-medium">Price Breakdown</h2>
           
           <div className="space-y-2 text-sm">
@@ -172,7 +172,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
           </div>
           
           <div className="mt-5 space-y-3">
-            <div className="flex justify-between rounded-md bg-gray-50 p-3 text-sm">
+            <div className="flex justify-between rounded-md bg-gray-50 p-4 text-sm">
               <div className="flex items-center">
                 <Luggage className="mr-2 h-4 w-4 text-gray-500" />
                 <span>Baggage Allowance</span>
@@ -180,7 +180,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
               <span>1 × 23kg</span>
             </div>
             
-            <div className="flex items-center justify-between rounded-md bg-gray-50 p-3 text-sm">
+            <div className="flex items-center justify-between rounded-md bg-gray-50 p-4 text-sm">
               <div className="flex items-center">
                 <BarChart4 className="mr-2 h-4 w-4 text-gray-500" />
                 <span>CO₂ Emissions</span>
@@ -191,11 +191,11 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         </div>
 
         {/* Personalization & Proactive section */}
-        <div className="mt-4 rounded-lg bg-white p-5 shadow-sm">
+        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-medium">Tailored for You</h2>
           
           <div className="space-y-3">
-            <div className="flex items-start rounded-md bg-blue-50 p-3 text-sm">
+            <div className="flex items-start rounded-md bg-blue-50 p-4 text-sm">
               <Info className="mr-2 h-4 w-4 flex-shrink-0 text-blue-500" />
               <div>
                 <p className="font-medium text-blue-700">Why we recommended this flight</p>
@@ -203,7 +203,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
               </div>
             </div>
             
-            <div className="flex items-start rounded-md bg-amber-50 p-3 text-sm">
+            <div className="flex items-start rounded-md bg-amber-50 p-4 text-sm">
               <AlertTriangle className="mr-2 h-4 w-4 flex-shrink-0 text-amber-500" />
               <div>
                 <p className="font-medium text-amber-700">Booking Insight</p>
@@ -226,7 +226,7 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
         </div>
 
         {/* Booking section with Apple Pay */}
-        <div className="sticky bottom-0 border-t border-gray-200 bg-white p-5 pb-8">
+        <div className="sticky bottom-0 mt-2 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Total price</p>
@@ -250,3 +250,4 @@ export default function TripDetail({ trip, onBack }: TripDetailProps) {
     </div>
   );
 }
+
