@@ -4,14 +4,15 @@ import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
 import FlightInsights from './FlightInsights';
 import { InsightProps } from './FlightInsights';
+import { mockTrips } from './mockData';
 
-// Mock flight data for Middle Eastern destinations
+// Mock flight data for Middle Eastern destinations with local logo paths
 const mockFlights = [
   {
     id: 1,
     airline: 'Emirates',
     airlineCode: 'EK',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Emirates-Logo.png',
+    airlineLogo: '/airline-logos/emirates-logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
     departureTime: '10:25 AM',
@@ -36,7 +37,7 @@ const mockFlights = [
     id: 2,
     airline: 'Turkish Airlines',
     airlineCode: 'TK',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Turkish-Airlines-Logo.png',
+    airlineLogo: '/airline-logos/turkish-airlines-logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
     departureTime: '7:15 PM',
@@ -61,7 +62,7 @@ const mockFlights = [
     id: 3,
     airline: 'Qatar Airways',
     airlineCode: 'QR',
-    airlineLogo: 'https://logos-world.net/wp-content/uploads/2021/08/Qatar-Airways-Logo.png',
+    airlineLogo: '/airline-logos/qatar-airways-logo.png',
     departureCity: 'New York',
     departureCode: 'EWR',
     departureTime: '10:30 PM',
@@ -109,6 +110,26 @@ interface TripListProps {
 const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
   console.log('TripList rendering - loading state:', loading);
   
+  // Create a mapping between flight data and mockTrips data for consistent experience
+  const enrichFlightData = (flight: any) => {
+    // Find the corresponding trip in mockTrips if it exists
+    const matchingTrip = mockTrips.find(trip => 
+      trip.destination === flight.destination || 
+      trip.title === flight.title
+    );
+    
+    if (matchingTrip) {
+      return {
+        ...flight,
+        activities: matchingTrip.activities,
+        hotel: matchingTrip.hotel,
+        duration: matchingTrip.duration
+      };
+    }
+    
+    return flight;
+  };
+  
   if (loading) {
     return (
       <div className="space-y-6">
@@ -139,7 +160,7 @@ const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
         <FlightResultCard 
           key={flight.id}
           flight={flight}
-          onClick={() => onViewTrip(flight)}
+          onClick={() => onViewTrip(enrichFlightData(flight))}
         />
       ))}
     </div>

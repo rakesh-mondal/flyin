@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Clock, Leaf, PlaneTakeoff } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -31,6 +31,12 @@ interface FlightResultCardProps {
 }
 
 export default function FlightResultCard({ flight, onClick }: FlightResultCardProps) {
+  const [imgError, setImgError] = useState(false);
+  
+  const handleImgError = () => {
+    setImgError(true);
+  };
+
   return (
     <Card 
       className="mb-4 overflow-hidden transition-all hover:shadow-md" 
@@ -39,14 +45,15 @@ export default function FlightResultCard({ flight, onClick }: FlightResultCardPr
       <div className="border-b border-gray-100 bg-gray-50 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            {flight.airlineLogo ? (
+            {flight.airlineLogo && !imgError ? (
               <img 
                 src={flight.airlineLogo} 
                 alt={flight.airline} 
-                className="h-8 w-8 rounded-full object-contain"
+                className="h-8 w-8 object-contain"
+                onError={handleImgError}
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-medium">
                 {flight.airlineCode}
               </div>
             )}
@@ -63,6 +70,8 @@ export default function FlightResultCard({ flight, onClick }: FlightResultCardPr
                     tag === "Lowest Price" ? "bg-emerald-50 text-emerald-600" : 
                     tag === "Fastest Route" ? "bg-blue-50 text-blue-600" : 
                     tag === "Eco-Friendly" ? "bg-green-50 text-green-600" :
+                    tag === "Direct Flight" ? "bg-purple-50 text-purple-600" :
+                    tag === "Award Winning" ? "bg-amber-50 text-amber-600" :
                     "bg-gray-50 text-gray-600"
                   )}
                 >
