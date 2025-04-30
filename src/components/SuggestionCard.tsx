@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { PlaneTakeoff, Image } from 'lucide-react';
+import { PlaneTakeoff, Image as ImageIcon } from 'lucide-react';
 
 interface SuggestionCardProps {
   title: string;
@@ -18,7 +18,7 @@ export default function SuggestionCard({ title, image, type, price, departure, o
 
   // Use a proper image element to detect load/error events
   React.useEffect(() => {
-    const img = new Image();
+    const img = new window.Image();
     img.src = image;
     img.onload = () => setImageLoaded(true);
     img.onerror = () => setImageError(true);
@@ -41,13 +41,13 @@ export default function SuggestionCard({ title, image, type, price, departure, o
           />
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <Image className="h-8 w-8 animate-pulse text-gray-400" />
+              <ImageIcon className="h-8 w-8 animate-pulse text-gray-400" />
             </div>
           )}
         </>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 text-gray-400">
-          <Image className="h-8 w-8 mb-2" />
+          <ImageIcon className="h-8 w-8 mb-2" />
           <span className="text-xs">Image unavailable</span>
         </div>
       )}
