@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface NavigationProps {
   activeTab: string;
   onChangeTab: (tab: string) => void;
+  isVisible?: boolean;
 }
 
-export default function Navigation({ activeTab, onChangeTab }: NavigationProps) {
+export default function Navigation({ activeTab, onChangeTab, isVisible = true }: NavigationProps) {
   const tabs = [
     { id: 'home', label: 'Discover', icon: PlaneTakeoff },
     { id: 'search', label: 'Search', icon: Search },
@@ -17,7 +18,12 @@ export default function Navigation({ activeTab, onChangeTab }: NavigationProps) 
   ];
 
   return (
-    <div className="sticky bottom-0 z-20 w-full border-t border-gray-200 bg-white shadow-md">
+    <div 
+      className={cn(
+        "fixed bottom-0 left-0 z-20 w-full border-t border-gray-200 bg-white shadow-md transition-transform duration-300",
+        isVisible ? "translate-y-0" : "translate-y-full"
+      )}
+    >
       <div className="mx-auto flex max-w-md items-center justify-around px-4 py-2">
         {tabs.map((tab) => (
           <button

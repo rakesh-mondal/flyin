@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TravelCanvas from '@/components/TravelCanvas';
 import TripCuration from '@/components/TripCuration';
 import TripDetail from '@/components/TripDetail';
@@ -7,12 +7,32 @@ import Navigation from '@/components/Navigation';
 import MyTrips from '@/components/MyTrips';
 import Profile from '@/components/Profile';
 import { Toaster } from '@/components/ui/sonner';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentView, setCurrentView] = useState('home');
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [activeTab, setActiveTab] = useState('home');
+  const [navIsVisible, setNavIsVisible] = useState(true);
+  
+  const isMobile = useIsMobile();
+  const scrollDirection = useScrollDirection();
+  
+  // Update navigation visibility based on scroll direction (only on mobile)
+  useEffect(() => {
+    if (isMobile && ['home', 'trips', 'profile'].includes(currentView)) {
+      if (scrollDirection === 'down') {
+        setNavIsVisible(false);
+      } else if (scrollDirection === 'up') {
+        setNavIsVisible(true);
+      }
+    } else {
+      // Always show navigation on desktop or on views where navigation should always be visible
+      setNavIsVisible(true);
+    }
+  }, [scrollDirection, isMobile, currentView]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -54,6 +74,8 @@ const Index = () => {
   // Add console logs to help with debugging
   console.log('Current view:', currentView);
   console.log('Search query:', searchQuery);
+  console.log('Navigation visible:', navIsVisible);
+  console.log('Scroll direction:', scrollDirection);
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
@@ -86,7 +108,11 @@ const Index = () => {
       
       {/* Only show navigation on certain views */}
       {['home', 'trips', 'profile'].includes(currentView) && (
-        <Navigation activeTab={activeTab} onChangeTab={handleChangeTab} />
+        <Navigation 
+          activeTab={activeTab} 
+          onChangeTab={handleChangeTab} 
+          isVisible={navIsVisible}
+        />
       )}
       
       <Toaster position="top-center" />
