@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { PlaneTakeoff } from 'lucide-react';
+import { PlaneTakeoff, Image } from 'lucide-react';
 
 interface SuggestionCardProps {
   title: string;
@@ -13,22 +13,44 @@ interface SuggestionCardProps {
 }
 
 export default function SuggestionCard({ title, image, type, price, departure, onClick }: SuggestionCardProps) {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [imageError, setImageError] = React.useState(false);
+
   return (
     <div 
       className="group relative h-44 w-72 shrink-0 cursor-pointer overflow-hidden rounded-xl transition-transform duration-300 hover:scale-[1.02]"
       onClick={onClick}
     >
-      {/* Background image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-        style={{ backgroundImage: `url(${image})` }}
-      />
+      {/* Background image with fallback */}
+      {!imageError ? (
+        <>
+          <div 
+            className={cn(
+              "absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105",
+              !imageLoaded && "hidden"
+            )}
+            style={{ backgroundImage: `url(${image})` }}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
+          />
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <Image className="h-8 w-8 animate-pulse text-gray-400" />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 text-gray-400">
+          <Image className="h-8 w-8 mb-2" />
+          <span className="text-xs">Image unavailable</span>
+        </div>
+      )}
       
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       
       {/* Content */}
-      <div className="absolute bottom-0 left-0 p-4 text-white">
+      <div className="absolute bottom-0 left-0 p-4 text-white z-10">
         <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-white/80">
           {type || 'Recommended Flight'}
         </span>

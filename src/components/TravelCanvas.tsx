@@ -7,10 +7,10 @@ import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
 
 const flightSuggestions = [
-  { id: 1, title: 'Weekend in Paris', image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?auto=format&fit=crop&q=80', type: 'Trending', departure: 'JFK' },
-  { id: 2, title: 'Beach Getaway to Miami', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80', type: 'For You', departure: 'LGA' },
-  { id: 3, title: 'Tokyo Adventure', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80', type: 'Popular', departure: 'JFK' },
-  { id: 4, title: 'Rome City Break', image: 'https://images.unsplash.com/photo-1533050487297-09b450131914?auto=format&fit=crop&q=80', type: 'Trending', departure: 'EWR' },
+  { id: 1, title: 'Weekend in Paris', image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
+  { id: 2, title: 'Beach Getaway to Miami', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'For You', departure: 'LGA' },
+  { id: 3, title: 'Tokyo Adventure', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Popular', departure: 'JFK' },
+  { id: 4, title: 'Rome City Break', image: 'https://images.unsplash.com/photo-1533050487297-09b450131914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'EWR' },
 ];
 
 // Search intent examples for rotating placeholder
