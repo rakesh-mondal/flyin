@@ -10,7 +10,7 @@ const upcomingTrips = [
     id: 1,
     destination: 'Tokyo, Japan',
     dates: 'May 15 - May 22, 2025',
-    image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1024&q=80',
     status: 'Confirmed',
     countdown: '14 days to go',
     flightTime: '11:45 AM'
@@ -23,14 +23,14 @@ const pastTrips = [
     id: 2,
     destination: 'Paris, France',
     dates: 'October 10 - October 17, 2024',
-    image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1024&q=80',
     status: 'Completed'
   },
   {
     id: 3,
     destination: 'Barcelona, Spain',
     dates: 'July 5 - July 12, 2024',
-    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1024&q=80',
     status: 'Completed'
   }
 ];
