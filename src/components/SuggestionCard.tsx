@@ -51,14 +51,20 @@ export default function SuggestionCard({ title, image, type, price, departure, o
         </div>
       )}
       
+      {/* Type tag moved to top right */}
+      {type && (
+        <div className="absolute right-3 top-3 z-10">
+          <span className="rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+            {type}
+          </span>
+        </div>
+      )}
+      
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       
       {/* Content */}
       <div className="absolute bottom-0 left-0 p-4 text-white z-10">
-        <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-white/80">
-          {type || 'Recommended Flight'}
-        </span>
         <h3 className="text-xl font-medium leading-tight">{title}</h3>
         
         <div className="mt-1 flex items-center space-x-2 text-sm">

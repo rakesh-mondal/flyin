@@ -74,7 +74,7 @@ export const mockTrips = [
     price: 3600,
     dates: 'September 8 - September 15, 2025',
     duration: '7 nights',
-    image: 'https://images.unsplash.com/photo-1510368731595-16674724bba0?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photos/a-kdjff86zE?auto=format&fit=crop&q=80',
     activities: ['Museum of Islamic Art', 'Souq Waqif Tour', 'Desert Safari'],
     flight: {
       airline: 'Qatar Airways',
