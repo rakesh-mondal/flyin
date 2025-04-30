@@ -88,6 +88,6 @@ const Index = () => {
       <Toaster position="top-center" />
     </div>
   );
-};
+}
 
 export default Index;

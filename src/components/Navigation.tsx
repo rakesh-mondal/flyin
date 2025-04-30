@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Search, MapPin, User } from 'lucide-react';
+import { PlaneTakeoff, Search, Calendar, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavigationProps {
@@ -10,9 +10,9 @@ interface NavigationProps {
 
 export default function Navigation({ activeTab, onChangeTab }: NavigationProps) {
   const tabs = [
-    { id: 'home', label: 'Discover', icon: Home },
+    { id: 'home', label: 'Discover', icon: PlaneTakeoff },
     { id: 'search', label: 'Search', icon: Search },
-    { id: 'trips', label: 'My Trips', icon: MapPin },
+    { id: 'trips', label: 'My Flights', icon: Calendar },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
