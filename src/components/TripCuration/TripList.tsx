@@ -2,7 +2,8 @@
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
-import AIInsights from './AIInsights';
+import FlightInsights from './FlightInsights';
+import { InsightProps } from './FlightInsights';
 
 // Mock flight data for Middle Eastern destinations
 const mockFlights = [
@@ -69,17 +70,17 @@ const mockFlights = [
 ];
 
 // Mock AI insights for Middle Eastern travel
-const mockInsights = [
+const mockInsights: InsightProps[] = [
   {
-    type: 'info' as const,
+    type: 'info',
     content: 'The best time to visit Dubai is between November and March when the weather is pleasant.'
   },
   {
-    type: 'price-drop' as const,
+    type: 'price-drop',
     content: 'Flights to Istanbul are currently 15% lower than average for June.'
   },
   {
-    type: 'warning' as const,
+    type: 'warning',
     content: 'Summer temperatures in the Middle East can exceed 40°C (104°F). Consider booking activities in the morning or evening.'
   }
 ];
@@ -110,7 +111,7 @@ const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
 
   return (
     <div className="space-y-4">
-      <AIInsights insights={mockInsights} />
+      <FlightInsights insights={mockInsights} />
       
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-lg font-medium">Flight Options</h3>
