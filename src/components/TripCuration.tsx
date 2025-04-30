@@ -175,14 +175,14 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
   };
 
   return (
-    <div className="flex h-screen w-full flex-col bg-apple-gray text-apple-black">
+    <div className="flex h-screen w-full flex-col bg-gray-50 text-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white/80 px-4 backdrop-blur-md">
-        <Button variant="ghost" size="icon" onClick={onBack}>
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4">
+        <Button variant="ghost" size="icon" onClick={onBack} className="text-black">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <h1 className="text-xl font-medium">Your Journey</h1>
-        <Button variant="ghost" size="icon" onClick={onBack}>
+        <Button variant="ghost" size="icon" onClick={onBack} className="text-black">
           <X className="h-5 w-5" />
         </Button>
       </header>
@@ -193,7 +193,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
         <div className="w-full bg-white p-4 shadow-sm">
           {loading ? (
             <div className="flex items-center space-x-3">
-              <div className="h-8 w-8 animate-pulse rounded-full bg-apple-blue/20"></div>
+              <div className="h-8 w-8 animate-pulse rounded-full bg-black/10"></div>
               <p className="text-lg">{thinking}</p>
             </div>
           ) : (
@@ -202,11 +202,11 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
         </div>
 
         {/* Filter chips */}
-        <div className="flex items-center space-x-2 overflow-x-auto bg-white/50 px-4 py-3 backdrop-blur-sm">
+        <div className="flex items-center space-x-2 overflow-x-auto bg-white px-4 py-3 shadow-sm">
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
+            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal text-gray-900 hover:bg-gray-100"
             onClick={() => toast.success("Date preferences updated!")}
           >
             <Calendar className="h-3.5 w-3.5" />
@@ -215,7 +215,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
+            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal text-gray-900 hover:bg-gray-100"
             onClick={() => toast.success("Flight preferences updated!")}
           >
             <PlaneTakeoff className="h-3.5 w-3.5" />
@@ -224,7 +224,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
+            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal text-gray-900 hover:bg-gray-100"
             onClick={() => toast.success("Hotel preferences updated!")}
           >
             <Hotel className="h-3.5 w-3.5" />
@@ -233,7 +233,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
+            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal text-gray-900 hover:bg-gray-100"
             onClick={() => toast.success("Budget preferences updated!")}
           >
             <DollarSign className="h-3.5 w-3.5" />
@@ -242,7 +242,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
+            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal text-gray-900 hover:bg-gray-100"
             onClick={() => toast.success("Filter preferences updated!")}
           >
             <Sliders className="h-3.5 w-3.5" />
@@ -251,7 +251,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
         </div>
 
         {/* Trip proposals */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
           {loading ? (
             // Skeleton loading
             <div className="space-y-6">
@@ -280,20 +280,17 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
         </div>
         
         {/* Assistant input */}
-        <div className={cn(
-          "sticky bottom-0 border-t border-gray-200 bg-white p-3",
-          "transition-all duration-300 ease-in-out"
-        )}>
+        <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3">
           <div className="relative flex items-center">
             <input
               type="text"
               placeholder="Ask a question or refine your search..."
-              className="apple-transition flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue"
+              className="flex-1 rounded-full border border-gray-300 bg-gray-50 px-4 py-3 pr-10 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
             />
             <Button
-              className="apple-transition absolute right-1 rounded-full bg-apple-blue p-2 text-white hover:bg-apple-blue/90"
+              className="absolute right-1 rounded-full bg-black p-2 text-white hover:bg-black/90"
               size="icon"
               onClick={handleSubmitMessage}
             >
@@ -306,7 +303,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-1 text-xs text-gray-600"
+                  className="flex items-center gap-1 text-xs text-gray-600 hover:bg-gray-100"
                   size="sm"
                 >
                   <Activity className="h-3 w-3" /> 
@@ -326,7 +323,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
                       className={cn(
                         selectedActivities.includes(activity) 
                           ? "bg-black text-white hover:bg-black/90" 
-                          : "bg-white"
+                          : "bg-white hover:bg-gray-100"
                       )}
                       size="sm"
                       onClick={() => handleAddActivities(activity)}
@@ -355,7 +352,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-1 text-xs text-gray-600"
+                  className="flex items-center gap-1 text-xs text-gray-600 hover:bg-gray-100"
                   size="sm"
                 >
                   <DollarSign className="h-3 w-3" /> 
@@ -381,18 +378,21 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
                     </Button>
                     <Button 
                       variant="outline" 
+                      className="hover:bg-gray-100"
                       onClick={() => handleSetBudget(3000, 5000)}
                     >
                       Standard ($3,000 - $5,000)
                     </Button>
                     <Button 
                       variant="outline" 
+                      className="hover:bg-gray-100"
                       onClick={() => handleSetBudget(5000, 8000)}
                     >
                       Premium ($5,000 - $8,000)
                     </Button>
                     <Button 
                       variant="outline" 
+                      className="hover:bg-gray-100"
                       onClick={() => handleSetBudget(8000, 15000)}
                     >
                       Luxury ($8,000+)
@@ -419,7 +419,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
               <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-1 text-xs text-gray-600"
+                  className="flex items-center gap-1 text-xs text-gray-600 hover:bg-gray-100"
                   size="sm"
                 >
                   <Calendar className="h-3 w-3" /> 
@@ -434,7 +434,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
                       <Button
                         key={index}
                         variant="outline"
-                        className="w-full justify-start"
+                        className="w-full justify-start hover:bg-gray-100"
                         onClick={() => handleSelectDate(date)}
                       >
                         {date}

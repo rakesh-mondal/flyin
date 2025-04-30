@@ -53,12 +53,12 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
             style={{ backgroundImage: `url(${image})` }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/30" /> {/* Overlay for better text visibility */}
+        <div className="absolute inset-0 bg-black/40" /> {/* Darker overlay for better text visibility */}
       </div>
 
       {/* Main content */}
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-white">
-        {/* Personalized greeting instead of app name */}
+        {/* Personalized greeting */}
         <h1 className="mb-4 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
           Hello Rakesh,
         </h1>
@@ -79,9 +79,8 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               type="text"
               placeholder="Where to next?"
               className={cn(
-                "h-14 w-full rounded-full bg-white/10 px-6 pr-12 text-lg backdrop-blur-lg transition-all",
-                "placeholder:text-white/70 focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50",
-                "apple-blur"
+                "h-14 w-full rounded-full bg-black/20 px-6 pr-12 text-lg",
+                "placeholder:text-white/70 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-white/50",
               )}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -100,7 +99,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               <Button 
                 type="submit" 
                 size="icon" 
-                className="h-10 w-10 rounded-full bg-white/20 text-white hover:bg-white/30"
+                className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/80"
               >
                 <Search className="h-5 w-5" />
               </Button>

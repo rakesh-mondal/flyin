@@ -17,7 +17,7 @@ export default function Navigation({ activeTab, onChangeTab }: NavigationProps) 
   ];
 
   return (
-    <div className="sticky bottom-0 z-20 w-full border-t border-gray-200 bg-white/80 backdrop-blur-md">
+    <div className="sticky bottom-0 z-20 w-full border-t border-gray-200 bg-white shadow-md">
       <div className="mx-auto flex max-w-md items-center justify-around px-4 py-2">
         {tabs.map((tab) => (
           <button
@@ -26,7 +26,7 @@ export default function Navigation({ activeTab, onChangeTab }: NavigationProps) 
               "flex flex-1 flex-col items-center rounded-lg py-2 text-xs transition-colors",
               activeTab === tab.id 
                 ? "text-black font-medium" 
-                : "text-gray-500 hover:text-gray-900"
+                : "text-gray-400 hover:text-gray-900"
             )}
             onClick={() => onChangeTab(tab.id)}
           >

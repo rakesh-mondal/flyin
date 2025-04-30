@@ -95,8 +95,8 @@ export default function TripProposal({ trip, onClick }: TripProps) {
         {/* Call to action */}
         <button 
           className={cn(
-            "mt-3 w-full rounded-full bg-apple-blue px-4 py-2.5 text-center text-sm font-medium text-white",
-            "transition-all duration-300 hover:bg-apple-blue/90 focus:outline-none focus:ring-2 focus:ring-apple-blue/50"
+            "mt-3 w-full rounded-full bg-black px-4 py-2.5 text-center text-sm font-medium text-white",
+            "transition-all duration-300 hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black/50"
           )}
         >
           View Details
