@@ -16,6 +16,14 @@ export default function SuggestionCard({ title, image, type, price, departure, o
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [imageError, setImageError] = React.useState(false);
 
+  // Use a proper image element to detect load/error events
+  React.useEffect(() => {
+    const img = new Image();
+    img.src = image;
+    img.onload = () => setImageLoaded(true);
+    img.onerror = () => setImageError(true);
+  }, [image]);
+
   return (
     <div 
       className="group relative h-44 w-72 shrink-0 cursor-pointer overflow-hidden rounded-xl transition-transform duration-300 hover:scale-[1.02]"
@@ -30,8 +38,6 @@ export default function SuggestionCard({ title, image, type, price, departure, o
               !imageLoaded && "hidden"
             )}
             style={{ backgroundImage: `url(${image})` }}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageError(true)}
           />
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100">

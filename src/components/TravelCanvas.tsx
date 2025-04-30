@@ -116,7 +116,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               <Button 
                 type="submit" 
                 size="icon" 
-                className="h-10 w-10 rounded-full bg-primary text-white hover:bg-primary/90"
+                className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/90"
               >
                 <Search className="h-5 w-5" />
               </Button>
