@@ -66,5 +66,27 @@ export const mockTrips = [
       type: 'Luxury Hotel',
       amenities: ['Nile View', 'Fine Dining', 'Spa Services']
     }
+  },
+  {
+    id: 4,
+    destination: 'Doha, Qatar',
+    title: 'Magical Doha',
+    price: 3600,
+    dates: 'September 8 - September 15, 2025',
+    duration: '7 nights',
+    image: 'https://images.unsplash.com/photo-1510368731595-16674724bba0?auto=format&fit=crop&q=80',
+    activities: ['Museum of Islamic Art', 'Souq Waqif Tour', 'Desert Safari'],
+    flight: {
+      airline: 'Qatar Airways',
+      departure: 'EWR 10:30 PM',
+      arrival: 'DOH 6:15 PM (+1)',
+      duration: '12h 45m'
+    },
+    hotel: {
+      name: 'Mandarin Oriental Doha',
+      rating: 4.9,
+      type: 'Luxury Hotel',
+      amenities: ['Spa Services', 'Rooftop Pool', 'City View']
+    }
   }
 ];
