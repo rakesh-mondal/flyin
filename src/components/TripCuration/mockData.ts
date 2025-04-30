@@ -3,68 +3,68 @@
 export const mockTrips = [
   {
     id: 1,
-    destination: 'Paris, France',
-    title: 'Romantic City Escape',
-    price: 3200,
+    destination: 'Dubai, UAE',
+    title: 'Cultural Dubai Experience',
+    price: 3400,
     dates: 'June 10 - June 16, 2025',
     duration: '7 nights',
-    image: 'https://images.unsplash.com/photo-1499856871958-5b9088d4687e?auto=format&fit=crop&q=80',
-    activities: ['Visit Eiffel Tower', 'Seine River Cruise', 'Louvre Museum'],
+    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80',
+    activities: ['Visit Burj Khalifa', 'Desert Safari', 'Dubai Mall Shopping'],
     flight: {
-      airline: 'Air France',
+      airline: 'Emirates',
       departure: 'JFK 10:25 AM',
-      arrival: 'CDG 11:55 PM',
-      duration: '7h 30m'
+      arrival: 'DXB 8:15 AM (+1)',
+      duration: '12h 50m'
     },
     hotel: {
-      name: 'Le Grand Paris',
+      name: 'Address Downtown',
       rating: 4.8,
-      type: 'Boutique Hotel',
+      type: 'Luxury Hotel',
       amenities: ['Free Wi-Fi', 'Breakfast included', 'City view']
     }
   },
   {
     id: 2,
-    destination: 'Santorini, Greece',
-    title: 'Mediterranean Dream',
-    price: 4500,
+    destination: 'Istanbul, Turkey',
+    title: 'Turkish Cultural Journey',
+    price: 2800,
     dates: 'July 5 - July 12, 2025',
     duration: '7 nights',
-    image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&q=80',
-    activities: ['Sunset in Oia', 'Catamaran Cruise', 'Wine Tasting'],
+    image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&q=80',
+    activities: ['Blue Mosque Tour', 'Bosphorus Cruise', 'Grand Bazaar Shopping'],
     flight: {
-      airline: 'Aegean Airlines',
+      airline: 'Turkish Airlines',
       departure: 'JFK 7:15 PM',
-      arrival: 'JTR 2:45 PM (+1)',
-      duration: '12h 30m'
+      arrival: 'IST 12:30 PM (+1)',
+      duration: '10h 15m'
     },
     hotel: {
-      name: 'Astra Suites',
+      name: 'Four Seasons Istanbul',
       rating: 4.9,
-      type: 'Luxury Resort',
-      amenities: ['Infinity Pool', 'Ocean View', 'Spa Services']
+      type: 'Luxury Hotel',
+      amenities: ['Spa Services', 'Panoramic View', 'Fine Dining']
     }
   },
   {
     id: 3,
-    destination: 'Tokyo, Japan',
-    title: 'Modern City Adventure',
-    price: 5200,
+    destination: 'Cairo, Egypt',
+    title: 'Pyramids & Nile Adventure',
+    price: 3100,
     dates: 'August 12 - August 19, 2025',
     duration: '7 nights',
-    image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80',
-    activities: ['Visit Tokyo Tower', 'Shibuya Crossing', 'Senso-ji Temple'],
+    image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&q=80',
+    activities: ['Pyramids of Giza', 'Egyptian Museum', 'Nile River Cruise'],
     flight: {
-      airline: 'Japan Airlines',
+      airline: 'EgyptAir',
       departure: 'JFK 11:45 AM',
-      arrival: 'NRT 2:35 PM (+1)',
-      duration: '14h 50m'
+      arrival: 'CAI 5:25 AM (+1)',
+      duration: '10h 40m'
     },
     hotel: {
-      name: 'Park Hyatt Tokyo',
+      name: 'The Nile Ritz-Carlton',
       rating: 4.7,
       type: 'Luxury Hotel',
-      amenities: ['City View', 'Fine Dining', 'Indoor Pool']
+      amenities: ['Nile View', 'Fine Dining', 'Spa Services']
     }
   }
 ];
