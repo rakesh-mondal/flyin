@@ -6,13 +6,13 @@ import FlightInsights from './FlightInsights';
 import { InsightProps } from './FlightInsights';
 import { mockTrips } from './mockData';
 
-// Mock flight data for Middle Eastern destinations with local logo paths
+// Mock flight data for Middle Eastern destinations with official airline logo URLs
 const mockFlights = [
   {
     id: 1,
     airline: 'Emirates',
     airlineCode: 'EK',
-    airlineLogo: '/airline-logos/emirates-logo.png',
+    airlineLogo: 'https://www.emirates.com/etc/designs/ecom/creative/emirates-logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
     departureTime: '10:25 AM',
@@ -37,7 +37,7 @@ const mockFlights = [
     id: 2,
     airline: 'Turkish Airlines',
     airlineCode: 'TK',
-    airlineLogo: '/airline-logos/turkish-airlines-logo.png',
+    airlineLogo: 'https://www.turkishairlines.com/theme/img/thy_logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
     departureTime: '7:15 PM',
@@ -62,7 +62,7 @@ const mockFlights = [
     id: 3,
     airline: 'Qatar Airways',
     airlineCode: 'QR',
-    airlineLogo: '/airline-logos/qatar-airways-logo.png',
+    airlineLogo: 'https://www.qatarairways.com/content/dam/images/renditions/horizontal-1/brand/logo/h1-qr-logo.png',
     departureCity: 'New York',
     departureCode: 'EWR',
     departureTime: '10:30 PM',
