@@ -73,17 +73,17 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
+      {/* Logo - repositioned to top left */}
+      <div className="absolute left-6 top-6 z-20">
+        <img 
+          src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" 
+          alt="Flyin.com" 
+          className="h-8 w-auto" 
+        />
+      </div>
+      
       {/* Main content */}
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-gray-900">
-        {/* Logo */}
-        <div className="mb-8">
-          <img 
-            src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" 
-            alt="Flyin.com" 
-            className="h-16 w-auto" 
-          />
-        </div>
-        
         {/* Personalized greeting */}
         <h1 className="mb-4 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
           Hello Rakesh,
