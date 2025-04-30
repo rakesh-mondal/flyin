@@ -22,7 +22,10 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
-      <div className="relative">
+      <div className={cn(
+        "relative transition-all duration-300",
+        isInputFocused ? "scale-105" : ""
+      )}>
         {isInputFocused && (
           <GlowEffect
             colors={['#0894FF', '#C959DD', '#FF2E54', '#FF9004']} 
@@ -37,8 +40,8 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
           placeholder="Ask a question..."
           className={cn(
             "h-14 w-full rounded-full bg-gray-100 px-6 pr-16 text-lg",
-            "placeholder:text-gray-500 focus:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-primary/50 relative z-10",
-            isInputFocused ? "border-transparent shadow-lg" : "border border-gray-300"
+            "placeholder:text-gray-500 focus:outline-none relative z-10",
+            isInputFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-1 focus:ring-primary/50" : "border border-gray-300"
           )}
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
