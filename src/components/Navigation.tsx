@@ -25,7 +25,7 @@ export default function Navigation({ activeTab, onChangeTab }: NavigationProps) 
             className={cn(
               "flex flex-1 flex-col items-center rounded-lg py-2 text-xs transition-colors",
               activeTab === tab.id 
-                ? "text-apple-blue" 
+                ? "text-black font-medium" 
                 : "text-gray-500 hover:text-gray-900"
             )}
             onClick={() => onChangeTab(tab.id)}

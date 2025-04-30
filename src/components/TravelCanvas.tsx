@@ -58,12 +58,12 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
 
       {/* Main content */}
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-white">
-        {/* App Name */}
+        {/* Personalized greeting instead of app name */}
         <h1 className="mb-4 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
-          Apple Journeys
+          Hello Rakesh,
         </h1>
         <p className="mb-8 text-center text-lg font-light opacity-90 md:text-xl">
-          AI-powered travel experiences
+          Where's your next adventure taking you?
         </p>
 
         {/* Search bar */}

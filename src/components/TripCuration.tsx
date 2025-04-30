@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, X, PlaneTakeoff, Hotel, Calendar, DollarSign, Sliders, Send, PlusCircle } from 'lucide-react';
+import { ArrowLeft, X, PlaneTakeoff, Hotel, Calendar, DollarSign, Sliders, Send, Activity } from 'lucide-react';
 import { Button } from './ui/button';
 import { Separator } from './ui/separator';
 import TripProposal from './TripProposal';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from './ui/sheet';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 // Mock trip data
 const mockTrips = [
@@ -88,6 +90,19 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [thinking, setThinking] = useState('');
+  const [userMessage, setUserMessage] = useState('');
+  const [budgetRange, setBudgetRange] = useState({ min: 1000, max: 5000 });
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [alternativeDates, setAlternativeDates] = useState<string[]>([
+    'June 5 - June 12, 2025',
+    'June 15 - June 22, 2025',
+    'July 1 - July 8, 2025'
+  ]);
+
+  const activities = [
+    'Sightseeing', 'Cultural Tours', 'Food & Wine', 'Adventure', 
+    'Beach', 'Nightlife', 'Shopping', 'Nature', 'Museums'
+  ];
 
   useEffect(() => {
     const thinkingMessages = [
@@ -124,17 +139,39 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
     return () => clearInterval(intervalId);
   }, [searchQuery]);
 
-  const handleRefineSearch = () => {
-    toast.success("Preferences updated! Refining your results...", {
-      description: "We'll adjust your recommendations based on your preferences.",
-    });
-  };
-
   const handleSubmitMessage = () => {
+    if (!userMessage.trim()) return;
+    
     toast.success("Message received!", {
       description: "I'll adjust your recommendations accordingly.",
     });
     setMessage(prev => `${prev} I've refined the options based on your preferences.`);
+    setUserMessage('');
+  };
+
+  const handleAddActivities = (activity: string) => {
+    if (selectedActivities.includes(activity)) {
+      setSelectedActivities(selectedActivities.filter(a => a !== activity));
+    } else {
+      setSelectedActivities([...selectedActivities, activity]);
+    }
+    
+    toast.success(`${selectedActivities.includes(activity) ? 'Removed' : 'Added'} activity: ${activity}`, {
+      description: "Updating your recommendations...",
+    });
+  };
+
+  const handleSetBudget = (min: number, max: number) => {
+    setBudgetRange({ min, max });
+    toast.success(`Budget updated to $${min} - $${max}`, {
+      description: "Adjusting your recommendations based on budget...",
+    });
+  };
+
+  const handleSelectDate = (date: string) => {
+    toast.success(`Selected alternative dates: ${date}`, {
+      description: "Updating availability for the new dates...",
+    });
   };
 
   return (
@@ -170,7 +207,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
-            onClick={handleRefineSearch}
+            onClick={() => toast.success("Date preferences updated!")}
           >
             <Calendar className="h-3.5 w-3.5" />
             <span>June 2025</span>
@@ -179,7 +216,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
-            onClick={handleRefineSearch}
+            onClick={() => toast.success("Flight preferences updated!")}
           >
             <PlaneTakeoff className="h-3.5 w-3.5" />
             <span>Direct flights</span>
@@ -188,7 +225,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
-            onClick={handleRefineSearch}
+            onClick={() => toast.success("Hotel preferences updated!")}
           >
             <Hotel className="h-3.5 w-3.5" />
             <span>4+ Stars</span>
@@ -197,7 +234,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
-            onClick={handleRefineSearch}
+            onClick={() => toast.success("Budget preferences updated!")}
           >
             <DollarSign className="h-3.5 w-3.5" />
             <span>Budget</span>
@@ -206,7 +243,7 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-sm font-normal"
-            onClick={handleRefineSearch}
+            onClick={() => toast.success("Filter preferences updated!")}
           >
             <Sliders className="h-3.5 w-3.5" />
             <span>More filters</span>
@@ -252,6 +289,8 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
               type="text"
               placeholder="Ask a question or refine your search..."
               className="apple-transition flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue"
+              value={userMessage}
+              onChange={(e) => setUserMessage(e.target.value)}
             />
             <Button
               className="apple-transition absolute right-1 rounded-full bg-apple-blue p-2 text-white hover:bg-apple-blue/90"
@@ -262,41 +301,159 @@ export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCu
             </Button>
           </div>
           <div className="mt-2 flex items-center justify-center">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-1 text-xs text-gray-600"
-              size="sm"
-              onClick={() => {
-                toast.success("Adding activities to your search!");
-              }}
-            >
-              <PlusCircle className="h-3 w-3" /> 
-              <span>Add activities</span>
-            </Button>
+            {/* Activities Button */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-xs text-gray-600"
+                  size="sm"
+                >
+                  <Activity className="h-3 w-3" /> 
+                  <span>Add activities</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="rounded-t-xl px-4 py-6">
+                <SheetHeader className="mb-4 text-left">
+                  <SheetTitle>Add Activities</SheetTitle>
+                  <SheetDescription>Select activities you're interested in</SheetDescription>
+                </SheetHeader>
+                <div className="flex flex-wrap gap-2">
+                  {activities.map((activity) => (
+                    <Button
+                      key={activity}
+                      variant={selectedActivities.includes(activity) ? "default" : "outline"}
+                      className={cn(
+                        selectedActivities.includes(activity) 
+                          ? "bg-black text-white hover:bg-black/90" 
+                          : "bg-white"
+                      )}
+                      size="sm"
+                      onClick={() => handleAddActivities(activity)}
+                    >
+                      {activity}
+                    </Button>
+                  ))}
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <Button 
+                    className="bg-black text-white hover:bg-black/90"
+                    onClick={() => {
+                      toast.success(`Added ${selectedActivities.length} activities to your search!`);
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+            
             <Separator orientation="vertical" className="mx-2 h-4" />
-            <Button
-              variant="ghost"
-              className="flex items-center gap-1 text-xs text-gray-600"
-              size="sm"
-              onClick={() => {
-                toast.success("Adjusting your budget range!");
-              }}
-            >
-              <PlusCircle className="h-3 w-3" /> 
-              <span>Adjust budget</span>
-            </Button>
+            
+            {/* Budget Button */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-xs text-gray-600"
+                  size="sm"
+                >
+                  <DollarSign className="h-3 w-3" /> 
+                  <span>Adjust budget</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="rounded-t-xl px-4 py-6">
+                <SheetHeader className="mb-4 text-left">
+                  <SheetTitle>Set Your Budget</SheetTitle>
+                  <SheetDescription>Select budget range per person</SheetDescription>
+                </SheetHeader>
+                <div className="space-y-6">
+                  <div className="flex justify-between">
+                    <p className="font-medium">${budgetRange.min}</p>
+                    <p className="font-medium">${budgetRange.max}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button 
+                      className="bg-black text-white hover:bg-black/90" 
+                      onClick={() => handleSetBudget(1000, 3000)}
+                    >
+                      Economy ($1,000 - $3,000)
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => handleSetBudget(3000, 5000)}
+                    >
+                      Standard ($3,000 - $5,000)
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => handleSetBudget(5000, 8000)}
+                    >
+                      Premium ($5,000 - $8,000)
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => handleSetBudget(8000, 15000)}
+                    >
+                      Luxury ($8,000+)
+                    </Button>
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <Button 
+                    className="bg-black text-white hover:bg-black/90"
+                    onClick={() => {
+                      toast.success(`Budget set to $${budgetRange.min} - $${budgetRange.max} per person`);
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+            
             <Separator orientation="vertical" className="mx-2 h-4" />
-            <Button
-              variant="ghost"
-              className="flex items-center gap-1 text-xs text-gray-600"
-              size="sm"
-              onClick={() => {
-                toast.success("Showing alternative dates!");
-              }}
-            >
-              <PlusCircle className="h-3 w-3" /> 
-              <span>Alternative dates</span>
-            </Button>
+            
+            {/* Alternative Dates Button */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-xs text-gray-600"
+                  size="sm"
+                >
+                  <Calendar className="h-3 w-3" /> 
+                  <span>Alternative dates</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="end">
+                <div className="space-y-4">
+                  <h3 className="font-medium">Available Alternative Dates</h3>
+                  <div className="space-y-2">
+                    {alternativeDates.map((date, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => handleSelectDate(date)}
+                      >
+                        {date}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="pt-2">
+                    <Button 
+                      className="w-full bg-black text-white hover:bg-black/90"
+                      onClick={() => {
+                        toast.success("Showing more date options!");
+                      }}
+                    >
+                      See More Dates
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
