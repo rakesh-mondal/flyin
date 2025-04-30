@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Mic } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
+import { GlowEffect } from './ui/glow-effect';
 
 const flightSuggestions = [
   { id: 1, title: 'Cultural Dubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
@@ -100,19 +102,29 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
           )}
         >
           <div className="relative">
+            {isSearchFocused && (
+              <GlowEffect
+                colors={['#0894FF', '#C959DD', '#FF2E54', '#FF9004']} 
+                mode="static"
+                blur="medium"
+                scale={1.05}
+                className="rounded-full opacity-60"
+              />
+            )}
             <Input
               type="text"
               placeholder={currentPlaceholder}
               className={cn(
-                "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg",
-                "placeholder:text-gray-500 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/50",
+                "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
+                "placeholder:text-gray-500 focus:outline-none",
+                isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-2 focus:ring-primary/50" : "border-gray-200",
               )}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
             />
-            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 space-x-1">
+            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 space-x-1 z-20">
               <Button 
                 type="button" 
                 size="icon" 
