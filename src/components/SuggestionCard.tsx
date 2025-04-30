@@ -32,13 +32,12 @@ export default function SuggestionCard({ title, image, type, price, departure, o
       {/* Background image with fallback */}
       {!imageError ? (
         <>
-          <div 
-            className={cn(
-              "absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105",
-              !imageLoaded && "hidden"
-            )}
-            style={{ backgroundImage: `url(${image})` }}
-          />
+          {imageLoaded && (
+            <div 
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+              style={{ backgroundImage: `url(${image})` }}
+            />
+          )}
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
               <ImageIcon className="h-8 w-8 animate-pulse text-gray-400" />
