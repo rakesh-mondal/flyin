@@ -15,7 +15,8 @@ interface TripCurationProps {
   onViewTrip: (trip: any) => void;
 }
 
-export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCurationProps) {
+export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCurationProps) {
+  console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');

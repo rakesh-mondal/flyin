@@ -92,6 +92,8 @@ interface TripListProps {
 }
 
 const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
+  console.log('TripList rendering - loading state:', loading);
+  
   if (loading) {
     return (
       <div className="space-y-6">

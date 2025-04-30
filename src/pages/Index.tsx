@@ -51,6 +51,10 @@ const Index = () => {
     }
   };
 
+  // Add console logs to help with debugging
+  console.log('Current view:', currentView);
+  console.log('Search query:', searchQuery);
+
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
       {currentView === 'home' && (

@@ -52,14 +52,19 @@ interface FlightInsightsProps {
 }
 
 export default function FlightInsights({ insights }: FlightInsightsProps) {
+  console.log('FlightInsights rendering with insights:', insights);
   return (
     <Card className="mb-4 border-dashed">
       <CardContent className="p-4">
         <h3 className="mb-3 text-sm font-medium">AI Flight Insights</h3>
         <div className="space-y-2">
-          {insights.map((insight, index) => (
-            <Insight key={index} type={insight.type} content={insight.content} />
-          ))}
+          {insights && insights.length > 0 ? (
+            insights.map((insight, index) => (
+              <Insight key={index} type={insight.type} content={insight.content} />
+            ))
+          ) : (
+            <div className="text-sm text-gray-500">No insights available</div>
+          )}
         </div>
       </CardContent>
     </Card>
