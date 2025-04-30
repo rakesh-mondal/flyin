@@ -34,20 +34,15 @@ export default function SuggestionCard({ title, image, type, price, departure, o
         </span>
         <h3 className="text-xl font-medium leading-tight">{title}</h3>
         
-        {price && (
-          <div className="mt-1 flex items-center space-x-2 text-sm">
-            <span className="font-semibold">${price}</span>
-            {departure && (
-              <>
-                <span className="text-white/70">•</span>
-                <div className="flex items-center">
-                  <PlaneTakeoff className="mr-1 h-3 w-3" />
-                  <span>{departure}</span>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <div className="mt-1 flex items-center space-x-2 text-sm">
+          {price && <span className="font-semibold">${price}</span>}
+          {departure && (
+            <div className="flex items-center">
+              <PlaneTakeoff className="mr-1 h-3 w-3" />
+              <span>{departure}</span>
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Hover effect */}
