@@ -1,37 +1,169 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
 import TripList from './TripList';
 import ChatInput from './ChatInput';
-import TripTools from './TripTools';
-import SelectedTripDetail from './SelectedTripDetail';
+// import SelectedTripDetail from './SelectedTripDetail';  // Commented out as we're not using it
 import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
+import { Button } from '../ui/button';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle } from 'lucide-react';
+import '@/styles/animations.css';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { cn } from '@/lib/utils';
 
 interface TripCurationProps {
   searchQuery: string;
   onBack: () => void;
   onViewTrip: (trip: any) => void;
+  isAiSearch?: boolean;
 }
 
-export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCurationProps) {
+// Search Summary Component
+const SearchSummary = ({
+  origin = "Bengaluru",
+  destination = "London",
+  departureDate,
+  returnDate,
+  passengers = 1,
+  cabinClass = "Economy",
+  onSwap,
+  onUpdate
+}: {
+  origin?: string;
+  destination?: string;
+  departureDate?: Date;
+  returnDate?: Date;
+  passengers?: number;
+  cabinClass?: string;
+  onSwap: () => void;
+  onUpdate: () => void;
+}) => {
+  const formatDate = (date?: Date) => {
+    if (!date) return "";
+    return new Intl.DateTimeFormat('en-US', { 
+      weekday: 'short', 
+      day: 'numeric', 
+      month: 'numeric' 
+    }).format(date);
+  };
+
+  return (
+    <div className="overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm">
+      <div className="flex w-full flex-col sm:flex-row items-stretch">
+        {/* Location Fields Wrapper */}
+        <div className="relative flex flex-[2] flex-col sm:flex-row">
+          {/* Origin input */}
+          <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="px-4 sm:px-6 py-2 sm:py-3">
+              <label className="block text-xs font-medium text-gray-500">
+                From
+              </label>
+              <div className="flex items-center">
+                <span className="text-sm truncate max-w-[120px] sm:max-w-full">{origin}</span>
+                <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Destination input */}
+          <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="px-4 sm:px-6 py-2 sm:py-3">
+              <label className="block text-xs font-medium text-gray-500">
+                To
+              </label>
+              <div className="flex items-center">
+                <span className="text-sm truncate max-w-[120px] sm:max-w-full">{destination}</span>
+                <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile swap button */}
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 sm:hidden">
+            <button
+              type="button"
+              onClick={onSwap}
+              className="rounded-full bg-white border border-gray-200 text-gray-600 p-1.5 shadow-sm hover:bg-gray-50"
+            >
+              <ArrowUpDown className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Desktop swap button */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden sm:block">
+            <button
+              type="button"
+              onClick={onSwap}
+              className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
+            >
+              <ArrowRightLeft className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Dates */}
+        <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <div className="px-4 sm:px-6 py-2 sm:py-3">
+            <label className="block text-xs font-medium text-gray-500">
+              Dates
+            </label>
+            <div className="flex items-center">
+              <span className="text-sm truncate">
+                {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Passengers & Class */}
+        <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <div className="px-4 sm:px-6 py-2 sm:py-3">
+            <label className="block text-xs font-medium text-gray-500">
+              Who
+            </label>
+            <div className="flex items-center">
+              <span className="text-sm truncate">{passengers} adult, {cabinClass}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Update button */}
+        <div className="flex items-center justify-center p-3 sm:px-4">
+          <Button 
+            onClick={onUpdate}
+            className="w-full sm:w-auto h-9 px-4 bg-black hover:bg-black/90 text-white rounded-full text-sm"
+          >
+            Update
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [thinking, setThinking] = useState('');
   const [userMessage, setUserMessage] = useState('');
-  const [budgetRange, setBudgetRange] = useState({ min: 1000, max: 5000 });
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
-  const [alternativeDates, setAlternativeDates] = useState<string[]>([
-    'June 5 - June 12, 2025',
-    'June 15 - June 22, 2025',
-    'July 1 - July 8, 2025'
-  ]);
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
+  
+  // Filter states
+  const [departureDate, setDepartureDate] = useState<Date | undefined>();
+  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
+  const [cabinClass, setCabinClass] = useState<string>('economy');
+  const [passengerCount, setPassengerCount] = useState(1);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Mock AI insights for Middle Eastern travel
   const mockInsights: InsightProps[] = [
@@ -49,7 +181,36 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     }
   ];
 
+  // Mock airlines for filter
+  const airlines = [
+    { id: 'emirates', name: 'Emirates' },
+    { id: 'etihad', name: 'Etihad Airways' },
+    { id: 'qatar', name: 'Qatar Airways' },
+    { id: 'turkish', name: 'Turkish Airlines' }
+  ];
+
+  // Mock cabin classes
+  const cabinClasses = [
+    { id: 'economy', name: 'Economy' },
+    { id: 'premium', name: 'Premium Economy' },
+    { id: 'business', name: 'Business' },
+    { id: 'first', name: 'First Class' }
+  ];
+
+  const tripListRef = useIntersectionObserver();
+  const filterRef = useIntersectionObserver();
+
   useEffect(() => {
+    if (!isAiSearch) {
+      setLoading(false);
+      const mockFlightData = mockTrips;
+      setTrips(mockFlightData);
+      if (mockFlightData.length > 0) {
+        setSelectedTrip(mockFlightData[0]);
+      }
+      return;
+    }
+
     const thinkingMessages = [
       "Finding the perfect Middle Eastern destinations for you...",
       "Checking availability for your dates...",
@@ -94,7 +255,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     }, 2500);
 
     return () => clearInterval(intervalId);
-  }, [searchQuery]);
+  }, [searchQuery, isAiSearch]);
 
   const handleSubmitMessage = () => {
     if (!userMessage.trim()) return;
@@ -106,95 +267,150 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     setUserMessage('');
   };
 
-  const handleSelectDate = (date: string) => {
-    toast.success(`Selected alternative dates: ${date}`, {
-      description: "Updating availability for the new dates...",
-    });
-  };
-
   const handleTripSelect = (trip: any) => {
-    setSelectedTrip(trip);
-  };
-
-  const handleProceedToBook = () => {
-    if (selectedTrip) {
-      onViewTrip(selectedTrip);
+    // Just call onViewTrip directly without setting selectedTrip
+    if (onViewTrip) {
+      onViewTrip(trip);
     }
   };
 
+  const handleSwapLocations = () => {
+    // Implement location swap logic
+    toast.success("Locations swapped!");
+  };
+
+  const handleUpdateSearch = () => {
+    // Implement search update logic
+    toast.success("Updating search results...");
+  };
+
   return (
-    <div className="flex h-screen w-full flex-col bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Header */}
-      <Header onBack={onBack} />
+      <div className="animate-fade-in">
+        <Header onBack={onBack} />
+      </div>
 
-      {/* Main content - Two-column layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Column - Filters & Flight List */}
-        <div className="flex flex-col w-full md:w-4/12 lg:w-3/12 overflow-hidden border-r border-gray-200 bg-white">
-          <FilterChips />
-          
-          <div className="flex-1 overflow-y-auto p-3">
-            <TripList 
-              trips={trips} 
-              loading={loading} 
-              onViewTrip={handleTripSelect} 
-              selectedTrip={selectedTrip}
-            />
-          </div>
-        </div>
-
-        {/* Right Column - Flight Details */}
-        <div className="hidden md:flex md:w-8/12 lg:w-9/12 flex-col overflow-hidden">
-          {/* AI message & chat */}
-          <AiMessage loading={loading} thinking={thinking} message={message} />
-          
-          {selectedTrip ? (
-            <div className="flex-1 overflow-y-auto p-4">
-              <SelectedTripDetail 
-                trip={selectedTrip} 
-                insights={mockInsights}
-                onProceedToBook={handleProceedToBook} 
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+          {/* Search Summary */}
+          <div className="mb-4 animate-scale-in">
+            <div className="rounded-xl">
+              <SearchSummary
+                origin="Bengaluru"
+                destination="London"
+                departureDate={departureDate}
+                returnDate={returnDate}
+                passengers={passengerCount}
+                cabinClass={cabinClass}
+                onSwap={handleSwapLocations}
+                onUpdate={handleUpdateSearch}
               />
             </div>
-          ) : (
-            <div className="flex items-center justify-center h-full bg-gray-100">
-              <p className="text-gray-500 text-lg">Select a trip to see details</p>
+          </div>
+
+          {/* AI Message */}
+          {(message || thinking) && isAiSearch && (
+            <div className="mb-4 animate-bounce-in">
+              <AiMessage 
+                message={message} 
+                thinking={thinking}
+                loading={loading} 
+              />
             </div>
           )}
-          
-          {/* Assistant input */}
-          <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3">
-            <ChatInput 
+
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+            {/* Left Column - Filters */}
+            <div className="order-2 lg:order-1 lg:col-span-3">
+              <div className="space-y-4 lg:sticky lg:top-4">
+                {/* Filter Chips */}
+                <div 
+                  ref={filterRef.elementRef}
+                  className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
+                >
+                  <div className="rounded-xl mb-4">
+                    <FilterChips
+                      selectedAirlines={selectedAirlines}
+                      onAirlinesChange={setSelectedAirlines}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Trip List */}
+            <div className="order-1 lg:order-2 lg:col-span-9">
+              <div className="space-y-4">
+                {/* Trip List */}
+                <div 
+                  ref={tripListRef.elementRef}
+                  className={`reveal ${tripListRef.isVisible ? 'visible' : ''}`}
+                >
+                  <div className="rounded-xl">
+                    <TripList
+                      trips={trips}
+                      loading={loading}
+                      onViewTrip={handleTripSelect}
+                      selectedTrip={selectedTrip}
+                    />
+                  </div>
+                </div>
+
+                {/* Selected Trip Detail - Commented out as per requirement
+                {selectedTrip && (
+                  <div className="animate-scale-in">
+                    <div className="hover-shadow hover-scale rounded-xl transition-all">
+                      <SelectedTripDetail
+                        trip={selectedTrip}
+                        onProceedToBook={handleProceedToBook}
+                      />
+                    </div>
+                  </div>
+                )} */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Chat Input - Sticky Bottom */}
+      {isChatOpen ? (
+        <div className="sticky bottom-0 border-t border-gray-200 bg-white shadow-lg transition-all duration-300 ease-in-out transform mobile-slide-up active">
+          <div className="container mx-auto max-w-7xl p-4 animate-fade-in">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-medium">Ask AI Assistant</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-full hover:bg-gray-100"
+                onClick={() => setIsChatOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <ChatInput
               userMessage={userMessage}
               setUserMessage={setUserMessage}
               onSubmitMessage={handleSubmitMessage}
             />
-            <TripTools 
-              selectedActivities={selectedActivities}
-              setSelectedActivities={setSelectedActivities}
-              budgetRange={budgetRange}
-              setBudgetRange={setBudgetRange}
-              alternativeDates={alternativeDates}
-              handleSelectDate={handleSelectDate}
-            />
           </div>
         </div>
-
-        {/* Mobile view - Only show the selected trip if it's selected */}
-        {selectedTrip && (
-          <div className="fixed inset-0 z-50 md:hidden">
-            <div className="bg-white h-full">
-              <SelectedTripDetail 
-                trip={selectedTrip} 
-                insights={mockInsights}
-                onProceedToBook={handleProceedToBook} 
-                onBack={() => setSelectedTrip(null)}
-                isMobile={true}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+      ) : (
+        <Button
+          className={cn(
+            "fixed bottom-6 right-6 h-14 w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
+            "flex items-center justify-center transition-all duration-200 hover:scale-105",
+            "animate-bounce-in"
+          )}
+          size="icon"
+          onClick={() => setIsChatOpen(true)}
+        >
+          <MessageCircle className="h-6 w-6" />
+        </Button>
+      )}
     </div>
   );
 }

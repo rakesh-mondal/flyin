@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
@@ -113,6 +112,32 @@ interface TripListProps {
   selectedTrip?: any;
 }
 
+const LoadingSkeleton = () => (
+  <div className="space-y-4 p-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="rounded-lg border border-gray-200 p-4">
+        <div className="flex items-start space-x-4">
+          {/* Image skeleton */}
+          <div className="h-24 w-24 rounded-lg loading-skeleton"></div>
+          
+          {/* Content skeleton */}
+          <div className="flex-1 space-y-3">
+            <div className="h-6 w-3/4 rounded loading-skeleton"></div>
+            <div className="h-4 w-1/2 rounded loading-skeleton"></div>
+            <div className="flex items-center space-x-4">
+              <div className="h-4 w-24 rounded loading-skeleton"></div>
+              <div className="h-4 w-24 rounded loading-skeleton"></div>
+            </div>
+          </div>
+          
+          {/* Price skeleton */}
+          <div className="h-8 w-24 rounded loading-skeleton"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   console.log('TripList rendering - loading state:', loading);
   
@@ -121,20 +146,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   };
   
   if (loading) {
-    return (
-      <div className="space-y-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="overflow-hidden rounded-xl bg-white shadow-sm">
-            <div className="h-52 animate-pulse bg-gray-200"></div>
-            <div className="p-4">
-              <div className="h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
-              <div className="mt-2 h-4 w-1/2 animate-pulse rounded bg-gray-200"></div>
-              <div className="mt-4 h-4 w-1/3 animate-pulse rounded bg-gray-200"></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   return (

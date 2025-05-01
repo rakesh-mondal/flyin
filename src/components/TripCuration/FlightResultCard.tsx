@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Clock, Leaf, PlaneTakeoff, Heart, Share } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
@@ -52,9 +51,10 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
 
   return (
     <Card 
+      onClick={onClick}
       className={cn(
-        "mb-4 overflow-hidden border border-gray-200 hover:border-gray-300", 
-        isSelected ? "ring-1 ring-primary shadow-sm" : ""
+        "mb-4 overflow-hidden border border-gray-200 cursor-pointer",
+        isSelected ? "ring-2 ring-black shadow-sm" : ""
       )}
     >
       {/* Flight information section */}
@@ -88,7 +88,9 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
           <div className="border-b border-gray-200 pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="text-xl font-bold">{flight.departureTime} – {flight.arrivalTime}</div>
+                <div className="text-xl font-bold">
+                  {flight.departureTime} – {flight.arrivalTime}
+                </div>
                 {flight.tags && flight.tags.includes("Direct Flight") ? (
                   <Badge variant="outline" className="bg-purple-50 text-xs text-purple-600 border-none">
                     Direct
@@ -114,16 +116,20 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                   onError={handleImgError}
                 />
               ) : (
-                <span className="font-medium">{flight.airline}</span>
+                <span className="font-medium">
+                  {flight.airline}
+                </span>
               )}
             </div>
           </div>
           
-          {/* Return flight - would normally come from data, using similar structure */}
+          {/* Return flight */}
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="text-xl font-bold">19:50 – 19:20</div>
+                <div className="text-xl font-bold">
+                  19:50 – 19:20
+                </div>
                 <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
                   {flight.stops === 1 ? "1 stop" : `${flight.stops} stops`}
                 </Badge>
@@ -143,7 +149,9 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                   onError={handleImgError}
                 />
               ) : (
-                <span className="font-medium">{flight.airline}</span>
+                <span className="font-medium">
+                  {flight.airline}
+                </span>
               )}
             </div>
           </div>
@@ -155,15 +163,17 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
         
         {/* Right column for price and action */}
         <div className="bg-gray-50 p-4 flex flex-col items-center justify-center border-l border-gray-200 min-w-[180px]">
-          <div className="text-2xl font-bold">${flight.price}</div>
+          <div className="text-2xl font-bold">
+            ${flight.price}
+          </div>
           <div className="mb-1 text-xs text-gray-500">Economy</div>
           <Button 
             onClick={onClick}
             className={cn(
               "w-full rounded-md text-sm font-medium py-2 mt-2",
               isSelected 
-                ? "bg-gray-200 text-gray-800 hover:bg-gray-300" 
-                : "bg-orange-500 text-white hover:bg-orange-600"
+                ? "bg-gray-200 text-gray-800" 
+                : "bg-black text-white"
             )}
           >
             {isSelected ? "Selected" : "Select"}

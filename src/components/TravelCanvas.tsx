@@ -95,7 +95,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
           type="text"
           placeholder={currentPlaceholder}
           className={cn(
-            "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
+            "h-12 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
             "placeholder:text-gray-500 focus:outline-none",
             isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-1 focus:ring-primary/50" : "border border-gray-200",
           )}
@@ -147,7 +147,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
         </p>
 
         {/* Dual-mode Search Component */}
-        <DualModeSearch onSearch={onSearch}>
+        <DualModeSearch onSearch={onSearch} className="max-w-5xl mx-auto">
           {AISearchComponent}
         </DualModeSearch>
 

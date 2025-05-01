@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -33,50 +32,64 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-full bg-white border border-border shadow-sm relative">
+    <div className="overflow-hidden rounded-full bg-white border border-border shadow-sm">
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
-        {/* Origin input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-6 py-2">
-            <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
-              From
-            </label>
-            <div className="relative">
-              <input
-                id="origin"
-                type="text"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                placeholder="From?"
-                className="w-full border-none bg-transparent py-1 text-base outline-none"
-              />
-              {origin && (
-                <button
-                  type="button"
-                  onClick={clearOrigin}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
+        {/* Location Fields Group */}
+        <div className="relative flex flex-1 md:flex-[2]">
+          {/* Origin input */}
+          <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
+            <div className="px-6 py-2">
+              <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
+                From
+              </label>
+              <div className="relative">
+                <input
+                  id="origin"
+                  type="text"
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value)}
+                  placeholder="From?"
+                  className="w-full border-none bg-transparent py-1 text-base outline-none"
+                />
+                {origin && (
+                  <button
+                    type="button"
+                    onClick={clearOrigin}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Destination input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-6 py-2">
-            <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
-              To
-            </label>
-            <input
-              id="destination"
-              type="text"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              placeholder="To?"
-              className="w-full border-none bg-transparent py-1 text-base outline-none"
-            />
+          {/* Swap button - positioned relative to the location group */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            <button
+              type="button"
+              onClick={handleSwapLocations}
+              className="rounded-full bg-white p-2 shadow-sm border border-border hover:bg-gray-50"
+            >
+              <ArrowRightLeft className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Destination input */}
+          <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
+            <div className="px-6 py-2">
+              <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
+                To
+              </label>
+              <input
+                id="destination"
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="To?"
+                className="w-full border-none bg-transparent py-1 text-base outline-none"
+              />
+            </div>
           </div>
         </div>
 
@@ -122,20 +135,6 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           </Button>
         </div>
       </form>
-      
-      {/* Swap button positioned exactly on the border between From and To fields */}
-      <button
-        type="button"
-        onClick={handleSwapLocations}
-        className="absolute z-10 rounded-full bg-white p-2 shadow-sm border border-border hover:bg-gray-50"
-        style={{ 
-          left: '23%', 
-          top: '50%', 
-          transform: 'translate(-50%, -50%)',
-        }}
-      >
-        <ArrowRightLeft className="h-4 w-4" />
-      </button>
     </div>
   );
 }

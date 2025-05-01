@@ -1,13 +1,24 @@
-
 import React from 'react';
-import { Calendar, PlaneTakeoff, Hotel, DollarSign, Sliders } from 'lucide-react';
+import { Calendar, PlaneTakeoff, Hotel, DollarSign, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Separator } from '@/components/ui/separator';
+import { X } from 'lucide-react';
 
-const FilterChips = () => {
+interface FilterChipsProps {
+  selectedAirlines: string[];
+  onAirlinesChange: (airlines: string[]) => void;
+}
+
+const FilterChips = ({
+  selectedAirlines,
+  onAirlinesChange,
+}: FilterChipsProps) => {
+  const handleRemoveAirline = (airline: string) => {
+    onAirlinesChange(selectedAirlines.filter(a => a !== airline));
+  };
+
   return (
-    <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+    <div className="sticky top-0 z-10 bg-white border border-gray-200 rounded-xl shadow-sm">
       <div className="p-3 flex items-center justify-between">
         <div className="text-sm">
           <span className="font-medium">1577</span> of <span className="text-blue-600">2000</span> flights
@@ -117,6 +128,27 @@ const FilterChips = () => {
             <div className="absolute left-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
             <div className="absolute right-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
           </div>
+        </div>
+      </div>
+
+      {/* Airlines section */}
+      <div className="p-3 border-t border-gray-100">
+        <h3 className="text-sm font-medium mb-2">Airlines</h3>
+        <div className="flex flex-wrap gap-2">
+          {selectedAirlines.map(airline => (
+            <Button
+              key={airline}
+              variant="outline"
+              className="h-8 rounded-full bg-gray-50 px-3 text-sm"
+              onClick={() => handleRemoveAirline(airline)}
+            >
+              {airline}
+              <X className="ml-1 h-3 w-3" />
+            </Button>
+          ))}
+          {selectedAirlines.length === 0 && (
+            <span className="text-sm text-gray-500">No airlines selected</span>
+          )}
         </div>
       </div>
     </div>

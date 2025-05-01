@@ -1,17 +1,18 @@
-
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FlightSearchForm from './FlightSearchForm';
 import AnimatedStar from './AnimatedStar';
+import { cn } from '@/lib/utils';
 
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
   onSearch: (query: string) => void;
+  className?: string;
 }
 
-export default function DualModeSearch({ children, onSearch }: DualModeSearchProps) {
+export default function DualModeSearch({ children, onSearch, className }: DualModeSearchProps) {
   return (
-    <div className="w-full max-w-3xl">
+    <div className={cn("w-full", className)}>
       <Tabs defaultValue="fly" className="w-full">
         <TabsList className="flex w-full justify-center bg-transparent px-2">
           <TabsTrigger 
@@ -36,7 +37,7 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
         </TabsContent>
         
         <TabsContent value="ai" className="mt-4 min-h-[100px]">
-          <div className="h-[89px] flex items-center">
+          <div className="h-[72px] flex items-center">
             {children}
           </div>
         </TabsContent>

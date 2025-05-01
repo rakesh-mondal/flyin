@@ -1,169 +1,109 @@
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-import React, { useEffect, useRef } from 'react';
-import { PlaneTakeoff, PlaneLanding } from 'lucide-react';
+// Fix for default marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 interface FlightMapProps {
   departureCity: string;
   departureCode: string;
-  departureCoordinates?: [number, number];
   arrivalCity: string;
   arrivalCode: string;
-  arrivalCoordinates?: [number, number];
 }
 
-// Default coordinates for common cities
-const cityCoordinates: Record<string, [number, number]> = {
-  'JFK': [-73.7781, 40.6413], // New York JFK
-  'EWR': [-74.1745, 40.6895], // New York Newark
-  'DXB': [55.3644, 25.2532], // Dubai
-  'IST': [28.8146, 40.9768], // Istanbul
-  'DOH': [51.6081, 25.2609], // Doha
-  'CAI': [31.4056, 30.1219], // Cairo
-};
-
-const FlightMap = ({ 
-  departureCity, 
+export default function FlightMap({
+  departureCity,
   departureCode,
-  departureCoordinates,
-  arrivalCity, 
-  arrivalCode,
-  arrivalCoordinates
-}: FlightMapProps) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const planeRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  
-  // Use provided coordinates or fallback to our lookup table
-  const depCoords = departureCoordinates || cityCoordinates[departureCode] || [-74, 40.7];
-  const arrCoords = arrivalCoordinates || cityCoordinates[arrivalCode] || [55.2, 25.2];
-  
-  // Calculate flight path
-  useEffect(() => {
-    if (!mapRef.current || !planeRef.current) return;
-    
-    const mapWidth = mapRef.current.clientWidth;
-    const mapHeight = mapRef.current.clientHeight;
-    
-    // Simple mapping from coordinates to pixels
-    // This is a very simplified version - in a real app, you'd use a mapping library
-    const depX = ((depCoords[0] + 180) / 360) * mapWidth;
-    const depY = ((90 - depCoords[1]) / 180) * mapHeight;
-    const arrX = ((arrCoords[0] + 180) / 360) * mapWidth;
-    const arrY = ((90 - arrCoords[1]) / 180) * mapHeight;
-    
-    // Create the path element for the flight
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    const svgPath = `M ${depX} ${depY} Q ${(depX + arrX) / 2} ${Math.min(depY, arrY) - 50} ${arrX} ${arrY}`;
-    path.setAttribute('d', svgPath);
-    path.setAttribute('stroke', '#3b82f6');
-    path.setAttribute('stroke-width', '2');
-    path.setAttribute('stroke-dasharray', '5,5');
-    path.setAttribute('fill', 'transparent');
-    
-    // Add SVG to the map
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.style.position = 'absolute';
-    svg.style.top = '0';
-    svg.style.left = '0';
-    svg.style.width = '100%';
-    svg.style.height = '100%';
-    svg.style.pointerEvents = 'none';
-    svg.appendChild(path);
-    
-    mapRef.current.appendChild(svg);
-    
-    // Create animation for the plane
-    let progress = 0;
-    const plane = planeRef.current;
-    plane.style.position = 'absolute';
-    plane.style.transform = 'translate(-50%, -50%)';
-    
-    // Animation loop
-    const animatePlane = () => {
-      if (!plane) return;
-      
-      progress += 0.005;
-      if (progress > 1) progress = 0;
-      
-      // Calculate position along the curve
-      // Using a quadratic bezier curve
-      const t = progress;
-      const x = (1-t)*(1-t)*depX + 2*(1-t)*t*((depX + arrX) / 2) + t*t*arrX;
-      const y = (1-t)*(1-t)*depY + 2*(1-t)*t*(Math.min(depY, arrY) - 50) + t*t*arrY;
-      
-      // Rotate the plane to follow the path
-      const angle = Math.atan2(
-        y - ((1-t+0.01)*(1-t+0.01)*depY + 2*(1-t+0.01)*(t-0.01)*((depY + arrY) / 2 - 50) + (t-0.01)*(t-0.01)*arrY),
-        x - ((1-t+0.01)*(1-t+0.01)*depX + 2*(1-t+0.01)*(t-0.01)*((depX + arrX) / 2) + (t-0.01)*(t-0.01)*arrX)
-      ) * 180 / Math.PI;
-      
-      plane.style.left = `${x}px`;
-      plane.style.top = `${y}px`;
-      plane.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-      
-      animationRef.current = requestAnimationFrame(animatePlane);
-    };
-    
-    animationRef.current = requestAnimationFrame(animatePlane);
-    
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      if (mapRef.current && svg) {
-        mapRef.current.removeChild(svg);
-      }
-    };
-  }, [departureCode, arrivalCode, depCoords, arrCoords]);
-  
+  arrivalCity,
+  arrivalCode
+}: FlightMapProps) {
+  // Mock coordinates (in real app, these would come from an API)
+  const coordinates = {
+    departure: [12.9716, 77.5946], // Bengaluru coordinates
+    arrival: [51.5074, -0.1278], // London coordinates
+  };
+
   return (
-    <div className="relative h-64 w-full bg-sky-50 rounded-lg overflow-hidden">
-      <div ref={mapRef} className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80')] bg-cover bg-center">
-        {/* Departure marker */}
-        <div className="absolute" style={{
-          left: `${((depCoords[0] + 180) / 360) * 100}%`,
-          top: `${((90 - depCoords[1]) / 180) * 100}%`,
-          transform: 'translate(-50%, -50%)'
-        }}>
-          <div className="flex flex-col items-center">
-            <div className="bg-blue-500 text-white p-1 rounded-full">
-              <PlaneTakeoff className="h-4 w-4" />
-            </div>
-            <div className="bg-white px-2 py-0.5 rounded-md shadow-md mt-1 text-xs font-medium">
-              {departureCode}
-            </div>
-          </div>
-        </div>
-        
-        {/* Arrival marker */}
-        <div className="absolute" style={{
-          left: `${((arrCoords[0] + 180) / 360) * 100}%`,
-          top: `${((90 - arrCoords[1]) / 180) * 100}%`,
-          transform: 'translate(-50%, -50%)'
-        }}>
-          <div className="flex flex-col items-center">
-            <div className="bg-red-500 text-white p-1 rounded-full">
-              <PlaneLanding className="h-4 w-4" />
-            </div>
-            <div className="bg-white px-2 py-0.5 rounded-md shadow-md mt-1 text-xs font-medium">
-              {arrivalCode}
-            </div>
-          </div>
-        </div>
-        
-        {/* Animated plane */}
-        <div ref={planeRef} className="text-blue-600">
-          <div className="bg-white p-1 rounded-full shadow-md">
-            <PlaneTakeoff className="h-5 w-5" />
-          </div>
-        </div>
+    <div className="relative h-full w-full overflow-hidden rounded-lg">
+      <div className="absolute inset-0">
+        <MapContainer
+          center={[30, 0]} // Center the map between departure and arrival
+          zoom={2}
+          className="h-full w-full"
+          zoomControl={false}
+          attributionControl={false}
+          scrollWheelZoom={false}
+          dragging={false}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            className="opacity-50"
+          />
+          
+          {/* Departure Marker */}
+          <Marker position={coordinates.departure as [number, number]}>
+            <Popup>
+              <div className="text-sm">
+                <strong>{departureCity}</strong>
+                <br />
+                {departureCode}
+              </div>
+            </Popup>
+          </Marker>
+
+          {/* Arrival Marker */}
+          <Marker position={coordinates.arrival as [number, number]}>
+            <Popup>
+              <div className="text-sm">
+                <strong>{arrivalCity}</strong>
+                <br />
+                {arrivalCode}
+              </div>
+            </Popup>
+          </Marker>
+
+          {/* Flight path - this would be a curved line in the real app */}
+          <svg
+            className="absolute inset-0 z-[400] pointer-events-none"
+            style={{ width: '100%', height: '100%' }}
+          >
+            <defs>
+              <linearGradient id="flightPath" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style={{ stopColor: '#3B82F6', stopOpacity: 0.2 }} />
+                <stop offset="100%" style={{ stopColor: '#3B82F6', stopOpacity: 0.6 }} />
+              </linearGradient>
+            </defs>
+            <path
+              d={`M ${coordinates.departure[1]} ${coordinates.departure[0]} L ${coordinates.arrival[1]} ${coordinates.arrival[0]}`}
+              stroke="url(#flightPath)"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray="4 4"
+            />
+          </svg>
+        </MapContainer>
       </div>
-      
-      <div className="absolute bottom-2 left-2 bg-white/80 rounded px-2 py-1 text-xs font-medium">
-        {departureCity} to {arrivalCity}
+
+      {/* Map overlay with city names */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 text-white">
+        <div className="flex items-center justify-between text-sm">
+          <div>
+            <div className="font-medium">{departureCity}</div>
+            <div className="text-xs opacity-75">{departureCode}</div>
+          </div>
+          <div className="text-right">
+            <div className="font-medium">{arrivalCity}</div>
+            <div className="text-xs opacity-75">{arrivalCode}</div>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default FlightMap;
+}
