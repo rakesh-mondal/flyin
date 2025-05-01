@@ -6,6 +6,7 @@ import { Input } from './ui/input';
 import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
 import { GlowEffect } from './ui/glow-effect';
+import DualModeSearch from './DualModeSearch';
 
 const flightSuggestions = [
   { id: 1, title: 'Cultural Dubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
@@ -72,6 +73,59 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
     }
   };
 
+  // The AI search component that will be passed to the DualModeSearch
+  const AISearchComponent = (
+    <form 
+      onSubmit={handleSubmit} 
+      className={cn(
+        "w-full max-w-2xl transition-all duration-300",
+        isSearchFocused ? "scale-105" : ""
+      )}
+    >
+      <div className="relative">
+        {isSearchFocused && (
+          <GlowEffect
+            colors={['#0894FF', '#C959DD', '#FF2E54', '#FF9004']} 
+            mode="static"
+            blur="medium"
+            scale={1.05}
+            className="rounded-full opacity-60"
+          />
+        )}
+        <Input
+          type="text"
+          placeholder={currentPlaceholder}
+          className={cn(
+            "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
+            "placeholder:text-gray-500 focus:outline-none",
+            isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-1 focus:ring-primary/50" : "border border-gray-200",
+          )}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+        />
+        <div className="absolute right-3 top-1/2 flex -translate-y-1/2 space-x-1 z-20">
+          <Button 
+            type="button" 
+            size="icon" 
+            variant="ghost" 
+            className="h-10 w-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Mic className="h-5 w-5" />
+          </Button>
+          <Button 
+            type="submit" 
+            size="icon" 
+            className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/90"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </form>
+  );
+
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
       {/* Logo - repositioned to top left */}
@@ -93,56 +147,10 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
           Where's your next flight taking you?
         </p>
 
-        {/* Search bar */}
-        <form 
-          onSubmit={handleSubmit} 
-          className={cn(
-            "w-full max-w-2xl transition-all duration-300",
-            isSearchFocused ? "scale-105" : ""
-          )}
-        >
-          <div className="relative">
-            {isSearchFocused && (
-              <GlowEffect
-                colors={['#0894FF', '#C959DD', '#FF2E54', '#FF9004']} 
-                mode="static"
-                blur="medium"
-                scale={1.05}
-                className="rounded-full opacity-60"
-              />
-            )}
-            <Input
-              type="text"
-              placeholder={currentPlaceholder}
-              className={cn(
-                "h-14 w-full rounded-full bg-gray-100 px-6 pr-12 text-lg relative z-10",
-                "placeholder:text-gray-500 focus:outline-none",
-                isSearchFocused ? "bg-gray-50 border-transparent shadow-lg focus:ring-1 focus:ring-primary/50" : "border border-gray-200",
-              )}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
-            />
-            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 space-x-1 z-20">
-              <Button 
-                type="button" 
-                size="icon" 
-                variant="ghost" 
-                className="h-10 w-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-900"
-              >
-                <Mic className="h-5 w-5" />
-              </Button>
-              <Button 
-                type="submit" 
-                size="icon" 
-                className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/90"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </form>
+        {/* Dual-mode Search Component */}
+        <DualModeSearch onSearch={onSearch}>
+          {AISearchComponent}
+        </DualModeSearch>
 
         {/* Flight Suggestions */}
         <div className="mt-12 w-full max-w-5xl overflow-hidden">
