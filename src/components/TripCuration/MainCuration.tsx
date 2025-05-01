@@ -129,16 +129,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
 
       {/* Main content - Two-column layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Column - Chat & Flight List */}
-        <div className="flex flex-col w-full md:w-5/12 lg:w-5/12 overflow-hidden border-r border-gray-200">
-          {/* AI message */}
-          <AiMessage loading={loading} thinking={thinking} message={message} />
-
-          {/* Filter chips */}
+        {/* Left Column - Filters & Flight List */}
+        <div className="flex flex-col w-full md:w-4/12 lg:w-3/12 overflow-hidden border-r border-gray-200 bg-white">
           <FilterChips />
-
-          {/* Trip proposals */}
-          <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
+          
+          <div className="flex-1 overflow-y-auto p-3">
             <TripList 
               trips={trips} 
               loading={loading} 
@@ -146,6 +141,26 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
               selectedTrip={selectedTrip}
             />
           </div>
+        </div>
+
+        {/* Right Column - Flight Details */}
+        <div className="hidden md:flex md:w-8/12 lg:w-9/12 flex-col overflow-hidden">
+          {/* AI message & chat */}
+          <AiMessage loading={loading} thinking={thinking} message={message} />
+          
+          {selectedTrip ? (
+            <div className="flex-1 overflow-y-auto p-4">
+              <SelectedTripDetail 
+                trip={selectedTrip} 
+                insights={mockInsights}
+                onProceedToBook={handleProceedToBook} 
+              />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full bg-gray-100">
+              <p className="text-gray-500 text-lg">Select a trip to see details</p>
+            </div>
+          )}
           
           {/* Assistant input */}
           <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3">
@@ -163,21 +178,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
               handleSelectDate={handleSelectDate}
             />
           </div>
-        </div>
-
-        {/* Right Column - Selected Trip Details */}
-        <div className="hidden md:flex md:w-7/12 lg:w-7/12 flex-col overflow-hidden">
-          {selectedTrip ? (
-            <SelectedTripDetail 
-              trip={selectedTrip} 
-              insights={mockInsights}
-              onProceedToBook={handleProceedToBook} 
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full bg-gray-100">
-              <p className="text-gray-500 text-lg">Select a trip to see details</p>
-            </div>
-          )}
         </div>
 
         {/* Mobile view - Only show the selected trip if it's selected */}

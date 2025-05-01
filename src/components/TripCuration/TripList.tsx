@@ -4,6 +4,8 @@ import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { Sliders } from 'lucide-react';
 
 // Mock flight data for Middle Eastern destinations with official airline logo URLs
 const mockFlights = [
@@ -14,18 +16,18 @@ const mockFlights = [
     airlineLogo: 'https://www.emirates.com/etc/designs/ecom/creative/emirates-logo.png',
     departureCity: 'New York',
     departureCode: 'JFK',
-    departureTime: '10:25 AM',
+    departureTime: '21:00',
     arrivalCity: 'Dubai',
     arrivalCode: 'DXB',
-    arrivalTime: '8:15 AM',
-    duration: '12h 50m',
-    stops: 0,
-    price: 1245,
+    arrivalTime: '07:05',
+    duration: '14h 35m',
+    stops: 1,
+    price: 65909,
     baseFare: 1050,
     taxes: 135,
     fees: 60,
     carbonFootprint: '2.3 tonnes',
-    tags: ['Direct Flight'],
+    tags: ['Eco Saver'],
     // Added properties for TripDetail component
     title: 'Cultural Dubai Experience',
     destination: 'Dubai, UAE',
@@ -34,53 +36,53 @@ const mockFlights = [
   },
   {
     id: 2,
-    airline: 'Turkish Airlines',
-    airlineCode: 'TK',
-    airlineLogo: 'https://www.turkishairlines.com/theme/img/thy_logo.png',
+    airline: 'Air India',
+    airlineCode: 'AI',
+    airlineLogo: 'https://airindia.com/content/dam/airindia/logos/airindia-logo.svg',
     departureCity: 'New York',
     departureCode: 'JFK',
-    departureTime: '7:15 PM',
-    arrivalCity: 'Istanbul',
-    arrivalCode: 'IST',
-    arrivalTime: '12:30 PM',
-    duration: '10h 15m',
+    departureTime: '14:20',
+    arrivalCity: 'Dubai',
+    arrivalCode: 'DXB',
+    arrivalTime: '20:20',
+    duration: '10h 30m',
     stops: 0,
-    price: 978,
+    price: 59035,
     baseFare: 820,
     taxes: 105,
     fees: 53,
     carbonFootprint: '1.9 tonnes',
-    tags: ['Lowest Price'],
+    tags: ['Direct Flight'],
     // Added properties for TripDetail component
-    title: 'Magical Istanbul',
-    destination: 'Istanbul, Turkey',
+    title: 'Business Dubai',
+    destination: 'Dubai, UAE',
     dates: 'July 5 - July 12, 2025',
-    image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?auto=format&fit=crop&q=80',
   },
   {
     id: 3,
-    airline: 'Qatar Airways',
-    airlineCode: 'QR',
-    airlineLogo: 'https://www.qatarairways.com/content/dam/images/renditions/horizontal-1/brand/logo/h1-qr-logo.png',
+    airline: 'Etihad Airways',
+    airlineCode: 'EY',
+    airlineLogo: 'https://www.etihad.com/content/dam/etihad/global/logo/etihad-logo.svg',
     departureCity: 'New York',
-    departureCode: 'EWR',
-    departureTime: '10:30 PM',
-    arrivalCity: 'Doha',
-    arrivalCode: 'DOH',
-    arrivalTime: '6:15 PM',
-    duration: '12h 45m',
-    stops: 0,
-    price: 1190,
+    departureCode: 'JFK',
+    departureTime: '10:00',
+    arrivalCity: 'Abu Dhabi',
+    arrivalCode: 'AUH',
+    arrivalTime: '07:00',
+    duration: '25h 30m',
+    stops: 1,
+    price: 45717,
     baseFare: 990,
     taxes: 140,
     fees: 60,
     carbonFootprint: '2.1 tonnes',
-    tags: ['Award Winning'],
+    tags: ['Cheapest'],
     // Added properties for TripDetail component
-    title: 'Magical Doha',
-    destination: 'Doha, Qatar',
+    title: 'Budget Abu Dhabi',
+    destination: 'Abu Dhabi, UAE',
     dates: 'September 8 - September 15, 2025',
-    image: 'https://images.unsplash.com/photos/a-kdjff86zE?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1512632578888-169bbcef7845?auto=format&fit=crop&q=80',
   }
 ];
 
@@ -136,20 +138,39 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   }
 
   return (
-    <div className="space-y-4">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-lg font-medium">Flight Options</h3>
-        <p className="text-sm text-gray-500">3 results found</p>
+    <div>
+      {/* Sort options */}
+      <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex">
+          <div className="flex-1 border-r border-gray-200 p-3 text-center">
+            <div className="text-sm text-gray-500">Cheapest</div>
+            <div className="font-bold">$45,717</div>
+            <div className="text-xs text-gray-500">28h 00m</div>
+          </div>
+          <div className="flex-1 border-r border-gray-200 p-3 text-center bg-blue-50 border-b-2 border-b-blue-600">
+            <div className="text-sm font-medium">Best</div>
+            <div className="font-bold">$59,035</div>
+            <div className="text-xs text-gray-500">10h 15m</div>
+          </div>
+          <div className="flex-1 p-3 text-center">
+            <div className="text-sm text-gray-500">Quickest</div>
+            <div className="font-bold">$59,035</div>
+            <div className="text-xs text-gray-500">10h 15m</div>
+          </div>
+        </div>
       </div>
-      
-      {mockFlights.map((flight) => (
-        <FlightResultCard 
-          key={flight.id}
-          flight={flight}
-          onClick={() => onViewTrip(enrichFlightData(flight))}
-          isSelected={isSelected(flight)}
-        />
-      ))}
+
+      {/* Flight cards list */}
+      <div className="space-y-4">
+        {mockFlights.map((flight) => (
+          <FlightResultCard 
+            key={flight.id}
+            flight={flight}
+            onClick={() => onViewTrip(enrichFlightData(flight))}
+            isSelected={isSelected(flight)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Calendar, Clock, Leaf, PlaneTakeoff } from 'lucide-react';
+import { Calendar, Clock, Leaf, PlaneTakeoff, Heart, Share } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 interface FlightResultCardProps {
   flight: {
@@ -33,149 +34,142 @@ interface FlightResultCardProps {
 
 export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
   const [imgError, setImgError] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   
   const handleImgError = () => {
     setImgError(true);
   };
 
+  const toggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSaved(!isSaved);
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Share functionality could be implemented here
+  };
+
   return (
     <Card 
       className={cn(
-        "mb-4 overflow-hidden transition-all hover:shadow-md", 
-        isSelected ? "ring-2 ring-primary shadow-md" : ""
+        "mb-4 overflow-hidden border border-gray-200 hover:border-gray-300", 
+        isSelected ? "ring-1 ring-primary shadow-sm" : ""
       )}
-      onClick={onClick}
     >
-      <div className={cn(
-        "border-b border-gray-100 bg-gray-50 p-3",
-        isSelected ? "bg-blue-50" : ""
-      )}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            {flight.airlineLogo && !imgError ? (
-              <img 
-                src={flight.airlineLogo} 
-                alt={flight.airline} 
-                className="h-8 w-8 object-contain"
-                onError={handleImgError}
-              />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-medium">
-                {flight.airlineCode}
-              </div>
-            )}
-            <span className="font-medium">{flight.airline}</span>
-          </div>
-          {flight.tags && flight.tags.length > 0 && (
-            <div className="flex gap-2">
-              {flight.tags.map((tag, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline"
-                  className={cn(
-                    "border-none text-xs font-normal",
-                    tag === "Lowest Price" ? "bg-emerald-50 text-emerald-600" : 
-                    tag === "Fastest Route" ? "bg-blue-50 text-blue-600" : 
-                    tag === "Eco-Friendly" ? "bg-green-50 text-green-600" :
-                    tag === "Direct Flight" ? "bg-purple-50 text-purple-600" :
-                    tag === "Award Winning" ? "bg-amber-50 text-amber-600" :
-                    "bg-gray-50 text-gray-600"
-                  )}
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Flight route info */}
-          <div className="flex flex-1 flex-col md:flex-row md:items-center md:space-x-8">
-            {/* Departure */}
-            <div className="mb-2 text-center md:mb-0 md:text-left">
-              <p className="text-lg font-bold">{flight.departureTime}</p>
-              <p className="text-sm text-gray-500">{flight.departureCode}</p>
-              <p className="text-xs text-gray-400">{flight.departureCity}</p>
-            </div>
+      {/* Flight information section */}
+      <div className="flex flex-col md:flex-row">
+        {/* Left column for flights */}
+        <div className="flex-grow p-4">
+          {/* Save and Share buttons */}
+          <div className="mb-4 flex items-center space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1.5 rounded-full"
+              onClick={toggleSave}
+            >
+              <Heart className={cn("h-4 w-4", isSaved ? "fill-red-500 text-red-500" : "")} />
+              <span>Save</span>
+            </Button>
             
-            {/* Flight path visualization */}
-            <div className="relative mb-2 flex flex-1 items-center md:mb-0">
-              <div className="relative flex w-full flex-col items-center">
-                <div className="flex w-full items-center">
-                  <div className="h-2 w-2 rounded-full bg-black"></div>
-                  <div className="h-[1px] flex-1 bg-gray-300"></div>
-                  {flight.stops > 0 && (
-                    <div className="h-2 w-2 rounded-full border border-gray-400 bg-white"></div>
-                  )}
-                  <div className="h-[1px] flex-1 bg-gray-300"></div>
-                  <div className="h-2 w-2 rounded-full bg-black"></div>
-                </div>
-                
-                <div className="mt-2 flex w-full justify-between">
-                  <div className="flex items-center space-x-1 text-xs text-gray-500">
-                    <Clock className="h-3 w-3" />
-                    <span>{flight.duration}</span>
-                  </div>
-                  
-                  <div className="text-xs text-gray-500">
-                    {flight.stops === 0 ? "Non-stop" : 
-                     flight.stops === 1 ? "1 stop" : 
-                     `${flight.stops} stops`}
-                  </div>
-                </div>
-                
-                {flight.layoverInfo && (
-                  <div className="mt-1 text-center text-xs text-gray-500">
-                    {flight.layoverInfo}
-                  </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1.5 rounded-full"
+              onClick={handleShare}
+            >
+              <Share className="h-4 w-4" />
+              <span>Share</span>
+            </Button>
+          </div>
+          
+          {/* Outbound flight */}
+          <div className="border-b border-gray-200 pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="text-xl font-bold">{flight.departureTime} – {flight.arrivalTime}</div>
+                {flight.tags && flight.tags.includes("Direct Flight") ? (
+                  <Badge variant="outline" className="bg-purple-50 text-xs text-purple-600 border-none">
+                    Direct
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
+                    {flight.stops === 1 ? "1 stop" : `${flight.stops} stops`}
+                  </Badge>
                 )}
               </div>
+              <div className="text-lg font-semibold">{flight.duration}</div>
             </div>
             
-            {/* Arrival */}
-            <div className="text-center md:text-left">
-              <p className="text-lg font-bold">{flight.arrivalTime}</p>
-              <p className="text-sm text-gray-500">{flight.arrivalCode}</p>
-              <p className="text-xs text-gray-400">{flight.arrivalCity}</p>
+            <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
+              <div>
+                {flight.departureCode} {flight.departureCity} – {flight.arrivalCode} {flight.arrivalCity}
+              </div>
+              {flight.airlineLogo && !imgError ? (
+                <img 
+                  src={flight.airlineLogo} 
+                  alt={flight.airline} 
+                  className="h-6 w-auto"
+                  onError={handleImgError}
+                />
+              ) : (
+                <span className="font-medium">{flight.airline}</span>
+              )}
             </div>
           </div>
           
-          {/* Price info */}
-          <div className="mt-4 rounded-lg bg-gray-50 p-3 md:mt-0 md:text-center">
-            <p className="text-2xl font-bold">${flight.price}</p>
-            <button className={cn(
-              "mt-2 w-full rounded-full px-4 py-2 text-sm font-medium text-white transition-colors",
-              isSelected ? "bg-primary hover:bg-primary/90" : "bg-black hover:bg-black/90"
-            )}>
-              {isSelected ? "Selected" : "Select"}
-            </button>
-            <div className="mt-2 text-center text-xs text-gray-500">
-              <button className="underline hover:text-gray-700">Fare details</button>
+          {/* Return flight - would normally come from data, using similar structure */}
+          <div className="mt-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="text-xl font-bold">19:50 – 19:20</div>
+                <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
+                  {flight.stops === 1 ? "1 stop" : `${flight.stops} stops`}
+                </Badge>
+              </div>
+              <div className="text-lg font-semibold">19h 00m</div>
             </div>
+            
+            <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
+              <div>
+                {flight.arrivalCode} {flight.arrivalCity} – {flight.departureCode} {flight.departureCity}
+              </div>
+              {flight.airlineLogo && !imgError ? (
+                <img 
+                  src={flight.airlineLogo} 
+                  alt={flight.airline} 
+                  className="h-6 w-auto"
+                  onError={handleImgError}
+                />
+              ) : (
+                <span className="font-medium">{flight.airline}</span>
+              )}
+            </div>
+          </div>
+          
+          <div className="mt-4 text-xs text-gray-500">
+            {flight.airline}
           </div>
         </div>
         
-        {/* Additional info row */}
-        <div className="mt-4 flex flex-wrap items-center justify-between border-t border-gray-100 pt-3 text-xs text-gray-500">
-          <div className="flex items-center space-x-1">
-            <PlaneTakeoff className="h-3 w-3" />
-            <span>{`${flight.airlineCode} ${Math.floor(Math.random() * 1000) + 1000}`}</span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <Calendar className="h-3 w-3" />
-            <span>Economy</span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <Leaf className="h-3 w-3" />
-            <span>{flight.carbonFootprint} CO₂</span>
-          </div>
+        {/* Right column for price and action */}
+        <div className="bg-gray-50 p-4 flex flex-col items-center justify-center border-l border-gray-200 min-w-[180px]">
+          <div className="text-2xl font-bold">${flight.price}</div>
+          <div className="mb-1 text-xs text-gray-500">Economy</div>
+          <Button 
+            onClick={onClick}
+            className={cn(
+              "w-full rounded-md text-sm font-medium py-2 mt-2",
+              isSelected 
+                ? "bg-gray-200 text-gray-800 hover:bg-gray-300" 
+                : "bg-orange-500 text-white hover:bg-orange-600"
+            )}
+          >
+            {isSelected ? "Selected" : "Select"}
+          </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }
