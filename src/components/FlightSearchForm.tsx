@@ -123,7 +123,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
       </form>
       
-      {/* Swap button positioned perfectly centered at the border between From and To */}
+      {/* Swap button positioned exactly in the center between From and To fields */}
       <button
         type="button"
         onClick={handleSwapLocations}
@@ -131,8 +131,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         style={{ 
           left: '50%', 
           top: '50%', 
-          transform: 'translate(-50%, -50%)',
-          marginLeft: '-12.5%' // Offset to center the button between the two fields
+          transform: 'translate(-150%, -50%)',
         }}
       >
         <ArrowRightLeft className="h-4 w-4" />
