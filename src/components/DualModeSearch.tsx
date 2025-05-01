@@ -16,13 +16,13 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
         <TabsList className="flex w-full justify-start bg-transparent px-2">
           <TabsTrigger 
             value="fly" 
-            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-primary data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
+            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
             Fly
           </TabsTrigger>
           <TabsTrigger 
             value="ai" 
-            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-primary data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
+            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
             Try Flyin AI
             <span className="ml-1.5">
