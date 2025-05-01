@@ -33,10 +33,10 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-md relative">
+    <div className="overflow-hidden rounded-xl bg-white border border-border shadow-sm relative">
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
         {/* Origin input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r">
+        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
           <div className="px-4 py-2">
             <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
               From
@@ -64,7 +64,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
 
         {/* Destination input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r">
+        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
           <div className="px-4 py-2">
             <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
               To
@@ -81,7 +81,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
 
         {/* Dates input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r">
+        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
           <div className="px-4 py-2">
             <label htmlFor="dates" className="block text-xs font-medium text-gray-500">
               Dates
@@ -97,7 +97,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
 
         {/* Passengers input */}
-        <div className="relative flex-1 border-b md:border-b-0 md:border-r">
+        <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
           <div className="px-4 py-2">
             <label htmlFor="passengers" className="block text-xs font-medium text-gray-500">
               Who
@@ -127,7 +127,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       <button
         type="button"
         onClick={handleSwapLocations}
-        className="absolute left-0 top-1/2 -translate-y-1/2 md:translate-x-0 z-10 md:left-[25%] rounded-full bg-white p-2 shadow-md hover:bg-gray-50"
+        className="absolute left-0 top-1/2 -translate-y-1/2 md:translate-x-0 z-10 md:left-[25%] rounded-full bg-white p-2 shadow-sm border border-border hover:bg-gray-50"
         style={{ transform: 'translate(50%, -50%)' }}
       >
         <ArrowRightLeft className="h-4 w-4" />
