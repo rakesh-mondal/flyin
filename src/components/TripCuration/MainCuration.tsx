@@ -6,6 +6,7 @@ import FilterChips from './FilterChips';
 import TripList from './TripList';
 import ChatInput from './ChatInput';
 import TripTools from './TripTools';
+import SelectedTripDetail from './SelectedTripDetail';
 import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 
@@ -29,6 +30,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     'June 15 - June 22, 2025',
     'July 1 - July 8, 2025'
   ]);
+  const [selectedTrip, setSelectedTrip] = useState<any>(null);
 
   useEffect(() => {
     const thinkingMessages = [
@@ -48,7 +50,13 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     setTimeout(() => {
       clearInterval(intervalId);
       setLoading(false);
-      setTrips(mockTrips);
+      const mockFlightData = mockTrips;
+      setTrips(mockFlightData);
+      
+      // Select the first trip by default when loaded
+      if (mockFlightData.length > 0) {
+        setSelectedTrip(mockFlightData[0]);
+      }
       
       // Set AI response based on search query
       if (searchQuery.toLowerCase().includes('dubai')) {
@@ -87,44 +95,86 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     });
   };
 
+  const handleTripSelect = (trip: any) => {
+    setSelectedTrip(trip);
+  };
+
+  const handleProceedToBook = () => {
+    if (selectedTrip) {
+      onViewTrip(selectedTrip);
+    }
+  };
+
   return (
     <div className="flex h-screen w-full flex-col bg-gray-50 text-gray-900">
       {/* Header */}
       <Header onBack={onBack} />
 
-      {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* AI message */}
-        <AiMessage loading={loading} thinking={thinking} message={message} />
+      {/* Main content - Two-column layout */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Column - Chat & Flight List */}
+        <div className="flex flex-col w-full md:w-5/12 lg:w-5/12 overflow-hidden border-r border-gray-200">
+          {/* AI message */}
+          <AiMessage loading={loading} thinking={thinking} message={message} />
 
-        {/* Filter chips */}
-        <FilterChips />
+          {/* Filter chips */}
+          <FilterChips />
 
-        {/* Trip proposals */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
-          <TripList 
-            trips={trips} 
-            loading={loading} 
-            onViewTrip={onViewTrip} 
-          />
+          {/* Trip proposals */}
+          <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
+            <TripList 
+              trips={trips} 
+              loading={loading} 
+              onViewTrip={handleTripSelect} 
+              selectedTrip={selectedTrip}
+            />
+          </div>
+          
+          {/* Assistant input */}
+          <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3">
+            <ChatInput 
+              userMessage={userMessage}
+              setUserMessage={setUserMessage}
+              onSubmitMessage={handleSubmitMessage}
+            />
+            <TripTools 
+              selectedActivities={selectedActivities}
+              setSelectedActivities={setSelectedActivities}
+              budgetRange={budgetRange}
+              setBudgetRange={setBudgetRange}
+              alternativeDates={alternativeDates}
+              handleSelectDate={handleSelectDate}
+            />
+          </div>
         </div>
-        
-        {/* Assistant input */}
-        <div className="sticky bottom-0 border-t border-gray-200 bg-white p-3">
-          <ChatInput 
-            userMessage={userMessage}
-            setUserMessage={setUserMessage}
-            onSubmitMessage={handleSubmitMessage}
-          />
-          <TripTools 
-            selectedActivities={selectedActivities}
-            setSelectedActivities={setSelectedActivities}
-            budgetRange={budgetRange}
-            setBudgetRange={setBudgetRange}
-            alternativeDates={alternativeDates}
-            handleSelectDate={handleSelectDate}
-          />
+
+        {/* Right Column - Selected Trip Details */}
+        <div className="hidden md:flex md:w-7/12 lg:w-7/12 flex-col overflow-hidden">
+          {selectedTrip ? (
+            <SelectedTripDetail 
+              trip={selectedTrip} 
+              onProceedToBook={handleProceedToBook} 
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full bg-gray-100">
+              <p className="text-gray-500 text-lg">Select a trip to see details</p>
+            </div>
+          )}
         </div>
+
+        {/* Mobile view - Only show the selected trip if it's selected */}
+        {selectedTrip && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            <div className="bg-white h-full">
+              <SelectedTripDetail 
+                trip={selectedTrip} 
+                onProceedToBook={handleProceedToBook} 
+                onBack={() => setSelectedTrip(null)}
+                isMobile={true}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

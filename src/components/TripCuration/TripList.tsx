@@ -5,6 +5,7 @@ import FlightResultCard from './FlightResultCard';
 import FlightInsights from './FlightInsights';
 import { InsightProps } from './FlightInsights';
 import { mockTrips } from './mockData';
+import { cn } from '@/lib/utils';
 
 // Mock flight data for Middle Eastern destinations with official airline logo URLs
 const mockFlights = [
@@ -105,9 +106,10 @@ interface TripListProps {
   trips?: any[];
   loading: boolean;
   onViewTrip: (trip: any) => void;
+  selectedTrip?: any;
 }
 
-const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
+const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   console.log('TripList rendering - loading state:', loading);
   
   // Create a mapping between flight data and mockTrips data for consistent experience
@@ -128,6 +130,10 @@ const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
     }
     
     return flight;
+  };
+
+  const isSelected = (flight: any) => {
+    return selectedTrip && selectedTrip.id === flight.id;
   };
   
   if (loading) {
@@ -161,6 +167,7 @@ const TripList = ({ trips, loading, onViewTrip }: TripListProps) => {
           key={flight.id}
           flight={flight}
           onClick={() => onViewTrip(enrichFlightData(flight))}
+          isSelected={isSelected(flight)}
         />
       ))}
     </div>

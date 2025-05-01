@@ -28,9 +28,10 @@ interface FlightResultCardProps {
     layoverInfo?: string;
   };
   onClick: () => void;
+  isSelected?: boolean;
 }
 
-export default function FlightResultCard({ flight, onClick }: FlightResultCardProps) {
+export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
   const [imgError, setImgError] = useState(false);
   
   const handleImgError = () => {
@@ -39,10 +40,16 @@ export default function FlightResultCard({ flight, onClick }: FlightResultCardPr
 
   return (
     <Card 
-      className="mb-4 overflow-hidden transition-all hover:shadow-md" 
+      className={cn(
+        "mb-4 overflow-hidden transition-all hover:shadow-md", 
+        isSelected ? "ring-2 ring-primary shadow-md" : ""
+      )}
       onClick={onClick}
     >
-      <div className="border-b border-gray-100 bg-gray-50 p-3">
+      <div className={cn(
+        "border-b border-gray-100 bg-gray-50 p-3",
+        isSelected ? "bg-blue-50" : ""
+      )}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {flight.airlineLogo && !imgError ? (
@@ -139,8 +146,11 @@ export default function FlightResultCard({ flight, onClick }: FlightResultCardPr
           {/* Price info */}
           <div className="mt-4 rounded-lg bg-gray-50 p-3 md:mt-0 md:text-center">
             <p className="text-2xl font-bold">${flight.price}</p>
-            <button className="mt-2 w-full rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black/90">
-              Select
+            <button className={cn(
+              "mt-2 w-full rounded-full px-4 py-2 text-sm font-medium text-white transition-colors",
+              isSelected ? "bg-primary hover:bg-primary/90" : "bg-black hover:bg-black/90"
+            )}>
+              {isSelected ? "Selected" : "Select"}
             </button>
             <div className="mt-2 text-center text-xs text-gray-500">
               <button className="underline hover:text-gray-700">Fare details</button>
