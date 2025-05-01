@@ -12,16 +12,22 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
   return (
     <div className="w-full max-w-3xl">
       <Tabs defaultValue="fly" className="w-full">
-        <TabsList className="mb-6 w-full bg-gray-100">
-          <TabsTrigger value="fly" className="w-1/2 data-[state=active]:bg-white">
+        <TabsList className="flex w-full justify-start border-b border-gray-200 bg-transparent px-2">
+          <TabsTrigger 
+            value="fly" 
+            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 data-[state=active]:border-black data-[state=active]:font-semibold data-[state=active]:text-gray-900"
+          >
             Fly
           </TabsTrigger>
-          <TabsTrigger value="ai" className="w-1/2 data-[state=active]:bg-white">
+          <TabsTrigger 
+            value="ai" 
+            className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 data-[state=active]:border-black data-[state=active]:font-semibold data-[state=active]:text-gray-900"
+          >
             Try Flyin AI
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="fly" className="mt-6 space-y-4">
+        <TabsContent value="fly" className="mt-6">
           <FlightSearchForm onSearch={onSearch} />
         </TabsContent>
         
