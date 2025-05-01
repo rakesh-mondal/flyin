@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import { Sliders } from 'lucide-react';
+import { Share2, Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Mock flight data for Middle Eastern destinations with official airline logo URLs
 const mockFlights = [
@@ -114,10 +115,26 @@ interface TripListProps {
 }
 
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
-  console.log('TripList rendering - loading state:', loading);
+  const [savedTrips, setSavedTrips] = useState<number[]>([]);
   
   const isSelected = (flight: any) => {
     return selectedTrip && selectedTrip.id === flight.id;
+  };
+  
+  const toggleSaveTrip = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (savedTrips.includes(id)) {
+      setSavedTrips(savedTrips.filter(tripId => tripId !== id));
+      toast.success("Trip removed from saved trips");
+    } else {
+      setSavedTrips([...savedTrips, id]);
+      toast.success("Trip saved to your collection");
+    }
+  };
+  
+  const shareTrip = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success("Trip sharing link copied to clipboard");
   };
   
   if (loading) {
@@ -163,12 +180,102 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       {/* Flight cards list */}
       <div className="space-y-4">
         {mockFlights.map((flight) => (
-          <FlightResultCard 
+          <div 
             key={flight.id}
-            flight={flight}
             onClick={() => onViewTrip(enrichFlightData(flight))}
-            isSelected={isSelected(flight)}
-          />
+            className={cn(
+              "overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md transition-all cursor-pointer",
+              isSelected(flight) && "ring-2 ring-blue-500"
+            )}
+          >
+            {/* Card header with image */}
+            <div className="relative h-40">
+              <img 
+                src={flight.image} 
+                alt={flight.destination} 
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute top-3 right-3 flex space-x-2">
+                <Button 
+                  size="icon" 
+                  variant="secondary" 
+                  className="h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white"
+                  onClick={(e) => toggleSaveTrip(flight.id, e)}
+                >
+                  <Heart 
+                    className={cn(
+                      "h-4 w-4", 
+                      savedTrips.includes(flight.id) ? "fill-red-500 text-red-500" : "text-gray-600"
+                    )} 
+                  />
+                </Button>
+                <Button 
+                  size="icon" 
+                  variant="secondary" 
+                  className="h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white"
+                  onClick={(e) => shareTrip(flight.id, e)}
+                >
+                  <Share2 className="h-4 w-4 text-gray-600" />
+                </Button>
+              </div>
+              <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+                <h3 className="text-xl font-medium">{flight.title}</h3>
+                <p className="text-sm text-white/90">{flight.destination}</p>
+              </div>
+            </div>
+
+            {/* Card body */}
+            <div className="p-4">
+              {/* Flight info */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <img 
+                    src={flight.airlineLogo} 
+                    alt={flight.airline} 
+                    className="h-6 object-contain" 
+                  />
+                  <span className="text-sm font-medium">{flight.airline}</span>
+                </div>
+                <div className="text-sm text-gray-500">{flight.dates}</div>
+              </div>
+              
+              {/* Route info */}
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="font-semibold">{flight.departureCode}</div>
+                  <div className="text-sm text-gray-500">{flight.departureTime}</div>
+                </div>
+                <div className="flex-1 mx-3">
+                  <div className="relative h-0.5 w-full bg-gray-200">
+                    <div className="absolute -top-1 left-1/2 h-2 w-2 -ml-1 rounded-full bg-gray-400"></div>
+                  </div>
+                  <div className="text-xs text-center mt-1 text-gray-500">{flight.duration}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{flight.arrivalCode}</div>
+                  <div className="text-sm text-gray-500">{flight.arrivalTime}</div>
+                </div>
+              </div>
+              
+              {/* Price and tags */}
+              <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {flight.tags.map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className="inline-block rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">Total price</div>
+                  <div className="font-bold text-lg">${(flight.price / 1000).toFixed(3)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </div>

@@ -42,6 +42,7 @@ const Index = () => {
   const handleBack = () => {
     if (currentView === 'detail') {
       setCurrentView('search');
+      setSelectedTrip(null);
     } else {
       setCurrentView('home');
     }
@@ -70,12 +71,6 @@ const Index = () => {
       setCurrentView('profile');
     }
   };
-
-  // Add console logs to help with debugging
-  console.log('Current view:', currentView);
-  console.log('Search query:', searchQuery);
-  console.log('Navigation visible:', navIsVisible);
-  console.log('Scroll direction:', scrollDirection);
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
