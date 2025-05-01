@@ -31,11 +31,11 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="fly" className="mt-6">
+        <TabsContent value="fly" className="mt-4">
           <FlightSearchForm onSearch={onSearch} />
         </TabsContent>
         
-        <TabsContent value="ai" className="mt-6">
+        <TabsContent value="ai" className="mt-4">
           {children}
         </TabsContent>
       </Tabs>
