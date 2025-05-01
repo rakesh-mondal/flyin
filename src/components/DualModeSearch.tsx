@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FlightSearchForm from './FlightSearchForm';
-import { Star } from 'lucide-react';
+import AnimatedStar from './AnimatedStar';
 
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
@@ -25,7 +25,9 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 data-[state=active]:border-black data-[state=active]:font-semibold data-[state=active]:text-gray-900"
           >
             Try Flyin AI
-            <Star className="ml-1.5 h-4 w-4 fill-yellow-400 stroke-yellow-500" />
+            <span className="ml-1.5">
+              <AnimatedStar />
+            </span>
           </TabsTrigger>
         </TabsList>
         

@@ -123,11 +123,11 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
       </form>
       
-      {/* Swap button - position fixed to be centered between origin and destination */}
+      {/* Swap button - positioned correctly between origin and destination */}
       <button
         type="button"
         onClick={handleSwapLocations}
-        className="absolute left-[25%] top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-2 shadow-md hover:bg-gray-50"
+        className="absolute left-0 md:left-1/4 top-1/2 md:top-1/2 z-10 translate-x-[50%] -translate-y-1/2 rounded-full bg-white p-2 shadow-md hover:bg-gray-50"
       >
         <ArrowRightLeft className="h-4 w-4" />
       </button>
