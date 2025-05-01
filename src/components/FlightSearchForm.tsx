@@ -129,7 +129,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         onClick={handleSwapLocations}
         className="absolute z-10 rounded-full bg-white p-2 shadow-sm border border-border hover:bg-gray-50"
         style={{ 
-          left: '20%', 
+          left: '23%', 
           top: '50%', 
           transform: 'translate(-50%, -50%)',
         }}
