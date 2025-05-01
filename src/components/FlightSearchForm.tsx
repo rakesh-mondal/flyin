@@ -123,15 +123,17 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
       </form>
       
-      {/* Swap button positioned directly on the divider between From and To fields */}
+      {/* Swap button positioned exactly in the middle between From and To fields */}
       <button
         type="button"
         onClick={handleSwapLocations}
         className="absolute z-10 rounded-full bg-white p-2 shadow-sm border border-border hover:bg-gray-50"
         style={{ 
-          left: '25%', 
-          top: '50%', 
+          left: '50%', 
+          top: '50%',
           transform: 'translate(-50%, -50%)',
+          marginTop: '-0.5rem',
+          marginLeft: '-12.5%'
         }}
       >
         <ArrowRightLeft className="h-4 w-4" />
