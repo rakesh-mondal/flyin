@@ -33,7 +33,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-md">
+    <div className="overflow-hidden rounded-xl bg-white shadow-md relative">
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
         {/* Origin input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r">
@@ -123,11 +123,12 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         </div>
       </form>
       
-      {/* Fixed swap button position */}
+      {/* Swap button positioned at the border between From and To */}
       <button
         type="button"
         onClick={handleSwapLocations}
-        className="absolute left-[12%] md:left-1/4 top-1/2 -translate-y-1/2 rounded-full bg-white p-2 shadow-md hover:bg-gray-50"
+        className="absolute left-0 top-1/2 -translate-y-1/2 md:translate-x-0 z-10 md:left-[25%] rounded-full bg-white p-2 shadow-md hover:bg-gray-50"
+        style={{ transform: 'translate(50%, -50%)' }}
       >
         <ArrowRightLeft className="h-4 w-4" />
       </button>
