@@ -128,38 +128,38 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
       {/* Logo - repositioned to top left */}
-      <div className="absolute left-6 top-6 z-20">
+      <div className="absolute left-4 sm:left-6 top-4 sm:top-6 z-20">
         <img 
           src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" 
           alt="Flyin.com" 
-          className="h-8 w-auto" 
+          className="h-6 sm:h-8 w-auto" 
         />
       </div>
       
       {/* Main content */}
-      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 text-gray-900">
+      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-gray-900">
         {/* Personalized greeting */}
-        <h1 className="mb-4 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center">
           Hello Rakesh,
         </h1>
-        <p className="mb-8 text-center text-lg font-light opacity-90 md:text-xl">
+        <p className="mb-6 sm:mb-8 text-center text-base sm:text-lg md:text-xl font-light opacity-90">
           Where's your next flight taking you?
         </p>
 
         {/* Dual-mode Search Component */}
-        <DualModeSearch onSearch={onSearch} className="max-w-5xl mx-auto">
+        <DualModeSearch onSearch={onSearch} className="w-full max-w-5xl mx-auto px-0 sm:px-4">
           {AISearchComponent}
         </DualModeSearch>
 
         {/* Flight Suggestions */}
-        <div className="mt-12 w-full max-w-5xl overflow-hidden">
-          <h2 className="mb-4 text-xl font-medium text-gray-900">Discover Middle Eastern Experiences</h2>
+        <div className="mt-8 sm:mt-12 w-full max-w-5xl overflow-hidden px-0 sm:px-4">
+          <h2 className="mb-4 text-lg sm:text-xl font-medium text-gray-900 px-4 sm:px-0">Discover Middle Eastern Experiences</h2>
           <div className="relative w-full">
             {/* Left gradient fade */}
-            <div className="absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+            <div className="absolute left-0 top-0 z-10 h-full w-8 sm:w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
             
             {/* Scrollable container */}
-            <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 px-4 sm:px-0 scrollbar-hide">
               {flightSuggestions.map(suggestion => (
                 <SuggestionCard 
                   key={suggestion.id}
@@ -173,7 +173,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
             </div>
             
             {/* Right gradient fade */}
-            <div className="absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+            <div className="absolute right-0 top-0 z-10 h-full w-8 sm:w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
           </div>
         </div>
       </div>
