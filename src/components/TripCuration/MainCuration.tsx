@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -164,6 +164,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [cabinClass, setCabinClass] = useState<string>('economy');
   const [passengerCount, setPassengerCount] = useState(1);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [departureTime, setDepartureTime] = useState<string | null>(null);
+  const [returnTime, setReturnTime] = useState<string | null>(null);
+  const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
 
   // Mock AI insights for Middle Eastern travel
   const mockInsights: InsightProps[] = [
@@ -199,6 +202,27 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   const tripListRef = useIntersectionObserver();
   const filterRef = useIntersectionObserver();
+
+  // Follow-up text suggestions
+  const followUpSuggestions = [
+    "Ask Flyin AI about flight options...",
+    "Need help finding the best deals?",
+    "Looking for travel recommendations?",
+    "Want to know about layover times?",
+    "Curious about baggage allowance?",
+    "Need help with travel dates?"
+  ];
+
+  // Rotate follow-up text every 3 seconds when chat is open
+  useEffect(() => {
+    if (!isChatOpen) return;
+
+    const intervalId = setInterval(() => {
+      setCurrentFollowUpIndex((prev) => (prev + 1) % followUpSuggestions.length);
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [isChatOpen]);
 
   useEffect(() => {
     if (!isAiSearch) {
@@ -284,6 +308,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     toast.success("Updating search results...");
   };
 
+  const chatCardRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close chat
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (chatCardRef.current && !chatCardRef.current.contains(event.target as Node)) {
+        setIsChatOpen(false);
+      }
+    }
+
+    if (isChatOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isChatOpen]);
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Header */}
@@ -335,6 +378,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     <FilterChips
                       selectedAirlines={selectedAirlines}
                       onAirlinesChange={setSelectedAirlines}
+                      departureRoute="DEL-BOM"
+                      returnRoute="BOM-DEL"
+                      onDepartureTimeChange={(time) => {
+                        setDepartureTime(time);
+                        toast.success("Departure time filter updated");
+                      }}
+                      onReturnTimeChange={(time) => {
+                        setReturnTime(time);
+                        toast.success("Return time filter updated");
+                      }}
                     />
                   </div>
                 </div>
@@ -358,39 +411,24 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     />
                   </div>
                 </div>
-
-                {/* Selected Trip Detail - Commented out as per requirement
-                {selectedTrip && (
-                  <div className="animate-scale-in">
-                    <div className="hover-shadow hover-scale rounded-xl transition-all">
-                      <SelectedTripDetail
-                        trip={selectedTrip}
-                        onProceedToBook={handleProceedToBook}
-                      />
-                    </div>
-                  </div>
-                )} */}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Chat Input - Sticky Bottom */}
+      {/* Chat Input - Floating Card */}
       {isChatOpen ? (
-        <div className="sticky bottom-0 border-t border-gray-200 bg-white shadow-lg transition-all duration-300 ease-in-out transform mobile-slide-up active">
-          <div className="container mx-auto max-w-7xl p-4 animate-fade-in">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-medium">Ask AI Assistant</h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-full hover:bg-gray-100"
-                onClick={() => setIsChatOpen(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+        <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-1/2 min-w-[500px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in">
+          {/* Subtle close button in top-right corner */}
+          <button
+            onClick={() => setIsChatOpen(false)}
+            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+          
+          <div className="p-6">
             <ChatInput
               userMessage={userMessage}
               setUserMessage={setUserMessage}

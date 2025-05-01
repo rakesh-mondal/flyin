@@ -1,20 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, PlaneTakeoff, Hotel, DollarSign, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
+import FlightTimings from './FlightTimings';
+import { cn } from '@/lib/utils';
 
 interface FilterChipsProps {
   selectedAirlines: string[];
   onAirlinesChange: (airlines: string[]) => void;
+  onDepartureTimeChange?: (time: string) => void;
+  onReturnTimeChange?: (time: string) => void;
+  departureRoute?: string;
+  returnRoute?: string;
 }
 
 const FilterChips = ({
   selectedAirlines,
   onAirlinesChange,
+  onDepartureTimeChange,
+  onReturnTimeChange,
+  departureRoute,
+  returnRoute,
 }: FilterChipsProps) => {
+  const [selectedStop, setSelectedStop] = useState<'non-stop' | '1-stop' | '2-more' | null>(null);
+
   const handleRemoveAirline = (airline: string) => {
     onAirlinesChange(selectedAirlines.filter(a => a !== airline));
+  };
+
+  const handleStopSelect = (stop: 'non-stop' | '1-stop' | '2-more') => {
+    setSelectedStop(selectedStop === stop ? null : stop);
+    toast.success(`${stop} filter ${selectedStop === stop ? 'removed' : 'applied'}`);
   };
 
   return (
@@ -79,56 +96,75 @@ const FilterChips = ({
       
       {/* Filter sections */}
       <div className="p-3 border-t border-gray-100">
-        <h3 className="text-sm font-medium mb-2">Stops</h3>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input type="checkbox" id="direct" className="h-4 w-4 rounded border-gray-300" defaultChecked />
-              <label htmlFor="direct" className="ml-2 text-sm">Direct</label>
-            </div>
-            <span className="text-sm">$59,035</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input type="checkbox" id="1stop" className="h-4 w-4 rounded border-gray-300" defaultChecked />
-              <label htmlFor="1stop" className="ml-2 text-sm">1 stop</label>
-            </div>
-            <span className="text-sm">$45,717</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input type="checkbox" id="2stops" className="h-4 w-4 rounded border-gray-300" defaultChecked />
-              <label htmlFor="2stops" className="ml-2 text-sm">2+ stops</label>
-            </div>
-            <span className="text-sm">$78,636</span>
-          </div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-medium">Stops</h3>
+          <button 
+            className="text-sm text-blue-600 hover:text-blue-700"
+            onClick={() => {
+              setSelectedStop(null);
+              toast.success("Stops filter reset");
+            }}
+          >
+            Reset
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-0 border border-gray-200 rounded-lg overflow-hidden">
+          <button 
+            className={cn(
+              "flex flex-col items-center py-3 px-2 transition-colors border-r border-gray-200",
+              selectedStop === 'non-stop' 
+                ? "bg-blue-50 text-blue-600" 
+                : "hover:bg-gray-50"
+            )}
+            onClick={() => handleStopSelect('non-stop')}
+          >
+            <span className="text-sm font-medium">Non stop</span>
+            <span className={cn(
+              "text-sm mt-1",
+              selectedStop === 'non-stop' ? "text-blue-600" : "text-gray-500"
+            )}>₹26,909</span>
+          </button>
+          <button 
+            className={cn(
+              "flex flex-col items-center py-3 px-2 transition-colors border-r border-gray-200",
+              selectedStop === '1-stop' 
+                ? "bg-blue-50 text-blue-600" 
+                : "hover:bg-gray-50"
+            )}
+            onClick={() => handleStopSelect('1-stop')}
+          >
+            <span className="text-sm font-medium">1 stop</span>
+            <span className={cn(
+              "text-sm mt-1",
+              selectedStop === '1-stop' ? "text-blue-600" : "text-gray-500"
+            )}>₹27,464</span>
+          </button>
+          <button 
+            className={cn(
+              "flex flex-col items-center py-3 px-2 transition-colors",
+              selectedStop === '2-more' 
+                ? "bg-blue-50 text-blue-600" 
+                : "hover:bg-gray-50"
+            )}
+            onClick={() => handleStopSelect('2-more')}
+          >
+            <span className="text-sm font-medium">2 & more</span>
+            <span className={cn(
+              "text-sm mt-1",
+              selectedStop === '2-more' ? "text-blue-600" : "text-gray-500"
+            )}>₹39,393</span>
+          </button>
         </div>
       </div>
       
+      {/* Flight Timings */}
       <div className="p-3 border-t border-gray-100">
-        <h3 className="text-sm font-medium mb-2">Times</h3>
-        <div className="flex mb-3 border border-gray-200 rounded-md">
-          <button className="flex-1 py-2 text-sm font-medium border-r border-gray-200 bg-white">Take-off</button>
-          <button className="flex-1 py-2 text-sm font-medium bg-white">Landing</button>
-        </div>
-        
-        <div className="mb-4">
-          <p className="text-sm mb-1">Take-off from BLR</p>
-          <p className="text-xs text-gray-500 mb-2">Tue 00:00 - Tue 23:30</p>
-          <div className="h-1.5 w-full bg-gray-200 relative rounded-full">
-            <div className="absolute left-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
-            <div className="absolute right-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
-          </div>
-        </div>
-        
-        <div className="mb-2">
-          <p className="text-sm mb-1">Take-off from LHR</p>
-          <p className="text-xs text-gray-500 mb-2">Fri 06:00 - Fri 22:30</p>
-          <div className="h-1.5 w-full bg-gray-200 relative rounded-full">
-            <div className="absolute left-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
-            <div className="absolute right-0 top-0 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
-          </div>
-        </div>
+        <FlightTimings
+          departureRoute={departureRoute}
+          returnRoute={returnRoute}
+          onDepartureTimeChange={onDepartureTimeChange}
+          onReturnTimeChange={onReturnTimeChange}
+        />
       </div>
 
       {/* Airlines section */}

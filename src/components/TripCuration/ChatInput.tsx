@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
@@ -11,8 +10,30 @@ interface ChatInputProps {
   setUserMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// Follow-up text suggestions
+const followUpSuggestions = [
+  "Ask Flyin AI about flight options...",
+  "Need help finding the best deals?",
+  "Looking for travel recommendations?",
+  "Want to know about layover times?",
+  "Curious about baggage allowance?",
+  "Need help with travel dates?"
+];
+
 const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputProps) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(followUpSuggestions[0]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentPlaceholder((prev) => {
+        const currentIndex = followUpSuggestions.indexOf(prev);
+        return followUpSuggestions[(currentIndex + 1) % followUpSuggestions.length];
+      });
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && userMessage.trim()) {
@@ -37,7 +58,7 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
         )}
         <input
           type="text"
-          placeholder="Ask a question..."
+          placeholder={currentPlaceholder}
           className={cn(
             "h-14 w-full rounded-full bg-gray-100 px-6 pr-16 text-lg",
             "placeholder:text-gray-500 focus:outline-none relative z-10",
