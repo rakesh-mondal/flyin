@@ -6,9 +6,9 @@ const AnimatedStar: React.FC = () => {
   return (
     <div className="relative inline-flex items-center justify-center">
       <span className="absolute animate-ping opacity-75">
-        <Sparkles className="h-3 w-3 text-yellow-400" />
+        <Sparkles className="h-3 w-3 text-black" />
       </span>
-      <Sparkles className="h-4 w-4 fill-yellow-400 text-yellow-500" />
+      <Sparkles className="h-4 w-4 fill-black text-black" />
     </div>
   );
 };
