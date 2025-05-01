@@ -10,9 +10,15 @@ interface TripCurationProps {
   searchQuery: string;
   onBack: () => void;
   onViewTrip: (trip: any) => void;
+  searchSource?: 'fly' | 'ai'; // New prop to determine if AI features should be shown
 }
 
-export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCurationProps) {
+export default function MainCuration({ 
+  searchQuery, 
+  onBack, 
+  onViewTrip,
+  searchSource = 'fly' // Default to 'fly' mode
+}: TripCurationProps) {
   const {
     trips,
     loading,
@@ -38,6 +44,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     onViewTrip(trip);
   };
 
+  const showAIFeatures = searchSource === 'ai';
+
   return (
     <div className="flex h-screen w-full flex-col bg-gray-50 text-gray-900">
       {/* Header */}
@@ -54,15 +62,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
             selectedTrip={selectedTrip}
             handleTripSelect={handleTripSelect}
             isChatOpen={isChatOpen}
+            showAIFeatures={showAIFeatures}
           />
           
-          {/* Chat floating button - only visible when chat is closed */}
-          {!isChatOpen && (
+          {/* Chat floating button - only visible when AI features are enabled and chat is closed */}
+          {showAIFeatures && !isChatOpen && (
             <ChatButton onClick={() => setIsChatOpen(true)} />
           )}
           
           {/* Chat drawer - displayed when chat is open */}
-          {isChatOpen && (
+          {showAIFeatures && isChatOpen && (
             <ChatDrawer
               message={message}
               userMessage={userMessage}

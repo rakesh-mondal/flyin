@@ -12,6 +12,7 @@ interface ContentAreaProps {
   selectedTrip: any;
   handleTripSelect: (trip: any) => void;
   isChatOpen: boolean;
+  showAIFeatures: boolean;
 }
 
 const ContentArea = ({
@@ -21,12 +22,13 @@ const ContentArea = ({
   trips,
   selectedTrip,
   handleTripSelect,
-  isChatOpen
+  isChatOpen,
+  showAIFeatures
 }: ContentAreaProps) => {
   return (
     <>
-      {/* AI welcome message */}
-      {!isChatOpen && (
+      {/* AI welcome message - only when AI features are enabled and chat is not open */}
+      {showAIFeatures && !isChatOpen && (
         <AiMessage loading={loading} thinking={thinking} message={message} />
       )}
       

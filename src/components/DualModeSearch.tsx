@@ -7,9 +7,10 @@ import AnimatedStar from './AnimatedStar';
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
   onSearch: (query: string) => void;
+  onAISearch: (query: string) => void; // Add this prop for AI searches
 }
 
-export default function DualModeSearch({ children, onSearch }: DualModeSearchProps) {
+export default function DualModeSearch({ children, onSearch, onAISearch }: DualModeSearchProps) {
   return (
     <div className="w-full max-w-3xl">
       <Tabs defaultValue="fly" className="w-full">
@@ -37,7 +38,7 @@ export default function DualModeSearch({ children, onSearch }: DualModeSearchPro
         
         <TabsContent value="ai" className="mt-4 min-h-[100px]">
           <div className="h-[89px] flex items-center">
-            {children}
+            {React.cloneElement(children as React.ReactElement, { onSearch: onAISearch })}
           </div>
         </TabsContent>
       </Tabs>

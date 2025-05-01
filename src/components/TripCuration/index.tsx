@@ -6,14 +6,21 @@ interface TripCurationProps {
   searchQuery: string;
   onBack: () => void;
   onViewTrip: (trip: any) => void;
+  searchSource?: 'fly' | 'ai';
 }
 
-export default function TripCuration({ searchQuery, onBack, onViewTrip }: TripCurationProps) {
+export default function TripCuration({ 
+  searchQuery, 
+  onBack, 
+  onViewTrip,
+  searchSource = 'fly'
+}: TripCurationProps) {
   return (
     <MainCuration 
       searchQuery={searchQuery} 
       onBack={onBack} 
-      onViewTrip={onViewTrip} 
+      onViewTrip={onViewTrip}
+      searchSource={searchSource}
     />
   );
 }
