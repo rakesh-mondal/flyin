@@ -33,7 +33,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white border border-border shadow-sm relative">
+    <div className="overflow-hidden rounded-xl bg-white border border-border shadow-sm relative w-full max-w-2xl">
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
         {/* Origin input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
@@ -116,7 +116,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         <div className="flex items-center justify-center p-2">
           <Button 
             type="submit" 
-            className="h-12 w-12 rounded-xl bg-orange-500 p-0 hover:bg-orange-600"
+            className="h-12 w-12 rounded-xl bg-black p-0 hover:bg-black/90"
           >
             <Search className="h-5 w-5" />
           </Button>
