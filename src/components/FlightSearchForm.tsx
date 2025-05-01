@@ -37,7 +37,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
         {/* Origin input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-4 py-2">
+          <div className="px-6 py-2">
             <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
               From
             </label>
@@ -65,7 +65,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
         {/* Destination input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-4 py-2">
+          <div className="px-6 py-2">
             <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
               To
             </label>
@@ -82,7 +82,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
         {/* Dates input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-4 py-2">
+          <div className="px-6 py-2">
             <label htmlFor="dates" className="block text-xs font-medium text-gray-500">
               Dates
             </label>
@@ -98,7 +98,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
         {/* Passengers input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">
-          <div className="px-4 py-2">
+          <div className="px-6 py-2">
             <label htmlFor="passengers" className="block text-xs font-medium text-gray-500">
               Who
             </label>
