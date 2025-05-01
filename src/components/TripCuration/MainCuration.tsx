@@ -9,6 +9,7 @@ import TripTools from './TripTools';
 import SelectedTripDetail from './SelectedTripDetail';
 import { mockTrips } from './mockData';
 import { toast } from 'sonner';
+import { InsightProps } from './FlightInsights';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -31,6 +32,22 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
     'July 1 - July 8, 2025'
   ]);
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
+
+  // Mock AI insights for Middle Eastern travel
+  const mockInsights: InsightProps[] = [
+    {
+      type: 'info',
+      content: 'The best time to visit Dubai is between November and March when the weather is pleasant.'
+    },
+    {
+      type: 'price-drop',
+      content: 'Flights to Istanbul are currently 15% lower than average for June.'
+    },
+    {
+      type: 'warning',
+      content: 'Summer temperatures in the Middle East can exceed 40°C (104°F). Consider booking activities in the morning or evening.'
+    }
+  ];
 
   useEffect(() => {
     const thinkingMessages = [
@@ -153,6 +170,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
           {selectedTrip ? (
             <SelectedTripDetail 
               trip={selectedTrip} 
+              insights={mockInsights}
               onProceedToBook={handleProceedToBook} 
             />
           ) : (
@@ -168,6 +186,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip }: TripCu
             <div className="bg-white h-full">
               <SelectedTripDetail 
                 trip={selectedTrip} 
+                insights={mockInsights}
                 onProceedToBook={handleProceedToBook} 
                 onBack={() => setSelectedTrip(null)}
                 isMobile={true}

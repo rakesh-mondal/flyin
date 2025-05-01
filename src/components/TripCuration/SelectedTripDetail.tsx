@@ -6,9 +6,12 @@ import { Separator } from '../ui/separator';
 import { PriceBreakdown } from '../trip-detail/PriceBreakdown';
 import FlightMap from './FlightMap';
 import { Card, CardContent } from '../ui/card';
+import FlightInsights from './FlightInsights';
+import { InsightProps } from './FlightInsights';
 
 interface SelectedTripDetailProps {
   trip: any;
+  insights?: InsightProps[];
   onProceedToBook: () => void;
   onBack?: () => void;
   isMobile?: boolean;
@@ -16,6 +19,7 @@ interface SelectedTripDetailProps {
 
 export default function SelectedTripDetail({ 
   trip, 
+  insights = [],
   onProceedToBook, 
   onBack,
   isMobile = false 
@@ -49,6 +53,13 @@ export default function SelectedTripDetail({
             {trip.dates || 'Dates not specified'}
           </p>
         </div>
+        
+        {/* AI Flight Insights */}
+        {insights && insights.length > 0 && (
+          <div className="mb-4">
+            <FlightInsights insights={insights} />
+          </div>
+        )}
         
         {/* Flight Map */}
         <div className="mb-4">

@@ -2,8 +2,6 @@
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
-import FlightInsights from './FlightInsights';
-import { InsightProps } from './FlightInsights';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
 
@@ -86,21 +84,25 @@ const mockFlights = [
   }
 ];
 
-// Mock AI insights for Middle Eastern travel
-const mockInsights: InsightProps[] = [
-  {
-    type: 'info',
-    content: 'The best time to visit Dubai is between November and March when the weather is pleasant.'
-  },
-  {
-    type: 'price-drop',
-    content: 'Flights to Istanbul are currently 15% lower than average for June.'
-  },
-  {
-    type: 'warning',
-    content: 'Summer temperatures in the Middle East can exceed 40°C (104°F). Consider booking activities in the morning or evening.'
+// Create a mapping between flight data and mockTrips data for consistent experience
+const enrichFlightData = (flight: any) => {
+  // Find the corresponding trip in mockTrips if it exists
+  const matchingTrip = mockTrips.find(trip => 
+    trip.destination === flight.destination || 
+    trip.title === flight.title
+  );
+  
+  if (matchingTrip) {
+    return {
+      ...flight,
+      activities: matchingTrip.activities,
+      hotel: matchingTrip.hotel,
+      duration: matchingTrip.duration
+    };
   }
-];
+  
+  return flight;
+};
 
 interface TripListProps {
   trips?: any[];
@@ -112,26 +114,6 @@ interface TripListProps {
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   console.log('TripList rendering - loading state:', loading);
   
-  // Create a mapping between flight data and mockTrips data for consistent experience
-  const enrichFlightData = (flight: any) => {
-    // Find the corresponding trip in mockTrips if it exists
-    const matchingTrip = mockTrips.find(trip => 
-      trip.destination === flight.destination || 
-      trip.title === flight.title
-    );
-    
-    if (matchingTrip) {
-      return {
-        ...flight,
-        activities: matchingTrip.activities,
-        hotel: matchingTrip.hotel,
-        duration: matchingTrip.duration
-      };
-    }
-    
-    return flight;
-  };
-
   const isSelected = (flight: any) => {
     return selectedTrip && selectedTrip.id === flight.id;
   };
@@ -155,8 +137,6 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
 
   return (
     <div className="space-y-4">
-      <FlightInsights insights={mockInsights} />
-      
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-lg font-medium">Flight Options</h3>
         <p className="text-sm text-gray-500">3 results found</p>
