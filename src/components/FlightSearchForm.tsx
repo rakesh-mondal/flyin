@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -33,7 +32,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white border border-border shadow-sm relative w-full max-w-2xl">
+    <div className="overflow-hidden rounded-xl bg-white border border-border shadow-sm relative">
       <form onSubmit={handleSubmit} className="flex w-full flex-col md:flex-row">
         {/* Origin input */}
         <div className="relative flex-1 border-b md:border-b-0 md:border-r border-border">

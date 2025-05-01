@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search, Mic } from 'lucide-react';
 import { Button } from './ui/button';
@@ -78,7 +77,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
     <form 
       onSubmit={handleSubmit} 
       className={cn(
-        "w-full max-w-2xl transition-all duration-300",
+        "w-full transition-all duration-300",
         isSearchFocused ? "scale-105" : ""
       )}
     >
