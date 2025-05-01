@@ -16,7 +16,6 @@ const Index = () => {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [activeTab, setActiveTab] = useState('home');
   const [navIsVisible, setNavIsVisible] = useState(true);
-  const [searchSource, setSearchSource] = useState<'fly' | 'ai'>('fly');
   
   const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
@@ -38,21 +37,11 @@ const Index = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setCurrentView('search');
-    // Default to 'fly' mode for regular searches
-    setSearchSource('fly');
-  };
-
-  const handleAISearch = (query: string) => {
-    setSearchQuery(query);
-    setCurrentView('search');
-    // Set to 'ai' mode for AI-powered searches
-    setSearchSource('ai');
   };
 
   const handleBack = () => {
     if (currentView === 'detail') {
       setCurrentView('search');
-      setSelectedTrip(null);
     } else {
       setCurrentView('home');
     }
@@ -82,10 +71,16 @@ const Index = () => {
     }
   };
 
+  // Add console logs to help with debugging
+  console.log('Current view:', currentView);
+  console.log('Search query:', searchQuery);
+  console.log('Navigation visible:', navIsVisible);
+  console.log('Scroll direction:', scrollDirection);
+
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
       {currentView === 'home' && (
-        <TravelCanvas onSearch={handleSearch} onAISearch={handleAISearch} />
+        <TravelCanvas onSearch={handleSearch} />
       )}
       
       {currentView === 'search' && (
@@ -93,7 +88,6 @@ const Index = () => {
           searchQuery={searchQuery} 
           onBack={handleBack}
           onViewTrip={handleViewTrip}
-          searchSource={searchSource}
         />
       )}
       
