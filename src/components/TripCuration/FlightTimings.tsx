@@ -49,14 +49,14 @@ export default function FlightTimings({
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 w-full rounded-lg border p-3 transition-all",
+        "flex flex-col items-center justify-center w-full rounded-lg border py-1.5 px-3 transition-all min-h-[60px]",
         isSelected 
           ? "border-blue-600 bg-blue-50 text-blue-600" 
           : "border-gray-200 bg-white hover:bg-gray-50"
       )}
     >
-      <option.icon className="h-5 w-5" />
-      <span className="text-sm font-medium">{option.label}</span>
+      <option.icon className="h-4 w-4 mb-0.5" />
+      <span className="text-sm font-medium text-center">{option.label}</span>
     </button>
   );
 
@@ -64,9 +64,9 @@ export default function FlightTimings({
     <div className="space-y-6">
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-medium">Flight Timings</h3>
+          <h3 className="text-sm font-semibold">Flight Timings</h3>
           <button 
-            className="text-sm text-blue-600 hover:text-blue-700"
+            className="text-sm font-medium text-blue-600 hover:text-blue-700"
             onClick={() => {
               setSelectedDeparture(null);
               setSelectedReturn(null);
@@ -78,7 +78,7 @@ export default function FlightTimings({
 
         <div className="space-y-4">
           <div>
-            <p className="mb-3 text-sm font-medium">Departing flight ({departureRoute})</p>
+            <p className="mb-2 text-sm font-medium">Departing flight ({departureRoute})</p>
             <div className="grid grid-cols-2 gap-2">
               {timeOptions.map((option) => (
                 <TimeButton
@@ -92,7 +92,7 @@ export default function FlightTimings({
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-medium">Returning flight ({returnRoute})</p>
+            <p className="mb-2 text-sm font-medium">Returning flight ({returnRoute})</p>
             <div className="grid grid-cols-2 gap-2">
               {timeOptions.map((option) => (
                 <TimeButton

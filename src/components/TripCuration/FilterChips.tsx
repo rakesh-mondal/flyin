@@ -48,58 +48,12 @@ const FilterChips = ({
         </div>
       </div>
       
-      <div className="p-3 flex-col border-t border-gray-100">
-        <h3 className="flex items-center text-sm font-medium mb-2">
-          <span>Smart Filters</span>
-          <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">BETA</span>
-        </h3>
-        
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-xs font-normal text-gray-900 hover:bg-gray-100"
-            onClick={() => toast.success("Date preferences updated!")}
-          >
-            <Calendar className="h-3 w-3" />
-            <span>June 2025</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-xs font-normal text-gray-900 hover:bg-gray-100"
-            onClick={() => toast.success("Flight preferences updated!")}
-          >
-            <PlaneTakeoff className="h-3 w-3" />
-            <span>Direct flights</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-xs font-normal text-gray-900 hover:bg-gray-100"
-            onClick={() => toast.success("Hotel preferences updated!")}
-          >
-            <Hotel className="h-3 w-3" />
-            <span>4+ Stars</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 rounded-full border-gray-300 bg-white text-xs font-normal text-gray-900 hover:bg-gray-100"
-            onClick={() => toast.success("Budget preferences updated!")}
-          >
-            <DollarSign className="h-3 w-3" />
-            <span>Budget</span>
-          </Button>
-        </div>
-      </div>
-      
       {/* Filter sections */}
       <div className="p-3 border-t border-gray-100">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base font-medium">Stops</h3>
+          <h3 className="text-sm font-semibold">Stops</h3>
           <button 
-            className="text-sm text-blue-600 hover:text-blue-700"
+            className="text-sm font-medium text-blue-600 hover:text-blue-700"
             onClick={() => {
               setSelectedStop(null);
               toast.success("Stops filter reset");
@@ -169,22 +123,138 @@ const FilterChips = ({
 
       {/* Airlines section */}
       <div className="p-3 border-t border-gray-100">
-        <h3 className="text-sm font-medium mb-2">Airlines</h3>
-        <div className="flex flex-wrap gap-2">
-          {selectedAirlines.map(airline => (
-            <Button
-              key={airline}
-              variant="outline"
-              className="h-8 rounded-full bg-gray-50 px-3 text-sm"
-              onClick={() => handleRemoveAirline(airline)}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold">Airlines</h3>
+          <button 
+            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            onClick={() => {
+              onAirlinesChange([]);
+              toast.success("Airlines filter reset");
+            }}
+          >
+            Reset
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {/* Multi-airline option */}
+          <label className="flex items-center w-full cursor-pointer group">
+            <div className="flex items-center flex-1">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                checked={selectedAirlines.includes('multi')}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    onAirlinesChange([...selectedAirlines, 'multi']);
+                  } else {
+                    onAirlinesChange(selectedAirlines.filter(a => a !== 'multi'));
+                  }
+                }}
+              />
+              <span className="ml-2 text-sm">Show multi-airline itineraries</span>
+            </div>
+          </label>
+
+          {/* Airlines list */}
+          <div className="space-y-3">
+            {/* Emirates */}
+            <label className="flex items-center w-full cursor-pointer group">
+              <div className="flex items-center flex-1">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  checked={selectedAirlines.includes('emirates')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onAirlinesChange([...selectedAirlines, 'emirates']);
+                    } else {
+                      onAirlinesChange(selectedAirlines.filter(a => a !== 'emirates'));
+                    }
+                  }}
+                />
+                <div className="ml-2 flex items-center justify-between flex-1">
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src="https://airhex.com/images/airline-logos/emirates.png"
+                      alt="Emirates"
+                      className="h-5 w-8 object-contain"
+                    />
+                    <span className="text-sm">Emirates</span>
+                  </div>
+                  <span className="text-xs text-gray-500">from ₹65,909</span>
+                </div>
+              </div>
+            </label>
+
+            {/* Air India */}
+            <label className="flex items-center w-full cursor-pointer group">
+              <div className="flex items-center flex-1">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  checked={selectedAirlines.includes('air-india')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onAirlinesChange([...selectedAirlines, 'air-india']);
+                    } else {
+                      onAirlinesChange(selectedAirlines.filter(a => a !== 'air-india'));
+                    }
+                  }}
+                />
+                <div className="ml-2 flex items-center justify-between flex-1">
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src="https://airhex.com/images/airline-logos/air-india.png"
+                      alt="Air India"
+                      className="h-5 w-8 object-contain"
+                    />
+                    <span className="text-sm">Air India</span>
+                  </div>
+                  <span className="text-xs text-gray-500">from ₹59,035</span>
+                </div>
+              </div>
+            </label>
+
+            {/* Etihad Airways */}
+            <label className="flex items-center w-full cursor-pointer group">
+              <div className="flex items-center flex-1">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  checked={selectedAirlines.includes('etihad')}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onAirlinesChange([...selectedAirlines, 'etihad']);
+                    } else {
+                      onAirlinesChange(selectedAirlines.filter(a => a !== 'etihad'));
+                    }
+                  }}
+                />
+                <div className="ml-2 flex items-center justify-between flex-1">
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src="https://airhex.com/images/airline-logos/etihad-airways.png"
+                      alt="Etihad Airways"
+                      className="h-5 w-8 object-contain"
+                    />
+                    <span className="text-sm">Etihad Airways</span>
+                  </div>
+                  <span className="text-xs text-gray-500">from ₹45,717</span>
+                </div>
+              </div>
+            </label>
+
+            {/* Show more button */}
+            <button
+              className="w-full text-blue-600 hover:text-blue-700 text-sm font-medium pt-1"
+              onClick={() => {
+                toast.info("Loading more airlines...");
+              }}
             >
-              {airline}
-              <X className="ml-1 h-3 w-3" />
-            </Button>
-          ))}
-          {selectedAirlines.length === 0 && (
-            <span className="text-sm text-gray-500">No airlines selected</span>
-          )}
+              Show 8 more airlines
+            </button>
+          </div>
         </div>
       </div>
     </div>
