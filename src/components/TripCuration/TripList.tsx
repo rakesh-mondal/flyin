@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightResultCard from './FlightResultCard';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import { Sliders } from 'lucide-react';
+import { Sliders, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Mock flight data for Middle Eastern destinations with official airline logo URLs
 const mockFlights = [
@@ -141,8 +142,14 @@ const LoadingSkeleton = () => (
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   console.log('TripList rendering - loading state:', loading);
   
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  
   const isSelected = (flight: any) => {
     return selectedTrip && selectedTrip.id === flight.id;
+  };
+
+  const handleTooltipClick = (tooltipId: string) => {
+    setActiveTooltip(activeTooltip === tooltipId ? null : tooltipId);
   };
   
   if (loading) {
@@ -154,20 +161,146 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       {/* Sort options */}
       <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex">
-          <div className="flex-1 border-r border-gray-200 p-3 text-center">
-            <div className="text-sm text-gray-500">Cheapest</div>
-            <div className="font-bold">$45,717</div>
-            <div className="text-xs text-gray-500">28h 00m</div>
+          <div className="flex-1 border-r border-gray-200 p-2.5 text-center relative">
+            <div className="absolute top-2 right-2">
+              <TooltipProvider>
+                <Tooltip open={activeTooltip === 'cheapest'} onOpenChange={() => handleTooltipClick('cheapest')}>
+                  <TooltipTrigger asChild>
+                    <button 
+                      className="focus:outline-none"
+                      onClick={() => handleTooltipClick('cheapest')}
+                    >
+                      <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+                        <Info className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <p className="font-semibold text-gray-900">Cheapest Flight Option</p>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Lowest price available for your route</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">May include longer layovers</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Best for budget-conscious travelers</p>
+                        </div>
+                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                          <span className="text-sm font-medium text-gray-900">Current best deal:</span>
+                          <span className="text-sm font-semibold text-blue-600">₹45,717</span>
+                        </div>
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="text-sm text-gray-500">Cheapest</div>
+              <div className="text-xs text-gray-500">28h 00m</div>
+            </div>
+            <div className="font-bold text-lg">₹45,717</div>
           </div>
-          <div className="flex-1 border-r border-gray-200 p-3 text-center bg-blue-50 border-b-2 border-b-blue-600">
-            <div className="text-sm font-medium">Best</div>
-            <div className="font-bold">$59,035</div>
-            <div className="text-xs text-gray-500">10h 15m</div>
+          <div className="flex-1 border-r border-gray-200 p-2.5 text-center bg-blue-50 border-b-2 border-b-blue-600 relative">
+            <div className="absolute top-2 right-2">
+              <TooltipProvider>
+                <Tooltip open={activeTooltip === 'best'} onOpenChange={() => handleTooltipClick('best')}>
+                  <TooltipTrigger asChild>
+                    <button 
+                      className="focus:outline-none"
+                      onClick={() => handleTooltipClick('best')}
+                    >
+                      <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+                        <Info className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <p className="font-semibold text-gray-900">AI Recommended Best Option</p>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Optimal balance of price and comfort</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Popular choice among travelers</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Good airline ratings and reviews</p>
+                        </div>
+                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                          <span className="text-sm font-medium text-gray-900">Current price:</span>
+                          <span className="text-sm font-semibold text-blue-600">₹59,035</span>
+                        </div>
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="text-sm font-medium">Best</div>
+              <div className="text-xs text-gray-500">10h 15m</div>
+            </div>
+            <div className="font-bold text-lg">₹59,035</div>
           </div>
-          <div className="flex-1 p-3 text-center">
-            <div className="text-sm text-gray-500">Quickest</div>
-            <div className="font-bold">$59,035</div>
-            <div className="text-xs text-gray-500">10h 15m</div>
+          <div className="flex-1 p-2.5 text-center relative">
+            <div className="absolute top-2 right-2">
+              <TooltipProvider>
+                <Tooltip open={activeTooltip === 'quickest'} onOpenChange={() => handleTooltipClick('quickest')}>
+                  <TooltipTrigger asChild>
+                    <button 
+                      className="focus:outline-none"
+                      onClick={() => handleTooltipClick('quickest')}
+                    >
+                      <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+                        <Info className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <p className="font-semibold text-gray-900">Fastest Travel Option</p>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Shortest total travel time</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Minimal layover duration</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
+                          <p className="text-sm text-gray-600 text-left">Ideal for time-sensitive travelers</p>
+                        </div>
+                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                          <span className="text-sm font-medium text-gray-900">Current duration:</span>
+                          <span className="text-sm font-semibold text-blue-600">10h 15m</span>
+                        </div>
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="text-sm text-gray-500">Quickest</div>
+              <div className="text-xs text-gray-500">10h 15m</div>
+            </div>
+            <div className="font-bold text-lg">₹59,035</div>
           </div>
         </div>
       </div>

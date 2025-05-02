@@ -40,12 +40,6 @@ const FilterChips = ({
         <div className="text-sm">
           <span className="font-medium">1577</span> of <span className="text-blue-600">2000</span> flights
         </div>
-        <div className="flex items-center">
-          <span className="text-sm text-gray-500 mr-2">Track prices</span>
-          <div className="h-5 w-10 bg-gray-200 rounded-full relative">
-            <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-sm"></div>
-          </div>
-        </div>
       </div>
       
       {/* Filter sections */}

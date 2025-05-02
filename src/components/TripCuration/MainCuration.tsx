@@ -331,28 +331,22 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Header */}
       <div className="animate-fade-in">
-        <Header onBack={onBack} />
+        <Header 
+          onBack={onBack}
+          origin="Bengaluru"
+          destination="London"
+          departureDate={departureDate}
+          returnDate={returnDate}
+          passengers={passengerCount}
+          cabinClass={cabinClass}
+          onSwap={handleSwapLocations}
+          onUpdate={handleUpdateSearch}
+        />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          {/* Search Summary */}
-          <div className="mb-4 animate-scale-in">
-            <div className="rounded-xl">
-              <SearchSummary
-                origin="Bengaluru"
-                destination="London"
-                departureDate={departureDate}
-                returnDate={returnDate}
-                passengers={passengerCount}
-                cabinClass={cabinClass}
-                onSwap={handleSwapLocations}
-                onUpdate={handleUpdateSearch}
-              />
-            </div>
-          </div>
-
           {/* AI Message */}
           {(message || thinking) && isAiSearch && (
             <div className="mb-4 animate-bounce-in">
