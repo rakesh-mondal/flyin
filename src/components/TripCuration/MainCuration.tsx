@@ -13,6 +13,7 @@ import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare } from 'lu
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
+import FlightOptionsSelector from './FlightOptionsSelector';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -167,6 +168,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [departureTime, setDepartureTime] = useState<string | null>(null);
   const [returnTime, setReturnTime] = useState<string | null>(null);
   const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
+  const [showOptionsSelector, setShowOptionsSelector] = useState(false);
 
   // Mock AI insights for Middle Eastern travel
   const mockInsights: InsightProps[] = [
@@ -326,6 +328,58 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isChatOpen]);
+
+  // Minimal mock data for one departure and one return date/route
+  const departureOptions = [
+    {
+      id: 'dep1',
+      departureTime: '10:00',
+      arrivalTime: '21:40',
+      departureCode: 'BLR',
+      arrivalCode: 'DXB',
+      duration: '13h 10m',
+      stops: 1,
+      date: new Date('2025-05-03'),
+      layoverInfo: '6h 55m in Colombo',
+    },
+    {
+      id: 'dep2',
+      departureTime: '03:05',
+      arrivalTime: '21:40',
+      departureCode: 'BLR',
+      arrivalCode: 'DXB',
+      duration: '20h 5m',
+      stops: 1,
+      date: new Date('2025-05-03'),
+      layoverInfo: '13h 50m in Colombo',
+    },
+  ];
+  const returnOptions = [
+    {
+      id: 'ret1',
+      departureTime: '23:00',
+      arrivalTime: '02:00',
+      departureCode: 'DXB',
+      arrivalCode: 'BLR',
+      duration: '25h 30m',
+      stops: 1,
+      date: new Date('2025-05-06'),
+      layoverInfo: '19h 40m in Colombo',
+    },
+    {
+      id: 'ret2',
+      departureTime: '01:00',
+      arrivalTime: '12:00',
+      departureCode: 'DXB',
+      arrivalCode: 'BLR',
+      duration: '11h 0m',
+      stops: 1,
+      date: new Date('2025-05-06'),
+      layoverInfo: '2h 30m in Mumbai',
+    },
+  ];
+  const [selectedDepartureId, setSelectedDepartureId] = useState<string | number>(departureOptions[0].id);
+  const [selectedReturnId, setSelectedReturnId] = useState<string | number>(returnOptions[0].id);
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">

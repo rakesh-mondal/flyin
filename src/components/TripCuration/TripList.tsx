@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
-import FlightResultCard from './FlightResultCard';
+import FlightListCard from './FlightListCard';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -156,6 +156,158 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     return <LoadingSkeleton />;
   }
 
+  // For demonstration, pair flights as round-trips (first as outbound, second as return)
+  const roundTripOptions = [
+    {
+      outboundFlight: {
+        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+        airlineName: mockFlights[0].airline,
+        departureTime: mockFlights[0].departureTime,
+        arrivalTime: mockFlights[0].arrivalTime,
+        departureCode: mockFlights[0].departureCode,
+        arrivalCode: mockFlights[0].arrivalCode,
+        duration: mockFlights[0].duration,
+        stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
+      },
+      returnFlight: {
+        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
+        airlineName: mockFlights[1].airline,
+        departureTime: mockFlights[1].departureTime,
+        arrivalTime: mockFlights[1].arrivalTime,
+        departureCode: mockFlights[1].departureCode,
+        arrivalCode: mockFlights[1].arrivalCode,
+        duration: mockFlights[1].duration,
+        stops: mockFlights[1].stops === 0 ? 'non-stop' : `${mockFlights[1].stops} stop${mockFlights[1].stops > 1 ? 's' : ''}`,
+      },
+      price: mockFlights[0].price.toString(),
+      currency: '₹',
+      stock: '1 Left at this price',
+      coupon: 'Book for ₹500 off using coupon FLY',
+      promoBanner: 'Enjoy up to ₹500 off, use code SPRING Know more',
+      baggageTag: 'Hand baggage only',
+      moreOptions: [
+        {
+          outbound: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[0].airline,
+            departureTime: '22:00',
+            arrivalTime: '06:00',
+            departureCode: mockFlights[0].departureCode,
+            arrivalCode: mockFlights[0].arrivalCode,
+            duration: '8h 00m',
+            stops: 'non-stop',
+          },
+          return: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[1].airline,
+            departureTime: '12:00',
+            arrivalTime: '20:00',
+            departureCode: mockFlights[1].departureCode,
+            arrivalCode: mockFlights[1].arrivalCode,
+            duration: '8h 00m',
+            stops: 'non-stop',
+          },
+        },
+        {
+          outbound: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[0].airline,
+            departureTime: '23:30',
+            arrivalTime: '07:30',
+            departureCode: mockFlights[0].departureCode,
+            arrivalCode: mockFlights[0].arrivalCode,
+            duration: '8h 00m',
+            stops: 'non-stop',
+          },
+          return: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[1].airline,
+            departureTime: '14:00',
+            arrivalTime: '22:00',
+            departureCode: mockFlights[1].departureCode,
+            arrivalCode: mockFlights[1].arrivalCode,
+            duration: '8h 00m',
+            stops: 'non-stop',
+          },
+        },
+      ],
+    },
+    {
+      outboundFlight: {
+        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
+        airlineName: mockFlights[2].airline,
+        departureTime: mockFlights[2].departureTime,
+        arrivalTime: mockFlights[2].arrivalTime,
+        departureCode: mockFlights[2].departureCode,
+        arrivalCode: mockFlights[2].arrivalCode,
+        duration: mockFlights[2].duration,
+        stops: mockFlights[2].stops === 0 ? 'non-stop' : `${mockFlights[2].stops} stop${mockFlights[2].stops > 1 ? 's' : ''}`,
+      },
+      returnFlight: {
+        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+        airlineName: mockFlights[0].airline,
+        departureTime: mockFlights[0].departureTime,
+        arrivalTime: mockFlights[0].arrivalTime,
+        departureCode: mockFlights[0].departureCode,
+        arrivalCode: mockFlights[0].arrivalCode,
+        duration: mockFlights[0].duration,
+        stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
+      },
+      price: mockFlights[2].price.toString(),
+      currency: '₹',
+      stock: '2 Left at this price',
+      coupon: 'Book for ₹400 off using coupon FLY',
+      promoBanner: 'Special deal for early birds!',
+      baggageTag: 'Hand baggage only',
+      moreOptions: [
+        {
+          outbound: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[2].airline,
+            departureTime: '09:00',
+            arrivalTime: '18:00',
+            departureCode: mockFlights[2].departureCode,
+            arrivalCode: mockFlights[2].arrivalCode,
+            duration: '9h 00m',
+            stops: '1 stop',
+          },
+          return: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[0].airline,
+            departureTime: '20:00',
+            arrivalTime: '05:00',
+            departureCode: mockFlights[0].departureCode,
+            arrivalCode: mockFlights[0].arrivalCode,
+            duration: '9h 00m',
+            stops: '1 stop',
+          },
+        },
+        {
+          outbound: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[2].airline,
+            departureTime: '13:00',
+            arrivalTime: '22:00',
+            departureCode: mockFlights[2].departureCode,
+            arrivalCode: mockFlights[2].arrivalCode,
+            duration: '9h 00m',
+            stops: '1 stop',
+          },
+          return: {
+            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
+            airlineName: mockFlights[0].airline,
+            departureTime: '23:00',
+            arrivalTime: '08:00',
+            departureCode: mockFlights[0].departureCode,
+            arrivalCode: mockFlights[0].arrivalCode,
+            duration: '9h 00m',
+            stops: '1 stop',
+          },
+        },
+      ],
+    },
+  ];
+
   return (
     <div>
       {/* Sort options */}
@@ -307,12 +459,20 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
 
       {/* Flight cards list */}
       <div className="space-y-4">
-        {mockFlights.map((flight) => (
-          <FlightResultCard 
-            key={flight.id}
-            flight={flight}
-            onClick={() => onViewTrip(enrichFlightData(flight))}
-            isSelected={isSelected(flight)}
+        {roundTripOptions.map((option, idx) => (
+          <FlightListCard
+            key={idx}
+            outboundFlight={option.outboundFlight}
+            returnFlight={option.returnFlight}
+            price={option.price}
+            currency={option.currency}
+            stock={option.stock}
+            coupon={option.coupon}
+            promoBanner={option.promoBanner}
+            baggageTag={option.baggageTag}
+            moreOptions={option.moreOptions}
+            onBook={() => onViewTrip(option)}
+            onDetails={() => onViewTrip(option)}
           />
         ))}
       </div>

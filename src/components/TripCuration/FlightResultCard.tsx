@@ -36,7 +36,6 @@ interface FlightResultCardProps {
 export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [showSimilarOptions, setShowSimilarOptions] = useState(false);
   
   const handleImgError = () => {
     setImgError(true);
@@ -50,11 +49,6 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Share functionality could be implemented here
-  };
-
-  const toggleSimilarOptions = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowSimilarOptions(!showSimilarOptions);
   };
 
   return (
@@ -193,32 +187,9 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
             >
               {isSelected ? "Selected" : "Select"}
             </Button>
-            {isSelected && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
-                onClick={toggleSimilarOptions}
-              >
-                Show options with same price
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            )}
           </div>
         </div>
       </Card>
-
-      {/* Similar Flight Options */}
-      {isSelected && showSimilarOptions && (
-        <div className="mt-2 border border-gray-100 rounded-lg p-6 bg-gray-50 shadow-sm">
-          <SimilarFlightOptions
-            departureOptions={similarFlightOptions.departureOptions}
-            returnOptions={similarFlightOptions.returnOptions}
-            onHideOptions={() => setShowSimilarOptions(false)}
-            selectedOutbound={`${flight.departureTime}-${flight.arrivalTime}`}
-          />
-        </div>
-      )}
     </div>
   );
 }
