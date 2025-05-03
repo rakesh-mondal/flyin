@@ -415,7 +415,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           {/* Main Grid Layout */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Filters */}
-            <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-100">
+            <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
               <div className="space-y-6 lg:sticky lg:top-4">
                 {/* Filter Chips */}
                 <div 

@@ -41,21 +41,21 @@ const FilterChips = ({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+    <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
       {/* Header with flight count */}
-      <div className="px-4 py-3 border-b border-gray-100">
+      <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <div className="text-sm">
+          <div className="text-base">
             <span className="font-semibold text-gray-900">1577</span>
             <span className="text-gray-500"> of </span>
-            <span className="text-blue-600 font-medium">2000</span>
+            <span className="font-semibold text-blue-600">2000</span>
             <span className="text-gray-500"> flights</span>
           </div>
         </div>
       </div>
       
       {/* Stops Section */}
-      <div className="border-b border-gray-100">
+      <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <PlaneTakeoff className="w-4 h-4 text-gray-500" />
@@ -82,7 +82,7 @@ const FilterChips = ({
               )}
               onClick={() => handleStopSelect('non-stop')}
             >
-              <span className="text-sm font-medium">Non stop</span>
+              <span className="text-sm font-medium">Direct</span>
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStop === 'non-stop' ? "text-blue-600" : "text-gray-500"
@@ -112,7 +112,7 @@ const FilterChips = ({
               )}
               onClick={() => handleStopSelect('2-more')}
             >
-              <span className="text-sm font-medium">2 & more</span>
+              <span className="text-sm font-medium">2+ stops</span>
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStop === '2-more' ? "text-blue-600" : "text-gray-500"
@@ -123,7 +123,7 @@ const FilterChips = ({
       </div>
       
       {/* Flight Timings Section */}
-      <div className="border-b border-gray-100">
+      <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-gray-500" />
