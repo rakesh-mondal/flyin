@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -71,7 +70,8 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+				sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+				display: ['Special Gothic Condensed One', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
