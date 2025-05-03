@@ -22,14 +22,22 @@ const timeOptions: TimeOption[] = [
   { icon: Moon, label: 'After 6 PM', value: 'after-6pm' },
 ];
 
+// Add color mapping for icons
+const iconColorMap: Record<string, string> = {
+  'before-6am': 'text-blue-500',
+  '6am-12pm': 'text-yellow-500',
+  '12pm-6pm': 'text-orange-500',
+  'after-6pm': 'text-purple-500',
+};
+
 export default function FlightTimings({
   departureRoute = 'DEL-BOM',
   returnRoute = 'BOM-DEL',
   onDepartureTimeChange,
   onReturnTimeChange
 }: FlightTimingsProps) {
-  const [selectedDeparture, setSelectedDeparture] = React.useState<string | null>(null);
-  const [selectedReturn, setSelectedReturn] = React.useState<string | null>(null);
+  const [selectedDeparture, setSelectedDeparture] = React.useState<string | null>('before-6am');
+  const [selectedReturn, setSelectedReturn] = React.useState<string | null>('before-6am');
 
   const handleDepartureSelect = (value: string) => {
     setSelectedDeparture(selectedDeparture === value ? null : value);
@@ -49,61 +57,43 @@ export default function FlightTimings({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center w-full rounded-lg border py-1.5 px-3 transition-all min-h-[60px]",
+        "flex flex-col items-center justify-center w-full rounded-lg border py-1 px-2 transition-all min-h-[48px]",
         isSelected 
-          ? "border-blue-600 bg-blue-50 text-blue-600" 
+          ? "border-blue-600 bg-blue-50 text-blue-600 shadow-sm" 
           : "border-gray-200 bg-white hover:bg-gray-50"
       )}
     >
-      <option.icon className="h-4 w-4 mb-0.5" />
-      <span className="text-sm font-medium text-center">{option.label}</span>
+      <option.icon className="h-4 w-4 mb-0.5 text-gray-500" />
+      <span className="text-xs font-medium text-center leading-tight">{option.label}</span>
     </button>
   );
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Flight Timings</h3>
-          <button 
-            className="text-sm font-medium text-blue-600 hover:text-blue-700"
-            onClick={() => {
-              setSelectedDeparture(null);
-              setSelectedReturn(null);
-            }}
-          >
-            Reset
-          </button>
+    <div className="space-y-3">
+      <div>
+        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">Departing flight <span className="font-normal text-gray-400">({departureRoute})</span></p>
+        <div className="grid grid-cols-2 gap-2">
+          {timeOptions.map((option) => (
+            <TimeButton
+              key={option.value}
+              option={option}
+              isSelected={selectedDeparture === option.value}
+              onClick={() => handleDepartureSelect(option.value)}
+            />
+          ))}
         </div>
-
-        <div className="space-y-4">
-          <div>
-            <p className="mb-2 text-sm font-medium">Departing flight ({departureRoute})</p>
-            <div className="grid grid-cols-2 gap-2">
-              {timeOptions.map((option) => (
-                <TimeButton
-                  key={option.value}
-                  option={option}
-                  isSelected={selectedDeparture === option.value}
-                  onClick={() => handleDepartureSelect(option.value)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-sm font-medium">Returning flight ({returnRoute})</p>
-            <div className="grid grid-cols-2 gap-2">
-              {timeOptions.map((option) => (
-                <TimeButton
-                  key={option.value}
-                  option={option}
-                  isSelected={selectedReturn === option.value}
-                  onClick={() => handleReturnSelect(option.value)}
-                />
-              ))}
-            </div>
-          </div>
+      </div>
+      <div>
+        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">Returning flight <span className="font-normal text-gray-400">({returnRoute})</span></p>
+        <div className="grid grid-cols-2 gap-2">
+          {timeOptions.map((option) => (
+            <TimeButton
+              key={option.value}
+              option={option}
+              isSelected={selectedReturn === option.value}
+              onClick={() => handleReturnSelect(option.value)}
+            />
+          ))}
         </div>
       </div>
     </div>
