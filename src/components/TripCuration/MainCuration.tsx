@@ -159,16 +159,47 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
   
   // Filter states
-  const [departureDate, setDepartureDate] = useState<Date | undefined>(new Date('2025-06-03'));
-  const [returnDate, setReturnDate] = useState<Date | undefined>(new Date('2025-06-06'));
+  const [searchParams, setSearchParams] = useState({
+    origin: '',
+    destination: '',
+    departureDate: undefined as Date | undefined,
+    returnDate: undefined as Date | undefined,
+    passengers: {
+      adults: 1,
+      children: 0,
+      infants: 0
+    },
+    cabinClass: 'economy',
+    isRoundTrip: true
+  });
+
+  // Additional state variables
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
-  const [cabinClass, setCabinClass] = useState<string>('economy');
-  const [passengerCount, setPassengerCount] = useState(1);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [departureTime, setDepartureTime] = useState<string | null>(null);
   const [returnTime, setReturnTime] = useState<string | null>(null);
   const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
   const [showOptionsSelector, setShowOptionsSelector] = useState(false);
+
+  // Parse search query when component mounts or searchQuery changes
+  useEffect(() => {
+    if (searchQuery) {
+      try {
+        const parsedQuery = JSON.parse(searchQuery);
+        setSearchParams({
+          origin: parsedQuery.origin,
+          destination: parsedQuery.destination,
+          departureDate: parsedQuery.departureDate ? new Date(parsedQuery.departureDate) : undefined,
+          returnDate: parsedQuery.returnDate ? new Date(parsedQuery.returnDate) : undefined,
+          passengers: parsedQuery.passengers,
+          cabinClass: parsedQuery.cabinClass,
+          isRoundTrip: parsedQuery.isRoundTrip
+        });
+      } catch (error) {
+        console.error('Error parsing search query:', error);
+      }
+    }
+  }, [searchQuery]);
 
   // Mock AI insights for Middle Eastern travel
   const mockInsights: InsightProps[] = [
@@ -301,12 +332,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   };
 
   const handleSwapLocations = () => {
-    // Implement location swap logic
+    setSearchParams(prev => ({
+      ...prev,
+      origin: prev.destination,
+      destination: prev.origin
+    }));
     toast.success("Locations swapped!");
   };
 
   const handleUpdateSearch = () => {
-    // Implement search update logic
+    // Here you would typically make an API call to update the search results
     toast.success("Updating search results...");
   };
 
@@ -387,12 +422,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       <div className="animate-fade-in">
         <Header 
           onBack={onBack}
-          origin="Bengaluru"
-          destination="London"
-          departureDate={departureDate}
-          returnDate={returnDate}
-          passengers={passengerCount}
-          cabinClass={cabinClass}
+          origin={searchParams.origin}
+          destination={searchParams.destination}
+          departureDate={searchParams.departureDate}
+          returnDate={searchParams.returnDate}
+          passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
+          cabinClass={searchParams.cabinClass}
           onSwap={handleSwapLocations}
           onUpdate={handleUpdateSearch}
         />
