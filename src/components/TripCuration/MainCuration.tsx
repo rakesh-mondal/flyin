@@ -345,6 +345,26 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     toast.success("Updating search results...");
   };
 
+  const handleResetSearch = () => {
+    setSearchParams({
+      origin: '',
+      destination: '',
+      departureDate: undefined,
+      returnDate: undefined,
+      passengers: {
+        adults: 1,
+        children: 0,
+        infants: 0
+      },
+      cabinClass: 'economy',
+      isRoundTrip: true
+    });
+    setSelectedAirlines([]);
+    setDepartureTime(null);
+    setReturnTime(null);
+    toast.success("Search parameters reset");
+  };
+
   const chatCardRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside to close chat
@@ -452,6 +472,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             {/* Left Column - Filters */}
             <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
               <div className="space-y-6 lg:sticky lg:top-4">
+                {/* Reset Button */}
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleResetSearch}
+                    className="text-gray-600 hover:text-gray-900 border-gray-200"
+                  >
+                    Reset All Filters
+                  </Button>
+                </div>
+
                 {/* Filter Chips */}
                 <div 
                   ref={filterRef.elementRef}
