@@ -26,11 +26,11 @@ const Header = ({
   onUpdate
 }: HeaderProps) => {
   const formatDate = (date?: Date) => {
-    if (!date) return "";
-    return new Intl.DateTimeFormat('en-US', { 
-      weekday: 'short', 
-      day: 'numeric', 
-      month: 'numeric' 
+    if (!date) return "--/--";
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'numeric',
     }).format(date);
   };
 
@@ -57,10 +57,7 @@ const Header = ({
                 <div className="relative flex flex-[1.5] flex-col sm:flex-row">
                   {/* Origin input */}
                   <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
-                    <div className="px-2 sm:px-3 py-1.5">
-                      <label className="block text-[10px] font-medium text-gray-500">
-                        From
-                      </label>
+                    <div className="px-2 sm:px-3 py-2.5">
                       <div className="flex items-center">
                         <span className="text-xs truncate max-w-[80px] sm:max-w-full">{origin}</span>
                         <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -72,10 +69,7 @@ const Header = ({
 
                   {/* Destination input */}
                   <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
-                    <div className="px-2 sm:px-3 py-1.5">
-                      <label className="block text-[10px] font-medium text-gray-500">
-                        To
-                      </label>
+                    <div className="px-2 sm:px-3 py-2.5">
                       <div className="flex items-center">
                         <span className="text-xs truncate max-w-[80px] sm:max-w-full">{destination}</span>
                         <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -110,13 +104,13 @@ const Header = ({
 
                 {/* Dates */}
                 <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="px-2 sm:px-3 py-1.5">
-                    <label className="block text-[10px] font-medium text-gray-500">
-                      Dates
-                    </label>
-                    <div className="flex items-center">
+                  <div className="px-2 sm:px-3 py-2.5">
+                    <div className="flex items-center gap-2">
                       <span className="text-xs truncate">
-                        {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
+                        {formatDate(departureDate)}
+                      </span>
+                      <span className="text-xs truncate bg-gray-200 rounded px-2 py-0.5">
+                        {formatDate(returnDate)}
                       </span>
                     </div>
                   </div>
@@ -124,10 +118,7 @@ const Header = ({
 
                 {/* Passengers & Class */}
                 <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="px-2 sm:px-3 py-1.5">
-                    <label className="block text-[10px] font-medium text-gray-500">
-                      Who
-                    </label>
+                  <div className="px-2 sm:px-3 py-2.5">
                     <div className="flex items-center">
                       <span className="text-xs truncate">{passengers} adult, {cabinClass}</span>
                     </div>

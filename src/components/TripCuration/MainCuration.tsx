@@ -59,9 +59,9 @@ const SearchSummary = ({
           {/* Origin input */}
           <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="px-4 sm:px-6 py-2 sm:py-3">
-              <label className="block text-xs font-medium text-gray-500">
+              {/* <label className="block text-xs font-medium text-gray-500">
                 From
-              </label>
+              </label> */}
               <div className="flex items-center">
                 <span className="text-sm truncate max-w-[120px] sm:max-w-full">{origin}</span>
                 <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -74,9 +74,9 @@ const SearchSummary = ({
           {/* Destination input */}
           <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="px-4 sm:px-6 py-2 sm:py-3">
-              <label className="block text-xs font-medium text-gray-500">
+              {/* <label className="block text-xs font-medium text-gray-500">
                 To
-              </label>
+              </label> */}
               <div className="flex items-center">
                 <span className="text-sm truncate max-w-[120px] sm:max-w-full">{destination}</span>
                 <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -112,9 +112,9 @@ const SearchSummary = ({
         {/* Dates */}
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
-            <label className="block text-xs font-medium text-gray-500">
+            {/* <label className="block text-xs font-medium text-gray-500">
               Dates
-            </label>
+            </label> */}
             <div className="flex items-center">
               <span className="text-sm truncate">
                 {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
@@ -126,9 +126,9 @@ const SearchSummary = ({
         {/* Passengers & Class */}
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
-            <label className="block text-xs font-medium text-gray-500">
+            {/* <label className="block text-xs font-medium text-gray-500">
               Who
-            </label>
+            </label> */}
             <div className="flex items-center">
               <span className="text-sm truncate">{passengers} adult, {cabinClass}</span>
             </div>
@@ -159,8 +159,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
   
   // Filter states
-  const [departureDate, setDepartureDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(new Date('2025-06-03'));
+  const [returnDate, setReturnDate] = useState<Date | undefined>(new Date('2025-06-06'));
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
   const [cabinClass, setCabinClass] = useState<string>('economy');
   const [passengerCount, setPassengerCount] = useState(1);
@@ -415,8 +415,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           {/* Main Grid Layout */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Filters */}
-            <div className="order-2 lg:order-1 lg:col-span-3">
-              <div className="space-y-4 lg:sticky lg:top-4">
+            <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-100">
+              <div className="space-y-6 lg:sticky lg:top-4">
                 {/* Filter Chips */}
                 <div 
                   ref={filterRef.elementRef}
