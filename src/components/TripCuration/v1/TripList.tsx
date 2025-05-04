@@ -534,17 +534,18 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           };
 
           return (
-            <FlightListCard
-              key={idx}
-              outboundFlight={outboundOptions[selectedOutboundIdx]}
-              returnFlight={returnOptions[selectedReturnIdx]}
-              price={option.price}
-              currency={option.currency}
-              coupon={option.coupon}
-              moreOptions={option.moreOptions}
-              onBook={() => onViewTrip(option)}
-              onDetails={() => onViewTrip(option)}
-            />
+            <div key={idx}>
+              <FlightListCard
+                outboundFlight={outboundOptions[selectedOutboundIdx]}
+                returnFlight={returnOptions[selectedReturnIdx]}
+                price={option.price}
+                currency={option.currency}
+                coupon={option.coupon}
+                moreOptions={option.moreOptions}
+                onBook={() => onViewTrip(option)}
+                onDetails={() => onViewTrip(option)}
+              />
+            </div>
           );
         })}
       </div>
