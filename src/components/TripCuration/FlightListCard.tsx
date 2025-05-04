@@ -112,6 +112,10 @@ const FlightResultCard = ({
     setSelectedReturnIdx(idx);
   };
 
+  if (!selectedOutbound || !selectedReturn) {
+    return null;
+  }
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
       {/* Top summary card */}

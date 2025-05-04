@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
-import FlightListCard from './FlightListCard';
 import { mockTrips } from './mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Sliders, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import FlightResultCard from './FlightListCard';
 
 // Mock flight data for Middle Eastern destinations with official airline logos
 const mockFlights = [
@@ -144,18 +144,6 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   console.log('TripList rendering - loading state:', loading);
   
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-  
-  const isSelected = (flight: any) => {
-    return selectedTrip && selectedTrip.id === flight.id;
-  };
-
-  const handleTooltipClick = (tooltipId: string) => {
-    setActiveTooltip(activeTooltip === tooltipId ? null : tooltipId);
-  };
-  
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
 
   // For demonstration, create FlightLegOption objects for each flight
   const roundTripOptions = [
@@ -349,6 +337,22 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     },
   ];
 
+  // Initialize selected indices arrays based on roundTripOptions length
+  const [selectedOutboundIdxArr, setSelectedOutboundIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
+  const [selectedReturnIdxArr, setSelectedReturnIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
+
+  const isSelected = (flight: any) => {
+    return selectedTrip && selectedTrip.id === flight.id;
+  };
+
+  const handleTooltipClick = (tooltipId: string) => {
+    setActiveTooltip(activeTooltip === tooltipId ? null : tooltipId);
+  };
+  
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
   return (
     <div>
       {/* Sort options */}
@@ -500,22 +504,54 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
 
       {/* Flight cards list */}
       <div className="space-y-4">
-        {roundTripOptions.map((option, idx) => (
-          <FlightListCard
-            key={idx}
-            outboundFlight={option.outboundFlight}
-            returnFlight={option.returnFlight}
-            price={option.price}
-            currency={option.currency}
-            stock={option.stock}
-            coupon={option.coupon}
-            promoBanner={option.promoBanner}
-            baggageTag={option.baggageTag}
-            moreOptions={option.moreOptions}
-            onBook={() => onViewTrip(option)}
-            onDetails={() => onViewTrip(option)}
-          />
-        ))}
+        {roundTripOptions.map((option, idx) => {
+          // Compose outbound and return options arrays, adding a 'date' property
+          const outboundOptions = [option.outboundFlight, ...option.moreOptions.map(opt => opt.outbound)].map((opt, i) => ({
+            ...(opt as any),
+            date: (opt as any).date || `2025-06-0${i + 1}`
+          }));
+          const returnOptions = [option.returnFlight, ...option.moreOptions.map(opt => opt.return)].map((opt, i) => ({
+            ...(opt as any),
+            date: (opt as any).date || `2025-06-1${i + 1}`
+          }));
+
+          // Use lifted state
+          const selectedOutboundIdx = selectedOutboundIdxArr[idx] || 0;
+          const selectedReturnIdx = selectedReturnIdxArr[idx] || 0;
+
+          const handleSelectOutbound = (newIdx: number) => {
+            setSelectedOutboundIdxArr(arr => {
+              const copy = [...arr];
+              copy[idx] = newIdx;
+              return copy;
+            });
+          };
+          const handleSelectReturn = (newIdx: number) => {
+            setSelectedReturnIdxArr(arr => {
+              const copy = [...arr];
+              copy[idx] = newIdx;
+              return copy;
+            });
+          };
+
+          return (
+            <FlightResultCard
+              key={idx}
+              outboundOptions={outboundOptions}
+              returnOptions={returnOptions}
+              selectedOutboundIdx={selectedOutboundIdx}
+              selectedReturnIdx={selectedReturnIdx}
+              price={option.price}
+              currency={option.currency}
+              coupon={option.coupon}
+              nonRefundable={true}
+              onSelectOutbound={handleSelectOutbound}
+              onSelectReturn={handleSelectReturn}
+              onBook={() => onViewTrip(option)}
+              onDetails={() => onViewTrip(option)}
+            />
+          );
+        })}
       </div>
     </div>
   );
