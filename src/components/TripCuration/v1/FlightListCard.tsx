@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
 import { Shield, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -187,10 +187,10 @@ const FlightListCard = ({
             <div className="flex flex-col gap-2">
               {outboundOptions.map((opt, idx) => (
                 <button
-                  key={idx}
+                  style={idx !== selectedOutboundIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
                     "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedOutboundIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
+                    idx === selectedOutboundIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-white hover:bg-white"
                   )}
                   onClick={() => handleSelectOutbound(idx)}
                 >
@@ -207,10 +207,10 @@ const FlightListCard = ({
             <div className="flex flex-col gap-2">
               {returnOptions.map((opt, idx) => (
                 <button
-                  key={idx}
+                  style={idx !== selectedReturnIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
                     "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedReturnIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
+                    idx === selectedReturnIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-white hover:bg-white"
                   )}
                   onClick={() => handleSelectReturn(idx)}
                 >

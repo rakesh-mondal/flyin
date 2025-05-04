@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
-import TripList from './TripList';
+import TripListV1 from './v1/TripList';
+import TripListV2 from './v2/TripList';
 import ChatInput from './ChatInput';
 // import SelectedTripDetail from './SelectedTripDetail';  // Commented out as we're not using it
 import { mockTrips } from './mockData';
@@ -180,6 +181,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [returnTime, setReturnTime] = useState<string | null>(null);
   const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
   const [showOptionsSelector, setShowOptionsSelector] = useState(false);
+  const [version, setVersion] = useState<'v1' | 'v2'>('v1');
 
   // Parse search query when component mounts or searchQuery changes
   useEffect(() => {
@@ -438,6 +440,23 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
+      {/* Compact Centered Version Toggle */}
+      <div className="flex justify-center my-2">
+        <div className="inline-flex gap-2 rounded-lg bg-gray-100 p-1">
+          <button
+            className={`px-3 py-1 rounded text-xs font-medium transition-all ${version === 'v1' ? 'bg-black text-white' : 'bg-white text-black'}`}
+            onClick={() => setVersion('v1')}
+          >
+            v1
+          </button>
+          <button
+            className={`px-3 py-1 rounded text-xs font-medium transition-all ${version === 'v2' ? 'bg-black text-white' : 'bg-white text-black'}`}
+            onClick={() => setVersion('v2')}
+          >
+            v2
+          </button>
+        </div>
+      </div>
       {/* Header */}
       <div className="animate-fade-in">
         <Header 
@@ -506,12 +525,21 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   className={`reveal ${tripListRef.isVisible ? 'visible' : ''}`}
                 >
                   <div className="rounded-xl">
-                    <TripList
-                      trips={trips}
-                      loading={loading}
-                      onViewTrip={handleTripSelect}
-                      selectedTrip={selectedTrip}
-                    />
+                    {version === 'v1' ? (
+                      <TripListV1
+                        trips={trips}
+                        loading={loading}
+                        onViewTrip={handleTripSelect}
+                        selectedTrip={selectedTrip}
+                      />
+                    ) : (
+                      <TripListV2
+                        trips={trips}
+                        loading={loading}
+                        onViewTrip={handleTripSelect}
+                        selectedTrip={selectedTrip}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

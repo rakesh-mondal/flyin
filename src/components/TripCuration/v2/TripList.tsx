@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Skeleton } from '../ui/skeleton';
-import { mockTrips } from './mockData';
+import { Skeleton } from '../../ui/skeleton';
+import { mockTrips } from '../mockData';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { Sliders, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FlightListCard from './FlightListCard';
 
-// Mock flight data for Middle Eastern destinations with official airline logos
+// --- Copy of mockFlights and enrichFlightData from v1 ---
 const mockFlights = [
   {
     id: 1,
@@ -28,7 +28,6 @@ const mockFlights = [
     fees: 60,
     carbonFootprint: '2.3 tonnes',
     tags: ['Eco Saver'],
-    // Added properties for TripDetail component
     title: 'Cultural Dubai Experience',
     destination: 'Dubai, UAE',
     dates: 'June 10 - June 16, 2025',
@@ -53,7 +52,6 @@ const mockFlights = [
     fees: 53,
     carbonFootprint: '1.9 tonnes',
     tags: ['Direct Flight'],
-    // Added properties for TripDetail component
     title: 'Business Dubai',
     destination: 'Dubai, UAE',
     dates: 'July 5 - July 12, 2025',
@@ -78,7 +76,6 @@ const mockFlights = [
     fees: 60,
     carbonFootprint: '2.1 tonnes',
     tags: ['Cheapest'],
-    // Added properties for TripDetail component
     title: 'Budget Abu Dhabi',
     destination: 'Abu Dhabi, UAE',
     dates: 'September 8 - September 15, 2025',
@@ -86,14 +83,11 @@ const mockFlights = [
   }
 ];
 
-// Create a mapping between flight data and mockTrips data for consistent experience
 const enrichFlightData = (flight: any) => {
-  // Find the corresponding trip in mockTrips if it exists
-  const matchingTrip = mockTrips.find(trip => 
-    trip.destination === flight.destination || 
+  const matchingTrip = mockTrips.find(trip =>
+    trip.destination === flight.destination ||
     trip.title === flight.title
   );
-  
   if (matchingTrip) {
     return {
       ...flight,
@@ -102,9 +96,9 @@ const enrichFlightData = (flight: any) => {
       duration: matchingTrip.duration
     };
   }
-  
   return flight;
 };
+// --- End copy ---
 
 interface TripListProps {
   trips?: any[];
@@ -118,10 +112,7 @@ const LoadingSkeleton = () => (
     {[1, 2, 3].map((i) => (
       <div key={i} className="rounded-lg border border-gray-200 p-4">
         <div className="flex items-start space-x-4">
-          {/* Image skeleton */}
           <div className="h-24 w-24 rounded-lg loading-skeleton"></div>
-          
-          {/* Content skeleton */}
           <div className="flex-1 space-y-3">
             <div className="h-6 w-3/4 rounded loading-skeleton"></div>
             <div className="h-4 w-1/2 rounded loading-skeleton"></div>
@@ -130,8 +121,6 @@ const LoadingSkeleton = () => (
               <div className="h-4 w-24 rounded loading-skeleton"></div>
             </div>
           </div>
-          
-          {/* Price skeleton */}
           <div className="h-8 w-24 rounded loading-skeleton"></div>
         </div>
       </div>
@@ -140,11 +129,8 @@ const LoadingSkeleton = () => (
 );
 
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
-  console.log('TripList rendering - loading state:', loading);
-  
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-
-  // For demonstration, create FlightLegOption objects for each flight
+  // For demonstration, create FlightLegOption objects for each flight (same as v1)
   const roundTripOptions = [
     {
       outboundFlight: {
@@ -340,32 +326,21 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   const [selectedOutboundIdxArr, setSelectedOutboundIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
   const [selectedReturnIdxArr, setSelectedReturnIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
 
-  const isSelected = (flight: any) => {
-    return selectedTrip && selectedTrip.id === flight.id;
-  };
-
-  const handleTooltipClick = (tooltipId: string) => {
-    setActiveTooltip(activeTooltip === tooltipId ? null : tooltipId);
-  };
-  
   if (loading) {
     return <LoadingSkeleton />;
   }
 
   return (
     <div>
-      {/* Sort options */}
+      {/* Sort options (Cheapest, Best, Quickest) */}
       <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex">
           <div className="flex-1 border-r border-gray-200 p-2.5 text-center relative">
             <div className="absolute top-2 right-2">
               <TooltipProvider>
-                <Tooltip open={activeTooltip === 'cheapest'} onOpenChange={() => handleTooltipClick('cheapest')}>
+                <Tooltip open={activeTooltip === 'cheapest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'cheapest' ? null : 'cheapest')}>
                   <TooltipTrigger asChild>
-                    <button 
-                      className="focus:outline-none"
-                      onClick={() => handleTooltipClick('cheapest')}
-                    >
+                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'cheapest' ? null : 'cheapest')}>
                       <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                     </button>
                   </TooltipTrigger>
@@ -407,12 +382,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           <div className="flex-1 border-r border-gray-200 p-2.5 text-center bg-blue-50 border-b-2 border-b-blue-600 relative">
             <div className="absolute top-2 right-2">
               <TooltipProvider>
-                <Tooltip open={activeTooltip === 'best'} onOpenChange={() => handleTooltipClick('best')}>
+                <Tooltip open={activeTooltip === 'best'} onOpenChange={() => setActiveTooltip(activeTooltip === 'best' ? null : 'best')}>
                   <TooltipTrigger asChild>
-                    <button 
-                      className="focus:outline-none"
-                      onClick={() => handleTooltipClick('best')}
-                    >
+                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'best' ? null : 'best')}>
                       <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                     </button>
                   </TooltipTrigger>
@@ -454,12 +426,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           <div className="flex-1 p-2.5 text-center relative">
             <div className="absolute top-2 right-2">
               <TooltipProvider>
-                <Tooltip open={activeTooltip === 'quickest'} onOpenChange={() => handleTooltipClick('quickest')}>
+                <Tooltip open={activeTooltip === 'quickest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'quickest' ? null : 'quickest')}>
                   <TooltipTrigger asChild>
-                    <button 
-                      className="focus:outline-none"
-                      onClick={() => handleTooltipClick('quickest')}
-                    >
+                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'quickest' ? null : 'quickest')}>
                       <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                     </button>
                   </TooltipTrigger>
@@ -500,7 +469,6 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           </div>
         </div>
       </div>
-
       {/* Flight cards list */}
       <div className="space-y-4">
         {roundTripOptions.map((option, idx) => {
@@ -552,4 +520,4 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   );
 };
 
-export default TripList;
+export default TripList; 
