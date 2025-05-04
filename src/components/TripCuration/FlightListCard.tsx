@@ -1,9 +1,28 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { Shield, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface FlightInfo {
+// --- Figma-style wireframe ---
+/*
+-----------------------------------------------
+| [AirlineLogo] 10:00–07:10  BLR–DUB  [AirlineName]
+| [Stops/Layover]  [Date]
+| [AirlineLogo] 09:05–02:15  DUB–BLR  [AirlineName]
+| [Stops/Layover]  [Date]
+| [Non-refundable] [Coupon/Offer]
+| ₹91,200   [Book Button]   [Flight details →]
+-----------------------------------------------
+| Bangalore → Dublin · Wed, May 07
+| [Option 1] [Option 2] [Option 3] ...
+-----------------------------------------------
+| Dublin → Bangalore · Fri, May 09
+| [Option 1] [Option 2] [Option 3] ...
+-----------------------------------------------
+*/
+
+interface FlightLegOption {
   airlineLogo: string;
   airlineName: string;
   departureTime: string;
@@ -12,217 +31,183 @@ interface FlightInfo {
   arrivalCode: string;
   duration: string;
   stops: string;
-  date?: string; // e.g. '2024-07-01' or 'Mon, Jul 1'
+  layover?: string;
+  date: string;
 }
 
-interface MoreOption {
-  outbound: FlightInfo;
-  return: FlightInfo;
-}
-
-interface FlightListCardProps {
-  outboundFlight: FlightInfo;
-  returnFlight: FlightInfo;
+interface FlightResultCardProps {
+  outboundOptions: FlightLegOption[];
+  returnOptions: FlightLegOption[];
+  selectedOutboundIdx: number;
+  selectedReturnIdx: number;
   price: string;
   currency: string;
-  stock?: string;
   coupon?: string;
-  promoBanner?: string;
-  baggageTag?: string;
-  moreOptions?: MoreOption[];
-  onBook?: () => void;
-  onDetails?: () => void;
+  nonRefundable?: boolean;
+  onSelectOutbound: (idx: number) => void;
+  onSelectReturn: (idx: number) => void;
+  onBook: () => void;
+  onDetails: () => void;
 }
 
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return '';
-  // Try to format as 'Mon, Jul 1' if not already
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-};
-
-const FlightRow = ({ flight }: { flight: FlightInfo }) => (
-  <div className="flex items-center gap-4 py-2">
-    <img src={flight.airlineLogo} alt={flight.airlineName} className="h-5 w-8 object-contain bg-white border" />
-    <div className="flex-1">
+const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
+  <div className="flex items-center gap-3 py-1">
+    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+    <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2">
-        <span className="text-lg font-bold">{flight.departureTime} – {flight.arrivalTime}</span>
-        <span className="text-gray-500 text-sm">{flight.departureCode} – {flight.arrivalCode}</span>
+        <span className="text-base font-bold">{option.departureTime}–{option.arrivalTime}</span>
+        <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+        <span className="text-xs text-gray-500 ml-2">{option.date}</span>
       </div>
-      <div className="text-xs text-gray-500">{flight.airlineName}</div>
-    </div>
-    <div className="text-right">
-      <div className="text-sm font-medium">{flight.duration}</div>
-      <div className="text-xs text-gray-500">{flight.stops}</div>
+      <div className="flex items-center gap-2 text-xs text-gray-500">
+        <span>{option.airlineName}</span>
+        <span>· {option.stops}</span>
+        {option.layover && <span>· {option.layover}</span>}
+      </div>
     </div>
   </div>
 );
 
-const FlightListCard: React.FC<FlightListCardProps> = ({
-  outboundFlight,
-  returnFlight,
+const FlightResultCard: React.FC<FlightResultCardProps> = ({
+  outboundOptions,
+  returnOptions,
+  selectedOutboundIdx,
+  selectedReturnIdx,
   price,
   currency,
-  stock,
   coupon,
-  promoBanner,
-  baggageTag,
-  moreOptions = [],
+  nonRefundable,
+  onSelectOutbound,
+  onSelectReturn,
   onBook,
   onDetails,
 }) => {
-  // Default selected: main summary flights
-  const [showMore, setShowMore] = useState(false);
-  const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
-  const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
-
-  // Compose all outbound/return options (main + moreOptions)
-  const allOutbound = [outboundFlight, ...moreOptions.map(opt => opt.outbound)];
-  const allReturn = [returnFlight, ...moreOptions.map(opt => opt.return)];
-
-  // Selected flights for summary
-  const selectedOutbound = allOutbound[selectedOutboundIdx];
-  const selectedReturn = allReturn[selectedReturnIdx];
+  // --- Top summary card ---
+  const selectedOutbound = outboundOptions[selectedOutboundIdx];
+  const selectedReturn = returnOptions[selectedReturnIdx];
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
-      {/* Promo Banner */}
-      {promoBanner && (
-        <div className="bg-yellow-50 text-yellow-800 text-xs px-4 py-2 border-b border-yellow-100 font-medium">
-          {promoBanner}
-        </div>
-      )}
-      <div className="flex flex-col md:flex-row p-4 gap-4">
-        <div className="flex-1">
-          {/* Outbound Flight (selected) */}
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-semibold text-sm">Outbound</span>
-            {selectedOutbound.date && (
-              <span className="text-xs text-gray-500">{formatDate(selectedOutbound.date)}</span>
-            )}
-          </div>
-          <FlightRow flight={selectedOutbound} />
-          <div className="border-b border-gray-100 my-2" />
-          {/* Return Flight (selected) */}
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-semibold text-sm">Return</span>
-            {selectedReturn.date && (
-              <span className="text-xs text-gray-500">{formatDate(selectedReturn.date)}</span>
-            )}
-          </div>
-          <FlightRow flight={selectedReturn} />
-          {/* Baggage Tag */}
-          {baggageTag && (
-            <div className="mt-2">
-              <Badge variant="outline" className="text-xs text-gray-700 bg-gray-50 border-gray-200">{baggageTag}</Badge>
-            </div>
-          )}
-        </div>
-        {/* Price/Book Area */}
-        <div className="flex flex-col items-end justify-center min-w-[160px] gap-2">
-          {stock && <div className="text-xs text-red-600 font-semibold">{stock}</div>}
-          <div className="text-2xl font-bold">{currency} {price}</div>
-          {coupon && <div className="text-xs text-green-600 font-medium">{coupon}</div>}
-          <Button className="mt-2 w-full bg-black hover:bg-black/90 text-white font-semibold rounded-lg" onClick={onBook}>Book</Button>
-        </div>
-      </div>
-      {/* Flight Details Link */}
-      <div className="flex justify-end px-4 pb-2">
-        <button className="text-blue-600 text-sm font-medium hover:underline" onClick={onDetails}>Flight details &rarr;</button>
-      </div>
-      {/* Expandable More Options */}
-      {moreOptions.length > 0 && (
-        <div className="bg-gray-50 border-t border-gray-100 px-4 py-2">
-          {!showMore ? (
-            <button
-              className="text-blue-600 text-sm font-medium w-full text-center py-2"
-              onClick={() => setShowMore(true)}
-            >
-              +{moreOptions.length} more options at same price
-            </button>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                {/* Outbound options */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold text-xs text-gray-700">Outbound options</span>
-                    {allOutbound[1]?.date && (
-                      <span className="text-xs text-gray-500">{formatDate(allOutbound[1].date)}</span>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {allOutbound.map((flight, idx) => (
-                      <div
-                        key={idx + '-out'}
-                        className={cn(
-                          "bg-white border border-gray-200 rounded-lg p-3 mb-1 shadow-sm transition-all",
-                          selectedOutboundIdx === idx ? "ring-2 ring-black" : ""
-                        )}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-gray-500">{flight.date ? formatDate(flight.date) : ''}</span>
-                          <Button
-                            size="sm"
-                            variant={selectedOutboundIdx === idx ? 'default' : 'outline'}
-                            className={cn("rounded-full px-3 py-1 text-xs", selectedOutboundIdx === idx ? 'bg-black text-white' : '')}
-                            onClick={() => setSelectedOutboundIdx(idx)}
-                          >
-                            {selectedOutboundIdx === idx ? 'Selected' : 'Select'}
-                          </Button>
-                        </div>
-                        <FlightRow flight={flight} />
-                      </div>
-                    ))}
-                  </div>
+      {/* Top summary card */}
+      <div className="p-4 flex flex-col gap-2 border-b border-gray-100">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          {/* Left: Outbound and Return details */}
+          <div className="flex-1 flex flex-col gap-2">
+            {/* Outbound */}
+            <div className="flex items-center gap-3">
+              {/* Airline logos */}
+              <div className="flex items-center gap-1">
+                <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 object-contain bg-white border rounded" />
+                {/* Add more logos if needed for multiple airlines */}
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold">{selectedOutbound.departureTime} - {selectedOutbound.arrivalTime}</span>
+                  <span className="text-base text-gray-500 font-medium">{selectedOutbound.departureCode} - {selectedOutbound.arrivalCode}</span>
                 </div>
-                {/* Return options */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold text-xs text-gray-700">Return options</span>
-                    {allReturn[1]?.date && (
-                      <span className="text-xs text-gray-500">{formatDate(allReturn[1].date)}</span>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {allReturn.map((flight, idx) => (
-                      <div
-                        key={idx + '-ret'}
-                        className={cn(
-                          "bg-white border border-gray-200 rounded-lg p-3 mb-1 shadow-sm transition-all",
-                          selectedReturnIdx === idx ? "ring-2 ring-black" : ""
-                        )}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-gray-500">{flight.date ? formatDate(flight.date) : ''}</span>
-                          <Button
-                            size="sm"
-                            variant={selectedReturnIdx === idx ? 'default' : 'outline'}
-                            className={cn("rounded-full px-3 py-1 text-xs", selectedReturnIdx === idx ? 'bg-black text-white' : '')}
-                            onClick={() => setSelectedReturnIdx(idx)}
-                          >
-                            {selectedReturnIdx === idx ? 'Selected' : 'Select'}
-                          </Button>
-                        </div>
-                        <FlightRow flight={flight} />
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>{selectedOutbound.airlineName}</span>
+                  <span>· {selectedOutbound.stops}</span>
+                  {selectedOutbound.layover && <span>· {selectedOutbound.layover}</span>}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                  <span>{selectedOutbound.date}</span>
+                  {/* Add stopover cities with icons if available */}
                 </div>
               </div>
-              <button
-                className="text-blue-600 text-sm font-medium w-full text-center py-2"
-                onClick={() => setShowMore(false)}
-              >
-                Hide options with same price
-              </button>
-            </>
-          )}
+              <div className="ml-4 text-right min-w-[120px]">
+                <span className="text-sm text-gray-500 font-medium">{selectedOutbound.duration}</span>
+              </div>
+            </div>
+            <div className="border-t border-dashed border-gray-200 my-1" />
+            {/* Return */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-7 w-7 object-contain bg-white border rounded" />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold">{selectedReturn.departureTime} - {selectedReturn.arrivalTime}</span>
+                  <span className="text-base text-gray-500 font-medium">{selectedReturn.departureCode} - {selectedReturn.arrivalCode}</span>
+                  <span className="text-xs text-red-500 font-semibold">{selectedReturn.date}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>{selectedReturn.airlineName}</span>
+                  <span>· {selectedReturn.stops}</span>
+                  {selectedReturn.layover && <span>· {selectedReturn.layover}</span>}
+                </div>
+              </div>
+              <div className="ml-4 text-right min-w-[120px]">
+                <span className="text-sm text-gray-500 font-medium">{selectedReturn.duration}</span>
+              </div>
+            </div>
+          </div>
+          {/* Right: Price, offer, book button */}
+          <div className="flex flex-col items-end justify-between min-w-[180px] gap-2">
+            <div className="flex flex-col items-end">
+              <div className="text-2xl font-bold">{currency} {price}</div>
+              {coupon && <span className="text-xs text-green-600 font-medium mt-1">{coupon}</span>}
+            </div>
+            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-8 py-2 mt-2" onClick={onBook}>Book</Button>
+            <button className="text-blue-600 text-sm font-medium hover:underline mt-2" onClick={onDetails}>Flight details &rarr;</button>
+          </div>
         </div>
-      )}
+        {/* Bottom row: badges */}
+        <div className="flex items-center gap-2 mt-3">
+          {nonRefundable && (
+            <Badge variant="outline" className="text-xs text-gray-700 bg-gray-50 border-gray-200 flex items-center gap-1"><Shield className="h-3 w-3 mr-1" /> Non-refundable</Badge>
+          )}
+          {/* Example: Transit visa badge */}
+          <Badge variant="outline" className="text-xs text-gray-700 bg-gray-50 border-gray-200 flex items-center gap-1"><BadgeCheck className="h-3 w-3 mr-1" /> Transit visa</Badge>
+        </div>
+      </div>
+      {/* Bottom section: Flight pickers */}
+      <div className="bg-gray-50 border-t border-gray-100 px-4 py-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Departure column */}
+          <div>
+            <div className="mb-2 text-xs font-semibold text-gray-700">
+              {outboundOptions[0].departureCode} → {outboundOptions[0].arrivalCode} · {outboundOptions[0].date}
+            </div>
+            <div className="flex flex-col gap-2">
+              {outboundOptions.map((opt, idx) => (
+                <button
+                  key={idx}
+                  className={cn(
+                    "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
+                    idx === selectedOutboundIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
+                  )}
+                  onClick={() => onSelectOutbound(idx)}
+                >
+                  <FlightLegRow option={opt} />
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Return column */}
+          <div>
+            <div className="mb-2 text-xs font-semibold text-gray-700">
+              {returnOptions[0].departureCode} → {returnOptions[0].arrivalCode} · {returnOptions[0].date}
+            </div>
+            <div className="flex flex-col gap-2">
+              {returnOptions.map((opt, idx) => (
+                <button
+                  key={idx}
+                  className={cn(
+                    "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
+                    idx === selectedReturnIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
+                  )}
+                  onClick={() => onSelectReturn(idx)}
+                >
+                  <FlightLegRow option={opt} />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default FlightListCard; 
+export default FlightResultCard; 
