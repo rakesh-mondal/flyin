@@ -52,30 +52,8 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate required fields
-    if (!origin.trim()) {
-      toast.error('Please enter departure city');
-      return;
-    }
-    if (!destination.trim()) {
-      toast.error('Please enter destination city');
-      return;
-    }
-    if (!departureDate) {
-      toast.error('Please select departure date');
-      return;
-    }
-    if (isRoundTrip && !returnDate) {
-      toast.error('Please select return date');
-      return;
-    }
-    if (returnDate && isBefore(returnDate, departureDate)) {
-      toast.error('Return date cannot be before departure date');
-      return;
-    }
-
     // Format dates
-    const formattedDepartureDate = format(departureDate, 'MMM dd, yyyy');
+    const formattedDepartureDate = departureDate ? format(departureDate, 'MMM dd, yyyy') : '';
     const formattedReturnDate = returnDate ? format(returnDate, 'MMM dd, yyyy') : '';
 
     // Create search query
