@@ -1,4 +1,3 @@
-
 // Mock trip data
 export const mockTrips = [
   {
@@ -74,7 +73,7 @@ export const mockTrips = [
     price: 3600,
     dates: 'September 8 - September 15, 2025',
     duration: '7 nights',
-    image: 'https://images.unsplash.com/photos/a-kdjff86zE?auto=format&fit=crop&q=80',
+    image: 'https://lp-cms-production.imgix.net/2019-06/f868443201b1370e5faa91e332e47ef8-al-corniche.jpg?w=1095&fit=crop&crop=faces,edges&auto=format&q=75',
     activities: ['Museum of Islamic Art', 'Souq Waqif Tour', 'Desert Safari'],
     flight: {
       airline: 'Qatar Airways',

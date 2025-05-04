@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Search, X, ArrowRightLeft, ArrowUpDown, Calendar, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { format, addDays, isAfter, isBefore, startOfDay } from 'date-fns';
+import { format, addDays, isAfter, isBefore, startOfDay, parseISO } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar as CalendarComponent } from './ui/calendar';
 import {
@@ -47,15 +47,12 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isPassengerOpen, setIsPassengerOpen] = useState(false);
 
-  const totalPassengers = passengers.adults + passengers.children + passengers.infants;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    // Remove all validation logic
     // Format dates
     const formattedDepartureDate = departureDate ? format(departureDate, 'MMM dd, yyyy') : '';
     const formattedReturnDate = returnDate ? format(returnDate, 'MMM dd, yyyy') : '';
-
     // Create search query
     const searchQuery = {
       origin,
@@ -66,7 +63,6 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       cabinClass,
       isRoundTrip
     };
-
     onSearch(JSON.stringify(searchQuery));
   };
 
@@ -159,17 +155,6 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             </div>
           </div>
 
-          {/* Swap button */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <button
-              type="button"
-              onClick={handleSwapLocations}
-              className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
-            >
-              <ArrowRightLeft className="h-4 w-4" />
-            </button>
-          </div>
-
           {/* Destination input */}
           <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border">
             <div className="px-5 py-3">
@@ -196,6 +181,17 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Swap button */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            <button
+              type="button"
+              onClick={handleSwapLocations}
+              className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
+            >
+              <ArrowRightLeft className="h-4 w-4" />
+            </button>
           </div>
         </div>
 

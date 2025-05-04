@@ -60,9 +60,6 @@ const SearchSummary = ({
           {/* Origin input */}
           <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="px-4 sm:px-6 py-2 sm:py-3">
-              {/* <label className="block text-xs font-medium text-gray-500">
-                From
-              </label> */}
               <div className="flex items-center">
                 <span className="text-sm truncate max-w-[120px] sm:max-w-full">{origin}</span>
                 <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -75,9 +72,6 @@ const SearchSummary = ({
           {/* Destination input */}
           <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="px-4 sm:px-6 py-2 sm:py-3">
-              {/* <label className="block text-xs font-medium text-gray-500">
-                To
-              </label> */}
               <div className="flex items-center">
                 <span className="text-sm truncate max-w-[120px] sm:max-w-full">{destination}</span>
                 <button className="ml-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -113,9 +107,6 @@ const SearchSummary = ({
         {/* Dates */}
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
-            {/* <label className="block text-xs font-medium text-gray-500">
-              Dates
-            </label> */}
             <div className="flex items-center">
               <span className="text-sm truncate">
                 {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
@@ -127,9 +118,6 @@ const SearchSummary = ({
         {/* Passengers & Class */}
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
-            {/* <label className="block text-xs font-medium text-gray-500">
-              Who
-            </label> */}
             <div className="flex items-center">
               <span className="text-sm truncate">{passengers} adult, {cabinClass}</span>
             </div>
@@ -441,7 +429,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Compact Centered Version Toggle */}
-      <div className="flex justify-center my-2">
+      <div className="flex justify-center my-2 px-4">
         <div className="inline-flex gap-2 rounded-lg bg-gray-100 p-1">
           <button
             className={`px-3 py-1 rounded text-xs font-medium transition-all ${version === 'v1' ? 'bg-black text-white' : 'bg-white text-black'}`}
@@ -457,19 +445,22 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           </button>
         </div>
       </div>
+
       {/* Header */}
       <div className="animate-fade-in">
-        <Header 
-          onBack={onBack}
-          origin={searchParams.origin}
-          destination={searchParams.destination}
-          departureDate={searchParams.departureDate}
-          returnDate={searchParams.returnDate}
-          passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
-          cabinClass={searchParams.cabinClass}
-          onSwap={handleSwapLocations}
-          onUpdate={handleUpdateSearch}
-        />
+        <div className="w-full">
+          <Header 
+            onBack={onBack}
+            origin={searchParams.origin}
+            destination={searchParams.destination}
+            departureDate={searchParams.departureDate}
+            returnDate={searchParams.returnDate}
+            passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
+            cabinClass={searchParams.cabinClass}
+            onSwap={handleSwapLocations}
+            onUpdate={handleUpdateSearch}
+          />
+        </div>
       </div>
 
       {/* Main Content */}
@@ -487,16 +478,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           )}
 
           {/* Main Grid Layout */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-12">
             {/* Left Column - Filters */}
             <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
-              <div className="space-y-6 lg:sticky lg:top-4">
+              <div className="space-y-4 lg:sticky lg:top-4">
                 {/* Filter Chips */}
                 <div 
                   ref={filterRef.elementRef}
                   className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
                 >
-                  <div className="rounded-xl mb-4">
+                  <div className="rounded-xl mb-4 overflow-x-auto">
                     <FilterChips
                       selectedAirlines={selectedAirlines}
                       onAirlinesChange={setSelectedAirlines}
@@ -550,7 +541,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
       {/* Chat Input - Floating Card */}
       {isChatOpen ? (
-        <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-1/2 min-w-[500px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in">
+        <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] min-w-[280px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in">
           {/* Subtle close button in top-right corner */}
           <button
             onClick={() => setIsChatOpen(false)}
@@ -559,7 +550,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             <X className="h-3.5 w-3.5" />
           </button>
           
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <ChatInput
               userMessage={userMessage}
               setUserMessage={setUserMessage}
@@ -570,14 +561,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       ) : (
         <Button
           className={cn(
-            "fixed bottom-6 right-6 h-14 w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
+            "fixed bottom-6 right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
             "flex items-center justify-center transition-all duration-200 hover:scale-105",
             "animate-bounce-in"
           )}
           size="icon"
           onClick={() => setIsChatOpen(true)}
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
       )}
     </div>
