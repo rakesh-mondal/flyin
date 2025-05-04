@@ -98,67 +98,67 @@ const FlightListCard = ({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
-      {/* Top summary card */}
-      <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100">
-        {/* Left: Flight details */}
-        <div className="flex-1 flex flex-col gap-3">
-          {/* Outbound */}
-          <div className="flex items-start w-full">
-            {/* Logo and times/route */}
-            <div className="flex items-start gap-3 min-w-[120px]">
-              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
-              <div>
-                <div className="text-lg font-bold leading-tight">{selectedOutbound.departureTime} – {selectedOutbound.arrivalTime}</div>
-                <div className="text-sm text-gray-500 leading-tight">
-                  {selectedOutbound.departureCode} {selectedOutbound.departureCity || ''} – {selectedOutbound.arrivalCode} {selectedOutbound.arrivalCity || ''}
-                </div>
-              </div>
+    <div className="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
+      {/* Compact summary card */}
+      <div className="flex flex-row items-center px-4 py-4 gap-0">
+        {/* Outbound */}
+        <div className="flex flex-col items-center flex-1 min-w-0">
+          <div className="flex flex-row items-center w-full justify-center gap-3">
+            <div className="flex flex-col items-center min-w-[56px]">
+              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
             </div>
-            {/* Center: Stops */}
-            <div className="flex flex-col items-center justify-center flex-1">
-              <span className="font-semibold text-black text-sm">{selectedOutbound.stops}</span>
-              {selectedOutbound.stops !== 'non-stop' && selectedOutbound.layover && (
-                <span className="text-xs text-gray-500 mt-0.5">{selectedOutbound.layover.replace(/.*in\s+/i, '')}</span>
-              )}
+            <div className="flex flex-col items-center min-w-[48px]">
+              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
             </div>
-            {/* Right: Duration */}
-            <div className="font-bold text-sm text-black min-w-[60px] text-right flex items-center justify-end">{selectedOutbound.duration}</div>
-          </div>
-          {/* Return */}
-          <div className="flex items-start w-full">
-            {/* Logo and times/route */}
-            <div className="flex items-start gap-3 min-w-[120px]">
-              <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
-              <div>
-                <div className="text-lg font-bold leading-tight">
-                  {selectedReturn.departureTime} – {selectedReturn.arrivalTime}
-                  <sup className="text-xs text-gray-400 font-semibold align-super">+1</sup>
-                </div>
-                <div className="text-sm text-gray-500 leading-tight">
-                  {selectedReturn.departureCode} {selectedReturn.departureCity || ''} – {selectedReturn.arrivalCode} {selectedReturn.arrivalCity || ''}
-                </div>
-              </div>
+            <div className="flex flex-col items-center min-w-[64px] mx-1">
+              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
+              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+              <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
             </div>
-            {/* Center: Stops */}
-            <div className="flex flex-col items-center justify-center flex-1">
-              <span className="font-semibold text-black text-sm">{selectedReturn.stops}</span>
-              {selectedReturn.stops !== 'non-stop' && selectedReturn.layover && (
-                <span className="text-xs text-gray-500 mt-0.5">{selectedReturn.layover.replace(/.*in\s+/i, '')}</span>
-              )}
+            <div className="flex flex-col items-center min-w-[48px]">
+              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
             </div>
-            {/* Right: Duration */}
-            <div className="font-bold text-sm text-black min-w-[60px] text-right flex items-center justify-end">{selectedReturn.duration}</div>
           </div>
         </div>
-        {/* Right: Price, class, select button */}
-        <div className="flex flex-col items-end min-w-[160px] gap-2">
-          <div className="text-2xl font-bold text-black">{currency} {price}</div>
-          <div className="text-sm text-gray-500">Economy</div>
-          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-8 py-2 mt-2" onClick={onBook}>Select</Button>
+        {/* Divider */}
+        <div className="w-px h-16 bg-gray-200 mx-1" />
+        {/* Return */}
+        <div className="flex flex-col items-center flex-1 min-w-0">
+          <div className="flex flex-row items-center w-full justify-center gap-3">
+            <div className="flex flex-col items-center min-w-[56px]">
+              <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedReturn.airlineName}</span>
+            </div>
+            <div className="flex flex-col items-center min-w-[48px]">
+              <span className="text-lg font-bold text-black leading-none">{selectedReturn.departureTime}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.departureCode}</span>
+            </div>
+            <div className="flex flex-col items-center min-w-[64px] mx-1">
+              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedReturn.duration}</span>
+              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+              <span className="text-xs text-gray-400 leading-none">{selectedReturn.stops}</span>
+            </div>
+            <div className="flex flex-col items-center min-w-[48px]">
+              <span className="text-lg font-bold text-black leading-none">{selectedReturn.arrivalTime}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.arrivalCode}</span>
+            </div>
+          </div>
+        </div>
+        {/* Price & Action */}
+        <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
+          <div className="flex flex-col justify-center items-end">
+            <div className="text-xl font-bold text-black">{currency} {price}</div>
+            <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
+          </div>
+          <div className="flex items-center">
+            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>Book now</Button>
+          </div>
         </div>
       </div>
-      {/* Bottom section: Flight pickers */}
+      {/* 2-column flight options list (unchanged) */}
       <div className="bg-gray-50 border-t border-gray-100 px-4 py-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Departure column */}
@@ -169,10 +169,11 @@ const FlightListCard = ({
             <div className="flex flex-col gap-2">
               {outboundOptions.map((opt, idx) => (
                 <button
+                  key={idx}
                   style={idx !== selectedOutboundIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
-                    "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedOutboundIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-white hover:bg-white"
+                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                   )}
                   onClick={() => handleSelectOutbound(idx)}
                 >
@@ -189,10 +190,11 @@ const FlightListCard = ({
             <div className="flex flex-col gap-2">
               {returnOptions.map((opt, idx) => (
                 <button
+                  key={idx}
                   style={idx !== selectedReturnIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
-                    "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedReturnIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-white hover:bg-white"
+                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                    idx === selectedReturnIdx ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                   )}
                   onClick={() => handleSelectReturn(idx)}
                 >
@@ -202,6 +204,10 @@ const FlightListCard = ({
             </div>
           </div>
         </div>
+      </div>
+      {/* Flight details link in gray bar at bottom */}
+      <div className="bg-gray-50 px-4 py-2 border-t border-gray-100 flex items-start">
+        <button className="text-blue-600 text-sm font-medium hover:underline" onClick={onDetails}>Flight details</button>
       </div>
     </div>
   );

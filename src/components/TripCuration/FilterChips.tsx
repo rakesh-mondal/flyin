@@ -75,10 +75,10 @@ const FilterChips = ({
           <div className="grid grid-cols-3 gap-1">
             <button 
               className={cn(
-                "flex flex-col items-center py-2 px-2 transition-colors rounded-md border",
-                selectedStop === 'non-stop' 
-                  ? "bg-blue-50 text-blue-600 border-blue-200" 
-                  : "bg-white text-black border-gray-200"
+                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                selectedStop === 'non-stop'
+                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                  : "border-gray-200 bg-white text-gray-900"
               )}
               onClick={() => handleStopSelect('non-stop')}
             >
@@ -90,10 +90,10 @@ const FilterChips = ({
             </button>
             <button 
               className={cn(
-                "flex flex-col items-center py-2 px-2 transition-colors rounded-md border",
-                selectedStop === '1-stop' 
-                  ? "bg-blue-50 text-blue-600 border-blue-200" 
-                  : "bg-white text-black border-gray-200"
+                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                selectedStop === '1-stop'
+                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                  : "border-gray-200 bg-white text-gray-900"
               )}
               onClick={() => handleStopSelect('1-stop')}
             >
@@ -105,10 +105,10 @@ const FilterChips = ({
             </button>
             <button 
               className={cn(
-                "flex flex-col items-center py-2 px-2 transition-colors rounded-md border",
-                selectedStop === '2-more' 
-                  ? "bg-blue-50 text-blue-600 border-blue-200" 
-                  : "bg-white text-black border-gray-200"
+                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                selectedStop === '2-more'
+                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                  : "border-gray-200 bg-white text-gray-900"
               )}
               onClick={() => handleStopSelect('2-more')}
             >

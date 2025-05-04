@@ -34,8 +34,8 @@ const FlightOptionCard = ({ option, isSelected, onClick }: {
   onClick: () => void;
 }) => (
   <div
-    className={`p-4 rounded-lg cursor-pointer border transition-colors ${
-      isSelected ? 'bg-blue-50 border-blue-400' : 'bg-white border-gray-200'
+    className={`p-4 rounded-md cursor-pointer border transition-colors ${
+      isSelected ? 'bg-blue-50 border-blue-500 text-blue-600 font-semibold' : 'bg-white border-gray-200 text-gray-900'
     }`}
     onClick={onClick}
   >
