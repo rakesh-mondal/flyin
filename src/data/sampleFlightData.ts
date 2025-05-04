@@ -2,7 +2,7 @@ export const sampleFlightData = {
   id: 1,
   airline: "SriLankan Airlines",
   airlineCode: "UL",
-  airlineLogo: "https://airhex.com/images/airline-logos/ul.png",
+  airlineLogo: "srilankan",
   departureCity: "Bangalore",
   departureCode: "BLR",
   departureTime: "10:00",

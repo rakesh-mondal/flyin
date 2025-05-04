@@ -3,6 +3,7 @@ import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Shield, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getAirlineLogo } from '../../../utils/airlineLogos';
 
 // --- Figma-style wireframe ---
 /*
@@ -56,12 +57,11 @@ interface FlightListCardProps {
 
 const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
   <div className="flex items-center gap-3 py-1">
-    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+    <img src={getAirlineLogo(option.airlineName)} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2">
-        <span className="text-base font-bold">{option.departureTime}–{option.arrivalTime}</span>
+        <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
         <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
-        <span className="text-xs text-gray-500 ml-2">{option.date}</span>
       </div>
       <div className="flex items-center gap-2 text-xs text-gray-500">
         <span>{option.airlineName}</span>
@@ -123,7 +123,7 @@ const FlightListCard = ({
         <div className="flex flex-col items-center flex-1 min-w-0">
           <div className="flex flex-row items-center w-full justify-center gap-3">
             <div className="flex flex-col items-center min-w-[56px]">
-              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+              <img src={getAirlineLogo(selectedOutbound.airlineName)} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
               <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
@@ -147,7 +147,7 @@ const FlightListCard = ({
         <div className="flex flex-col items-center flex-1 min-w-0">
           <div className="flex flex-row items-center w-full justify-center gap-3">
             <div className="flex flex-col items-center min-w-[56px]">
-              <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+              <img src={getAirlineLogo(selectedReturn.airlineName)} alt={selectedReturn.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
               <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedReturn.airlineName}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
@@ -191,7 +191,7 @@ const FlightListCard = ({
                   style={idx !== selectedOutboundIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
                     "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                   )}
                   onClick={() => handleSelectOutbound(idx)}
                 >
@@ -212,7 +212,7 @@ const FlightListCard = ({
                   style={idx !== selectedReturnIdx ? { backgroundColor: '#fff' } : {}}
                   className={cn(
                     "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedReturnIdx ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                    idx === selectedReturnIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                   )}
                   onClick={() => handleSelectReturn(idx)}
                 >
