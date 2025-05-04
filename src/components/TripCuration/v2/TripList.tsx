@@ -426,17 +426,19 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     return <LoadingSkeleton />;
   }
 
+  // For the summary card, use the first roundTripOption as the default selection
+  const summaryOption = roundTripOptions[0];
+
   return (
     <div>
       {/* Price Category Summary Cards */}
       <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex">
-          <div 
-            className={cn(
-              "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
-              selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
-            )}
-            onClick={() => setSelectedPriceCategory('cheapest')}
+          <div className={cn(
+            "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+            selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
+          )}
+          onClick={() => setSelectedPriceCategory('cheapest')}
           >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
@@ -481,12 +483,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             </div>
             <div className="font-bold text-lg">₹45,717</div>
           </div>
-          <div 
-            className={cn(
-              "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
-              selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
-            )}
-            onClick={() => setSelectedPriceCategory('best')}
+          <div className={cn(
+            "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+            selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
+          )}
+          onClick={() => setSelectedPriceCategory('best')}
           >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
@@ -531,12 +532,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             </div>
             <div className="font-bold text-lg">₹59,035</div>
           </div>
-          <div 
-            className={cn(
-              "flex-1 p-2.5 text-center relative cursor-pointer",
-              selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
-            )}
-            onClick={() => setSelectedPriceCategory('quickest')}
+          <div className={cn(
+            "flex-1 p-2.5 text-center relative",
+            selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
+          )}
+          onClick={() => setSelectedPriceCategory('quickest')}
           >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
@@ -583,66 +583,125 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           </div>
         </div>
       </div>
-
-      {/* Quick Price Filters */}
-      <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {airlines.map((airline) => (
-            <button
-              key={airline.id}
-              onClick={() => handleQuickFilterSelect(airline.id)}
-              className={cn(
-                "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
-                selectedQuickFilters.includes(airline.id)
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300"
-              )}
-            >
-              <div className="flex items-center gap-2.5">
-                <img 
-                  src={airline.logo} 
-                  alt={airline.name} 
-                  className="h-5 w-5 rounded bg-gray-100"
-                />
-                <div className="text-left">
-                  <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
-                </div>
-              </div>
-              {selectedQuickFilters.includes(airline.id) && (
-                <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
-              )}
-            </button>
-          ))}
+      {/* Summary Card (non-interactive, just summary) */}
+      <div className="rounded-xl border border-gray-200 mb-6 overflow-hidden">
+        <FlightListCard
+          outboundFlight={summaryOption.outboundFlight}
+          returnFlight={summaryOption.returnFlight}
+          price={summaryOption.price}
+          currency={summaryOption.currency}
+          onBook={() => onViewTrip(summaryOption)}
+          showOptions={false}
+        />
+        {/* Flight details link/section - just below summary row */}
+        <div className="px-4 py-1.5 flex items-start">
+          <button className="text-blue-600 text-sm font-medium hover:underline" onClick={() => {}}>Flight details</button>
         </div>
-      </div>
-
-      {/* Flight cards list */}
-      <div className="space-y-4">
-        {roundTripOptions
-          .filter(option => {
-            // If quick filters are selected, use those
-            if (selectedQuickFilters.length > 0) {
-              const airlineId = option.outboundFlight.airlineName.toLowerCase().replace(/\s+/g, '');
-              return selectedQuickFilters.includes(airlineId);
-            }
-            // Otherwise use the left side airline filters
-            const airlineId = option.outboundFlight.airlineName.toLowerCase().replace(/\s+/g, '');
-            return selectedAirlines.includes(airlineId);
-          })
-          .map((option, idx) => (
-            <FlightListCard
-              key={idx}
-              outboundFlight={option.outboundFlight}
-              returnFlight={option.returnFlight}
-              price={option.price}
-              currency={option.currency}
-              coupon={option.coupon}
-              moreOptions={option.moreOptions}
-              onBook={() => onViewTrip(option)}
-              onDetails={() => onViewTrip(option)}
-            />
-          ))}
+        {/* Divider after Flight Details Link */}
+        <div className="border-t border-gray-100" />
+        {/* Quick Price Filters inside summary card */}
+        <div className="pt-3 pb-4 px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {airlines.map((airline) => (
+              <button
+                key={airline.id}
+                className={cn(
+                  "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
+                  selectedQuickFilters.includes(airline.id)
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-white hover:border-gray-300"
+                )}
+                onClick={() => handleQuickFilterSelect(airline.id)}
+              >
+                <div className="flex items-center gap-2.5">
+                  <img 
+                    src={airline.logo} 
+                    alt={airline.name} 
+                    className="h-5 w-5 rounded bg-gray-100"
+                  />
+                  <div className="text-left">
+                    <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
+                  </div>
+                </div>
+                {selectedQuickFilters.includes(airline.id) && (
+                  <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* Outbound and Inbound Flight Lists inside summary card */}
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Outbound List */}
+            <div>
+              <div className="mb-2 text-xs font-semibold text-gray-700">
+                {summaryOption.outboundFlight.departureCode} → {summaryOption.outboundFlight.arrivalCode} · {summaryOption.outboundFlight.date}
+              </div>
+              <div className="flex flex-col gap-2">
+                {roundTripOptions.map((option, idx) => (
+                  <button
+                    key={idx}
+                    className={cn(
+                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                      idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                    )}
+                    // TODO: Add selection logic if needed
+                  >
+                    <div className="flex items-center gap-3 py-1">
+                      <img src={option.outboundFlight.airlineLogo} alt={option.outboundFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-bold text-black">{option.outboundFlight.departureTime}–{option.outboundFlight.arrivalTime}</span>
+                          <span className="text-gray-500 text-xs">{option.outboundFlight.departureCode}–{option.outboundFlight.arrivalCode}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span>{option.outboundFlight.airlineName}</span>
+                          <span>· {option.outboundFlight.stops}</span>
+                          {option.outboundFlight.layover && <span>· {option.outboundFlight.layover}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Inbound List */}
+            <div>
+              <div className="mb-2 text-xs font-semibold text-gray-700">
+                {summaryOption.returnFlight.departureCode} → {summaryOption.returnFlight.arrivalCode} · {summaryOption.returnFlight.date}
+              </div>
+              <div className="flex flex-col gap-2">
+                {roundTripOptions.map((option, idx) => (
+                  <button
+                    key={idx}
+                    className={cn(
+                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                      idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                    )}
+                    // TODO: Add selection logic if needed
+                  >
+                    <div className="flex items-center gap-3 py-1">
+                      <img src={option.returnFlight.airlineLogo} alt={option.returnFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-bold text-black">{option.returnFlight.departureTime}–{option.returnFlight.arrivalTime}</span>
+                          <span className="text-gray-500 text-xs">{option.returnFlight.departureCode}–{option.returnFlight.arrivalCode}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span>{option.returnFlight.airlineName}</span>
+                          <span>· {option.returnFlight.stops}</span>
+                          {option.returnFlight.layover && <span>· {option.returnFlight.layover}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

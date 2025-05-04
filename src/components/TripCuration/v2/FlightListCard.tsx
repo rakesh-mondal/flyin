@@ -35,6 +35,7 @@ interface FlightListCardProps {
   }>;
   onBook: () => void;
   onDetails?: () => void;
+  showOptions?: boolean;
 }
 
 const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
@@ -66,6 +67,7 @@ const FlightListCard = ({
   moreOptions = [],
   onBook,
   onDetails,
+  showOptions = true,
 }: FlightListCardProps) => {
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
@@ -98,7 +100,7 @@ const FlightListCard = ({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
+    <div className="bg-white rounded-t-xl overflow-hidden">
       {/* Compact summary card */}
       <div className="flex flex-row items-center px-4 py-4 gap-0">
         {/* Outbound */}
@@ -158,57 +160,61 @@ const FlightListCard = ({
           </div>
         </div>
       </div>
-      {/* 2-column flight options list (unchanged) */}
-      <div className="bg-gray-50 border-t border-gray-100 px-4 py-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Departure column */}
-          <div>
-            <div className="mb-2 text-xs font-semibold text-gray-700">
-              {outboundOptions[0].departureCode} → {outboundOptions[0].arrivalCode} · {outboundOptions[0].date}
-            </div>
-            <div className="flex flex-col gap-2">
-              {outboundOptions.map((opt, idx) => (
-                <button
-                  key={idx}
-                  style={idx !== selectedOutboundIdx ? { backgroundColor: '#fff' } : {}}
-                  className={cn(
-                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                  )}
-                  onClick={() => handleSelectOutbound(idx)}
-                >
-                  <FlightLegRow option={opt} />
-                </button>
-              ))}
+      {/* Only show options and details if showOptions is true */}
+      {showOptions && (
+        <>
+          <div className="bg-gray-50 border-t border-gray-100 px-4 py-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Departure column */}
+              <div>
+                <div className="mb-2 text-xs font-semibold text-gray-700">
+                  {outboundOptions[0].departureCode} → {outboundOptions[0].arrivalCode} · {outboundOptions[0].date}
+                </div>
+                <div className="flex flex-col gap-2">
+                  {outboundOptions.map((opt, idx) => (
+                    <button
+                      key={idx}
+                      style={idx !== selectedOutboundIdx ? { backgroundColor: '#fff' } : {}}
+                      className={cn(
+                        "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                        idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                      )}
+                      onClick={() => handleSelectOutbound(idx)}
+                    >
+                      <FlightLegRow option={opt} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Return column */}
+              <div>
+                <div className="mb-2 text-xs font-semibold text-gray-700">
+                  {returnOptions[0].departureCode} → {returnOptions[0].arrivalCode} · {returnOptions[0].date}
+                </div>
+                <div className="flex flex-col gap-2">
+                  {returnOptions.map((opt, idx) => (
+                    <button
+                      key={idx}
+                      style={idx !== selectedReturnIdx ? { backgroundColor: '#fff' } : {}}
+                      className={cn(
+                        "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                        idx === selectedReturnIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                      )}
+                      onClick={() => handleSelectReturn(idx)}
+                    >
+                      <FlightLegRow option={opt} />
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-          {/* Return column */}
-          <div>
-            <div className="mb-2 text-xs font-semibold text-gray-700">
-              {returnOptions[0].departureCode} → {returnOptions[0].arrivalCode} · {returnOptions[0].date}
-            </div>
-            <div className="flex flex-col gap-2">
-              {returnOptions.map((opt, idx) => (
-                <button
-                  key={idx}
-                  style={idx !== selectedReturnIdx ? { backgroundColor: '#fff' } : {}}
-                  className={cn(
-                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                    idx === selectedReturnIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                  )}
-                  onClick={() => handleSelectReturn(idx)}
-                >
-                  <FlightLegRow option={opt} />
-                </button>
-              ))}
-            </div>
+          {/* Flight details link in gray bar at bottom */}
+          <div className="bg-gray-50 px-4 pt-1 pb-2 flex items-start">
+            <button className="text-blue-600 text-sm font-medium hover:underline" onClick={onDetails}>Flight details</button>
           </div>
-        </div>
-      </div>
-      {/* Flight details link in gray bar at bottom */}
-      <div className="bg-gray-50 px-4 py-2 border-t border-gray-100 flex items-start">
-        <button className="text-blue-600 text-sm font-medium hover:underline" onClick={onDetails}>Flight details</button>
-      </div>
+        </>
+      )}
     </div>
   );
 };
