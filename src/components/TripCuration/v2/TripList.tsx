@@ -3,7 +3,7 @@ import { Skeleton } from '../../ui/skeleton';
 import { mockTrips } from '../mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../../ui/button';
-import { Sliders, Info } from 'lucide-react';
+import { Sliders, Info, Check } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FlightListCard from './FlightListCard';
 
@@ -128,8 +128,53 @@ const LoadingSkeleton = () => (
   </div>
 );
 
+// New component for Quick Price Filters
+const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
+  return (
+    <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {airlines.map((airline) => (
+          <button
+            key={airline.id}
+            onClick={() => onAirlineSelect(
+              selectedAirlines.includes(airline.id)
+                ? selectedAirlines.filter(id => id !== airline.id)
+                : [...selectedAirlines, airline.id]
+            )}
+            className={cn(
+              "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
+              selectedAirlines.includes(airline.id)
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-300"
+            )}
+          >
+            <div className="flex items-center gap-2.5">
+              <img 
+                src={airline.logo} 
+                alt={airline.name} 
+                className="h-5 w-5 rounded bg-gray-100"
+              />
+              <div className="text-left">
+                <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
+              </div>
+            </div>
+            {selectedAirlines.includes(airline.id) && (
+              <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
+  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
+  const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
+
   // For demonstration, create FlightLegOption objects for each flight (same as v1)
   const roundTripOptions = [
     {
@@ -326,16 +371,73 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   const [selectedOutboundIdxArr, setSelectedOutboundIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
   const [selectedReturnIdxArr, setSelectedReturnIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
 
+  // Mock airlines data with price ranges
+  const airlines = [
+    {
+      id: 'emirates',
+      name: 'Emirates',
+      logo: 'https://airhex.com/images/airline-logos/emirates.png',
+      priceRange: '45,717 - 65,909'
+    },
+    {
+      id: 'etihad',
+      name: 'Etihad Airways',
+      logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
+      priceRange: '47,000 - 68,000'
+    },
+    {
+      id: 'qatar',
+      name: 'Qatar Airways',
+      logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
+      priceRange: '46,000 - 67,000'
+    },
+    {
+      id: 'turkish',
+      name: 'Turkish Airlines',
+      logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
+      priceRange: '44,000 - 64,000'
+    }
+  ];
+
+  // Initialize selected airlines with all airlines when component mounts
+  React.useEffect(() => {
+    const allAirlineIds = airlines.map(a => a.id);
+    setSelectedAirlines(allAirlineIds);
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  const handleQuickFilterSelect = (airlineId: string) => {
+    // If the airline is already selected, deselect it
+    if (selectedQuickFilters.includes(airlineId)) {
+      const newSelectedFilters = selectedQuickFilters.filter(id => id !== airlineId);
+      setSelectedQuickFilters(newSelectedFilters);
+      // If no quick filters are selected, reset to all airlines
+      if (newSelectedFilters.length === 0) {
+        setSelectedAirlines(airlines.map(a => a.id));
+      }
+    } else {
+      // Add the new airline to selected quick filters
+      setSelectedQuickFilters([...selectedQuickFilters, airlineId]);
+      // Clear left side airline selections
+      setSelectedAirlines([]);
+    }
+  };
+
   if (loading) {
     return <LoadingSkeleton />;
   }
 
   return (
     <div>
-      {/* Sort options (Cheapest, Best, Quickest) */}
+      {/* Price Category Summary Cards */}
       <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex">
-          <div className="flex-1 border-r border-gray-200 p-2.5 text-center relative">
+          <div 
+            className={cn(
+              "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
+              selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
+            )}
+            onClick={() => setSelectedPriceCategory('cheapest')}
+          >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
                 <Tooltip open={activeTooltip === 'cheapest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'cheapest' ? null : 'cheapest')}>
@@ -379,7 +481,13 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             </div>
             <div className="font-bold text-lg">₹45,717</div>
           </div>
-          <div className="flex-1 border-r border-gray-200 p-2.5 text-center bg-blue-50 border-b-2 border-b-blue-600 relative">
+          <div 
+            className={cn(
+              "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
+              selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
+            )}
+            onClick={() => setSelectedPriceCategory('best')}
+          >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
                 <Tooltip open={activeTooltip === 'best'} onOpenChange={() => setActiveTooltip(activeTooltip === 'best' ? null : 'best')}>
@@ -423,7 +531,13 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             </div>
             <div className="font-bold text-lg">₹59,035</div>
           </div>
-          <div className="flex-1 p-2.5 text-center relative">
+          <div 
+            className={cn(
+              "flex-1 p-2.5 text-center relative cursor-pointer",
+              selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
+            )}
+            onClick={() => setSelectedPriceCategory('quickest')}
+          >
             <div className="absolute top-2 right-2">
               <TooltipProvider>
                 <Tooltip open={activeTooltip === 'quickest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'quickest' ? null : 'quickest')}>
@@ -469,43 +583,58 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           </div>
         </div>
       </div>
+
+      {/* Quick Price Filters */}
+      <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {airlines.map((airline) => (
+            <button
+              key={airline.id}
+              onClick={() => handleQuickFilterSelect(airline.id)}
+              className={cn(
+                "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
+                selectedQuickFilters.includes(airline.id)
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:border-gray-300"
+              )}
+            >
+              <div className="flex items-center gap-2.5">
+                <img 
+                  src={airline.logo} 
+                  alt={airline.name} 
+                  className="h-5 w-5 rounded bg-gray-100"
+                />
+                <div className="text-left">
+                  <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
+                </div>
+              </div>
+              {selectedQuickFilters.includes(airline.id) && (
+                <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Flight cards list */}
       <div className="space-y-4">
-        {roundTripOptions.map((option, idx) => {
-          // Compose outbound and return options arrays, adding a 'date' property
-          const outboundOptions = [option.outboundFlight, ...option.moreOptions.map(opt => opt.outbound)].map((opt, i) => ({
-            ...(opt as any),
-            date: (opt as any).date || `2025-06-0${i + 1}`
-          }));
-          const returnOptions = [option.returnFlight, ...option.moreOptions.map(opt => opt.return)].map((opt, i) => ({
-            ...(opt as any),
-            date: (opt as any).date || `2025-06-1${i + 1}`
-          }));
-
-          // Use lifted state
-          const selectedOutboundIdx = selectedOutboundIdxArr[idx] || 0;
-          const selectedReturnIdx = selectedReturnIdxArr[idx] || 0;
-
-          const handleSelectOutbound = (newIdx: number) => {
-            setSelectedOutboundIdxArr(arr => {
-              const copy = [...arr];
-              copy[idx] = newIdx;
-              return copy;
-            });
-          };
-          const handleSelectReturn = (newIdx: number) => {
-            setSelectedReturnIdxArr(arr => {
-              const copy = [...arr];
-              copy[idx] = newIdx;
-              return copy;
-            });
-          };
-
-          return (
+        {roundTripOptions
+          .filter(option => {
+            // If quick filters are selected, use those
+            if (selectedQuickFilters.length > 0) {
+              const airlineId = option.outboundFlight.airlineName.toLowerCase().replace(/\s+/g, '');
+              return selectedQuickFilters.includes(airlineId);
+            }
+            // Otherwise use the left side airline filters
+            const airlineId = option.outboundFlight.airlineName.toLowerCase().replace(/\s+/g, '');
+            return selectedAirlines.includes(airlineId);
+          })
+          .map((option, idx) => (
             <FlightListCard
               key={idx}
-              outboundFlight={outboundOptions[selectedOutboundIdx]}
-              returnFlight={returnOptions[selectedReturnIdx]}
+              outboundFlight={option.outboundFlight}
+              returnFlight={option.returnFlight}
               price={option.price}
               currency={option.currency}
               coupon={option.coupon}
@@ -513,8 +642,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
               onBook={() => onViewTrip(option)}
               onDetails={() => onViewTrip(option)}
             />
-          );
-        })}
+          ))}
       </div>
     </div>
   );
