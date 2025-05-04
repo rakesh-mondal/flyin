@@ -33,6 +33,8 @@ interface FlightLegOption {
   stops: string;
   layover?: string;
   date: string;
+  departureCity: string;
+  arrivalCity: string;
 }
 
 interface FlightResultCardProps {
@@ -89,76 +91,58 @@ const FlightResultCard: React.FC<FlightResultCardProps> = ({
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
       {/* Top summary card */}
-      <div className="p-4 flex flex-col gap-2 border-b border-gray-100">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-          {/* Left: Outbound and Return details */}
-          <div className="flex-1 flex flex-col gap-2">
-            {/* Outbound */}
-            <div className="flex items-center gap-3">
-              {/* Airline logos */}
-              <div className="flex items-center gap-1">
-                <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 object-contain bg-white border rounded" />
-                {/* Add more logos if needed for multiple airlines */}
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold">{selectedOutbound.departureTime} - {selectedOutbound.arrivalTime}</span>
-                  <span className="text-base text-gray-500 font-medium">{selectedOutbound.departureCode} - {selectedOutbound.arrivalCode}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <span>{selectedOutbound.airlineName}</span>
-                  <span>· {selectedOutbound.stops}</span>
-                  {selectedOutbound.layover && <span>· {selectedOutbound.layover}</span>}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
-                  <span>{selectedOutbound.date}</span>
-                  {/* Add stopover cities with icons if available */}
-                </div>
-              </div>
-              <div className="ml-4 text-right min-w-[120px]">
-                <span className="text-sm text-gray-500 font-medium">{selectedOutbound.duration}</span>
+      <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100">
+        {/* Left: Flight details, match reference design */}
+        <div className="flex-1 flex flex-col gap-3">
+          {/* Outbound */}
+          <div className="flex items-start w-full">
+            {/* Logo and times/route */}
+            <div className="flex items-start gap-3 min-w-[120px]">
+              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
+              <div>
+                <div className="text-lg font-bold leading-tight">{selectedOutbound.departureTime} – {selectedOutbound.arrivalTime}</div>
+                <div className="text-sm text-gray-500 leading-tight">{selectedOutbound.departureCode} {selectedOutbound.departureCity}–{selectedOutbound.arrivalCode} {selectedOutbound.arrivalCity}</div>
               </div>
             </div>
-            <div className="border-t border-dashed border-gray-200 my-1" />
-            {/* Return */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-7 w-7 object-contain bg-white border rounded" />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold">{selectedReturn.departureTime} - {selectedReturn.arrivalTime}</span>
-                  <span className="text-base text-gray-500 font-medium">{selectedReturn.departureCode} - {selectedReturn.arrivalCode}</span>
-                  <span className="text-xs text-red-500 font-semibold">{selectedReturn.date}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <span>{selectedReturn.airlineName}</span>
-                  <span>· {selectedReturn.stops}</span>
-                  {selectedReturn.layover && <span>· {selectedReturn.layover}</span>}
-                </div>
-              </div>
-              <div className="ml-4 text-right min-w-[120px]">
-                <span className="text-sm text-gray-500 font-medium">{selectedReturn.duration}</span>
-              </div>
+            {/* Center: Stops */}
+            <div className="flex flex-col items-center justify-center flex-1">
+              <span className="font-semibold text-black text-sm">{selectedOutbound.stops}</span>
+              {selectedOutbound.stops !== 'non-stop' && selectedOutbound.layover && (
+                <span className="text-xs text-gray-500 mt-0.5">{selectedOutbound.layover.replace(/.*in\s+/i, '')}</span>
+              )}
             </div>
+            {/* Right: Duration */}
+            <div className="font-bold text-sm text-black min-w-[60px] text-right flex items-center justify-end">{selectedOutbound.duration}</div>
           </div>
-          {/* Right: Price, offer, book button */}
-          <div className="flex flex-col items-end justify-between min-w-[180px] gap-2">
-            <div className="flex flex-col items-end">
-              <div className="text-2xl font-bold">{currency} {price}</div>
-              {coupon && <span className="text-xs text-green-600 font-medium mt-1">{coupon}</span>}
+          {/* Return */}
+          <div className="flex items-start w-full">
+            {/* Logo and times/route */}
+            <div className="flex items-start gap-3 min-w-[120px]">
+              <img src={selectedReturn.airlineLogo} alt={selectedReturn.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
+              <div>
+                <div className="text-lg font-bold leading-tight">
+                  {selectedReturn.departureTime} – {selectedReturn.arrivalTime}
+                  <sup className="text-xs text-gray-400 font-semibold align-super">+1</sup>
+                </div>
+                <div className="text-sm text-gray-500 leading-tight">{selectedReturn.departureCode} {selectedReturn.departureCity}–{selectedReturn.arrivalCode} {selectedReturn.arrivalCity}</div>
+              </div>
             </div>
-            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-8 py-2 mt-2" onClick={onBook}>Book</Button>
-            <button className="text-blue-600 text-sm font-medium hover:underline mt-2" onClick={onDetails}>Flight details &rarr;</button>
+            {/* Center: Stops */}
+            <div className="flex flex-col items-center justify-center flex-1">
+              <span className="font-semibold text-black text-sm">{selectedReturn.stops}</span>
+              {selectedReturn.stops !== 'non-stop' && selectedReturn.layover && (
+                <span className="text-xs text-gray-500 mt-0.5">{selectedReturn.layover.replace(/.*in\s+/i, '')}</span>
+              )}
+            </div>
+            {/* Right: Duration */}
+            <div className="font-bold text-sm text-black min-w-[60px] text-right flex items-center justify-end">{selectedReturn.duration}</div>
           </div>
         </div>
-        {/* Bottom row: badges */}
-        <div className="flex items-center gap-2 mt-3">
-          {nonRefundable && (
-            <Badge variant="outline" className="text-xs text-gray-700 bg-gray-50 border-gray-200 flex items-center gap-1"><Shield className="h-3 w-3 mr-1" /> Non-refundable</Badge>
-          )}
-          {/* Example: Transit visa badge */}
-          <Badge variant="outline" className="text-xs text-gray-700 bg-gray-50 border-gray-200 flex items-center gap-1"><BadgeCheck className="h-3 w-3 mr-1" /> Transit visa</Badge>
+        {/* Right: Price, class, select button */}
+        <div className="flex flex-col items-end min-w-[160px] gap-2">
+          <div className="text-2xl font-bold text-black">{currency} {price}</div>
+          <div className="text-sm text-gray-500">Economy</div>
+          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-8 py-2 mt-2" onClick={onBook}>Select</Button>
         </div>
       </div>
       {/* Bottom section: Flight pickers */}
