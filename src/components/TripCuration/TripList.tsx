@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import FlightListCard from './FlightListCard';
@@ -7,7 +8,7 @@ import { Button } from '../ui/button';
 import { Sliders, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-// Mock flight data for Middle Eastern destinations with official airline logo URLs
+// Mock flight data for Middle Eastern destinations with official airline logos
 const mockFlights = [
   {
     id: 1,
@@ -156,7 +157,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     return <LoadingSkeleton />;
   }
 
-  // For demonstration, pair flights as round-trips (first as outbound, second as return)
+  // For demonstration, create FlightLegOption objects for each flight
   const roundTripOptions = [
     {
       outboundFlight: {
@@ -166,8 +167,12 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         arrivalTime: mockFlights[0].arrivalTime,
         departureCode: mockFlights[0].departureCode,
         arrivalCode: mockFlights[0].arrivalCode,
+        departureCity: mockFlights[0].departureCity,
+        arrivalCity: mockFlights[0].arrivalCity,
         duration: mockFlights[0].duration,
         stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
+        date: 'May 7, 2025',
+        layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
       },
       returnFlight: {
         airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -176,8 +181,12 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         arrivalTime: mockFlights[1].arrivalTime,
         departureCode: mockFlights[1].departureCode,
         arrivalCode: mockFlights[1].arrivalCode,
+        departureCity: mockFlights[1].departureCity,
+        arrivalCity: mockFlights[1].arrivalCity,
         duration: mockFlights[1].duration,
         stops: mockFlights[1].stops === 0 ? 'non-stop' : `${mockFlights[1].stops} stop${mockFlights[1].stops > 1 ? 's' : ''}`,
+        date: 'May 14, 2025',
+        layover: mockFlights[1].stops > 0 ? '1h in Mumbai' : undefined,
       },
       price: mockFlights[0].price.toString(),
       currency: '₹',
@@ -194,8 +203,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '06:00',
             departureCode: mockFlights[0].departureCode,
             arrivalCode: mockFlights[0].arrivalCode,
+            departureCity: mockFlights[0].departureCity,
+            arrivalCity: mockFlights[0].arrivalCity,
             duration: '8h 00m',
             stops: 'non-stop',
+            date: 'May 7, 2025',
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -204,8 +216,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '20:00',
             departureCode: mockFlights[1].departureCode,
             arrivalCode: mockFlights[1].arrivalCode,
+            departureCity: mockFlights[1].departureCity,
+            arrivalCity: mockFlights[1].arrivalCity,
             duration: '8h 00m',
             stops: 'non-stop',
+            date: 'May 14, 2025',
           },
         },
         {
@@ -216,8 +231,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '07:30',
             departureCode: mockFlights[0].departureCode,
             arrivalCode: mockFlights[0].arrivalCode,
+            departureCity: mockFlights[0].departureCity,
+            arrivalCity: mockFlights[0].arrivalCity,
             duration: '8h 00m',
             stops: 'non-stop',
+            date: 'May 7, 2025',
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -226,8 +244,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '22:00',
             departureCode: mockFlights[1].departureCode,
             arrivalCode: mockFlights[1].arrivalCode,
+            departureCity: mockFlights[1].departureCity,
+            arrivalCity: mockFlights[1].arrivalCity,
             duration: '8h 00m',
             stops: 'non-stop',
+            date: 'May 14, 2025',
           },
         },
       ],
@@ -240,8 +261,12 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         arrivalTime: mockFlights[2].arrivalTime,
         departureCode: mockFlights[2].departureCode,
         arrivalCode: mockFlights[2].arrivalCode,
+        departureCity: mockFlights[2].departureCity,
+        arrivalCity: mockFlights[2].arrivalCity,
         duration: mockFlights[2].duration,
         stops: mockFlights[2].stops === 0 ? 'non-stop' : `${mockFlights[2].stops} stop${mockFlights[2].stops > 1 ? 's' : ''}`,
+        date: 'May 7, 2025',
+        layover: mockFlights[2].stops > 0 ? '3h in Abu Dhabi' : undefined,
       },
       returnFlight: {
         airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -250,8 +275,12 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         arrivalTime: mockFlights[0].arrivalTime,
         departureCode: mockFlights[0].departureCode,
         arrivalCode: mockFlights[0].arrivalCode,
+        departureCity: mockFlights[0].departureCity,
+        arrivalCity: mockFlights[0].arrivalCity,
         duration: mockFlights[0].duration,
         stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
+        date: 'May 14, 2025',
+        layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
       },
       price: mockFlights[2].price.toString(),
       currency: '₹',
@@ -268,8 +297,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '18:00',
             departureCode: mockFlights[2].departureCode,
             arrivalCode: mockFlights[2].arrivalCode,
+            departureCity: mockFlights[2].departureCity,
+            arrivalCity: mockFlights[2].arrivalCity,
             duration: '9h 00m',
             stops: '1 stop',
+            date: 'May 7, 2025',
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -278,8 +310,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '05:00',
             departureCode: mockFlights[0].departureCode,
             arrivalCode: mockFlights[0].arrivalCode,
+            departureCity: mockFlights[0].departureCity,
+            arrivalCity: mockFlights[0].arrivalCity,
             duration: '9h 00m',
             stops: '1 stop',
+            date: 'May 14, 2025',
           },
         },
         {
@@ -290,8 +325,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '22:00',
             departureCode: mockFlights[2].departureCode,
             arrivalCode: mockFlights[2].arrivalCode,
+            departureCity: mockFlights[2].departureCity,
+            arrivalCity: mockFlights[2].arrivalCity,
             duration: '9h 00m',
             stops: '1 stop',
+            date: 'May 7, 2025',
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -300,8 +338,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             arrivalTime: '08:00',
             departureCode: mockFlights[0].departureCode,
             arrivalCode: mockFlights[0].arrivalCode,
+            departureCity: mockFlights[0].departureCity,
+            arrivalCity: mockFlights[0].arrivalCity,
             duration: '9h 00m',
             stops: '1 stop',
+            date: 'May 14, 2025',
           },
         },
       ],

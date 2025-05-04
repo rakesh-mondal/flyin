@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -33,23 +34,25 @@ interface FlightLegOption {
   stops: string;
   layover?: string;
   date: string;
-  departureCity: string;
-  arrivalCity: string;
+  departureCity?: string; // Make optional to avoid undefined errors
+  arrivalCity?: string; // Make optional to avoid undefined errors
 }
 
-interface FlightResultCardProps {
-  outboundOptions: FlightLegOption[];
-  returnOptions: FlightLegOption[];
-  selectedOutboundIdx: number;
-  selectedReturnIdx: number;
+interface FlightListCardProps {
+  outboundFlight: FlightLegOption;
+  returnFlight: FlightLegOption;
   price: string;
   currency: string;
+  stock?: string;
   coupon?: string;
-  nonRefundable?: boolean;
-  onSelectOutbound: (idx: number) => void;
-  onSelectReturn: (idx: number) => void;
+  promoBanner?: string;
+  baggageTag?: string;
+  moreOptions?: Array<{
+    outbound: FlightLegOption;
+    return: FlightLegOption;
+  }>;
   onBook: () => void;
-  onDetails: () => void;
+  onDetails?: () => void;
 }
 
 const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
@@ -70,23 +73,44 @@ const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
   </div>
 );
 
-const FlightResultCard: React.FC<FlightResultCardProps> = ({
-  outboundOptions,
-  returnOptions,
-  selectedOutboundIdx,
-  selectedReturnIdx,
+const FlightResultCard = ({
+  outboundFlight, // Changed from outboundOptions to outboundFlight
+  returnFlight, // Changed from returnOptions to returnFlight
   price,
   currency,
+  stock,
   coupon,
-  nonRefundable,
-  onSelectOutbound,
-  onSelectReturn,
+  promoBanner,
+  baggageTag,
+  moreOptions = [], // Provide default empty array
   onBook,
   onDetails,
-}) => {
-  // --- Top summary card ---
-  const selectedOutbound = outboundOptions[selectedOutboundIdx];
-  const selectedReturn = returnOptions[selectedReturnIdx];
+}: FlightListCardProps) => {
+  const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
+  const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
+  
+  // Create arrays for outbound and return options
+  const outboundOptions = [
+    outboundFlight,
+    ...(moreOptions?.map(option => option.outbound) || [])
+  ];
+  
+  const returnOptions = [
+    returnFlight,
+    ...(moreOptions?.map(option => option.return) || [])
+  ];
+
+  // Ensure we have valid selections
+  const selectedOutbound = outboundOptions[selectedOutboundIdx] || outboundOptions[0];
+  const selectedReturn = returnOptions[selectedReturnIdx] || returnOptions[0];
+  
+  const handleSelectOutbound = (idx: number) => {
+    setSelectedOutboundIdx(idx);
+  };
+  
+  const handleSelectReturn = (idx: number) => {
+    setSelectedReturnIdx(idx);
+  };
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
@@ -101,7 +125,9 @@ const FlightResultCard: React.FC<FlightResultCardProps> = ({
               <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
               <div>
                 <div className="text-lg font-bold leading-tight">{selectedOutbound.departureTime} – {selectedOutbound.arrivalTime}</div>
-                <div className="text-sm text-gray-500 leading-tight">{selectedOutbound.departureCode} {selectedOutbound.departureCity}–{selectedOutbound.arrivalCode} {selectedOutbound.arrivalCity}</div>
+                <div className="text-sm text-gray-500 leading-tight">
+                  {selectedOutbound.departureCode} {selectedOutbound.departureCity || ''} – {selectedOutbound.arrivalCode} {selectedOutbound.arrivalCity || ''}
+                </div>
               </div>
             </div>
             {/* Center: Stops */}
@@ -124,7 +150,9 @@ const FlightResultCard: React.FC<FlightResultCardProps> = ({
                   {selectedReturn.departureTime} – {selectedReturn.arrivalTime}
                   <sup className="text-xs text-gray-400 font-semibold align-super">+1</sup>
                 </div>
-                <div className="text-sm text-gray-500 leading-tight">{selectedReturn.departureCode} {selectedReturn.departureCity}–{selectedReturn.arrivalCode} {selectedReturn.arrivalCity}</div>
+                <div className="text-sm text-gray-500 leading-tight">
+                  {selectedReturn.departureCode} {selectedReturn.departureCity || ''} – {selectedReturn.arrivalCode} {selectedReturn.arrivalCity || ''}
+                </div>
               </div>
             </div>
             {/* Center: Stops */}
@@ -161,7 +189,7 @@ const FlightResultCard: React.FC<FlightResultCardProps> = ({
                     "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
                     idx === selectedOutboundIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
                   )}
-                  onClick={() => onSelectOutbound(idx)}
+                  onClick={() => handleSelectOutbound(idx)}
                 >
                   <FlightLegRow option={opt} />
                 </button>
@@ -181,7 +209,7 @@ const FlightResultCard: React.FC<FlightResultCardProps> = ({
                     "rounded-lg border px-3 py-2 min-w-[180px] text-left transition-all",
                     idx === selectedReturnIdx ? "border-black ring-2 ring-black bg-white" : "border-gray-200 bg-gray-50 hover:bg-white"
                   )}
-                  onClick={() => onSelectReturn(idx)}
+                  onClick={() => handleSelectReturn(idx)}
                 >
                   <FlightLegRow option={opt} />
                 </button>
