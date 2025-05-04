@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -73,16 +72,16 @@ const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
   </div>
 );
 
-const FlightResultCard = ({
-  outboundFlight, // Changed from outboundOptions to outboundFlight
-  returnFlight, // Changed from returnOptions to returnFlight
+const FlightListCard = ({
+  outboundFlight,
+  returnFlight,
   price,
   currency,
   stock,
   coupon,
   promoBanner,
   baggageTag,
-  moreOptions = [], // Provide default empty array
+  moreOptions = [],
   onBook,
   onDetails,
 }: FlightListCardProps) => {
@@ -226,4 +225,4 @@ const FlightResultCard = ({
   );
 };
 
-export default FlightResultCard; 
+export default FlightListCard; 

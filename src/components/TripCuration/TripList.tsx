@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { mockTrips } from './mockData';
@@ -6,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Sliders, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import FlightResultCard from './FlightListCard';
+import FlightListCard from './FlightListCard';
 
 // Mock flight data for Middle Eastern destinations with official airline logos
 const mockFlights = [
@@ -535,18 +534,14 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           };
 
           return (
-            <FlightResultCard
+            <FlightListCard
               key={idx}
-              outboundOptions={outboundOptions}
-              returnOptions={returnOptions}
-              selectedOutboundIdx={selectedOutboundIdx}
-              selectedReturnIdx={selectedReturnIdx}
+              outboundFlight={outboundOptions[selectedOutboundIdx]}
+              returnFlight={returnOptions[selectedReturnIdx]}
               price={option.price}
               currency={option.currency}
               coupon={option.coupon}
-              nonRefundable={true}
-              onSelectOutbound={handleSelectOutbound}
-              onSelectReturn={handleSelectReturn}
+              moreOptions={option.moreOptions}
               onBook={() => onViewTrip(option)}
               onDetails={() => onViewTrip(option)}
             />
