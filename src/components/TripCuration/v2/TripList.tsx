@@ -156,7 +156,7 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
               />
               <div className="text-left">
                 <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
+                <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
               </div>
             </div>
             {selectedAirlines.includes(airline.id) && (
@@ -191,6 +191,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
         date: 'May 7, 2025',
         layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
+        price: '35,909'
       },
       returnFlight: {
         airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -205,8 +206,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         stops: mockFlights[1].stops === 0 ? 'non-stop' : `${mockFlights[1].stops} stop${mockFlights[1].stops > 1 ? 's' : ''}`,
         date: 'May 14, 2025',
         layover: mockFlights[1].stops > 0 ? '1h in Mumbai' : undefined,
+        price: '30,000'
       },
-      price: mockFlights[0].price.toString(),
+      price: '65,909',
       currency: '₹',
       stock: '1 Left at this price',
       coupon: 'Book for ₹500 off using coupon FLY',
@@ -226,6 +228,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '8h 00m',
             stops: 'non-stop',
             date: 'May 7, 2025',
+            price: '32,909'
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -239,6 +242,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '8h 00m',
             stops: 'non-stop',
             date: 'May 14, 2025',
+            price: '28,000'
           },
         },
         {
@@ -254,6 +258,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '8h 00m',
             stops: 'non-stop',
             date: 'May 7, 2025',
+            price: '33,909'
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -267,6 +272,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '8h 00m',
             stops: 'non-stop',
             date: 'May 14, 2025',
+            price: '29,000'
           },
         },
       ],
@@ -285,6 +291,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         stops: mockFlights[2].stops === 0 ? 'non-stop' : `${mockFlights[2].stops} stop${mockFlights[2].stops > 1 ? 's' : ''}`,
         date: 'May 7, 2025',
         layover: mockFlights[2].stops > 0 ? '3h in Abu Dhabi' : undefined,
+        price: '25,909'
       },
       returnFlight: {
         airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -299,8 +306,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
         date: 'May 14, 2025',
         layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
+        price: '19,808'
       },
-      price: mockFlights[2].price.toString(),
+      price: '45,717',
       currency: '₹',
       stock: '2 Left at this price',
       coupon: 'Book for ₹400 off using coupon FLY',
@@ -320,6 +328,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '9h 00m',
             stops: '1 stop',
             date: 'May 7, 2025',
+            price: '24,909'
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -333,6 +342,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '9h 00m',
             stops: '1 stop',
             date: 'May 14, 2025',
+            price: '18,808'
           },
         },
         {
@@ -348,6 +358,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '9h 00m',
             stops: '1 stop',
             date: 'May 7, 2025',
+            price: '23,909'
           },
           return: {
             airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
@@ -361,6 +372,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             duration: '9h 00m',
             stops: '1 stop',
             date: 'May 14, 2025',
+            price: '20,808'
           },
         },
       ],
@@ -377,25 +389,25 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       id: 'emirates',
       name: 'Emirates',
       logo: 'https://airhex.com/images/airline-logos/emirates.png',
-      priceRange: '45,717 - 65,909'
+      price: '65,909'
     },
     {
       id: 'etihad',
       name: 'Etihad Airways',
       logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
-      priceRange: '47,000 - 68,000'
+      price: '47,000'
     },
     {
       id: 'qatar',
       name: 'Qatar Airways',
       logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
-      priceRange: '46,000 - 67,000'
+      price: '46,000'
     },
     {
       id: 'turkish',
       name: 'Turkish Airlines',
       logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
-      priceRange: '44,000 - 64,000'
+      price: '44,000'
     }
   ];
 
@@ -621,7 +633,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                   />
                   <div className="text-left">
                     <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">₹{airline.priceRange}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
                   </div>
                 </div>
                 {selectedQuickFilters.includes(airline.id) && (
@@ -637,7 +649,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             {/* Outbound List */}
             <div>
               <div className="mb-2 text-xs font-semibold text-gray-700">
-                {summaryOption.outboundFlight.departureCode} → {summaryOption.outboundFlight.arrivalCode} · {summaryOption.outboundFlight.date}
+                {summaryOption.outboundFlight.departureCity} → {summaryOption.outboundFlight.arrivalCity} · {summaryOption.outboundFlight.date}
               </div>
               <div className="flex flex-col gap-2">
                 {roundTripOptions.map((option, idx) => (
@@ -662,6 +674,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                           {option.outboundFlight.layover && <span>· {option.outboundFlight.layover}</span>}
                         </div>
                       </div>
+                      <div className="text-right">
+                        <div className="text-base font-bold text-black">₹{option.outboundFlight.price}</div>
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -670,7 +685,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             {/* Inbound List */}
             <div>
               <div className="mb-2 text-xs font-semibold text-gray-700">
-                {summaryOption.returnFlight.departureCode} → {summaryOption.returnFlight.arrivalCode} · {summaryOption.returnFlight.date}
+                {summaryOption.returnFlight.arrivalCity} → {summaryOption.returnFlight.departureCity} · {summaryOption.returnFlight.date}
               </div>
               <div className="flex flex-col gap-2">
                 {roundTripOptions.map((option, idx) => (
@@ -694,6 +709,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                           <span>· {option.returnFlight.stops}</span>
                           {option.returnFlight.layover && <span>· {option.returnFlight.layover}</span>}
                         </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-base font-bold text-black">₹{option.returnFlight.price}</div>
                       </div>
                     </div>
                   </button>

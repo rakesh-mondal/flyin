@@ -36,17 +36,17 @@ export default function FlightTimings({
   onDepartureTimeChange,
   onReturnTimeChange
 }: FlightTimingsProps) {
-  const [selectedDeparture, setSelectedDeparture] = React.useState<string | null>('before-6am');
-  const [selectedReturn, setSelectedReturn] = React.useState<string | null>('before-6am');
+  const [selectedDeparture, setSelectedDeparture] = React.useState<string | null>(null);
+  const [selectedReturn, setSelectedReturn] = React.useState<string | null>(null);
 
   const handleDepartureSelect = (value: string) => {
     setSelectedDeparture(selectedDeparture === value ? null : value);
-    onDepartureTimeChange?.(value);
+    onDepartureTimeChange?.(selectedDeparture === value ? '' : value);
   };
 
   const handleReturnSelect = (value: string) => {
     setSelectedReturn(selectedReturn === value ? null : value);
-    onReturnTimeChange?.(value);
+    onReturnTimeChange?.(selectedReturn === value ? '' : value);
   };
 
   const TimeButton = ({ option, isSelected, onClick }: { 

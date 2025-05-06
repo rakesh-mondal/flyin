@@ -23,11 +23,11 @@ const FilterChips = ({
   departureRoute,
   returnRoute,
 }: FilterChipsProps) => {
-  const [selectedStop, setSelectedStop] = useState<'non-stop' | '1-stop' | '2-more'>('non-stop');
+  const [selectedStop, setSelectedStop] = useState<'non-stop' | '1-stop' | '2-more' | null>(null);
 
   useEffect(() => {
     if (selectedAirlines.length === 0) {
-      onAirlinesChange(['emirates']);
+      onAirlinesChange(['emirates', 'air-india', 'etihad', 'vistara', 'qatar', 'lufthansa', 'singapore']);
     }
   }, []);
 
@@ -36,7 +36,7 @@ const FilterChips = ({
   };
 
   const handleStopSelect = (stop: 'non-stop' | '1-stop' | '2-more') => {
-    setSelectedStop(selectedStop === stop ? 'non-stop' : stop);
+    setSelectedStop(selectedStop === stop ? null : stop);
     toast.success(`${stop} filter ${selectedStop === stop ? 'removed' : 'applied'}`);
   };
 
@@ -48,7 +48,7 @@ const FilterChips = ({
           <div className="text-base">
             <span className="font-semibold text-gray-900">1577</span>
             <span className="text-gray-500"> of </span>
-            <span className="font-semibold text-blue-600">2000</span>
+            <span className="font-semibold text-gray-900">2000</span>
             <span className="text-gray-500"> flights</span>
           </div>
         </div>
@@ -57,14 +57,13 @@ const FilterChips = ({
       {/* Stops Section */}
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <PlaneTakeoff className="w-4 h-4 text-gray-500" />
+          <div className="flex items-center">
             <h3 className="text-sm font-semibold text-gray-900">Stops</h3>
           </div>
           <button 
             className="text-xs font-medium text-blue-600 hover:text-blue-700"
             onClick={() => {
-              setSelectedStop('non-stop');
+              setSelectedStop(null);
               toast.success("Stops filter reset");
             }}
           >
@@ -125,8 +124,7 @@ const FilterChips = ({
       {/* Flight Timings Section */}
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-gray-500" />
+          <div className="flex items-center">
             <h3 className="text-sm font-semibold text-gray-900">Flight Timings</h3>
           </div>
           <button 
@@ -152,8 +150,7 @@ const FilterChips = ({
       {/* Airlines Section */}
       <div>
         <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <PlaneTakeoff className="w-4 h-4 text-gray-500" />
+          <div className="flex items-center">
             <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
           </div>
           <button 

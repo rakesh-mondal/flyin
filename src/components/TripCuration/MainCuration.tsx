@@ -169,7 +169,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [returnTime, setReturnTime] = useState<string | null>(null);
   const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
   const [showOptionsSelector, setShowOptionsSelector] = useState(false);
-  const [version, setVersion] = useState<'v1' | 'v2'>('v1');
+  const [version] = useState<'v2'>('v2');
 
   // Parse search query when component mounts or searchQuery changes
   useEffect(() => {
@@ -428,24 +428,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
-      {/* Compact Centered Version Toggle */}
-      <div className="flex justify-center my-2 px-4">
-        <div className="inline-flex gap-2 rounded-lg bg-gray-100 p-1">
-          <button
-            className={`px-3 py-1 rounded text-xs font-medium transition-all ${version === 'v1' ? 'bg-black text-white' : 'bg-white text-black'}`}
-            onClick={() => setVersion('v1')}
-          >
-            v1
-          </button>
-          <button
-            className={`px-3 py-1 rounded text-xs font-medium transition-all ${version === 'v2' ? 'bg-black text-white' : 'bg-white text-black'}`}
-            onClick={() => setVersion('v2')}
-          >
-            v2
-          </button>
-        </div>
-      </div>
-
       {/* Header */}
       <div className="animate-fade-in">
         <div className="w-full">
@@ -516,21 +498,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   className={`reveal ${tripListRef.isVisible ? 'visible' : ''}`}
                 >
                   <div className="rounded-xl">
-                    {version === 'v1' ? (
-                      <TripListV1
-                        trips={trips}
-                        loading={loading}
-                        onViewTrip={handleTripSelect}
-                        selectedTrip={selectedTrip}
-                      />
-                    ) : (
-                      <TripListV2
-                        trips={trips}
-                        loading={loading}
-                        onViewTrip={handleTripSelect}
-                        selectedTrip={selectedTrip}
-                      />
-                    )}
+                    <TripListV2
+                      trips={trips}
+                      loading={loading}
+                      onViewTrip={handleTripSelect}
+                      selectedTrip={selectedTrip}
+                    />
                   </div>
                 </div>
               </div>
