@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
-import TripListV1 from './v1/TripList';
 import TripListV2 from './v2/TripList';
 import ChatInput from './ChatInput';
 // import SelectedTripDetail from './SelectedTripDetail';  // Commented out as we're not using it
@@ -543,6 +542,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
             {/* Right Column - Main Content Cards */}
             <div className="order-1 lg:order-2 lg:col-span-9 space-y-6">
+              {/* Only v2 modular cards, no v1/v2 toggle */}
               {/* Tabs Card: Cheapest/Best/Quickest */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="flex">
