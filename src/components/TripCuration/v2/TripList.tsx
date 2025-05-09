@@ -154,8 +154,31 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
                 alt={airline.name} 
                 className="h-5 w-5 rounded bg-gray-100"
               />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-left cursor-pointer">
+                      <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="w-[260px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
+                    <div className="space-y-1">
+                      <div className="font-semibold text-gray-900">{airline.name} ({airline.iata})</div>
+                      <div className="text-xs text-gray-500 mb-1">{airline.country} · {airline.alliance}</div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span>⭐ {airline.rating}</span>
+                        <span>On-time: {airline.onTime}%</span>
+                      </div>
+                      <div className="text-xs">Baggage: {airline.baggage}</div>
+                      <div className="text-xs">WiFi: {airline.wifi ? 'Yes' : 'No'}</div>
+                      <div className="text-xs">Meal: {airline.meal}</div>
+                      <div className="text-xs italic text-gray-600 mt-1">"{airline.review}"</div>
+                      <a href={airline.website} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">Visit website</a>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <div className="text-left">
-                <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
                 <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
               </div>
             </div>
@@ -169,11 +192,26 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
   );
 };
 
+const stopsOptions = [
+  { label: 'Non-stop', value: 0 },
+  { label: '1 stop', value: 1 },
+  { label: '2+ stops', value: 2 }
+];
+const mealOptions = [
+  { label: 'Vegetarian', value: 'Vegetarian' },
+  { label: 'Vegan', value: 'Vegan' },
+  { label: 'Gluten-Free', value: 'Gluten-Free' },
+  { label: 'Halal', value: 'Halal' }
+];
+
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
   const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
+  const [selectedStops, setSelectedStops] = useState<number[]>([]);
+  const [wifiOnly, setWifiOnly] = useState(false);
+  const [selectedMeals, setSelectedMeals] = useState<string[]>([]);
 
   // For demonstration, create FlightLegOption objects for each flight (same as v1)
   const roundTripOptions = [
@@ -388,24 +426,64 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     {
       id: 'emirates',
       name: 'Emirates',
+      iata: 'EK',
+      country: 'UAE',
+      alliance: 'None',
+      rating: 4.7,
+      onTime: 89,
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      review: 'Spacious seats and excellent service.',
+      website: 'https://www.emirates.com',
       logo: 'https://airhex.com/images/airline-logos/emirates.png',
       price: '65,909'
     },
     {
       id: 'etihad',
       name: 'Etihad Airways',
+      iata: 'EY',
+      country: 'UAE',
+      alliance: 'None',
+      rating: 4.5,
+      onTime: 85,
+      baggage: '23kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian',
+      review: 'Modern fleet and great lounges.',
+      website: 'https://www.etihad.com',
       logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
       price: '47,000'
     },
     {
       id: 'qatar',
       name: 'Qatar Airways',
+      iata: 'QR',
+      country: 'Qatar',
+      alliance: 'Oneworld',
+      rating: 4.8,
+      onTime: 92,
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
+      review: 'Award-winning business class.',
+      website: 'https://www.qatarairways.com',
       logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
       price: '46,000'
     },
     {
       id: 'turkish',
       name: 'Turkish Airlines',
+      iata: 'TK',
+      country: 'Turkey',
+      alliance: 'Star Alliance',
+      rating: 4.4,
+      onTime: 81,
+      baggage: '30kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      review: 'Best food among European carriers.',
+      website: 'https://www.turkishairlines.com',
       logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
       price: '44,000'
     }
@@ -434,6 +512,22 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     }
   };
 
+  // Filtering logic
+  const filteredTrips = (trips || mockTrips).filter(trip => {
+    // Airline filter
+    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes((trip.flight.airline || '').toLowerCase().replace(/\s/g, ''));
+    // Stops filter
+    const stopsMatch = selectedStops.length === 0 || selectedStops.some(stops => {
+      if (stops === 2) return trip.flight.stops >= 2;
+      return trip.flight.stops === stops;
+    });
+    // Wifi filter
+    const wifiMatch = !wifiOnly || trip.flight.wifi;
+    // Meal filter
+    const mealMatch = selectedMeals.length === 0 || selectedMeals.some(meal => (trip.flight.meal || '').toLowerCase().includes(meal.toLowerCase()));
+    return airlineMatch && stopsMatch && wifiMatch && mealMatch;
+  });
+
   if (loading) {
     return <LoadingSkeleton />;
   }
@@ -441,8 +535,216 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   // For the summary card, use the first roundTripOption as the default selection
   const summaryOption = roundTripOptions[0];
 
+  // Generate more mock outbound and inbound flights for demo
+  const outboundFlights = [
+    {
+      airlineLogo: airlines[0].logo,
+      airlineName: airlines[0].name,
+      departureTime: '21:00',
+      arrivalTime: '07:05',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 35m',
+      stops: '1 stop',
+      layover: '2h in Dubai',
+      price: '35,909',
+      baggage: airlines[0].baggage,
+      wifi: airlines[0].wifi,
+      meal: airlines[0].meal,
+      rating: airlines[0].rating
+    },
+    {
+      airlineLogo: airlines[1].logo,
+      airlineName: airlines[1].name,
+      departureTime: '22:30',
+      arrivalTime: '09:00',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '37,500',
+      baggage: airlines[1].baggage,
+      wifi: airlines[1].wifi,
+      meal: airlines[1].meal,
+      rating: airlines[1].rating
+    },
+    {
+      airlineLogo: airlines[2].logo,
+      airlineName: airlines[2].name,
+      departureTime: '19:00',
+      arrivalTime: '05:30',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '15h 00m',
+      stops: '2 stops',
+      layover: '3h in Doha',
+      price: '33,800',
+      baggage: airlines[2].baggage,
+      wifi: airlines[2].wifi,
+      meal: airlines[2].meal,
+      rating: airlines[2].rating
+    },
+    {
+      airlineLogo: airlines[3].logo,
+      airlineName: airlines[3].name,
+      departureTime: '23:15',
+      arrivalTime: '10:00',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 45m',
+      stops: '1 stop',
+      layover: '1h 30m in Istanbul',
+      price: '36,200',
+      baggage: airlines[3].baggage,
+      wifi: airlines[3].wifi,
+      meal: airlines[3].meal,
+      rating: airlines[3].rating
+    }
+  ];
+  const inboundFlights = [
+    {
+      airlineLogo: airlines[1].logo,
+      airlineName: airlines[1].name,
+      departureTime: '14:20',
+      arrivalTime: '20:20',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '10h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '30,000',
+      baggage: airlines[1].baggage,
+      wifi: airlines[1].wifi,
+      meal: airlines[1].meal,
+      rating: airlines[1].rating
+    },
+    {
+      airlineLogo: airlines[0].logo,
+      airlineName: airlines[0].name,
+      departureTime: '16:00',
+      arrivalTime: '22:30',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '11h 00m',
+      stops: '1 stop',
+      layover: '2h in Dubai',
+      price: '31,500',
+      baggage: airlines[0].baggage,
+      wifi: airlines[0].wifi,
+      meal: airlines[0].meal,
+      rating: airlines[0].rating
+    },
+    {
+      airlineLogo: airlines[2].logo,
+      airlineName: airlines[2].name,
+      departureTime: '18:30',
+      arrivalTime: '01:00',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '12h 30m',
+      stops: '2 stops',
+      layover: '3h in Doha',
+      price: '29,800',
+      baggage: airlines[2].baggage,
+      wifi: airlines[2].wifi,
+      meal: airlines[2].meal,
+      rating: airlines[2].rating
+    },
+    {
+      airlineLogo: airlines[3].logo,
+      airlineName: airlines[3].name,
+      departureTime: '20:00',
+      arrivalTime: '02:30',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '13h 00m',
+      stops: '1 stop',
+      layover: '1h 45m in Istanbul',
+      price: '32,200',
+      baggage: airlines[3].baggage,
+      wifi: airlines[3].wifi,
+      meal: airlines[3].meal,
+      rating: airlines[3].rating
+    }
+  ];
+
   return (
     <div>
+      {/* Filter UI */}
+      <div className="mb-4 flex flex-wrap gap-3 items-center">
+        {/* Stops filter */}
+        <div className="flex gap-2 items-center">
+          <span className="text-xs font-medium text-gray-700">Stops:</span>
+          {stopsOptions.map(opt => (
+            <button
+              key={opt.value}
+              className={cn(
+                'px-2 py-1 rounded text-xs border',
+                selectedStops.includes(opt.value)
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+              )}
+              onClick={() => setSelectedStops(selectedStops.includes(opt.value)
+                ? selectedStops.filter(s => s !== opt.value)
+                : [...selectedStops, opt.value])}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {/* Wifi filter */}
+        <div className="flex gap-2 items-center">
+          <span className="text-xs font-medium text-gray-700">WiFi:</span>
+          <button
+            className={cn(
+              'px-2 py-1 rounded text-xs border',
+              wifiOnly ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+            )}
+            onClick={() => setWifiOnly(w => !w)}
+          >
+            Yes
+          </button>
+        </div>
+        {/* Meal filter */}
+        <div className="flex gap-2 items-center">
+          <span className="text-xs font-medium text-gray-700">Meal:</span>
+          {mealOptions.map(opt => (
+            <button
+              key={opt.value}
+              className={cn(
+                'px-2 py-1 rounded text-xs border',
+                selectedMeals.includes(opt.value)
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+              )}
+              onClick={() => setSelectedMeals(selectedMeals.includes(opt.value)
+                ? selectedMeals.filter(m => m !== opt.value)
+                : [...selectedMeals, opt.value])}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Results count */}
+      <div className="mb-2 text-xs text-gray-600">{filteredTrips.length} results found</div>
       {/* Price Category Summary Cards */}
       <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex">
@@ -631,8 +933,31 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                     alt={airline.name} 
                     className="h-5 w-5 rounded bg-gray-100"
                   />
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="text-left cursor-pointer">
+                          <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="w-[260px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
+                        <div className="space-y-1">
+                          <div className="font-semibold text-gray-900">{airline.name} ({airline.iata})</div>
+                          <div className="text-xs text-gray-500 mb-1">{airline.country} · {airline.alliance}</div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <span>⭐ {airline.rating}</span>
+                            <span>On-time: {airline.onTime}%</span>
+                          </div>
+                          <div className="text-xs">Baggage: {airline.baggage}</div>
+                          <div className="text-xs">WiFi: {airline.wifi ? 'Yes' : 'No'}</div>
+                          <div className="text-xs">Meal: {airline.meal}</div>
+                          <div className="text-xs italic text-gray-600 mt-1">"{airline.review}"</div>
+                          <a href={airline.website} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">Visit website</a>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <div className="text-left">
-                    <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
                     <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
                   </div>
                 </div>
@@ -649,33 +974,38 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             {/* Outbound List */}
             <div>
               <div className="mb-2 text-xs font-semibold text-gray-700">
-                {summaryOption.outboundFlight.departureCity} → {summaryOption.outboundFlight.arrivalCity} · {summaryOption.outboundFlight.date}
+                New York → Dubai · May 7, 2025
               </div>
               <div className="flex flex-col gap-2">
-                {roundTripOptions.map((option, idx) => (
+                {outboundFlights.map((option, idx) => (
                   <button
                     key={idx}
                     className={cn(
                       "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                       idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                     )}
-                    // TODO: Add selection logic if needed
                   >
                     <div className="flex items-center gap-3 py-1">
-                      <img src={option.outboundFlight.airlineLogo} alt={option.outboundFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-black">{option.outboundFlight.departureTime}–{option.outboundFlight.arrivalTime}</span>
-                          <span className="text-gray-500 text-xs">{option.outboundFlight.departureCode}–{option.outboundFlight.arrivalCode}</span>
+                          <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                          <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span>{option.outboundFlight.airlineName}</span>
-                          <span>· {option.outboundFlight.stops}</span>
-                          {option.outboundFlight.layover && <span>· {option.outboundFlight.layover}</span>}
+                          <span>{option.airlineName}</span>
+                          <span>· {option.stops}</span>
+                          {option.layover && <span>· {option.layover}</span>}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                          <span>Baggage: {option.baggage}</span>
+                          <span>· WiFi: {option.wifi ? 'Yes' : 'No'}</span>
+                          <span>· Meals: {option.meal}</span>
+                          <span>· ⭐ {option.rating}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-base font-bold text-black">₹{option.outboundFlight.price}</div>
+                        <div className="text-base font-bold text-black">₹{option.price}</div>
                       </div>
                     </div>
                   </button>
@@ -685,33 +1015,38 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
             {/* Inbound List */}
             <div>
               <div className="mb-2 text-xs font-semibold text-gray-700">
-                {summaryOption.returnFlight.arrivalCity} → {summaryOption.returnFlight.departureCity} · {summaryOption.returnFlight.date}
+                Dubai → New York · May 14, 2025
               </div>
               <div className="flex flex-col gap-2">
-                {roundTripOptions.map((option, idx) => (
+                {inboundFlights.map((option, idx) => (
                   <button
                     key={idx}
                     className={cn(
                       "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                       idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                     )}
-                    // TODO: Add selection logic if needed
                   >
                     <div className="flex items-center gap-3 py-1">
-                      <img src={option.returnFlight.airlineLogo} alt={option.returnFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-black">{option.returnFlight.departureTime}–{option.returnFlight.arrivalTime}</span>
-                          <span className="text-gray-500 text-xs">{option.returnFlight.departureCode}–{option.returnFlight.arrivalCode}</span>
+                          <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                          <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span>{option.returnFlight.airlineName}</span>
-                          <span>· {option.returnFlight.stops}</span>
-                          {option.returnFlight.layover && <span>· {option.returnFlight.layover}</span>}
+                          <span>{option.airlineName}</span>
+                          <span>· {option.stops}</span>
+                          {option.layover && <span>· {option.layover}</span>}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                          <span>Baggage: {option.baggage}</span>
+                          <span>· WiFi: {option.wifi ? 'Yes' : 'No'}</span>
+                          <span>· Meals: {option.meal}</span>
+                          <span>· ⭐ {option.rating}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-base font-bold text-black">₹{option.returnFlight.price}</div>
+                        <div className="text-base font-bold text-black">₹{option.price}</div>
                       </div>
                     </div>
                   </button>

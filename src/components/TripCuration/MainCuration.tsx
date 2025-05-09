@@ -175,12 +175,48 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
   const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
 
-  // Mock airlines data with price ranges (from TripListV2)
+  // Update airlines array to include baggage, wifi, meal, rating, etc.
   const airlines = [
-    { id: 'emirates', name: 'Emirates', logo: 'https://airhex.com/images/airline-logos/emirates.png', price: '65,909' },
-    { id: 'etihad', name: 'Etihad Airways', logo: 'https://airhex.com/images/airline-logos/etihad-airways.png', price: '47,000' },
-    { id: 'qatar', name: 'Qatar Airways', logo: 'https://airhex.com/images/airline-logos/qatar-airways.png', price: '46,000' },
-    { id: 'turkish', name: 'Turkish Airlines', logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png', price: '44,000' }
+    {
+      id: 'emirates',
+      name: 'Emirates',
+      logo: 'https://airhex.com/images/airline-logos/emirates.png',
+      price: '65,909',
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      rating: 4.7
+    },
+    {
+      id: 'etihad',
+      name: 'Etihad Airways',
+      logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
+      price: '47,000',
+      baggage: '23kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian',
+      rating: 4.5
+    },
+    {
+      id: 'qatar',
+      name: 'Qatar Airways',
+      logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
+      price: '46,000',
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
+      rating: 4.8
+    },
+    {
+      id: 'turkish',
+      name: 'Turkish Airlines',
+      logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
+      price: '44,000',
+      baggage: '30kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      rating: 4.4
+    }
   ];
 
   // Handler for quick filter selection
@@ -477,6 +513,167 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedDepartureId, setSelectedDepartureId] = useState<string | number>(departureOptions[0].id);
   const [selectedReturnId, setSelectedReturnId] = useState<string | number>(returnOptions[0].id);
 
+  // Add outboundFlights and inboundFlights arrays (copy from TripListV2)
+  const outboundFlights = [
+    {
+      airlineLogo: airlines[0].logo,
+      airlineName: airlines[0].name,
+      departureTime: '21:00',
+      arrivalTime: '07:05',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 35m',
+      stops: '1 stop',
+      layover: '2h in Dubai',
+      price: '35,909',
+      baggage: airlines[0].baggage,
+      wifi: airlines[0].wifi,
+      meal: airlines[0].meal,
+      rating: airlines[0].rating
+    },
+    {
+      airlineLogo: airlines[1].logo,
+      airlineName: airlines[1].name,
+      departureTime: '22:30',
+      arrivalTime: '09:00',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '37,500',
+      baggage: airlines[1].baggage,
+      wifi: airlines[1].wifi,
+      meal: airlines[1].meal,
+      rating: airlines[1].rating
+    },
+    {
+      airlineLogo: airlines[2].logo,
+      airlineName: airlines[2].name,
+      departureTime: '19:00',
+      arrivalTime: '05:30',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '15h 00m',
+      stops: '2 stops',
+      layover: '3h in Doha',
+      price: '33,800',
+      baggage: airlines[2].baggage,
+      wifi: airlines[2].wifi,
+      meal: airlines[2].meal,
+      rating: airlines[2].rating
+    },
+    {
+      airlineLogo: airlines[3].logo,
+      airlineName: airlines[3].name,
+      departureTime: '23:15',
+      arrivalTime: '10:00',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 45m',
+      stops: '1 stop',
+      layover: '1h 30m in Istanbul',
+      price: '36,200',
+      baggage: airlines[3].baggage,
+      wifi: airlines[3].wifi,
+      meal: airlines[3].meal,
+      rating: airlines[3].rating
+    }
+  ];
+  const inboundFlights = [
+    {
+      airlineLogo: airlines[1].logo,
+      airlineName: airlines[1].name,
+      departureTime: '14:20',
+      arrivalTime: '20:20',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '10h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '30,000',
+      baggage: airlines[1].baggage,
+      wifi: airlines[1].wifi,
+      meal: airlines[1].meal,
+      rating: airlines[1].rating
+    },
+    {
+      airlineLogo: airlines[0].logo,
+      airlineName: airlines[0].name,
+      departureTime: '16:00',
+      arrivalTime: '22:30',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '11h 00m',
+      stops: '1 stop',
+      layover: '2h in Dubai',
+      price: '31,500',
+      baggage: airlines[0].baggage,
+      wifi: airlines[0].wifi,
+      meal: airlines[0].meal,
+      rating: airlines[0].rating
+    },
+    {
+      airlineLogo: airlines[2].logo,
+      airlineName: airlines[2].name,
+      departureTime: '18:30',
+      arrivalTime: '01:00',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '12h 30m',
+      stops: '2 stops',
+      layover: '3h in Doha',
+      price: '29,800',
+      baggage: airlines[2].baggage,
+      wifi: airlines[2].wifi,
+      meal: airlines[2].meal,
+      rating: airlines[2].rating
+    },
+    {
+      airlineLogo: airlines[3].logo,
+      airlineName: airlines[3].name,
+      departureTime: '20:00',
+      arrivalTime: '02:30',
+      departureCode: 'DXB',
+      arrivalCode: 'JFK',
+      departureCity: 'Dubai',
+      arrivalCity: 'New York',
+      duration: '13h 00m',
+      stops: '1 stop',
+      layover: '1h 45m in Istanbul',
+      price: '32,200',
+      baggage: airlines[3].baggage,
+      wifi: airlines[3].wifi,
+      meal: airlines[3].meal,
+      rating: airlines[3].rating
+    }
+  ];
+
+  // Add state for selected outbound/inbound flight
+  const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
+  const [selectedInboundIdx, setSelectedInboundIdx] = useState(0);
+
+  // Compute selected outbound/inbound flights and total price
+  const selectedOutbound = outboundFlights[selectedOutboundIdx];
+  const selectedInbound = inboundFlights[selectedInboundIdx];
+  const totalPrice =
+    (parseInt(selectedOutbound?.price?.replace(/[^\d]/g, '') || '0', 10) +
+     parseInt(selectedInbound?.price?.replace(/[^\d]/g, '') || '0', 10)).toLocaleString();
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Header */}
@@ -592,56 +789,56 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   <div className="flex flex-col items-center flex-1 min-w-0">
                     <div className="flex flex-row items-center w-full justify-center gap-3">
                       <div className="flex flex-col items-center min-w-[56px]">
-                        <img src={summaryOption.outboundFlight.airlineLogo} alt={summaryOption.outboundFlight.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{summaryOption.outboundFlight.airlineName}</span>
+                        <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{summaryOption.outboundFlight.departureTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{summaryOption.outboundFlight.departureCode}</span>
+                        <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
+                        <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[64px] mx-1">
-                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{summaryOption.outboundFlight.duration}</span>
+                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
                         <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                        <span className="text-xs text-gray-400 leading-none">{summaryOption.outboundFlight.stops}</span>
+                        <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{summaryOption.outboundFlight.arrivalTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{summaryOption.outboundFlight.arrivalCode}</span>
+                        <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
+                        <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
                       </div>
                     </div>
                   </div>
                   {/* Divider */}
                   <div className="w-px h-16 bg-gray-200 mx-1" />
-                  {/* Return */}
+                  {/* Inbound */}
                   <div className="flex flex-col items-center flex-1 min-w-0">
                     <div className="flex flex-row items-center w-full justify-center gap-3">
                       <div className="flex flex-col items-center min-w-[56px]">
-                        <img src={summaryOption.returnFlight.airlineLogo} alt={summaryOption.returnFlight.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{summaryOption.returnFlight.airlineName}</span>
+                        <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{summaryOption.returnFlight.departureTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{summaryOption.returnFlight.departureCode}</span>
+                        <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
+                        <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[64px] mx-1">
-                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{summaryOption.returnFlight.duration}</span>
+                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
                         <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                        <span className="text-xs text-gray-400 leading-none">{summaryOption.returnFlight.stops}</span>
+                        <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
                       </div>
                       <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{summaryOption.returnFlight.arrivalTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{summaryOption.returnFlight.arrivalCode}</span>
+                        <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
+                        <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
                       </div>
                     </div>
                   </div>
                   {/* Price & Action */}
                   <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
                     <div className="flex flex-col justify-center items-end">
-                      <div className="text-xl font-bold text-black">{summaryOption.currency} {summaryOption.price}</div>
+                      <div className="text-xl font-bold text-black">₹ {totalPrice}</div>
                       <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                     </div>
                     <div className="flex items-center">
-                      <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => onViewTrip(summaryOption)}>Book now</Button>
+                      <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => onViewTrip({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
                     </div>
                   </div>
                 </div>
@@ -685,32 +882,33 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     {/* Outbound List */}
                     <div>
                       <div className="mb-2 text-xs font-semibold text-gray-700">
-                        {summaryOption.outboundFlight.departureCity} → {summaryOption.outboundFlight.arrivalCity} · {summaryOption.outboundFlight.date}
+                        New York → Dubai · May 7, 2025
                       </div>
                       <div className="flex flex-col gap-2">
-                        {roundTripOptions.map((option, idx) => (
+                        {outboundFlights.map((option, idx) => (
                           <button
                             key={idx}
                             className={cn(
                               "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                              idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                              idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                             )}
+                            onClick={() => setSelectedOutboundIdx(idx)}
                           >
                             <div className="flex items-center gap-3 py-1">
-                              <img src={option.outboundFlight.airlineLogo} alt={option.outboundFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                              <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-base font-bold text-black">{option.outboundFlight.departureTime}–{option.outboundFlight.arrivalTime}</span>
-                                  <span className="text-gray-500 text-xs">{option.outboundFlight.departureCode}–{option.outboundFlight.arrivalCode}</span>
+                                  <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                  <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <span>{option.outboundFlight.airlineName}</span>
-                                  <span>· {option.outboundFlight.stops}</span>
-                                  {option.outboundFlight.layover && <span>· {option.outboundFlight.layover}</span>}
+                                  <span>{option.airlineName}</span>
+                                  <span>· {option.stops}</span>
+                                  {option.layover && <span>· {option.layover}</span>}
                                 </div>
                               </div>
                               <div className="text-right">
-                                <div className="text-base font-bold text-black">₹{option.outboundFlight.price}</div>
+                                <div className="text-base font-bold text-black">₹{option.price}</div>
                               </div>
                             </div>
                           </button>
@@ -720,32 +918,33 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     {/* Inbound List */}
                     <div>
                       <div className="mb-2 text-xs font-semibold text-gray-700">
-                        {summaryOption.returnFlight.arrivalCity} → {summaryOption.returnFlight.departureCity} · {summaryOption.returnFlight.date}
+                        Dubai → New York · May 14, 2025
                       </div>
                       <div className="flex flex-col gap-2">
-                        {roundTripOptions.map((option, idx) => (
+                        {inboundFlights.map((option, idx) => (
                           <button
                             key={idx}
                             className={cn(
                               "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                              idx === 0 ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                              idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                             )}
+                            onClick={() => setSelectedInboundIdx(idx)}
                           >
                             <div className="flex items-center gap-3 py-1">
-                              <img src={option.returnFlight.airlineLogo} alt={option.returnFlight.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                              <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-base font-bold text-black">{option.returnFlight.departureTime}–{option.returnFlight.arrivalTime}</span>
-                                  <span className="text-gray-500 text-xs">{option.returnFlight.departureCode}–{option.returnFlight.arrivalCode}</span>
+                                  <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                  <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <span>{option.returnFlight.airlineName}</span>
-                                  <span>· {option.returnFlight.stops}</span>
-                                  {option.returnFlight.layover && <span>· {option.returnFlight.layover}</span>}
+                                  <span>{option.airlineName}</span>
+                                  <span>· {option.stops}</span>
+                                  {option.layover && <span>· {option.layover}</span>}
                                 </div>
                               </div>
                               <div className="text-right">
-                                <div className="text-base font-bold text-black">₹{option.returnFlight.price}</div>
+                                <div className="text-base font-bold text-black">₹{option.price}</div>
                               </div>
                             </div>
                           </button>

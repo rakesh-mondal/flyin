@@ -11,9 +11,16 @@ export const mockTrips = [
     activities: ['Visit Burj Khalifa', 'Desert Safari', 'Dubai Mall Shopping'],
     flight: {
       airline: 'Emirates',
+      airlineCode: 'EK',
       departure: 'JFK 10:25 AM',
       arrival: 'DXB 8:15 AM (+1)',
-      duration: '12h 50m'
+      duration: '12h 50m',
+      stops: 1,
+      layover: '2h in Dubai',
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      rating: 4.7
     },
     hotel: {
       name: 'Address Downtown',
@@ -33,9 +40,16 @@ export const mockTrips = [
     activities: ['Blue Mosque Tour', 'Bosphorus Cruise', 'Grand Bazaar Shopping'],
     flight: {
       airline: 'Turkish Airlines',
+      airlineCode: 'TK',
       departure: 'JFK 7:15 PM',
       arrival: 'IST 12:30 PM (+1)',
-      duration: '10h 15m'
+      duration: '10h 15m',
+      stops: 0,
+      layover: null,
+      baggage: '30kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan',
+      rating: 4.4
     },
     hotel: {
       name: 'Four Seasons Istanbul',
@@ -55,9 +69,16 @@ export const mockTrips = [
     activities: ['Pyramids of Giza', 'Egyptian Museum', 'Nile River Cruise'],
     flight: {
       airline: 'EgyptAir',
+      airlineCode: 'MS',
       departure: 'JFK 11:45 AM',
       arrival: 'CAI 5:25 AM (+1)',
-      duration: '10h 40m'
+      duration: '10h 40m',
+      stops: 0,
+      layover: null,
+      baggage: '23kg checked, 7kg cabin',
+      wifi: false,
+      meal: 'Halal, Vegetarian',
+      rating: 4.1
     },
     hotel: {
       name: 'The Nile Ritz-Carlton',
@@ -77,9 +98,16 @@ export const mockTrips = [
     activities: ['Museum of Islamic Art', 'Souq Waqif Tour', 'Desert Safari'],
     flight: {
       airline: 'Qatar Airways',
+      airlineCode: 'QR',
       departure: 'EWR 10:30 PM',
       arrival: 'DOH 6:15 PM (+1)',
-      duration: '12h 45m'
+      duration: '12h 45m',
+      stops: 1,
+      layover: '1h 30m in Doha',
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
+      rating: 4.8
     },
     hotel: {
       name: 'Mandarin Oriental Doha',
