@@ -175,12 +175,12 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                   <div className="text-xs text-gray-600 mb-2">{option.description}</div>
                 </div>
                 {/* Baggage */}
-                <div className="flex items-center gap-2 px-5 border-l text-sm" style={{ gridColumn: colIdx + 2, gridRow: 2 }}>
+                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 2 }}>
                   <Luggage className="h-4 w-4 text-gray-400" />
                   <span>{option.features.baggage}</span>
                 </div>
                 {/* Cancellation fee */}
-                <div className="flex items-center gap-2 px-5 border-l text-sm" style={{ gridColumn: colIdx + 2, gridRow: 3 }}>
+                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 3 }}>
                   {option.features.cancellation ? (
                     <><Check className="inline h-4 w-4 text-green-600" /> Free cancellation for AED {option.features.cancellationFee}</>
                   ) : (
@@ -188,7 +188,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                   )}
                 </div>
                 {/* Date Change fee */}
-                <div className="flex items-center gap-2 px-5 border-l text-sm" style={{ gridColumn: colIdx + 2, gridRow: 4 }}>
+                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 4 }}>
                   {option.features.dateChange ? (
                     <><Check className="inline h-4 w-4 text-green-600" /> Free date change for AED {option.features.dateChangeFee}</>
                   ) : (
@@ -196,7 +196,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                   )}
                 </div>
                 {/* Seat selection */}
-                <div className="flex items-center gap-2 px-5 border-l text-sm" style={{ gridColumn: colIdx + 2, gridRow: 5 }}>
+                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 5 }}>
                   {option.features.seatSelection ? (
                     <><Check className="inline h-4 w-4 text-green-600" /> Free seat selection</>
                   ) : (
@@ -204,15 +204,15 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                   )}
                 </div>
                 {/* Meal selection */}
-                <div className="flex items-center gap-2 px-5 border-l text-sm" style={{ gridColumn: colIdx + 2, gridRow: 6 }}>
+                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 6 }}>
                   {option.features.mealSelection ? (
                     <><Check className="inline h-4 w-4 text-green-600" /> Free meal</>
                   ) : (
                     <><Cross className="inline h-4 w-4 text-gray-400" /> Paid meal</>
                   )}
                 </div>
-                {/* Promo and select button (footer) */}
-                <div className="mt-auto px-5 pb-5" style={{ gridColumn: colIdx + 2, gridRow: 7 }}>
+                {/* Promo and select button (immediately after features) */}
+                <div className="px-5 pb-5" style={{ gridColumn: colIdx + 2, gridRow: 7 }}>
                   <div className="text-xs text-green-700 bg-green-50 rounded px-2 py-1 mb-2 font-medium">
                     {option.promo}
                   </div>
