@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import TravelCanvas from '@/components/TravelCanvas';
 import TripCuration from '@/components/TripCuration';
@@ -9,6 +8,7 @@ import Profile from '@/components/Profile';
 import { Toaster } from '@/components/ui/sonner';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useIsMobile } from '@/hooks/use-mobile';
+import CurationVersionToggle from '@/components/TripCuration/CurationVersionToggle';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +16,7 @@ const Index = () => {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [activeTab, setActiveTab] = useState('home');
   const [navIsVisible, setNavIsVisible] = useState(true);
+  const [version, setVersion] = useState<'v2' | 'v3'>('v2');
   
   const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
@@ -84,11 +85,17 @@ const Index = () => {
       )}
       
       {currentView === 'search' && (
-        <TripCuration 
-          searchQuery={searchQuery} 
-          onBack={handleBack}
-          onViewTrip={handleViewTrip}
-        />
+        <>
+          <TripCuration 
+            searchQuery={searchQuery} 
+            onBack={handleBack}
+            onViewTrip={handleViewTrip}
+            version={version}
+          />
+          <div className="fixed bottom-4 left-4 z-50">
+            <CurationVersionToggle version={version} setVersion={setVersion} />
+          </div>
+        </>
       )}
       
       {currentView === 'detail' && selectedTrip && (

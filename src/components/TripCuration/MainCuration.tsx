@@ -3,6 +3,7 @@ import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
 import TripListV2 from './v2/TripList';
+import TripListV3 from './v3/TripList';
 import ChatInput from './ChatInput';
 // import SelectedTripDetail from './SelectedTripDetail';  // Commented out as we're not using it
 import { mockTrips } from './mockData';
@@ -14,11 +15,13 @@ import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
 import FlightOptionsSelector from './FlightOptionsSelector';
+import HorizontalFilters from './HorizontalFilters';
 
 interface TripCurationProps {
   searchQuery: string;
   onBack: () => void;
   onViewTrip: (trip: any) => void;
+  version: 'v2' | 'v3';
   isAiSearch?: boolean;
 }
 
@@ -137,7 +140,7 @@ const SearchSummary = ({
   );
 };
 
-export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
+export default function MainCuration({ searchQuery, onBack, onViewTrip, version, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -168,7 +171,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [returnTime, setReturnTime] = useState<string | null>(null);
   const [currentFollowUpIndex, setCurrentFollowUpIndex] = useState(0);
   const [showOptionsSelector, setShowOptionsSelector] = useState(false);
-  const [version] = useState<'v2'>('v2');
 
   // --- State for summary tabs and quick filters (moved up from TripListV2) ---
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
@@ -1147,6 +1149,22 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
         </div>
       </div>
 
+      {/* Horizontal Filters for v3 only */}
+      {version === 'v3' && (
+        <div className="sticky top-0 z-10 bg-white border-b">
+          <HorizontalFilters
+            selectedStops={selectedStops}
+            onStopsChange={setSelectedStops}
+            selectedDepartureTimeSlot={selectedDepartureTimeSlot}
+            onDepartureTimeChange={setSelectedDepartureTimeSlot}
+            selectedReturnTimeSlot={selectedReturnTimeSlot}
+            onReturnTimeChange={setSelectedReturnTimeSlot}
+            selectedAirlines={selectedAirlines}
+            onAirlinesChange={setSelectedAirlines}
+          />
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
@@ -1163,33 +1181,40 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
           {/* Main Grid Layout */}
           <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-12">
-            {/* Left Column - Filters */}
-            <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
-              <div className="space-y-4 lg:sticky lg:top-4">
-                {/* Filter Chips */}
-                <div 
-                  ref={filterRef.elementRef}
-                  className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
-                >
-                  <div className="rounded-xl mb-4 overflow-x-auto">
-                    <FilterChips
-                      selectedAirlines={selectedAirlines}
-                      onAirlinesChange={setSelectedAirlines}
-                      departureRoute="DEL-BOM"
-                      returnRoute="BOM-DEL"
-                      onDepartureTimeChange={setSelectedDepartureTimeSlot}
-                      onReturnTimeChange={setSelectedReturnTimeSlot}
-                      // Add stops filter handlers
-                      selectedStops={selectedStops}
-                      onStopsChange={setSelectedStops}
-                    />
+            {/* Left Column - Filters (only for v2) */}
+            {version === 'v2' && (
+              <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
+                <div className="space-y-4 lg:sticky lg:top-4">
+                  {/* Filter Chips */}
+                  <div 
+                    ref={filterRef.elementRef}
+                    className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
+                  >
+                    <div className="rounded-xl mb-4 overflow-x-auto">
+                      <FilterChips
+                        selectedAirlines={selectedAirlines}
+                        onAirlinesChange={setSelectedAirlines}
+                        departureRoute="DEL-BOM"
+                        returnRoute="BOM-DEL"
+                        onDepartureTimeChange={setSelectedDepartureTimeSlot}
+                        onReturnTimeChange={setSelectedReturnTimeSlot}
+                        // Add stops filter handlers
+                        selectedStops={selectedStops}
+                        onStopsChange={setSelectedStops}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Right Column - Main Content Cards */}
-            <div className="order-1 lg:order-2 lg:col-span-9 space-y-6">
+            {/* Main Content Cards (center, col-span-9) */}
+            <div className={cn(
+              "order-1 lg:order-2 space-y-6",
+              version === 'v3'
+                ? 'lg:col-span-10 mr-[260px] w-full' // span 10 columns, add right margin for copilot, full width
+                : 'lg:col-span-9 max-w-4xl mx-auto w-full'
+            )}>
               <div data-debug-marker="main-curation-right-col" style={{display: 'none'}}>MainCuration Right Column Marker</div>
               {/* Only v2 modular cards, no v1/v2 toggle */}
               {(!hasOutbound || !hasInbound) ? (
@@ -1427,41 +1452,61 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                 </>
               )}
             </div>
+
+            {/* Copilot Chat Panel for v3 (right column, desktop/tablet only) */}
+            {version === 'v3' && (
+              <div className="hidden lg:block order-3 lg:order-3 lg:col-span-3">
+                <div className="fixed top-[140px] right-0 z-30 h-[calc(100vh-140px)] w-[325px]">
+                  <div className="bg-white rounded-2xl border border-gray-200 p-4 h-full flex flex-col">
+                    <h3 className="text-lg font-semibold mb-2">AI Copilot</h3>
+                    <div className="flex-1 flex flex-col justify-end">
+                      <ChatInput
+                        userMessage={userMessage}
+                        setUserMessage={setUserMessage}
+                        onSubmitMessage={handleSubmitMessage}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Chat Input - Floating Card */}
-      {isChatOpen ? (
-        <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] min-w-[280px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in">
-          {/* Subtle close button in top-right corner */}
-          <button
-            onClick={() => setIsChatOpen(false)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-          
-          <div className="p-4 sm:p-6">
-            <ChatInput
-              userMessage={userMessage}
-              setUserMessage={setUserMessage}
-              onSubmitMessage={handleSubmitMessage}
-            />
-          </div>
-        </div>
-      ) : (
-        <Button
-          className={cn(
-            "fixed bottom-6 right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
-            "flex items-center justify-center transition-all duration-200 hover:scale-105",
-            "animate-bounce-in"
+      {/* Copilot Chat Floating for v2 (all screens) and v3 (mobile/tablet only) */}
+      {((version === 'v2') || (version === 'v3' && typeof window !== 'undefined' && window.innerWidth < 1024)) && (
+        <>
+          {isChatOpen ? (
+            <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] sm:w-[80%] md:w-[70%] min-w-[280px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in z-50">
+              <button
+                onClick={() => setIsChatOpen(false)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+              <div className="p-4 sm:p-6">
+                <ChatInput
+                  userMessage={userMessage}
+                  setUserMessage={setUserMessage}
+                  onSubmitMessage={handleSubmitMessage}
+                />
+              </div>
+            </div>
+          ) : (
+            <Button
+              className={cn(
+                "fixed bottom-6 right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
+                "flex items-center justify-center transition-all duration-200 hover:scale-105",
+                "animate-bounce-in z-50"
+              )}
+              size="icon"
+              onClick={() => setIsChatOpen(true)}
+            >
+              <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
+            </Button>
           )}
-          size="icon"
-          onClick={() => setIsChatOpen(true)}
-        >
-          <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
-        </Button>
+        </>
       )}
     </div>
   );
