@@ -16,6 +16,7 @@ import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
 import FlightOptionsSelector from './FlightOptionsSelector';
 import HorizontalFilters from './HorizontalFilters';
+import FareSelectionModal from './FareSelectionModal';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -186,6 +187,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
   const [hasShownManualSelectToast, setHasShownManualSelectToast] = useState(false);
   // Track if user has manually selected a flight
   const [userHasManuallySelected, setUserHasManuallySelected] = useState(false);
+
+  // State for fare selection modal
+  const [isFareModalOpen, setFareModalOpen] = useState(false);
+  const [fareModalTrip, setFareModalTrip] = useState<any>(null);
 
   // Update airlines array to include baggage, wifi, meal, rating, etc.
   const airlines = [
@@ -473,11 +478,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
     setUserMessage('');
   };
 
+  // Open fare selection modal instead of direct booking
   const handleTripSelect = (trip: any) => {
-    // Just call onViewTrip directly without setting selectedTrip
-    if (onViewTrip) {
-      onViewTrip(trip);
-    }
+    setFareModalTrip(trip);
+    setFareModalOpen(true);
+  };
+
+  // Called after fare is selected in modal
+  const handleFareSelected = (selectedFare: any) => {
+    setFareModalOpen(false);
+    setFareModalTrip(null);
+    // Proceed to next step with selected fare/trip
+    onViewTrip(selectedFare);
   };
 
   const handleSwapLocations = () => {
@@ -1321,7 +1333,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
                           <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                         </div>
                         <div className="flex items-center">
-                          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => onViewTrip({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
                         </div>
                       </div>
                     </div>
@@ -1458,7 +1470,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
               <div className="hidden lg:block order-3 lg:order-3 lg:col-span-3">
                 <div className="fixed top-[140px] right-0 z-30 h-[calc(100vh-140px)] w-[325px]">
                   <div className="bg-white rounded-2xl border border-gray-200 p-4 h-full flex flex-col">
-                    <h3 className="text-lg font-semibold mb-2">AI Copilot</h3>
+                    <h3 className="text-lg font-semibold mb-2">Flyin Pilot</h3>
                     <div className="flex-1 flex flex-col justify-end">
                       <ChatInput
                         userMessage={userMessage}
@@ -1508,6 +1520,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
           )}
         </>
       )}
+
+      {/* Fare Selection Modal */}
+      <FareSelectionModal
+        open={isFareModalOpen}
+        trip={fareModalTrip}
+        onClose={() => setFareModalOpen(false)}
+        onFareSelected={handleFareSelected}
+      />
     </div>
   );
 }
