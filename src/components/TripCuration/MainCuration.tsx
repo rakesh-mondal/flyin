@@ -180,6 +180,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedDepartureTimeSlot, setSelectedDepartureTimeSlot] = useState<string | null>(null); // e.g., 'before-6am'
   const [selectedReturnTimeSlot, setSelectedReturnTimeSlot] = useState<string | null>(null); // e.g., 'after-6pm'
 
+  // Track if user has seen the manual selection toast
+  const [hasShownManualSelectToast, setHasShownManualSelectToast] = useState(false);
+  // Track if user has manually selected a flight
+  const [userHasManuallySelected, setUserHasManuallySelected] = useState(false);
+
   // Update airlines array to include baggage, wifi, meal, rating, etc.
   const airlines = [
     {
@@ -1004,15 +1009,35 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     return airlineMatch && stopsMatch && timeMatch;
   });
 
-  // Ensure selected indices are valid after filtering
-  useEffect(() => {
-    if (selectedOutboundIdx >= filteredOutboundFlights.length) {
-      setSelectedOutboundIdx(0);
-    }
-    if (selectedInboundIdx >= filteredInboundFlights.length) {
-      setSelectedInboundIdx(0);
-    }
-  }, [selectedAirlines, selectedStops, selectedDepartureTimeSlot, selectedReturnTimeSlot]);
+  // Helper to get total duration in minutes from duration string (e.g., '14h 35m')
+  function parseDuration(duration: string) {
+    const match = duration.match(/(\d+)h\s*(\d+)?m?/);
+    if (!match) return 0;
+    const hours = parseInt(match[1], 10);
+    const minutes = match[2] ? parseInt(match[2], 10) : 0;
+    return hours * 60 + minutes;
+  }
+
+  // Compute all possible outbound/inbound pairs
+  const allPairs = filteredOutboundFlights.flatMap((out, oi) =>
+    filteredInboundFlights.map((inn, ii) => ({
+      out, inn, oi, ii,
+      totalPrice: (parseInt(out.price.replace(/[^\d]/g, '') || '0', 10) + parseInt(inn.price.replace(/[^\d]/g, '') || '0', 10)),
+      totalDuration: parseDuration(out.duration) + parseDuration(inn.duration)
+    }))
+  );
+
+  // Find best pairs for each category
+  let cheapestPair = null, quickestPair = null, bestPair = null;
+  if (allPairs.length > 0) {
+    // Cheapest: lowest total price
+    cheapestPair = allPairs.reduce((a, b) => a.totalPrice < b.totalPrice ? a : b);
+    // Quickest: lowest total duration
+    quickestPair = allPairs.reduce((a, b) => a.totalDuration < b.totalDuration ? a : b);
+    // Best: lowest price among the 3 quickest pairs
+    const sortedByDuration = [...allPairs].sort((a, b) => a.totalDuration - b.totalDuration).slice(0, 3);
+    bestPair = sortedByDuration.reduce((a, b) => a.totalPrice < b.totalPrice ? a : b);
+  }
 
   // Compute selected outbound/inbound flights and total price (from filtered lists)
   const hasOutbound = filteredOutboundFlights.length > 0;
@@ -1022,6 +1047,86 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const totalPrice =
     (parseInt(selectedOutbound?.price?.replace(/[^\d]/g, '') || '0', 10) +
      parseInt(selectedInbound?.price?.replace(/[^\d]/g, '') || '0', 10)).toLocaleString();
+
+  // Tab label helpers
+  const formatPrice = (price) => `₹${price.toLocaleString()}`;
+  const formatDuration = (mins) => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h}h ${m.toString().padStart(2, '0')}m`;
+  };
+
+  // When tab changes, update selectedOutboundIdx/selectedInboundIdx to match best pair
+  useEffect(() => {
+    if (!hasOutbound || !hasInbound) return;
+    // If user has not manually selected, auto-select best pair for tab
+    if (!userHasManuallySelected) {
+      let pair = null;
+      if (selectedPriceCategory === 'cheapest') pair = cheapestPair;
+      else if (selectedPriceCategory === 'quickest') pair = quickestPair;
+      else pair = bestPair;
+      if (pair) {
+        setSelectedOutboundIdx(pair.oi);
+        setSelectedInboundIdx(pair.ii);
+      }
+    }
+  }, [selectedPriceCategory, filteredOutboundFlights, filteredInboundFlights, userHasManuallySelected]);
+
+  // Ensure selected indices are valid after filtering
+  useEffect(() => {
+    let outboundValid = selectedOutboundIdx < filteredOutboundFlights.length;
+    let inboundValid = selectedInboundIdx < filteredInboundFlights.length;
+    if (!outboundValid || !inboundValid) {
+      // If user's selection is no longer valid, reset to best pair and allow auto-selection again
+      let pair = null;
+      if (selectedPriceCategory === 'cheapest') pair = cheapestPair;
+      else if (selectedPriceCategory === 'quickest') pair = quickestPair;
+      else pair = bestPair;
+      if (pair) {
+        setSelectedOutboundIdx(pair.oi);
+        setSelectedInboundIdx(pair.ii);
+      } else {
+        setSelectedOutboundIdx(0);
+        setSelectedInboundIdx(0);
+      }
+      setUserHasManuallySelected(false);
+    }
+  }, [filteredOutboundFlights, filteredInboundFlights, selectedOutboundIdx, selectedInboundIdx, selectedPriceCategory, cheapestPair, quickestPair, bestPair]);
+
+  // Refs for scrolling selected outbound/inbound into view
+  const outboundRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const inboundRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Scroll selected outbound/inbound into view when index changes
+  useEffect(() => {
+    if (outboundRefs.current[selectedOutboundIdx]) {
+      outboundRefs.current[selectedOutboundIdx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }, [selectedOutboundIdx, filteredOutboundFlights]);
+  useEffect(() => {
+    if (inboundRefs.current[selectedInboundIdx]) {
+      inboundRefs.current[selectedInboundIdx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }, [selectedInboundIdx, filteredInboundFlights]);
+
+  // Handler for manual outbound selection
+  const handleManualOutboundSelect = (idx: number) => {
+    setSelectedOutboundIdx(idx);
+    setUserHasManuallySelected(true);
+    if (!hasShownManualSelectToast) {
+      toast.info("You can freely select any outbound and inbound flight combination.");
+      setHasShownManualSelectToast(true);
+    }
+  };
+  // Handler for manual inbound selection
+  const handleManualInboundSelect = (idx: number) => {
+    setSelectedInboundIdx(idx);
+    setUserHasManuallySelected(true);
+    if (!hasShownManualSelectToast) {
+      toast.info("You can freely select any outbound and inbound flight combination.");
+      setHasShownManualSelectToast(true);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -1097,40 +1202,40 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="flex">
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+                        "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
                         selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('cheapest')}
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-sm text-gray-500">Cheapest</div>
-                          <div className="text-xs text-gray-500">28h 00m</div>
+                          <div className="text-xs text-gray-500">{cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">₹45,717</div>
+                        <div className="font-bold text-lg">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+                        "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
                         selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('best')}
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-sm font-medium">Best</div>
-                          <div className="text-xs text-gray-500">10h 15m</div>
+                          <div className="text-xs text-gray-500">{bestPair ? formatDuration(bestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">₹59,035</div>
+                        <div className="font-bold text-lg">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 p-2.5 text-center relative",
+                        "flex-1 p-2.5 text-center relative cursor-pointer",
                         selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('quickest')}
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-sm text-gray-500">Quickest</div>
-                          <div className="text-xs text-gray-500">10h 15m</div>
+                          <div className="text-xs text-gray-500">{quickestPair ? formatDuration(quickestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">₹59,035</div>
+                        <div className="font-bold text-lg">{quickestPair ? formatPrice(quickestPair.totalPrice) : '--'}</div>
                       </div>
                     </div>
                   </div>
@@ -1251,11 +1356,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             {filteredOutboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
+                                ref={el => outboundRefs.current[idx] = el}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                                   idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                 )}
-                                onClick={() => setSelectedOutboundIdx(idx)}
+                                onClick={() => handleManualOutboundSelect(idx)}
                               >
                                 <div className="flex items-center gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
@@ -1287,11 +1393,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             {filteredInboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
+                                ref={el => inboundRefs.current[idx] = el}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                                   idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                 )}
-                                onClick={() => setSelectedInboundIdx(idx)}
+                                onClick={() => handleManualInboundSelect(idx)}
                               >
                                 <div className="flex items-center gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
