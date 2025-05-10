@@ -1200,34 +1200,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Quick Price Filters Card */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {airlines.map((airline) => (
-                      <button
-                        key={airline.id}
-                        className={cn(
-                          "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
-                          selectedQuickFilters.includes(airline.id)
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-gray-200 bg-white hover:border-gray-300"
-                        )}
-                        onClick={() => handleQuickFilterSelect(airline.id)}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <img 
-                            src={airline.logo} 
-                            alt={airline.name} 
-                            className="h-5 w-5 rounded bg-gray-100"
-                          />
-                          <div className="text-left">
-                            <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                  <div className="relative">
+                    {/* Scroll indicator (fade effect) */}
+                    <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
+                    <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      {airlines.map((airline) => (
+                        <button
+                          key={airline.id}
+                          className={cn(
+                            "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px] min-w-[160px] max-w-[180px] flex-shrink-0",
+                            selectedQuickFilters.includes(airline.id)
+                              ? "border-blue-500 bg-blue-50"
+                              : "border-gray-200 bg-white hover:border-gray-300"
+                          )}
+                          onClick={() => handleQuickFilterSelect(airline.id)}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <img 
+                              src={airline.logo} 
+                              alt={airline.name} 
+                              className="h-5 w-5 rounded bg-gray-100"
+                            />
+                            <div className="text-left">
+                              <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                              <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                            </div>
                           </div>
-                        </div>
-                        {selectedQuickFilters.includes(airline.id) && (
-                          <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
-                        )}
-                      </button>
-                    ))}
+                          {selectedQuickFilters.includes(airline.id) && (
+                            <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
+                          )}
+                        </button>
+                      ))}
+                      {/* Optional: Add a right arrow icon at the end for extra visual cue on mobile */}
+                      <div className="flex items-center pl-2 pr-1 sm:hidden">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-gray-400 animate-pulse"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Outbound & Inbound Flight Lists Card */}
