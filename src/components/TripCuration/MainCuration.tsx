@@ -175,6 +175,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
   const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
 
+  // Add state for stops and flight timings filters
+  const [selectedStops, setSelectedStops] = useState<string[]>([]); // e.g., ['non-stop', '1-stop']
+  const [selectedDepartureTimeSlot, setSelectedDepartureTimeSlot] = useState<string | null>(null); // e.g., 'before-6am'
+  const [selectedReturnTimeSlot, setSelectedReturnTimeSlot] = useState<string | null>(null); // e.g., 'after-6pm'
+
   // Update airlines array to include baggage, wifi, meal, rating, etc.
   const airlines = [
     {
@@ -216,6 +221,66 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: true,
       meal: 'Halal, Vegetarian, Vegan',
       rating: 4.4
+    },
+    {
+      id: 'lufthansa',
+      name: 'Lufthansa',
+      logo: 'https://airhex.com/images/airline-logos/lufthansa.png',
+      price: '61,000',
+      baggage: '23kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Vegetarian, Vegan, Gluten-Free',
+      rating: 4.2
+    },
+    {
+      id: 'air-india',
+      name: 'Air India',
+      logo: 'https://airhex.com/images/airline-logos/air-india.png',
+      price: '59,035',
+      baggage: '25kg checked, 7kg cabin',
+      wifi: false,
+      meal: 'Vegetarian, Vegan',
+      rating: 3.9
+    },
+    {
+      id: 'singapore',
+      name: 'Singapore Airlines',
+      logo: 'https://airhex.com/images/airline-logos/singapore-airlines.png',
+      price: '58,500',
+      baggage: '30kg checked, 7kg cabin',
+      wifi: true,
+      meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
+      rating: 4.9
+    },
+    {
+      id: 'british',
+      name: 'British Airways',
+      logo: 'https://airhex.com/images/airline-logos/british-airways.png',
+      price: '62,000',
+      baggage: '23kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Vegetarian, Vegan, Gluten-Free',
+      rating: 4.3
+    },
+    {
+      id: 'air-france',
+      name: 'Air France',
+      logo: 'https://airhex.com/images/airline-logos/air-france.png',
+      price: '60,500',
+      baggage: '23kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Vegetarian, Vegan, Gluten-Free',
+      rating: 4.1
+    },
+    {
+      id: 'klm',
+      name: 'KLM',
+      logo: 'https://airhex.com/images/airline-logos/klm.png',
+      price: '59,800',
+      baggage: '23kg checked, 8kg cabin',
+      wifi: true,
+      meal: 'Vegetarian, Vegan, Gluten-Free',
+      rating: 4.0
     }
   ];
 
@@ -586,6 +651,115 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
       rating: airlines[3].rating
+    },
+    // Additional airlines
+    {
+      airlineLogo: airlines[4].logo,
+      airlineName: airlines[4].name,
+      departureTime: '20:00',
+      arrivalTime: '06:00',
+      departureCode: 'JFK',
+      arrivalCode: 'FRA',
+      departureCity: 'New York',
+      arrivalCity: 'Frankfurt',
+      duration: '10h 00m',
+      stops: 'non-stop',
+      layover: null,
+      price: '40,000',
+      baggage: airlines[4].baggage,
+      wifi: airlines[4].wifi,
+      meal: airlines[4].meal,
+      rating: airlines[4].rating
+    },
+    {
+      airlineLogo: airlines[5].logo,
+      airlineName: airlines[5].name,
+      departureTime: '21:30',
+      arrivalTime: '10:00',
+      departureCode: 'JFK',
+      arrivalCode: 'DEL',
+      departureCity: 'New York',
+      arrivalCity: 'Delhi',
+      duration: '14h 00m',
+      stops: '1 stop',
+      layover: '2h in London',
+      price: '38,500',
+      baggage: airlines[5].baggage,
+      wifi: airlines[5].wifi,
+      meal: airlines[5].meal,
+      rating: airlines[5].rating
+    },
+    {
+      airlineLogo: airlines[6].logo,
+      airlineName: airlines[6].name,
+      departureTime: '18:00',
+      arrivalTime: '06:30',
+      departureCode: 'JFK',
+      arrivalCode: 'SIN',
+      departureCity: 'New York',
+      arrivalCity: 'Singapore',
+      duration: '16h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '42,000',
+      baggage: airlines[6].baggage,
+      wifi: airlines[6].wifi,
+      meal: airlines[6].meal,
+      rating: airlines[6].rating
+    },
+    {
+      airlineLogo: airlines[7].logo,
+      airlineName: airlines[7].name,
+      departureTime: '19:45',
+      arrivalTime: '09:00',
+      departureCode: 'JFK',
+      arrivalCode: 'LHR',
+      departureCity: 'New York',
+      arrivalCity: 'London',
+      duration: '9h 15m',
+      stops: 'non-stop',
+      layover: null,
+      price: '41,500',
+      baggage: airlines[7].baggage,
+      wifi: airlines[7].wifi,
+      meal: airlines[7].meal,
+      rating: airlines[7].rating
+    },
+    {
+      airlineLogo: airlines[8].logo,
+      airlineName: airlines[8].name,
+      departureTime: '22:10',
+      arrivalTime: '11:00',
+      departureCode: 'JFK',
+      arrivalCode: 'CDG',
+      departureCity: 'New York',
+      arrivalCity: 'Paris',
+      duration: '10h 50m',
+      stops: 'non-stop',
+      layover: null,
+      price: '43,000',
+      baggage: airlines[8].baggage,
+      wifi: airlines[8].wifi,
+      meal: airlines[8].meal,
+      rating: airlines[8].rating
+    },
+    {
+      airlineLogo: airlines[9].logo,
+      airlineName: airlines[9].name,
+      departureTime: '17:30',
+      arrivalTime: '07:00',
+      departureCode: 'JFK',
+      arrivalCode: 'AMS',
+      departureCity: 'New York',
+      arrivalCity: 'Amsterdam',
+      duration: '13h 30m',
+      stops: '1 stop',
+      layover: '2h in Paris',
+      price: '39,800',
+      baggage: airlines[9].baggage,
+      wifi: airlines[9].wifi,
+      meal: airlines[9].meal,
+      rating: airlines[9].rating
     }
   ];
   const inboundFlights = [
@@ -660,6 +834,115 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
       rating: airlines[3].rating
+    },
+    // Additional airlines
+    {
+      airlineLogo: airlines[4].logo,
+      airlineName: airlines[4].name,
+      departureTime: '12:00',
+      arrivalTime: '22:00',
+      departureCode: 'FRA',
+      arrivalCode: 'JFK',
+      departureCity: 'Frankfurt',
+      arrivalCity: 'New York',
+      duration: '10h 00m',
+      stops: 'non-stop',
+      layover: null,
+      price: '40,000',
+      baggage: airlines[4].baggage,
+      wifi: airlines[4].wifi,
+      meal: airlines[4].meal,
+      rating: airlines[4].rating
+    },
+    {
+      airlineLogo: airlines[5].logo,
+      airlineName: airlines[5].name,
+      departureTime: '13:30',
+      arrivalTime: '03:00',
+      departureCode: 'DEL',
+      arrivalCode: 'JFK',
+      departureCity: 'Delhi',
+      arrivalCity: 'New York',
+      duration: '14h 00m',
+      stops: '1 stop',
+      layover: '2h in London',
+      price: '38,500',
+      baggage: airlines[5].baggage,
+      wifi: airlines[5].wifi,
+      meal: airlines[5].meal,
+      rating: airlines[5].rating
+    },
+    {
+      airlineLogo: airlines[6].logo,
+      airlineName: airlines[6].name,
+      departureTime: '15:00',
+      arrivalTime: '05:30',
+      departureCode: 'SIN',
+      arrivalCode: 'JFK',
+      departureCity: 'Singapore',
+      arrivalCity: 'New York',
+      duration: '16h 30m',
+      stops: 'non-stop',
+      layover: null,
+      price: '42,000',
+      baggage: airlines[6].baggage,
+      wifi: airlines[6].wifi,
+      meal: airlines[6].meal,
+      rating: airlines[6].rating
+    },
+    {
+      airlineLogo: airlines[7].logo,
+      airlineName: airlines[7].name,
+      departureTime: '10:45',
+      arrivalTime: '20:00',
+      departureCode: 'LHR',
+      arrivalCode: 'JFK',
+      departureCity: 'London',
+      arrivalCity: 'New York',
+      duration: '9h 15m',
+      stops: 'non-stop',
+      layover: null,
+      price: '41,500',
+      baggage: airlines[7].baggage,
+      wifi: airlines[7].wifi,
+      meal: airlines[7].meal,
+      rating: airlines[7].rating
+    },
+    {
+      airlineLogo: airlines[8].logo,
+      airlineName: airlines[8].name,
+      departureTime: '11:10',
+      arrivalTime: '22:00',
+      departureCode: 'CDG',
+      arrivalCode: 'JFK',
+      departureCity: 'Paris',
+      arrivalCity: 'New York',
+      duration: '10h 50m',
+      stops: 'non-stop',
+      layover: null,
+      price: '43,000',
+      baggage: airlines[8].baggage,
+      wifi: airlines[8].wifi,
+      meal: airlines[8].meal,
+      rating: airlines[8].rating
+    },
+    {
+      airlineLogo: airlines[9].logo,
+      airlineName: airlines[9].name,
+      departureTime: '16:30',
+      arrivalTime: '06:00',
+      departureCode: 'AMS',
+      arrivalCode: 'JFK',
+      departureCity: 'Amsterdam',
+      arrivalCity: 'New York',
+      duration: '13h 30m',
+      stops: '1 stop',
+      layover: '2h in Paris',
+      price: '39,800',
+      baggage: airlines[9].baggage,
+      wifi: airlines[9].wifi,
+      meal: airlines[9].meal,
+      rating: airlines[9].rating
     }
   ];
 
@@ -667,9 +950,77 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedInboundIdx, setSelectedInboundIdx] = useState(0);
 
-  // Compute selected outbound/inbound flights and total price
-  const selectedOutbound = outboundFlights[selectedOutboundIdx];
-  const selectedInbound = inboundFlights[selectedInboundIdx];
+  // Helper to get time slot from a time string (e.g., '21:00')
+  function getTimeSlot(time: string) {
+    const [h, m] = time.split(":").map(Number);
+    if (h < 6) return 'before-6am';
+    if (h < 12) return '6am-12pm';
+    if (h < 18) return '12pm-6pm';
+    return 'after-6pm';
+  }
+
+  // Add filtered outbound/inbound flights based on selectedAirlines, stops, and timings
+  const filteredOutboundFlights = outboundFlights.filter(f => {
+    // Airline filter
+    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes(
+      airlines.find(a => a.name === f.airlineName)?.id || ''
+    );
+    // Stops filter
+    let stopsMatch = true;
+    if (selectedStops.length > 0) {
+      stopsMatch = selectedStops.some(stop => {
+        if (stop === 'non-stop') return f.stops === 'non-stop';
+        if (stop === '1-stop') return f.stops === '1 stop';
+        if (stop === '2-more') return f.stops === '2 stops' || f.stops === '2+ stops';
+        return false;
+      });
+    }
+    // Departure time slot filter
+    let timeMatch = true;
+    if (selectedDepartureTimeSlot) {
+      timeMatch = getTimeSlot(f.departureTime) === selectedDepartureTimeSlot;
+    }
+    return airlineMatch && stopsMatch && timeMatch;
+  });
+
+  const filteredInboundFlights = inboundFlights.filter(f => {
+    // Airline filter
+    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes(
+      airlines.find(a => a.name === f.airlineName)?.id || ''
+    );
+    // Stops filter
+    let stopsMatch = true;
+    if (selectedStops.length > 0) {
+      stopsMatch = selectedStops.some(stop => {
+        if (stop === 'non-stop') return f.stops === 'non-stop';
+        if (stop === '1-stop') return f.stops === '1 stop';
+        if (stop === '2-more') return f.stops === '2 stops' || f.stops === '2+ stops';
+        return false;
+      });
+    }
+    // Return time slot filter
+    let timeMatch = true;
+    if (selectedReturnTimeSlot) {
+      timeMatch = getTimeSlot(f.departureTime) === selectedReturnTimeSlot;
+    }
+    return airlineMatch && stopsMatch && timeMatch;
+  });
+
+  // Ensure selected indices are valid after filtering
+  useEffect(() => {
+    if (selectedOutboundIdx >= filteredOutboundFlights.length) {
+      setSelectedOutboundIdx(0);
+    }
+    if (selectedInboundIdx >= filteredInboundFlights.length) {
+      setSelectedInboundIdx(0);
+    }
+  }, [selectedAirlines, selectedStops, selectedDepartureTimeSlot, selectedReturnTimeSlot]);
+
+  // Compute selected outbound/inbound flights and total price (from filtered lists)
+  const hasOutbound = filteredOutboundFlights.length > 0;
+  const hasInbound = filteredInboundFlights.length > 0;
+  const selectedOutbound = hasOutbound ? (filteredOutboundFlights[selectedOutboundIdx] || filteredOutboundFlights[0]) : null;
+  const selectedInbound = hasInbound ? (filteredInboundFlights[selectedInboundIdx] || filteredInboundFlights[0]) : null;
   const totalPrice =
     (parseInt(selectedOutbound?.price?.replace(/[^\d]/g, '') || '0', 10) +
      parseInt(selectedInbound?.price?.replace(/[^\d]/g, '') || '0', 10)).toLocaleString();
@@ -723,14 +1074,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       onAirlinesChange={setSelectedAirlines}
                       departureRoute="DEL-BOM"
                       returnRoute="BOM-DEL"
-                      onDepartureTimeChange={(time) => {
-                        setDepartureTime(time);
-                        toast.success("Departure time filter updated");
-                      }}
-                      onReturnTimeChange={(time) => {
-                        setReturnTime(time);
-                        toast.success("Return time filter updated");
-                      }}
+                      onDepartureTimeChange={setSelectedDepartureTimeSlot}
+                      onReturnTimeChange={setSelectedReturnTimeSlot}
+                      // Add stops filter handlers
+                      selectedStops={selectedStops}
+                      onStopsChange={setSelectedStops}
                     />
                   </div>
                 </div>
@@ -739,221 +1087,230 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
             {/* Right Column - Main Content Cards */}
             <div className="order-1 lg:order-2 lg:col-span-9 space-y-6">
+              <div data-debug-marker="main-curation-right-col" style={{display: 'none'}}>MainCuration Right Column Marker</div>
               {/* Only v2 modular cards, no v1/v2 toggle */}
-              {/* Tabs Card: Cheapest/Best/Quickest */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="flex">
-                  <div className={cn(
-                    "flex-1 border-r border-gray-200 p-2.5 text-center relative",
-                    selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
-                  )}
-                  onClick={() => setSelectedPriceCategory('cheapest')}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="text-sm text-gray-500">Cheapest</div>
-                      <div className="text-xs text-gray-500">28h 00m</div>
-                    </div>
-                    <div className="font-bold text-lg">₹45,717</div>
-                  </div>
-                  <div className={cn(
-                    "flex-1 border-r border-gray-200 p-2.5 text-center relative",
-                    selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
-                  )}
-                  onClick={() => setSelectedPriceCategory('best')}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="text-sm font-medium">Best</div>
-                      <div className="text-xs text-gray-500">10h 15m</div>
-                    </div>
-                    <div className="font-bold text-lg">₹59,035</div>
-                  </div>
-                  <div className={cn(
-                    "flex-1 p-2.5 text-center relative",
-                    selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
-                  )}
-                  onClick={() => setSelectedPriceCategory('quickest')}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="text-sm text-gray-500">Quickest</div>
-                      <div className="text-xs text-gray-500">10h 15m</div>
-                    </div>
-                    <div className="font-bold text-lg">₹59,035</div>
-                  </div>
+              {(!hasOutbound || !hasInbound) ? (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden p-8 text-center text-gray-500 text-lg font-semibold">
+                  No flights found matching your filters.
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Tabs Card: Cheapest/Best/Quickest */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="flex">
+                      <div className={cn(
+                        "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+                        selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
+                      )}
+                      onClick={() => setSelectedPriceCategory('cheapest')}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="text-sm text-gray-500">Cheapest</div>
+                          <div className="text-xs text-gray-500">28h 00m</div>
+                        </div>
+                        <div className="font-bold text-lg">₹45,717</div>
+                      </div>
+                      <div className={cn(
+                        "flex-1 border-r border-gray-200 p-2.5 text-center relative",
+                        selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
+                      )}
+                      onClick={() => setSelectedPriceCategory('best')}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="text-sm font-medium">Best</div>
+                          <div className="text-xs text-gray-500">10h 15m</div>
+                        </div>
+                        <div className="font-bold text-lg">₹59,035</div>
+                      </div>
+                      <div className={cn(
+                        "flex-1 p-2.5 text-center relative",
+                        selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
+                      )}
+                      onClick={() => setSelectedPriceCategory('quickest')}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="text-sm text-gray-500">Quickest</div>
+                          <div className="text-xs text-gray-500">10h 15m</div>
+                        </div>
+                        <div className="font-bold text-lg">₹59,035</div>
+                      </div>
+                    </div>
+                  </div>
 
-              {/* Summary Row Card */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="flex flex-row items-center px-4 py-4 gap-0">
-                  {/* Outbound */}
-                  <div className="flex flex-col items-center flex-1 min-w-0">
-                    <div className="flex flex-row items-center w-full justify-center gap-3">
-                      <div className="flex flex-col items-center min-w-[56px]">
-                        <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
+                  {/* Summary Row Card */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="flex flex-row items-center px-4 py-4 gap-0">
+                      {/* Outbound */}
+                      <div className="flex flex-col items-center flex-1 min-w-0">
+                        <div className="flex flex-row items-center w-full justify-center gap-3">
+                          <div className="flex flex-col items-center min-w-[56px]">
+                            <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                            <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[48px]">
+                            <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
+                            <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[64px] mx-1">
+                            <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
+                            <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+                            <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[48px]">
+                            <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
+                            <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
+                      {/* Divider */}
+                      <div className="w-px h-16 bg-gray-200 mx-1" />
+                      {/* Inbound */}
+                      <div className="flex flex-col items-center flex-1 min-w-0">
+                        <div className="flex flex-row items-center w-full justify-center gap-3">
+                          <div className="flex flex-col items-center min-w-[56px]">
+                            <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                            <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[48px]">
+                            <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
+                            <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[64px] mx-1">
+                            <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
+                            <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+                            <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
+                          </div>
+                          <div className="flex flex-col items-center min-w-[48px]">
+                            <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
+                            <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-center min-w-[64px] mx-1">
-                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
-                        <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                        <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
-                      </div>
-                      <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
+                      {/* Price & Action */}
+                      <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
+                        <div className="flex flex-col justify-center items-end">
+                          <div className="text-xl font-bold text-black">₹ {totalPrice}</div>
+                          <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
+                        </div>
+                        <div className="flex items-center">
+                          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => onViewTrip({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  {/* Divider */}
-                  <div className="w-px h-16 bg-gray-200 mx-1" />
-                  {/* Inbound */}
-                  <div className="flex flex-col items-center flex-1 min-w-0">
-                    <div className="flex flex-row items-center w-full justify-center gap-3">
-                      <div className="flex flex-col items-center min-w-[56px]">
-                        <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                        <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
-                      </div>
-                      <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
-                      </div>
-                      <div className="flex flex-col items-center min-w-[64px] mx-1">
-                        <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
-                        <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                        <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
-                      </div>
-                      <div className="flex flex-col items-center min-w-[48px]">
-                        <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
-                        <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Price & Action */}
-                  <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
-                    <div className="flex flex-col justify-center items-end">
-                      <div className="text-xl font-bold text-black">₹ {totalPrice}</div>
-                      <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
-                    </div>
-                    <div className="flex items-center">
-                      <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => onViewTrip({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Quick Price Filters Card */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {airlines.map((airline) => (
-                  <button
-                    key={airline.id}
-                    className={cn(
-                      "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
-                      selectedQuickFilters.includes(airline.id)
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-white hover:border-gray-300"
-                    )}
-                    onClick={() => handleQuickFilterSelect(airline.id)}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <img 
-                        src={airline.logo} 
-                        alt={airline.name} 
-                        className="h-5 w-5 rounded bg-gray-100"
-                      />
-                      <div className="text-left">
-                        <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
-                      </div>
-                    </div>
-                    {selectedQuickFilters.includes(airline.id) && (
-                      <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
-                    )}
-                  </button>
-                ))}
-              </div>
+                  {/* Quick Price Filters Card */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {airlines.map((airline) => (
+                      <button
+                        key={airline.id}
+                        className={cn(
+                          "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
+                          selectedQuickFilters.includes(airline.id)
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 bg-white hover:border-gray-300"
+                        )}
+                        onClick={() => handleQuickFilterSelect(airline.id)}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <img 
+                            src={airline.logo} 
+                            alt={airline.name} 
+                            className="h-5 w-5 rounded bg-gray-100"
+                          />
+                          <div className="text-left">
+                            <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                            <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                          </div>
+                        </div>
+                        {selectedQuickFilters.includes(airline.id) && (
+                          <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
 
-              {/* Outbound & Inbound Flight Lists Card */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Outbound List */}
-                    <div>
-                      <div className="mb-2 text-xs font-semibold text-gray-700">
-                        New York → Dubai · May 7, 2025
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {outboundFlights.map((option, idx) => (
-                          <button
-                            key={idx}
-                            className={cn(
-                              "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                              idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                            )}
-                            onClick={() => setSelectedOutboundIdx(idx)}
-                          >
-                            <div className="flex items-center gap-3 py-1">
-                              <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                  <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                  {/* Outbound & Inbound Flight Lists Card */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Outbound List */}
+                        <div>
+                          <div className="mb-2 text-xs font-semibold text-gray-700">
+                            New York → Dubai · May 7, 2025
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {filteredOutboundFlights.map((option, idx) => (
+                              <button
+                                key={idx}
+                                className={cn(
+                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                )}
+                                onClick={() => setSelectedOutboundIdx(idx)}
+                              >
+                                <div className="flex items-center gap-3 py-1">
+                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                      <span>{option.airlineName}</span>
+                                      <span>· {option.stops}</span>
+                                      {option.layover && <span>· {option.layover}</span>}
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-base font-bold text-black">₹{option.price}</div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <span>{option.airlineName}</span>
-                                  <span>· {option.stops}</span>
-                                  {option.layover && <span>· {option.layover}</span>}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        {/* Inbound List */}
+                        <div>
+                          <div className="mb-2 text-xs font-semibold text-gray-700">
+                            Dubai → New York · May 14, 2025
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {filteredInboundFlights.map((option, idx) => (
+                              <button
+                                key={idx}
+                                className={cn(
+                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                )}
+                                onClick={() => setSelectedInboundIdx(idx)}
+                              >
+                                <div className="flex items-center gap-3 py-1">
+                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                      <span>{option.airlineName}</span>
+                                      <span>· {option.stops}</span>
+                                      {option.layover && <span>· {option.layover}</span>}
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-base font-bold text-black">₹{option.price}</div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-base font-bold text-black">₹{option.price}</div>
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Inbound List */}
-                    <div>
-                      <div className="mb-2 text-xs font-semibold text-gray-700">
-                        Dubai → New York · May 14, 2025
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {inboundFlights.map((option, idx) => (
-                          <button
-                            key={idx}
-                            className={cn(
-                              "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                              idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                            )}
-                            onClick={() => setSelectedInboundIdx(idx)}
-                          >
-                            <div className="flex items-center gap-3 py-1">
-                              <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                  <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <span>{option.airlineName}</span>
-                                  <span>· {option.stops}</span>
-                                  {option.layover && <span>· {option.layover}</span>}
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-base font-bold text-black">₹{option.price}</div>
-                              </div>
-                            </div>
-                          </button>
-                        ))}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>

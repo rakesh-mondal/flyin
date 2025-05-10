@@ -158,7 +158,7 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-left cursor-pointer">
-                      <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
                     </span>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="w-[260px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
@@ -937,7 +937,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="text-left cursor-pointer">
-                          <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                    <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
                         </span>
                       </TooltipTrigger>
                       <TooltipContent side="top" className="w-[260px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">

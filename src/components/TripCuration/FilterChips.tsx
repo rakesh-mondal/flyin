@@ -13,6 +13,8 @@ interface FilterChipsProps {
   onReturnTimeChange?: (time: string) => void;
   departureRoute?: string;
   returnRoute?: string;
+  selectedStops?: string[];
+  onStopsChange?: (stops: string[]) => void;
 }
 
 const FilterChips = ({
@@ -22,9 +24,9 @@ const FilterChips = ({
   onReturnTimeChange,
   departureRoute,
   returnRoute,
+  selectedStops = [],
+  onStopsChange = () => {},
 }: FilterChipsProps) => {
-  const [selectedStop, setSelectedStop] = useState<'non-stop' | '1-stop' | '2-more' | null>(null);
-
   useEffect(() => {
     if (selectedAirlines.length === 0) {
       onAirlinesChange(['emirates', 'air-india', 'etihad', 'vistara', 'qatar', 'lufthansa', 'singapore']);
@@ -36,8 +38,13 @@ const FilterChips = ({
   };
 
   const handleStopSelect = (stop: 'non-stop' | '1-stop' | '2-more') => {
-    setSelectedStop(selectedStop === stop ? null : stop);
-    toast.success(`${stop} filter ${selectedStop === stop ? 'removed' : 'applied'}`);
+    if (selectedStops.includes(stop)) {
+      onStopsChange(selectedStops.filter(s => s !== stop));
+      toast.success(`${stop} filter removed`);
+    } else {
+      onStopsChange([...selectedStops, stop]);
+      toast.success(`${stop} filter applied`);
+    }
   };
 
   return (
@@ -63,7 +70,7 @@ const FilterChips = ({
           <button 
             className="text-xs font-medium text-blue-600 hover:text-blue-700"
             onClick={() => {
-              setSelectedStop(null);
+              onStopsChange([]);
               toast.success("Stops filter reset");
             }}
           >
@@ -75,7 +82,7 @@ const FilterChips = ({
             <button 
               className={cn(
                 "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStop === 'non-stop'
+                selectedStops.includes('non-stop')
                   ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
                   : "border-gray-200 bg-white text-gray-900"
               )}
@@ -84,13 +91,13 @@ const FilterChips = ({
               <span className="text-sm font-medium">Direct</span>
               <span className={cn(
                 "text-xs mt-0.5",
-                selectedStop === 'non-stop' ? "text-blue-600" : "text-gray-500"
+                selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
               )}>₹26,909</span>
             </button>
             <button 
               className={cn(
                 "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStop === '1-stop'
+                selectedStops.includes('1-stop')
                   ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
                   : "border-gray-200 bg-white text-gray-900"
               )}
@@ -99,13 +106,13 @@ const FilterChips = ({
               <span className="text-sm font-medium">1 stop</span>
               <span className={cn(
                 "text-xs mt-0.5",
-                selectedStop === '1-stop' ? "text-blue-600" : "text-gray-500"
+                selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
               )}>₹27,464</span>
             </button>
             <button 
               className={cn(
                 "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStop === '2-more'
+                selectedStops.includes('2-more')
                   ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
                   : "border-gray-200 bg-white text-gray-900"
               )}
@@ -114,7 +121,7 @@ const FilterChips = ({
               <span className="text-sm font-medium">2+ stops</span>
               <span className={cn(
                 "text-xs mt-0.5",
-                selectedStop === '2-more' ? "text-blue-600" : "text-gray-500"
+                selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
               )}>₹39,393</span>
             </button>
           </div>
