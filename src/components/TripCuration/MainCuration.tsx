@@ -961,10 +961,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   // Add filtered outbound/inbound flights based on selectedAirlines, stops, and timings
   const filteredOutboundFlights = outboundFlights.filter(f => {
-    // Airline filter
-    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes(
-      airlines.find(a => a.name === f.airlineName)?.id || ''
-    );
+    // Airline filter: use selectedQuickFilters if any, else show all
+    const airlineId = airlines.find(a => a.name === f.airlineName)?.id || '';
+    const airlineMatch = selectedQuickFilters.length === 0 || selectedQuickFilters.includes(airlineId);
     // Stops filter
     let stopsMatch = true;
     if (selectedStops.length > 0) {
@@ -984,10 +983,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   });
 
   const filteredInboundFlights = inboundFlights.filter(f => {
-    // Airline filter
-    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes(
-      airlines.find(a => a.name === f.airlineName)?.id || ''
-    );
+    // Airline filter: use selectedQuickFilters if any, else show all
+    const airlineId = airlines.find(a => a.name === f.airlineName)?.id || '';
+    const airlineMatch = selectedQuickFilters.length === 0 || selectedQuickFilters.includes(airlineId);
     // Stops filter
     let stopsMatch = true;
     if (selectedStops.length > 0) {
