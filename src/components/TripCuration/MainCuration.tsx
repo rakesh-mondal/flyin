@@ -1207,7 +1207,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             </div>
 
             {/* Main Content Cards (center, col-span-9) */}
-            <div className="order-1 lg:order-2 space-y-6 lg:col-span-9 max-w-4xl mx-auto w-full">
+            <div className="order-1 lg:order-2 lg:col-span-9 max-w-4xl mx-auto w-full">
               <div data-debug-marker="main-curation-right-col" style={{display: 'none'}}>MainCuration Right Column Marker</div>
               {/* Only v2 modular cards, no v1/v2 toggle */}
               {(!hasOutbound || !hasInbound) ? (
@@ -1259,7 +1259,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Summary Row Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
                     <div className="flex flex-row items-center px-4 py-4 gap-0">
                       {/* Outbound */}
                       <div className="flex flex-col items-center flex-1 min-w-0">
@@ -1321,7 +1321,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Quick Price Filters Card */}
-                  <div className="relative">
+                  <div className="relative mt-6">
                     {/* Scroll indicator (fade effect) */}
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
                     <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
@@ -1362,7 +1362,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Outbound & Inbound Flight Lists Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
                     <div className="p-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Outbound List */}
