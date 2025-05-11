@@ -280,6 +280,27 @@ function MainCurationSkeleton() {
   );
 }
 
+// Line loading indicator component
+function LineLoading({ duration = 4000 }) {
+  return (
+    <div className="w-full h-1 bg-gray-200 overflow-hidden">
+      <div
+        className="h-full bg-blue-600 transition-all"
+        style={{
+          width: '100%',
+          animation: `line-loading-bar ${duration}ms linear forwards`
+        }}
+      />
+      <style>{`
+        @keyframes line-loading-bar {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
@@ -1290,6 +1311,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
         <TopHeader />
+        <LineLoading duration={4000} />
         <div className="container mx-auto max-w-7xl px-4 pt-4 pb-4 sm:px-6 lg:px-8">
           <SearchHeader 
             origin={searchParams.origin}
