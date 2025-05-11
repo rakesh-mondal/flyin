@@ -18,8 +18,10 @@ interface FilterChipsProps {
 }
 
 const FilterChips = ({
-  selectedAirlines,
-  onAirlinesChange,
+  selectedAirlines = [],
+  onAirlinesChange = () => {
+    console.warn('FilterChips: onAirlinesChange prop is missing!');
+  },
   onDepartureTimeChange,
   onReturnTimeChange,
   departureRoute,
@@ -28,7 +30,7 @@ const FilterChips = ({
   onStopsChange = () => {},
 }: FilterChipsProps) => {
   useEffect(() => {
-    if (selectedAirlines.length === 0) {
+    if (!selectedAirlines || selectedAirlines.length === 0) {
       onAirlinesChange(['emirates', 'air-india', 'etihad', 'vistara', 'qatar', 'lufthansa', 'singapore']);
     }
   }, []);
@@ -47,381 +49,379 @@ const FilterChips = ({
     }
   };
 
-  return (
-    <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
-      {/* Header with flight count */}
-      <div className="px-4 py-3 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="text-base">
-            <span className="font-semibold text-gray-900">1577</span>
-            <span className="text-gray-500"> of </span>
-            <span className="font-semibold text-gray-900">2000</span>
-            <span className="text-gray-500"> flights</span>
+  try {
+    return (
+      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+        {/* Header with flight count */}
+        <div className="px-4 py-3 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-base">
+              <span className="font-semibold text-gray-900">1577</span>
+              <span className="text-gray-500"> of </span>
+              <span className="font-semibold text-gray-900">2000</span>
+              <span className="text-gray-500"> flights</span>
+            </div>
           </div>
         </div>
-      </div>
-      
-      {/* Stops Section */}
-      <div className="border-b border-gray-200">
-        <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Stops</h3>
-          </div>
-          <button 
-            className="text-xs font-medium text-blue-600 hover:text-blue-700"
-            onClick={() => {
-              onStopsChange([]);
-              toast.success("Stops filter reset");
-            }}
-          >
-            Reset
-          </button>
-        </div>
-        <div className="px-4 pb-3">
-          <div className="grid grid-cols-3 gap-1">
+        {/* Stops Section */}
+        <div className="border-b border-gray-200">
+          <div className="w-full px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center">
+              <h3 className="text-sm font-semibold text-gray-900">Stops</h3>
+            </div>
             <button 
-              className={cn(
-                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStops.includes('non-stop')
-                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
-                  : "border-gray-200 bg-white text-gray-900"
-              )}
-              onClick={() => handleStopSelect('non-stop')}
+              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              onClick={() => {
+                onStopsChange([]);
+                toast.success("Stops filter reset");
+              }}
             >
-              <span className="text-sm font-medium">Direct</span>
-              <span className={cn(
-                "text-xs mt-0.5",
-                selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
-              )}>₹26,909</span>
-            </button>
-            <button 
-              className={cn(
-                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStops.includes('1-stop')
-                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
-                  : "border-gray-200 bg-white text-gray-900"
-              )}
-              onClick={() => handleStopSelect('1-stop')}
-            >
-              <span className="text-sm font-medium">1 stop</span>
-              <span className={cn(
-                "text-xs mt-0.5",
-                selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
-              )}>₹27,464</span>
-            </button>
-            <button 
-              className={cn(
-                "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
-                selectedStops.includes('2-more')
-                  ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
-                  : "border-gray-200 bg-white text-gray-900"
-              )}
-              onClick={() => handleStopSelect('2-more')}
-            >
-              <span className="text-sm font-medium">2+ stops</span>
-              <span className={cn(
-                "text-xs mt-0.5",
-                selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
-              )}>₹39,393</span>
+              Reset
             </button>
           </div>
-        </div>
-      </div>
-      
-      {/* Flight Timings Section */}
-      <div className="border-b border-gray-200">
-        <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Flight Timings</h3>
+          <div className="px-4 pb-3">
+            <div className="grid grid-cols-3 gap-1">
+              <button 
+                className={cn(
+                  "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                  selectedStops.includes('non-stop')
+                    ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                    : "border-gray-200 bg-white text-gray-900"
+                )}
+                onClick={() => handleStopSelect('non-stop')}
+              >
+                <span className="text-sm font-medium">Direct</span>
+                <span className={cn(
+                  "text-xs mt-0.5",
+                  selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
+                )}>₹26,909</span>
+              </button>
+              <button 
+                className={cn(
+                  "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                  selectedStops.includes('1-stop')
+                    ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                    : "border-gray-200 bg-white text-gray-900"
+                )}
+                onClick={() => handleStopSelect('1-stop')}
+              >
+                <span className="text-sm font-medium">1 stop</span>
+                <span className={cn(
+                  "text-xs mt-0.5",
+                  selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
+                )}>₹27,464</span>
+              </button>
+              <button 
+                className={cn(
+                  "flex flex-col items-center py-2 px-2 border transition-all rounded-md",
+                  selectedStops.includes('2-more')
+                    ? "border-blue-500 bg-blue-50 text-blue-600 font-semibold"
+                    : "border-gray-200 bg-white text-gray-900"
+                )}
+                onClick={() => handleStopSelect('2-more')}
+              >
+                <span className="text-sm font-medium">2+ stops</span>
+                <span className={cn(
+                  "text-xs mt-0.5",
+                  selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
+                )}>₹39,393</span>
+              </button>
+            </div>
           </div>
-          <button 
-            className="text-xs font-medium text-blue-600 hover:text-blue-700"
-            onClick={() => {
-              if (typeof onDepartureTimeChange === 'function') onDepartureTimeChange('');
-              if (typeof onReturnTimeChange === 'function') onReturnTimeChange('');
-            }}
-          >
-            Reset
-          </button>
         </div>
-        <div className="px-4 pb-3">
-          <FlightTimings
-            departureRoute={departureRoute}
-            returnRoute={returnRoute}
-            onDepartureTimeChange={onDepartureTimeChange}
-            onReturnTimeChange={onReturnTimeChange}
-          />
-        </div>
-      </div>
-
-      {/* Airlines Section */}
-      <div>
-        <div className="w-full px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
+        {/* Flight Timings Section */}
+        <div className="border-b border-gray-200">
+          <div className="w-full px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center">
+              <h3 className="text-sm font-semibold text-gray-900">Flight Timings</h3>
+            </div>
+            <button 
+              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              onClick={() => {
+                if (typeof onDepartureTimeChange === 'function') onDepartureTimeChange('');
+                if (typeof onReturnTimeChange === 'function') onReturnTimeChange('');
+              }}
+            >
+              Reset
+            </button>
           </div>
-          <button 
-            className="text-xs font-medium text-blue-600 hover:text-blue-700"
-            onClick={() => {
-              onAirlinesChange([]);
-              toast.success("Airlines filter reset");
-            }}
-          >
-            Reset
-          </button>
+          <div className="px-4 pb-3">
+            <FlightTimings
+              departureRoute={departureRoute}
+              returnRoute={returnRoute}
+              onDepartureTimeChange={onDepartureTimeChange}
+              onReturnTimeChange={onReturnTimeChange}
+            />
+          </div>
         </div>
-        <div className="px-4 pb-3">
-          <div className="space-y-2">
-            {/* Multi-airline option */}
-            <label className="flex items-center w-full cursor-pointer group">
-              <div className="flex items-center flex-1">
-                <input
-                  type="checkbox"
-                  className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  checked={selectedAirlines.includes('multi')}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      onAirlinesChange([...selectedAirlines, 'multi']);
-                    } else {
-                      onAirlinesChange(selectedAirlines.filter(a => a !== 'multi'));
-                    }
-                  }}
-                />
-                <span className="ml-2 text-sm text-gray-700">Show multi-airline itineraries</span>
-              </div>
-            </label>
-
-            {/* Airlines list */}
+        {/* Airlines Section */}
+        <div>
+          <div className="w-full px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center">
+              <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
+            </div>
+            <button 
+              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              onClick={() => {
+                onAirlinesChange([]);
+                toast.success("Airlines filter reset");
+              }}
+            >
+              Reset
+            </button>
+          </div>
+          <div className="px-4 pb-3">
             <div className="space-y-2">
-              {/* Emirates */}
+              {/* Multi-airline option */}
               <label className="flex items-center w-full cursor-pointer group">
                 <div className="flex items-center flex-1">
                   <input
                     type="checkbox"
                     className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('emirates')}
+                    checked={selectedAirlines.includes('multi')}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'emirates']);
+                        onAirlinesChange([...selectedAirlines, 'multi']);
                       } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'emirates'));
+                        onAirlinesChange(selectedAirlines.filter(a => a !== 'multi'));
                       }
                     }}
                   />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/emirates.png"
-                        alt="Emirates"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Emirates
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
-                    </div>
-                    <span className="text-xs text-gray-500">₹65,909</span>
-                  </div>
+                  <span className="ml-2 text-sm text-gray-700">Show multi-airline itineraries</span>
                 </div>
               </label>
-
-              {/* Air India */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('air-india')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'air-india']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'air-india'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/air-india.png"
-                        alt="Air India"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Air India
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+              {/* Airlines list */}
+              <div className="space-y-2">
+                {/* Emirates */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('emirates')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'emirates']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'emirates'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/emirates.png"
+                          alt="Emirates"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Emirates
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹65,909</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹59,035</span>
                   </div>
-                </div>
-              </label>
-
-              {/* Etihad Airways */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('etihad')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'etihad']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'etihad'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/etihad-airways.png"
-                        alt="Etihad Airways"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Etihad Airways
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+                </label>
+                {/* Air India */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('air-india')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'air-india']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'air-india'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/air-india.png"
+                          alt="Air India"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Air India
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹59,035</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹45,717</span>
                   </div>
-                </div>
-              </label>
-
-              {/* Vistara */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('vistara')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'vistara']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'vistara'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/vistara.png"
-                        alt="Vistara"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Vistara
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+                </label>
+                {/* Etihad Airways */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('etihad')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'etihad']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'etihad'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/etihad-airways.png"
+                          alt="Etihad Airways"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Etihad Airways
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹45,717</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹48,200</span>
                   </div>
-                </div>
-              </label>
-
-              {/* Qatar Airways */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('qatar')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'qatar']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'qatar'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/qatar-airways.png"
-                        alt="Qatar Airways"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Qatar Airways
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+                </label>
+                {/* Vistara */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('vistara')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'vistara']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'vistara'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/vistara.png"
+                          alt="Vistara"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Vistara
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹48,200</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹52,800</span>
                   </div>
-                </div>
-              </label>
-
-              {/* Lufthansa */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('lufthansa')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'lufthansa']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'lufthansa'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/lufthansa.png"
-                        alt="Lufthansa"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Lufthansa
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+                </label>
+                {/* Qatar Airways */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('qatar')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'qatar']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'qatar'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/qatar-airways.png"
+                          alt="Qatar Airways"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Qatar Airways
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹52,800</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹61,000</span>
                   </div>
-                </div>
-              </label>
-
-              {/* Singapore Airlines */}
-              <label className="flex items-center w-full cursor-pointer group">
-                <div className="flex items-center flex-1">
-                  <input
-                    type="checkbox"
-                    className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedAirlines.includes('singapore')}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onAirlinesChange([...selectedAirlines, 'singapore']);
-                      } else {
-                        onAirlinesChange(selectedAirlines.filter(a => a !== 'singapore'));
-                      }
-                    }}
-                  />
-                  <div className="ml-2 flex items-center justify-between flex-1">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="https://airhex.com/images/airline-logos/singapore-airlines.png"
-                        alt="Singapore Airlines"
-                        className="h-4 w-6 object-contain"
-                      />
-                      <span className="text-sm text-gray-700 relative">
-                        Singapore Airlines
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
-                      </span>
+                </label>
+                {/* Lufthansa */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('lufthansa')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'lufthansa']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'lufthansa'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/lufthansa.png"
+                          alt="Lufthansa"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Lufthansa
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹61,000</span>
                     </div>
-                    <span className="text-xs text-gray-500">₹58,500</span>
                   </div>
-                </div>
-              </label>
+                </label>
+                {/* Singapore Airlines */}
+                <label className="flex items-center w-full cursor-pointer group">
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedAirlines.includes('singapore')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          onAirlinesChange([...selectedAirlines, 'singapore']);
+                        } else {
+                          onAirlinesChange(selectedAirlines.filter(a => a !== 'singapore'));
+                        }
+                      }}
+                    />
+                    <div className="ml-2 flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src="https://airhex.com/images/airline-logos/singapore-airlines.png"
+                          alt="Singapore Airlines"
+                          className="h-4 w-6 object-contain"
+                        />
+                        <span className="text-sm text-gray-700 relative">
+                          Singapore Airlines
+                          <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">₹58,500</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } catch (err) {
+    return (
+      <div style={{ background: 'red', color: 'white', padding: 20 }}>
+        Error rendering FilterChips: {err && err.toString()}
+      </div>
+    );
+  }
 };
 
 export default FilterChips;

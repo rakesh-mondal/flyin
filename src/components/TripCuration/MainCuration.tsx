@@ -218,6 +218,68 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
   );
 }
 
+// Skeleton Loader Components
+function Skeleton({ className = '' }) {
+  return <div className={`bg-gray-200 animate-pulse rounded ${className}`} />;
+}
+
+function MainCurationSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-12">
+      {/* Left Column - FilterChips Skeleton */}
+      <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
+        <div className="space-y-4">
+          <Skeleton className="rounded-xl h-[340px] w-full mb-4" />
+        </div>
+      </div>
+      {/* Main Content Cards Skeleton (center, col-span-9) */}
+      <div className="order-1 lg:order-2 lg:col-span-9 max-w-4xl mx-auto w-full">
+        {/* Merchandising Banner Skeleton */}
+        <div className="flex w-full gap-3 pb-4 -mx-2 px-2">
+          {[1,2,3].map(i => (
+            <Skeleton key={i} className="flex-1 h-16" />
+          ))}
+        </div>
+        {/* Tabs Skeleton */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4">
+          <div className="flex">
+            {[1,2,3].map(i => (
+              <Skeleton key={i} className="flex-1 h-14 m-2" />
+            ))}
+          </div>
+        </div>
+        {/* Summary Row Card Skeleton */}
+        <Skeleton className="w-full h-28 mb-4" />
+        {/* DatesCard Skeleton */}
+        <div className="flex items-center w-full py-2 mt-2 mb-2">
+          <Skeleton className="h-8 w-8 mr-2" />
+          <div className="flex gap-2 flex-1">
+            {[...Array(8)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-20" />
+            ))}
+          </div>
+          <Skeleton className="h-8 w-8 ml-2" />
+        </div>
+        {/* Flight List Skeleton */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[1,2].map(col => (
+              <div key={col}>
+                <Skeleton className="h-4 w-40 mb-3" />
+                <div className="flex flex-col gap-2">
+                  {[...Array(4)].map((_, i) => (
+                    <Skeleton key={i} className="h-16 w-full" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
@@ -489,14 +551,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   }, [isChatOpen]);
 
   useEffect(() => {
+    setLoading(true);
+    let timeoutId;
     if (!isAiSearch) {
-      setLoading(false);
+      timeoutId = setTimeout(() => setLoading(false), 4000);
       const mockFlightData = mockTrips;
       setTrips(mockFlightData);
       if (mockFlightData.length > 0) {
         setSelectedTrip(mockFlightData[0]);
       }
-      return;
+      return () => clearTimeout(timeoutId);
     }
 
     const thinkingMessages = [
@@ -513,7 +577,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }, 2000);
 
     // Simulate AI processing
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       clearInterval(intervalId);
       setLoading(false);
       const mockFlightData = mockTrips;
@@ -540,9 +604,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       } else {
         setMessage(`Based on your interest in "${searchQuery}", I've curated these Middle Eastern journeys that I think you'll love.`);
       }
-    }, 2500);
+    }, 4000);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
   }, [searchQuery, isAiSearch]);
 
   const handleSubmitMessage = () => {
@@ -1219,6 +1286,31 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col bg-gray-50">
+        <TopHeader />
+        <div className="container mx-auto max-w-7xl px-4 pt-4 pb-4 sm:px-6 lg:px-8">
+          <SearchHeader 
+            origin={searchParams.origin}
+            destination={searchParams.destination}
+            departureDate={searchParams.departureDate}
+            returnDate={searchParams.returnDate}
+            passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
+            cabinClass={searchParams.cabinClass}
+            onSwap={handleSwapLocations}
+            onUpdate={handleUpdateSearch}
+          />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <MainCurationSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
       {/* New Top Header */}
@@ -1272,25 +1364,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             {/* Left Column - Filters (only for v2) */}
             <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
               <div className="space-y-4">
-                {/* Filter Chips */}
-                <div 
-                  ref={filterRef.elementRef}
-                  className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
-                >
-                  <div className="rounded-xl mb-4 overflow-x-auto">
-                    <FilterChips
-                      selectedAirlines={selectedAirlines}
-                      onAirlinesChange={setSelectedAirlines}
-                      departureRoute="DEL-BOM"
-                      returnRoute="BOM-DEL"
-                      onDepartureTimeChange={setSelectedDepartureTimeSlot}
-                      onReturnTimeChange={setSelectedReturnTimeSlot}
-                      // Add stops filter handlers
-                      selectedStops={selectedStops}
-                      onStopsChange={setSelectedStops}
-                    />
-                  </div>
-                </div>
+                <FilterChips
+                  selectedAirlines={selectedAirlines}
+                  onAirlinesChange={setSelectedAirlines}
+                  selectedStops={selectedStops}
+                  onStopsChange={setSelectedStops}
+                  onDepartureTimeChange={setSelectedDepartureTimeSlot}
+                  onReturnTimeChange={setSelectedReturnTimeSlot}
+                  departureRoute="DEL-BOM"
+                  returnRoute="BOM-DEL"
+                />
               </div>
             </div>
 
