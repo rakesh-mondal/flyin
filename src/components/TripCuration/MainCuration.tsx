@@ -1307,6 +1307,31 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
   };
 
+  const [isDatesCardSticky, setIsDatesCardSticky] = useState(false);
+  const datesCardRef = useRef<HTMLDivElement>(null);
+  const datesCardSentinelRef = useRef<HTMLDivElement>(null);
+  const mainScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!mainScrollRef.current || !datesCardSentinelRef.current) return;
+
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        setIsDatesCardSticky(!entry.isIntersecting);
+      },
+      {
+        root: mainScrollRef.current,
+        threshold: 0,
+        rootMargin: "-108px 0px 0px 0px",
+      }
+    );
+    observer.observe(datesCardSentinelRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [mainScrollRef.current, datesCardSentinelRef.current]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
@@ -1368,7 +1393,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       )} */}
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto max-h-screen" ref={mainScrollRef}>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* AI Message */}
           {(message || thinking) && isAiSearch && (
@@ -1487,7 +1512,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   {/* Summary Row Card */}
                   {selectedOutbound && selectedInbound && (
                     <div className={cn(
-                      "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 transition-all duration-700",
+                      "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 transition-all duration-700 sticky top-2 z-30 mb-2",
                       glow && "ring-2 ring-blue-300/60 shadow-blue-200"
                     )}>
                       <div className="flex flex-row items-center px-4 py-4 gap-0">
@@ -1556,7 +1581,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     </div>
                   )}
                   {/* Dates Card below summary row card */}
-                  <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
+                  <div ref={datesCardSentinelRef} style={{ height: 0 }} />
+                  <div
+                    ref={datesCardRef}
+                    className={cn(
+                      "sticky top-[108px] z-20 bg-white",
+                      isDatesCardSticky && "border-b border-gray-200"
+                    )}
+                  >
+                    <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
+                  </div>
 
                   {/* Quick Price Filters Card */}
                   <div className="relative mt-2">
