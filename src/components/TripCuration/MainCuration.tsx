@@ -1441,7 +1441,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       <div className="mr-3 flex-shrink-0">
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
-                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
                         Use code ADCB and get up to<br />
                         AED 350 off flights & hotels
                       </div>
@@ -1451,7 +1451,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       <div className="mr-3 flex-shrink-0">
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
-                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
                         Use code AHB and get up to 20% off flights & hotels
                       </div>
                     </div>
@@ -1460,7 +1460,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       <div className="mr-3 flex-shrink-0">
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
-                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
                         Use code VIP and get up to AED<br />
                         300 off on bookings
                       </div>
@@ -1471,40 +1471,40 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="flex">
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
+                        "flex-1 border-r border-gray-200 p-2 text-center relative cursor-pointer",
                         selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('cheapest')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-sm text-gray-500">Cheapest</div>
-                          <div className="text-xs text-gray-500">{cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--'}</div>
+                          <div className="text-xs text-gray-500">Cheapest</div>
+                          <div className="text-[10px] text-gray-500">{cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2.5 text-center relative cursor-pointer",
+                        "flex-1 border-r border-gray-200 p-2 text-center relative cursor-pointer",
                         selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('best')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-sm font-medium">Best</div>
-                          <div className="text-xs text-gray-500">{bestPair ? formatDuration(bestPair.totalDuration) : '--'}</div>
+                          <div className="text-xs font-medium">Best</div>
+                          <div className="text-[10px] text-gray-500">{bestPair ? formatDuration(bestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 p-2.5 text-center relative cursor-pointer",
+                        "flex-1 p-2 text-center relative cursor-pointer",
                         selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('quickest')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-sm text-gray-500">Quickest</div>
-                          <div className="text-xs text-gray-500">{quickestPair ? formatDuration(quickestPair.totalDuration) : '--'}</div>
+                          <div className="text-xs text-gray-500">Quickest</div>
+                          <div className="text-[10px] text-gray-500">{quickestPair ? formatDuration(quickestPair.totalDuration) : '--'}</div>
                         </div>
-                        <div className="font-bold text-lg">{quickestPair ? formatPrice(quickestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">{quickestPair ? formatPrice(quickestPair.totalPrice) : '--'}</div>
                       </div>
                     </div>
                   </div>
