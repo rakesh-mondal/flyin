@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Info, AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
+import FlightListCard from './FlightListCard';
 
 interface InsightProps {
   type: 'info' | 'warning' | 'price-drop' | 'price-rise';
@@ -47,6 +48,16 @@ interface AIInsightsProps {
 }
 
 export default function AIInsights({ insights }: AIInsightsProps) {
+  const [displayedPrice, setDisplayedPrice] = useState(0);
+
+  useEffect(() => {
+    // For testing: change price after 2 seconds
+    const timer = setTimeout(() => {
+      setDisplayedPrice(12345); // or any other number
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Card className="mb-4 border-dashed">
       <CardContent className="p-4">

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Shield, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getAirlineLogo } from '../../../utils/airlineLogos';
+import cashRegisterSound from '@/assets/cash-register.mp3'; // Place a short cash register sound in this path
+import { SlidingNumber } from '@/components/ui/sliding-number';
 
 interface FlightLegOption {
   airlineLogo: string;
@@ -71,7 +73,7 @@ const FlightListCard = ({
 }: FlightListCardProps) => {
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
-  
+
   // Create arrays for outbound and return options
   const outboundOptions = [
     outboundFlight,
@@ -98,6 +100,8 @@ const FlightListCard = ({
   if (!selectedOutbound || !selectedReturn) {
     return null;
   }
+
+  console.log('FlightListCard rendered');
 
   return (
     <div className="bg-white rounded-t-xl overflow-hidden">
@@ -152,7 +156,10 @@ const FlightListCard = ({
         {/* Price & Action */}
         <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
           <div className="flex flex-col justify-center items-end">
-            <div className="text-xl font-bold text-black">{currency} {price}</div>
+            <div className="text-xl font-bold text-black flex items-center gap-1">
+              <span>{currency}</span>
+              <SlidingNumber value={parseInt(price.toString().replace(/[^0-9]/g, '')) || 0} />
+            </div>
             <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
           </div>
           <div className="flex items-center">

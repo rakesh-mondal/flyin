@@ -528,12 +528,30 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
     return airlineMatch && stopsMatch && wifiMatch && mealMatch;
   });
 
+  // Add summary options for demo
+  const summaryOptions = [
+    {
+      label: 'Best',
+      value: 'best',
+      option: roundTripOptions[0],
+    },
+    {
+      label: 'Cheapest',
+      value: 'cheapest',
+      option: roundTripOptions[1],
+    },
+    {
+      label: 'Quickest',
+      value: 'quickest',
+      option: roundTripOptions[2],
+    },
+  ];
+  const [selectedSummary, setSelectedSummary] = useState('best');
+  const summaryOption = summaryOptions.find(opt => opt.value === selectedSummary)?.option || roundTripOptions[0];
+
   if (loading) {
     return <LoadingSkeleton />;
   }
-
-  // For the summary card, use the first roundTripOption as the default selection
-  const summaryOption = roundTripOptions[0];
 
   // Generate more mock outbound and inbound flights for demo
   const outboundFlights = [
@@ -898,6 +916,17 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
         </div>
       </div>
       {/* Summary Card (non-interactive, just summary) */}
+      <div className="flex gap-2 mb-2">
+        {summaryOptions.map(opt => (
+          <button
+            key={opt.value}
+            className={`px-3 py-1 rounded border text-sm font-medium transition-colors ${selectedSummary === opt.value ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300 hover:bg-gray-100'}`}
+            onClick={() => setSelectedSummary(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
       <div className="rounded-xl border border-gray-200 mb-6 overflow-hidden">
         <FlightListCard
           outboundFlight={summaryOption.outboundFlight}

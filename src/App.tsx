@@ -7,6 +7,7 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SearchPage from './pages/Search';
+import SlidingNumberDemo from './components/ui/SlidingNumberDemo';
 
 function App() {
   // Create a client instance inside the component to avoid hooks being called at the module level
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/sliding-number-demo" element={<SlidingNumberDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

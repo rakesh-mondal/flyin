@@ -18,6 +18,7 @@ import HorizontalFilters from './HorizontalFilters';
 import FareSelectionModal from './FareSelectionModal';
 import TopHeader from './TopHeader';
 import SearchHeader from './SearchHeader';
+import { SlidingNumber } from '@/components/ui/sliding-number';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -1343,7 +1344,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       {/* Price & Action */}
                       <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
                         <div className="flex flex-col justify-center items-end">
-                          <div className="text-xl font-bold text-black">₹ {totalPrice}</div>
+                          <div className="text-xl font-bold text-black">
+                            <span className="whitespace-nowrap flex items-center gap-1 font-sans tabular-nums">
+                              <span>₹</span>
+                              <SlidingNumber value={parseInt(totalPrice.replace(/[^0-9]/g, '')) || 0} />
+                            </span>
+                          </div>
                           <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                         </div>
                         <div className="flex items-center">

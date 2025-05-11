@@ -1,4 +1,5 @@
 import React from 'react';
+import { Phone } from 'lucide-react';
 
 const TopHeader = () => (
   <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14">
@@ -24,7 +25,7 @@ const TopHeader = () => (
       <a href="#">My Bookings</a>
       <select className="border rounded px-2 py-1"><option>عربي | SAR</option></select>
       <a href="tel:+966112246333" className="flex items-center gap-1">
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M21 16.5V19a2 2 0 0 1-2.18 2A19.72 19.72 0 0 1 3 5.18 2 2 0 0 1 5 3h2.5a1 1 0 0 1 1 0.76l1.2 5a1 1 0 0 1-.29 1L8.09 11.91a16 16 0 0 0 6 6l2.15-2.15a1 1 0 0 1 1-.29l5 1.2a1 1 0 0 1 .76 1V19a2 2 0 0 1-2 2z" stroke="#1a2a3a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <Phone className="h-5 w-5 text-gray-500" />
         +966112246333
       </a>
       <img src="/images/awards-header.png" alt="Middle East's Leading Online Travel Agency Awards" className="h-8" />

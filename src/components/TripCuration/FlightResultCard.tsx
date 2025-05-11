@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import SimilarFlightOptions from './SimilarFlightOptions';
 import { similarFlightOptions } from '@/data/sampleFlightData';
+import { SlidingNumber } from '@/components/ui/sliding-number';
 
 interface FlightResultCardProps {
   flight: {
@@ -173,7 +174,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
           {/* Right column for price and action */}
           <div className="bg-gray-50 p-4 flex flex-col items-center justify-center border-l border-gray-200 min-w-[180px]">
             <div className="text-2xl font-bold">
-              ₹{flight.price}
+              <span>₹</span><SlidingNumber value={flight.price} />
             </div>
             <div className="mb-1 text-xs text-gray-500">Economy</div>
             <Button 
