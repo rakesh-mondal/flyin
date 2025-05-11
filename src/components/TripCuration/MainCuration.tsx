@@ -19,6 +19,7 @@ import FareSelectionModal from './FareSelectionModal';
 import TopHeader from './TopHeader';
 import SearchHeader from './SearchHeader';
 import { SlidingNumber } from '@/components/ui/sliding-number';
+import { format, addDays } from 'date-fns';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -143,44 +144,74 @@ const SearchSummary = ({
   );
 };
 
-// DatesCard component for horizontal date/price selection
-const mockDates = [
-  { date: 'Sun, 11 May', price: 6774 },
-  { date: 'Mon, 12 May', price: 5264 },
-  { date: 'Tue, 13 May', price: 6089 },
-  { date: 'Wed, 14 May', price: 6946 },
-  { date: 'Thu, 15 May', price: 7890 },
-  { date: 'Fri, 16 May', price: 8120 },
-];
+// Generate 14 days of dates from today
+const today = new Date();
+const mockDates = Array.from({ length: 14 }, (_, i) => ({
+  date: format(addDays(today, i), 'EEE, d MMM'),
+  price: Math.floor(5000 + Math.random() * 4000),
+}));
+
 function DatesCard({ dates, selectedIdx, onSelect }) {
   const minPrice = Math.min(...dates.map(d => d.price));
+  const [windowStart, setWindowStart] = useState(0);
+  const windowSize = 8;
+  const canScrollLeft = windowStart > 0;
+  const canScrollRight = windowStart + windowSize < dates.length;
+
+  // When selectedIdx changes, auto-scroll window to keep selected in view
+  useEffect(() => {
+    if (selectedIdx < windowStart) setWindowStart(selectedIdx);
+    else if (selectedIdx >= windowStart + windowSize) setWindowStart(selectedIdx - windowSize + 1);
+  }, [selectedIdx]);
+
+  // For smooth scroll, use a wrapper with fixed width and translateX
+  const cardWidth = 90; // px, including gap, for tighter fit
+  const visibleDates = dates.slice(windowStart, windowStart + windowSize);
+
   return (
     <div className="flex items-center w-full py-2 mt-2 mb-2">
-      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === 0} onClick={() => onSelect(Math.max(0, selectedIdx - 1))}>
+      <button
+        className="p-1 text-gray-400 hover:text-black"
+        disabled={!canScrollLeft}
+        onClick={() => setWindowStart(Math.max(0, windowStart - 3))}
+      >
         <ChevronLeft className="h-5 w-5" />
       </button>
-      <div className="flex-1 flex justify-center gap-2 overflow-x-auto scrollbar-hide">
-        {dates.map((d, i) => (
-          <div
-            key={d.date}
-            className={
-              'flex flex-col items-center px-4 cursor-pointer min-w-[90px] ' +
-              (i === selectedIdx ? 'text-black' : 'text-gray-500')
-            }
-            onClick={() => onSelect(i)}
-          >
-            <div className="text-xs mb-0.5 font-medium">{d.date}</div>
-            <div className={
-              'text-xs font-semibold ' +
-              (d.price === minPrice ? 'text-green-600' : 'text-gray-700')
-            }>
-              ₹{d.price.toLocaleString()}
+      <div className="flex-1 overflow-x-hidden">
+        <div
+          className="flex gap-2 transition-all duration-300"
+          style={{
+            width: `${windowSize * cardWidth}px`,
+            transform: `translateX(-${windowStart * cardWidth}px)`
+          }}
+        >
+          {dates.map((d, i) => (
+            <div
+              key={d.date}
+              className={
+                'flex flex-col items-center px-2 cursor-pointer min-w-[80px] ' +
+                (i === selectedIdx ? 'text-black' : 'text-gray-500')
+              }
+              onClick={() => onSelect(i)}
+              style={{ width: `${cardWidth - 8}px` }}
+            >
+              <div className="text-xs mb-0.5 font-medium whitespace-nowrap">{d.date}</div>
+              <div className={
+                'text-xs font-semibold ' +
+                (d.price === minPrice ? 'text-green-600' : 'text-gray-700')
+              }>
+                ₹{d.price.toLocaleString()}
+              </div>
+              {i === selectedIdx && <div className="mt-1 h-0.5 w-6 bg-black rounded-full" />}
             </div>
-            {i === selectedIdx && <div className="mt-1 h-0.5 w-6 bg-black rounded-full" />}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === dates.length - 1} onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}>
+      <button
+        className="p-1 text-gray-400 hover:text-black"
+        disabled={!canScrollRight}
+        onClick={() => setWindowStart(Math.min(dates.length - windowSize, windowStart + 3))}
+      >
         <ChevronRight className="h-5 w-5" />
       </button>
     </div>
