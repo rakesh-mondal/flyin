@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -142,6 +142,50 @@ const SearchSummary = ({
     </div>
   );
 };
+
+// DatesCard component for horizontal date/price selection
+const mockDates = [
+  { date: 'Sun, 11 May', price: 6774 },
+  { date: 'Mon, 12 May', price: 5264 },
+  { date: 'Tue, 13 May', price: 6089 },
+  { date: 'Wed, 14 May', price: 6946 },
+  { date: 'Thu, 15 May', price: 7890 },
+  { date: 'Fri, 16 May', price: 8120 },
+];
+function DatesCard({ dates, selectedIdx, onSelect }) {
+  const minPrice = Math.min(...dates.map(d => d.price));
+  return (
+    <div className="flex items-center w-full py-2 mt-2 mb-2">
+      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === 0} onClick={() => onSelect(Math.max(0, selectedIdx - 1))}>
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <div className="flex-1 flex justify-center gap-2 overflow-x-auto scrollbar-hide">
+        {dates.map((d, i) => (
+          <div
+            key={d.date}
+            className={
+              'flex flex-col items-center px-4 cursor-pointer min-w-[90px] ' +
+              (i === selectedIdx ? 'text-black' : 'text-gray-500')
+            }
+            onClick={() => onSelect(i)}
+          >
+            <div className="text-xs mb-0.5 font-medium">{d.date}</div>
+            <div className={
+              'text-xs font-semibold ' +
+              (d.price === minPrice ? 'text-green-600' : 'text-gray-700')
+            }>
+              ₹{d.price.toLocaleString()}
+            </div>
+            {i === selectedIdx && <div className="mt-1 h-0.5 w-6 bg-black rounded-full" />}
+          </div>
+        ))}
+      </div>
+      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === dates.length - 1} onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}>
+        <ChevronRight className="h-5 w-5" />
+      </button>
+    </div>
+  );
+}
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
@@ -1061,8 +1105,20 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const selectedOutbound = hasOutbound ? (filteredOutboundFlights[selectedOutboundIdx] || filteredOutboundFlights[0]) : null;
   const selectedInbound = hasInbound ? (filteredInboundFlights[selectedInboundIdx] || filteredInboundFlights[0]) : null;
   const totalPrice =
-    (parseInt(selectedOutbound?.price?.replace(/[^\d]/g, '') || '0', 10) +
-     parseInt(selectedInbound?.price?.replace(/[^\d]/g, '') || '0', 10)).toLocaleString();
+    (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0', 10) +
+     parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0', 10)).toLocaleString();
+
+  // Add glow effect state for Summary Row Card (must be after totalPrice is defined)
+  const [glow, setGlow] = useState(false);
+  const prevTotalPriceRef = useRef(totalPrice);
+  useEffect(() => {
+    if (totalPrice !== prevTotalPriceRef.current) {
+      setGlow(true);
+      prevTotalPriceRef.current = totalPrice;
+      const timeout = setTimeout(() => setGlow(false), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [totalPrice]);
 
   // Tab label helpers
   const formatPrice = (price) => `₹${price.toLocaleString()}`;
@@ -1293,74 +1349,81 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Summary Row Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
-                    <div className="flex flex-row items-center px-4 py-4 gap-0">
-                      {/* Outbound */}
-                      <div className="flex flex-col items-center flex-1 min-w-0">
-                        <div className="flex flex-row items-center w-full justify-center gap-3">
-                          <div className="flex flex-col items-center min-w-[56px]">
-                            <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                            <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[48px]">
-                            <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
-                            <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[64px] mx-1">
-                            <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
-                            <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                            <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[48px]">
-                            <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
-                            <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Divider */}
-                      <div className="w-px h-16 bg-gray-200 mx-1" />
-                      {/* Inbound */}
-                      <div className="flex flex-col items-center flex-1 min-w-0">
-                        <div className="flex flex-row items-center w-full justify-center gap-3">
-                          <div className="flex flex-col items-center min-w-[56px]">
-                            <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                            <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[48px]">
-                            <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
-                            <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[64px] mx-1">
-                            <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
-                            <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                            <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
-                          </div>
-                          <div className="flex flex-col items-center min-w-[48px]">
-                            <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
-                            <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
+                  {selectedOutbound && selectedInbound && (
+                    <div className={cn(
+                      "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 transition-all duration-700",
+                      glow && "ring-2 ring-blue-300/60 shadow-blue-200"
+                    )}>
+                      <div className="flex flex-row items-center px-4 py-4 gap-0">
+                        {/* Outbound */}
+                        <div className="flex flex-col items-center flex-1 min-w-0">
+                          <div className="flex flex-row items-center w-full justify-center gap-3">
+                            <div className="flex flex-col items-center min-w-[56px]">
+                              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[48px]">
+                              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
+                              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[64px] mx-1">
+                              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
+                              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+                              <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[48px]">
+                              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
+                              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      {/* Price & Action */}
-                      <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
-                        <div className="flex flex-col justify-center items-end">
-                          <div className="text-xl font-bold text-black">
-                            <span className="whitespace-nowrap flex items-center gap-1 font-sans tabular-nums">
-                              <span>₹</span>
-                              <SlidingNumber value={parseInt(totalPrice.replace(/[^0-9]/g, '')) || 0} />
-                            </span>
+                        {/* Divider */}
+                        <div className="w-px h-16 bg-gray-200 mx-1" />
+                        {/* Inbound */}
+                        <div className="flex flex-col items-center flex-1 min-w-0">
+                          <div className="flex flex-row items-center w-full justify-center gap-3">
+                            <div className="flex flex-col items-center min-w-[56px]">
+                              <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
+                              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[48px]">
+                              <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
+                              <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[64px] mx-1">
+                              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
+                              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
+                              <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
+                            </div>
+                            <div className="flex flex-col items-center min-w-[48px]">
+                              <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
+                              <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
+                            </div>
                           </div>
-                          <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                         </div>
-                        <div className="flex items-center">
-                          <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                        {/* Price & Action */}
+                        <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
+                          <div className="flex flex-col justify-center items-end">
+                            <div className="text-xl font-bold text-black">
+                              <span className="whitespace-nowrap flex items-center gap-1 font-sans tabular-nums">
+                                <span>₹</span>
+                                <SlidingNumber value={parseInt(totalPrice.replace(/[^0-9]/g, '')) || 0} />
+                              </span>
+                            </div>
+                            <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
+                          </div>
+                          <div className="flex items-center">
+                            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+                  {/* Dates Card below summary row card */}
+                  <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
 
                   {/* Quick Price Filters Card */}
-                  <div className="relative mt-6">
+                  <div className="relative mt-2">
                     {/* Scroll indicator (fade effect) */}
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
                     <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
