@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -1216,6 +1216,39 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                 </div>
               ) : (
                 <>
+                  {/* Merchandising Banner */}
+                  <div className="flex w-full gap-3 pb-4 -mx-2 px-2">
+                    {/* Card 1 */}
+                    <div className="flex-1 flex items-center rounded-xl px-4 py-3" style={{ background: '#ecf8f4' }}>
+                      <div className="mr-3 flex-shrink-0">
+                        <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
+                      </div>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                        Use code ADCB and get up to<br />
+                        AED 350 off flights & hotels
+                      </div>
+                    </div>
+                    {/* Card 2 */}
+                    <div className="flex-1 flex items-center rounded-xl px-4 py-3" style={{ background: '#ecf8f4' }}>
+                      <div className="mr-3 flex-shrink-0">
+                        <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
+                      </div>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                        Use code AHB and get up to 20% off flights & hotels
+                      </div>
+                    </div>
+                    {/* Card 3 */}
+                    <div className="flex-1 flex items-center rounded-xl px-4 py-3 relative" style={{ background: '#ecf8f4' }}>
+                      <div className="mr-3 flex-shrink-0">
+                        <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
+                      </div>
+                      <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670' }}>
+                        Use code VIP and get up to AED<br />
+                        300 off on bookings
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Tabs Card: Cheapest/Best/Quickest */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="flex">
@@ -1354,10 +1387,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           )}
                         </button>
                       ))}
-                      {/* Optional: Add a right arrow icon at the end for extra visual cue on mobile */}
-                      <div className="flex items-center pl-2 pr-1 sm:hidden">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-gray-400 animate-pulse"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                      </div>
                     </div>
                   </div>
 
