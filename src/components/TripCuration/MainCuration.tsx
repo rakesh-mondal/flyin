@@ -3,7 +3,6 @@ import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
 import TripListV2 from './v2/TripList';
-import TripListV3 from './v3/TripList';
 import ChatInput from './ChatInput';
 // import SelectedTripDetail from './SelectedTripDetail';  // Commented out as we're not using it
 import { mockTrips } from './mockData';
@@ -17,12 +16,14 @@ import { cn } from '@/lib/utils';
 import FlightOptionsSelector from './FlightOptionsSelector';
 import HorizontalFilters from './HorizontalFilters';
 import FareSelectionModal from './FareSelectionModal';
+import TopHeader from './TopHeader';
+import SearchHeader from './SearchHeader';
 
 interface TripCurationProps {
   searchQuery: string;
   onBack: () => void;
   onViewTrip: (trip: any) => void;
-  version: 'v2' | 'v3';
+  version?: 'v2';
   isAiSearch?: boolean;
 }
 
@@ -141,7 +142,7 @@ const SearchSummary = ({
   );
 };
 
-export default function MainCuration({ searchQuery, onBack, onViewTrip, version, isAiSearch = false }: TripCurationProps) {
+export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1107,21 +1108,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
     }
   }, [filteredOutboundFlights, filteredInboundFlights, selectedOutboundIdx, selectedInboundIdx, selectedPriceCategory, cheapestPair, quickestPair, bestPair]);
 
-  // Refs for scrolling selected outbound/inbound into view
-  const outboundRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const inboundRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  // Scroll selected outbound/inbound into view when index changes
   useEffect(() => {
-    if (outboundRefs.current[selectedOutboundIdx]) {
-      outboundRefs.current[selectedOutboundIdx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    }
-  }, [selectedOutboundIdx, filteredOutboundFlights]);
-  useEffect(() => {
-    if (inboundRefs.current[selectedInboundIdx]) {
-      inboundRefs.current[selectedInboundIdx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    }
-  }, [selectedInboundIdx, filteredInboundFlights]);
+    window.scrollTo(0, 0);
+  }, []);
 
   // Handler for manual outbound selection
   const handleManualOutboundSelect = (idx: number) => {
@@ -1144,26 +1133,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
-      {/* Header */}
-      <div className="animate-fade-in">
-        <div className="w-full">
-          <Header 
-            onBack={onBack}
-            origin={searchParams.origin}
-            destination={searchParams.destination}
-            departureDate={searchParams.departureDate}
-            returnDate={searchParams.returnDate}
-            passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
-            cabinClass={searchParams.cabinClass}
-            onSwap={handleSwapLocations}
-            onUpdate={handleUpdateSearch}
-          />
-        </div>
+      {/* New Top Header */}
+      <TopHeader />
+      {/* Search Header (not sticky) */}
+      <div className="container mx-auto max-w-7xl px-4 pt-4 pb-4 sm:px-6 lg:px-8">
+        <SearchHeader 
+          origin={searchParams.origin}
+          destination={searchParams.destination}
+          departureDate={searchParams.departureDate}
+          returnDate={searchParams.returnDate}
+          passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
+          cabinClass={searchParams.cabinClass}
+          onSwap={handleSwapLocations}
+          onUpdate={handleUpdateSearch}
+        />
       </div>
 
       {/* Horizontal Filters for v3 only */}
-      {version === 'v3' && (
-        <div className="sticky top-0 z-10 bg-white border-b">
+      {/* {version === 'v3' && (
+        <div className="bg-white border-b">
           <HorizontalFilters
             selectedStops={selectedStops}
             onStopsChange={setSelectedStops}
@@ -1175,11 +1163,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
             onAirlinesChange={setSelectedAirlines}
           />
         </div>
-      )}
+      )} */}
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* AI Message */}
           {(message || thinking) && isAiSearch && (
             <div className="mb-4 animate-bounce-in">
@@ -1194,39 +1182,32 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
           {/* Main Grid Layout */}
           <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-12">
             {/* Left Column - Filters (only for v2) */}
-            {version === 'v2' && (
-              <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
-                <div className="space-y-4 lg:sticky lg:top-4">
-                  {/* Filter Chips */}
-                  <div 
-                    ref={filterRef.elementRef}
-                    className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
-                  >
-                    <div className="rounded-xl mb-4 overflow-x-auto">
-                      <FilterChips
-                        selectedAirlines={selectedAirlines}
-                        onAirlinesChange={setSelectedAirlines}
-                        departureRoute="DEL-BOM"
-                        returnRoute="BOM-DEL"
-                        onDepartureTimeChange={setSelectedDepartureTimeSlot}
-                        onReturnTimeChange={setSelectedReturnTimeSlot}
-                        // Add stops filter handlers
-                        selectedStops={selectedStops}
-                        onStopsChange={setSelectedStops}
-                      />
-                    </div>
+            <div className="order-2 lg:order-1 lg:col-span-3 bg-gray-50">
+              <div className="space-y-4">
+                {/* Filter Chips */}
+                <div 
+                  ref={filterRef.elementRef}
+                  className={`stagger-children ${filterRef.isVisible ? 'active' : ''}`}
+                >
+                  <div className="rounded-xl mb-4 overflow-x-auto">
+                    <FilterChips
+                      selectedAirlines={selectedAirlines}
+                      onAirlinesChange={setSelectedAirlines}
+                      departureRoute="DEL-BOM"
+                      returnRoute="BOM-DEL"
+                      onDepartureTimeChange={setSelectedDepartureTimeSlot}
+                      onReturnTimeChange={setSelectedReturnTimeSlot}
+                      // Add stops filter handlers
+                      selectedStops={selectedStops}
+                      onStopsChange={setSelectedStops}
+                    />
                   </div>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Main Content Cards (center, col-span-9) */}
-            <div className={cn(
-              "order-1 lg:order-2 space-y-6",
-              version === 'v3'
-                ? 'lg:col-span-10 mr-[260px] w-full' // span 10 columns, add right margin for copilot, full width
-                : 'lg:col-span-9 max-w-4xl mx-auto w-full'
-            )}>
+            <div className="order-1 lg:order-2 space-y-6 lg:col-span-9 max-w-4xl mx-auto w-full">
               <div data-debug-marker="main-curation-right-col" style={{display: 'none'}}>MainCuration Right Column Marker</div>
               {/* Only v2 modular cards, no v1/v2 toggle */}
               {(!hasOutbound || !hasInbound) ? (
@@ -1393,7 +1374,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
                             {filteredOutboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
-                                ref={el => outboundRefs.current[idx] = el}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                                   idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
@@ -1430,7 +1410,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
                             {filteredInboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
-                                ref={el => inboundRefs.current[idx] = el}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
                                   idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
@@ -1464,62 +1443,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, version,
                 </>
               )}
             </div>
-
-            {/* Copilot Chat Panel for v3 (right column, desktop/tablet only) */}
-            {version === 'v3' && (
-              <div className="hidden lg:block order-3 lg:order-3 lg:col-span-3">
-                <div className="fixed top-[140px] right-0 z-30 h-[calc(100vh-140px)] w-[325px]">
-                  <div className="bg-white rounded-2xl border border-gray-200 p-4 h-full flex flex-col">
-                    <h3 className="text-lg font-semibold mb-2">Flyin Pilot</h3>
-                    <div className="flex-1 flex flex-col justify-end">
-                      <ChatInput
-                        userMessage={userMessage}
-                        setUserMessage={setUserMessage}
-                        onSubmitMessage={handleSubmitMessage}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
-
-      {/* Copilot Chat Floating for v2 (all screens) and v3 (mobile/tablet only) */}
-      {((version === 'v2') || (version === 'v3' && typeof window !== 'undefined' && window.innerWidth < 1024)) && (
-        <>
-          {isChatOpen ? (
-            <div ref={chatCardRef} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] sm:w-[80%] md:w-[70%] min-w-[280px] max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out transform animate-fade-in z-50">
-              <button
-                onClick={() => setIsChatOpen(false)}
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-              <div className="p-4 sm:p-6">
-                <ChatInput
-                  userMessage={userMessage}
-                  setUserMessage={setUserMessage}
-                  onSubmitMessage={handleSubmitMessage}
-                />
-              </div>
-            </div>
-          ) : (
-            <Button
-              className={cn(
-                "fixed bottom-6 right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-black text-white shadow-lg hover:bg-black/90",
-                "flex items-center justify-center transition-all duration-200 hover:scale-105",
-                "animate-bounce-in z-50"
-              )}
-              size="icon"
-              onClick={() => setIsChatOpen(true)}
-            >
-              <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
-            </Button>
-          )}
-        </>
-      )}
 
       {/* Fare Selection Modal */}
       <FareSelectionModal

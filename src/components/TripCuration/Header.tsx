@@ -35,17 +35,12 @@ const Header = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-gray-200 bg-white w-full">
+    <header className="border-b border-gray-200 bg-white w-full">
       <div className="flex h-16 items-center w-full">
         <Button variant="ghost" size="icon" onClick={onBack} className="text-black">
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        {/* Logo */}
-        <img 
-          src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" 
-          alt="Flyin.com" 
-          className="h-5 ml-2" 
-        />
+        {/* Logo removed */}
         {/* Search Pill */}
         <div className="flex-1 flex items-center justify-center">
           <div className="ml-6 w-[75%]">

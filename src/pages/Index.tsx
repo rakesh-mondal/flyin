@@ -8,7 +8,7 @@ import Profile from '@/components/Profile';
 import { Toaster } from '@/components/ui/sonner';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useIsMobile } from '@/hooks/use-mobile';
-import CurationVersionToggle from '@/components/TripCuration/CurationVersionToggle';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,6 +20,7 @@ const Index = () => {
   
   const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
+  const navigate = useNavigate();
   
   // Update navigation visibility based on scroll direction (only on mobile)
   useEffect(() => {
@@ -36,8 +37,7 @@ const Index = () => {
   }, [scrollDirection, isMobile, currentView]);
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setCurrentView('search');
+    navigate(`/search?query=${encodeURIComponent(query)}`);
   };
 
   const handleBack = () => {
@@ -82,20 +82,6 @@ const Index = () => {
     <div className="flex h-screen w-full flex-col overflow-hidden">
       {currentView === 'home' && (
         <TravelCanvas onSearch={handleSearch} />
-      )}
-      
-      {currentView === 'search' && (
-        <>
-          <TripCuration 
-            searchQuery={searchQuery} 
-            onBack={handleBack}
-            onViewTrip={handleViewTrip}
-            version={version}
-          />
-          <div className="fixed bottom-4 left-4 z-50">
-            <CurationVersionToggle version={version} setVersion={setVersion} />
-          </div>
-        </>
       )}
       
       {currentView === 'detail' && selectedTrip && (
