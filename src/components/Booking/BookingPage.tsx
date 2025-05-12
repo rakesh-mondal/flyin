@@ -267,7 +267,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           <StepCard step={3} title="Add contact details" />
           <StepCard step={4} title="Add traveller details" />
           <button
-            className="mt-8 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded px-6 py-3"
+            className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
             onClick={() => setStep((s) => Math.min(s + 1, 4))}
           >
             Continue
