@@ -1595,7 +1595,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   )}
 
                   {/* Quick Price Filters Card */}
-                  <div className="relative mt-2 mb-4">
+                  <div className="relative mt-4 mb-4">
                     {/* Scroll indicator (fade effect) */}
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
                     <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
