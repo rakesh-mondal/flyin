@@ -154,65 +154,59 @@ const mockDates = Array.from({ length: 14 }, (_, i) => ({
 function DatesCard({ dates, selectedIdx, onSelect }) {
   const minPrice = Math.min(...dates.map(d => d.price));
   const [windowStart, setWindowStart] = useState(0);
-  const windowSize = 8;
+  const windowSize = 4;
   const canScrollLeft = windowStart > 0;
   const canScrollRight = windowStart + windowSize < dates.length;
 
-  // When selectedIdx changes, auto-scroll window to keep selected in view
   useEffect(() => {
     if (selectedIdx < windowStart) setWindowStart(selectedIdx);
     else if (selectedIdx >= windowStart + windowSize) setWindowStart(selectedIdx - windowSize + 1);
   }, [selectedIdx]);
 
-  // For smooth scroll, use a wrapper with fixed width and translateX
-  const cardWidth = 90; // px, including gap, for tighter fit
   const visibleDates = dates.slice(windowStart, windowStart + windowSize);
 
   return (
-    <div className="flex items-center w-full py-2 mt-2 mb-2">
+    <div className="flex items-center w-full py-1 mb-1">
       <button
         className="p-1 text-gray-400 hover:text-black"
         disabled={!canScrollLeft}
-        onClick={() => setWindowStart(Math.max(0, windowStart - 3))}
+        onClick={() => setWindowStart(Math.max(0, windowStart - 1))}
+        style={{ minWidth: 28 }}
       >
-        <ChevronLeft className="h-5 w-5" />
+        <ChevronLeft className="h-4 w-4" />
       </button>
-      <div className="flex-1 overflow-x-hidden">
-        <div
-          className="flex gap-2 transition-all duration-300"
-          style={{
-            width: `${windowSize * cardWidth}px`,
-            transform: `translateX(-${windowStart * cardWidth}px)`
-          }}
-        >
-          {dates.map((d, i) => (
+      <div className="flex-1 flex justify-between gap-0 overflow-x-hidden">
+        {visibleDates.map((d, i) => {
+          const globalIdx = windowStart + i;
+          return (
             <div
               key={d.date}
               className={
-                'flex flex-col items-center px-2 cursor-pointer min-w-[80px] ' +
-                (i === selectedIdx ? 'text-black' : 'text-gray-500')
+                'flex flex-col items-center cursor-pointer ' +
+                (globalIdx === selectedIdx ? 'font-bold text-black' : 'text-gray-500')
               }
-              onClick={() => onSelect(i)}
-              style={{ width: `${cardWidth - 8}px` }}
+              onClick={() => onSelect(globalIdx)}
+              style={{ fontSize: '12px', lineHeight: '16px', width: 70, minWidth: 70, maxWidth: 70 }}
             >
-              <div className="text-xs mb-0.5 font-medium whitespace-nowrap">{d.date}</div>
+              <div className="mb-0.5" style={{ fontSize: '11px', fontWeight: 500 }}>{d.date}</div>
               <div className={
-                'text-xs font-semibold ' +
-                (d.price === minPrice ? 'text-green-600' : 'text-gray-700')
-              }>
+                'font-semibold ' +
+                (d.price === minPrice ? 'text-green-600' : '')
+              } style={{ fontSize: '12px' }}>
                 ₹{d.price.toLocaleString()}
               </div>
-              {i === selectedIdx && <div className="mt-1 h-0.5 w-6 bg-black rounded-full" />}
+              {globalIdx === selectedIdx && <div className="mt-0.5 h-0.5 w-5 bg-black rounded-full" />}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
       <button
         className="p-1 text-gray-400 hover:text-black"
         disabled={!canScrollRight}
-        onClick={() => setWindowStart(Math.min(dates.length - windowSize, windowStart + 3))}
+        onClick={() => setWindowStart(Math.min(dates.length - windowSize, windowStart + 1))}
+        style={{ minWidth: 28 }}
       >
-        <ChevronRight className="h-5 w-5" />
+        <ChevronRight className="h-4 w-4" />
       </button>
     </div>
   );
@@ -1332,6 +1326,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     };
   }, [mainScrollRef.current, datesCardSentinelRef.current]);
 
+  // In MainCuration component, before the Outbound & Inbound Flight Lists Card rendering:
+  // Add state for outbound/inbound date selection and mock date arrays
+  const [selectedOutboundDateIdx, setSelectedOutboundDateIdx] = useState(0);
+  const [selectedInboundDateIdx, setSelectedInboundDateIdx] = useState(0);
+  const outboundDates = [
+    { date: 'Wed, 7 May', price: 35000 },
+    { date: 'Thu, 8 May', price: 35500 },
+    { date: 'Fri, 9 May', price: 34000 },
+    { date: 'Sat, 10 May', price: 36000 },
+    { date: 'Sun, 11 May', price: 34500 },
+  ];
+  const inboundDates = [
+    { date: 'Wed, 14 May', price: 30000 },
+    { date: 'Thu, 15 May', price: 30500 },
+    { date: 'Fri, 16 May', price: 29900 },
+    { date: 'Sat, 17 May', price: 31000 },
+    { date: 'Sun, 18 May', price: 30200 },
+  ];
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
@@ -1580,16 +1593,96 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       </div>
                     </div>
                   )}
-                  {/* Dates Card below summary row card */}
-                  <div ref={datesCardSentinelRef} style={{ height: 0 }} />
-                  <div
-                    ref={datesCardRef}
-                    className={cn(
-                      "sticky top-[108px] z-20 bg-white",
-                      isDatesCardSticky && "border-b border-gray-200"
-                    )}
-                  >
-                    <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
+                  {/* Outbound & Inbound Flight Lists Card */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+                    <div className="p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Outbound List */}
+                        <div>
+                          <DatesCard
+                            dates={outboundDates}
+                            selectedIdx={selectedOutboundDateIdx}
+                            onSelect={setSelectedOutboundDateIdx}
+                          />
+                          <hr className="my-1 border-gray-200" />
+                          <div className="mb-2 text-xs font-semibold text-gray-700">
+                            New York → Dubai · {outboundDates[selectedOutboundDateIdx]?.date}
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {filteredOutboundFlights.map((option, idx) => (
+                              <button
+                                key={idx}
+                                className={cn(
+                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                )}
+                                onClick={() => handleManualOutboundSelect(idx)}
+                              >
+                                <div className="flex items-center gap-3 py-1">
+                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                      <span>{option.airlineName}</span>
+                                      <span>· {option.stops}</span>
+                                      {option.layover && <span>· {option.layover}</span>}
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-base font-bold text-black">₹{option.price}</div>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        {/* Inbound List */}
+                        <div>
+                          <DatesCard
+                            dates={inboundDates}
+                            selectedIdx={selectedInboundDateIdx}
+                            onSelect={setSelectedInboundDateIdx}
+                          />
+                          <hr className="my-1 border-gray-200" />
+                          <div className="mb-2 text-xs font-semibold text-gray-700">
+                            Dubai → New York · {inboundDates[selectedInboundDateIdx]?.date}
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {filteredInboundFlights.map((option, idx) => (
+                              <button
+                                key={idx}
+                                className={cn(
+                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                )}
+                                onClick={() => handleManualInboundSelect(idx)}
+                              >
+                                <div className="flex items-center gap-3 py-1">
+                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                      <span>{option.airlineName}</span>
+                                      <span>· {option.stops}</span>
+                                      {option.layover && <span>· {option.layover}</span>}
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-base font-bold text-black">₹{option.price}</div>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Quick Price Filters Card */}
@@ -1635,9 +1728,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Outbound List */}
                         <div>
-                          <div className="mb-2 text-xs font-semibold text-gray-700">
-                            New York → Dubai · May 7, 2025
-                          </div>
+                          <div className="mb-2 text-xs font-semibold text-gray-700">New York → Dubai · May 7, 2025</div>
                           <div className="flex flex-col gap-2">
                             {filteredOutboundFlights.map((option, idx) => (
                               <button
@@ -1671,9 +1762,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         </div>
                         {/* Inbound List */}
                         <div>
-                          <div className="mb-2 text-xs font-semibold text-gray-700">
-                            Dubai → New York · May 14, 2025
-                          </div>
+                          <div className="mb-2 text-xs font-semibold text-gray-700">Dubai → New York · May 14, 2025</div>
                           <div className="flex flex-col gap-2">
                             {filteredInboundFlights.map((option, idx) => (
                               <button
