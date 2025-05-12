@@ -3,7 +3,7 @@ import { Skeleton } from '../../ui/skeleton';
 import { mockTrips } from '../mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '../../ui/button';
-import { Sliders, Info, Check } from 'lucide-react';
+import { Sliders, Info, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FlightListCard from './FlightListCard';
 
@@ -203,6 +203,52 @@ const mealOptions = [
   { label: 'Gluten-Free', value: 'Gluten-Free' },
   { label: 'Halal', value: 'Halal' }
 ];
+
+// DatesCard component for horizontal date/price selection
+const mockDates = [
+  { date: 'Sun, 11 May', price: 6774 },
+  { date: 'Mon, 12 May', price: 5264 },
+  { date: 'Tue, 13 May', price: 6089 },
+  { date: 'Wed, 14 May', price: 6946 },
+  { date: 'Thu, 15 May', price: 7890 },
+  { date: 'Fri, 16 May', price: 8120 },
+];
+
+function DatesCard({ dates, selectedIdx, onSelect }) {
+  // Find lowest price for green highlight
+  const minPrice = Math.min(...dates.map(d => d.price));
+  return (
+    <div className="flex items-center w-full py-2 mb-4">
+      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === 0} onClick={() => onSelect(Math.max(0, selectedIdx - 1))}>
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <div className="flex-1 flex justify-center gap-2 overflow-x-auto scrollbar-hide">
+        {dates.map((d, i) => (
+          <div
+            key={d.date}
+            className={
+              'flex flex-col items-center px-4 cursor-pointer min-w-[90px] ' +
+              (i === selectedIdx ? 'font-bold text-black' : 'text-gray-500')
+            }
+            onClick={() => onSelect(i)}
+          >
+            <div className="text-sm mb-1">{d.date}</div>
+            <div className={
+              'text-base ' +
+              (d.price === minPrice ? 'text-green-600 font-semibold' : '')
+            }>
+              ₹{d.price.toLocaleString()}
+            </div>
+            {i === selectedIdx && <div className="mt-1 h-1 w-8 bg-black rounded-full" />}
+          </div>
+        ))}
+      </div>
+      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === dates.length - 1} onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}>
+        <ChevronRight className="h-5 w-5" />
+      </button>
+    </div>
+  );
+}
 
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
@@ -936,6 +982,8 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           onBook={() => onViewTrip(summaryOption)}
           showOptions={false}
         />
+        {/* Dates Card below summary row card */}
+        <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
         {/* Flight details link/section - just below summary row */}
         <div className="px-4 py-1.5 flex items-start">
           <button className="text-blue-600 text-sm font-medium hover:underline" onClick={() => {}}>Flight details</button>

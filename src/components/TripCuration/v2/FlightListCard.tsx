@@ -73,6 +73,18 @@ const FlightListCard = ({
 }: FlightListCardProps) => {
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
+  const [glow, setGlow] = useState(false);
+  const prevPriceRef = useRef(parseInt(price.toString().replace(/[^0-9]/g, '')) || 0);
+
+  useEffect(() => {
+    const numericPrice = parseInt(price.toString().replace(/[^0-9]/g, '')) || 0;
+    if (numericPrice !== prevPriceRef.current) {
+      setGlow(true);
+      prevPriceRef.current = numericPrice;
+      const timeout = setTimeout(() => setGlow(false), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [price]);
 
   // Create arrays for outbound and return options
   const outboundOptions = [
@@ -104,7 +116,12 @@ const FlightListCard = ({
   console.log('FlightListCard rendered');
 
   return (
-    <div className="bg-white rounded-t-xl overflow-hidden">
+    <div
+      className={cn(
+        "bg-white rounded-t-xl overflow-visible transition-all duration-700",
+        glow ? "ring-4 ring-blue-400/80 shadow-blue-300 shadow-2xl scale-105 z-10" : ""
+      )}
+    >
       {/* Compact summary card */}
       <div className="flex flex-row items-center px-4 py-4 gap-0">
         {/* Outbound */}

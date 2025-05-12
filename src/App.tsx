@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SearchPage from './pages/Search';
 import SlidingNumberDemo from './components/ui/SlidingNumberDemo';
+import Booking from './pages/Booking';
+import Curation from './pages/Curation';
 
 function App() {
   // Create a client instance inside the component to avoid hooks being called at the module level
@@ -21,7 +23,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/curation" element={<Curation />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/Booking" element={<Booking />} />
             <Route path="/sliding-number-demo" element={<SlidingNumberDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

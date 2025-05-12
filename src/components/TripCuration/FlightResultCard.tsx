@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Calendar, Clock, Leaf, PlaneTakeoff, Heart, Share, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -37,7 +37,18 @@ interface FlightResultCardProps {
 export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [glow, setGlow] = useState(false);
+  const prevPriceRef = useRef(flight.price);
   
+  useEffect(() => {
+    if (flight.price !== prevPriceRef.current) {
+      setGlow(true);
+      prevPriceRef.current = flight.price;
+      const timeout = setTimeout(() => setGlow(false), 700);
+      return () => clearTimeout(timeout);
+    }
+  }, [flight.price]);
+
   const handleImgError = () => {
     setImgError(true);
   };
@@ -57,8 +68,9 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
       <Card 
         onClick={onClick}
         className={cn(
-          "overflow-hidden border border-gray-200 cursor-pointer",
-          isSelected ? "ring-2 ring-black shadow-sm" : ""
+          "overflow-visible border border-gray-200 cursor-pointer transition-all duration-500",
+          isSelected ? "ring-2 ring-black shadow-sm" : "",
+          glow ? "ring-4 ring-yellow-400/80 shadow-yellow-300 shadow-2xl scale-105 z-10" : ""
         )}
       >
         {/* Flight information section */}
