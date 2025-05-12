@@ -1593,6 +1593,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       </div>
                     </div>
                   )}
+
+                  {/* Quick Price Filters Card */}
+                  <div className="relative mt-2 mb-4">
+                    {/* Scroll indicator (fade effect) */}
+                    <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
+                    <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      {airlines.map((airline) => (
+                        <button
+                          key={airline.id}
+                          className={cn(
+                            "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px] min-w-[160px] max-w-[180px] flex-shrink-0",
+                            selectedQuickFilters.includes(airline.id)
+                              ? "border-blue-500 bg-blue-50"
+                              : "border-gray-200 bg-white hover:border-gray-300"
+                          )}
+                          onClick={() => handleQuickFilterSelect(airline.id)}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <img 
+                              src={airline.logo} 
+                              alt={airline.name} 
+                              className="h-5 w-5 rounded bg-gray-100"
+                            />
+                            <div className="text-left">
+                              <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                              <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                            </div>
+                          </div>
+                          {selectedQuickFilters.includes(airline.id) && (
+                            <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Outbound & Inbound Flight Lists Card */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
                     <div className="p-4">
@@ -1650,119 +1688,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           <div className="mb-2 text-xs font-semibold text-gray-700">
                             Dubai → New York · {inboundDates[selectedInboundDateIdx]?.date}
                           </div>
-                          <div className="flex flex-col gap-2">
-                            {filteredInboundFlights.map((option, idx) => (
-                              <button
-                                key={idx}
-                                className={cn(
-                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                )}
-                                onClick={() => handleManualInboundSelect(idx)}
-                              >
-                                <div className="flex items-center gap-3 py-1">
-                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                      <span>{option.airlineName}</span>
-                                      <span>· {option.stops}</span>
-                                      {option.layover && <span>· {option.layover}</span>}
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-base font-bold text-black">₹{option.price}</div>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quick Price Filters Card */}
-                  <div className="relative mt-2">
-                    {/* Scroll indicator (fade effect) */}
-                    <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
-                    <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
-                      style={{ WebkitOverflowScrolling: 'touch' }}
-                    >
-                      {airlines.map((airline) => (
-                        <button
-                          key={airline.id}
-                          className={cn(
-                            "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px] min-w-[160px] max-w-[180px] flex-shrink-0",
-                            selectedQuickFilters.includes(airline.id)
-                              ? "border-blue-500 bg-blue-50"
-                              : "border-gray-200 bg-white hover:border-gray-300"
-                          )}
-                          onClick={() => handleQuickFilterSelect(airline.id)}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <img 
-                              src={airline.logo} 
-                              alt={airline.name} 
-                              className="h-5 w-5 rounded bg-gray-100"
-                            />
-                            <div className="text-left">
-                              <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                              <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
-                            </div>
-                          </div>
-                          {selectedQuickFilters.includes(airline.id) && (
-                            <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Outbound & Inbound Flight Lists Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
-                    <div className="p-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Outbound List */}
-                        <div>
-                          <div className="mb-2 text-xs font-semibold text-gray-700">New York → Dubai · May 7, 2025</div>
-                          <div className="flex flex-col gap-2">
-                            {filteredOutboundFlights.map((option, idx) => (
-                              <button
-                                key={idx}
-                                className={cn(
-                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                )}
-                                onClick={() => handleManualOutboundSelect(idx)}
-                              >
-                                <div className="flex items-center gap-3 py-1">
-                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                      <span>{option.airlineName}</span>
-                                      <span>· {option.stops}</span>
-                                      {option.layover && <span>· {option.layover}</span>}
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-base font-bold text-black">₹{option.price}</div>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        {/* Inbound List */}
-                        <div>
-                          <div className="mb-2 text-xs font-semibold text-gray-700">Dubai → New York · May 14, 2025</div>
                           <div className="flex flex-col gap-2">
                             {filteredInboundFlights.map((option, idx) => (
                               <button
