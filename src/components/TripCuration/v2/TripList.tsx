@@ -217,29 +217,39 @@ const mockDates = [
 function DatesCard({ dates, selectedIdx, onSelect }) {
   // Find lowest price for green highlight
   const minPrice = Math.min(...dates.map(d => d.price));
+  let indices = [];
+  if (dates.length === 0) {
+    indices = [];
+  } else if (selectedIdx === 0) {
+    indices = [0, 0, 1 < dates.length ? 1 : 0];
+  } else if (selectedIdx === dates.length - 1) {
+    indices = [dates.length - 2 >= 0 ? dates.length - 2 : dates.length - 1, dates.length - 1, dates.length - 1];
+  } else {
+    indices = [selectedIdx - 1, selectedIdx, selectedIdx + 1];
+  }
   return (
     <div className="flex items-center w-full py-2 mb-4">
       <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === 0} onClick={() => onSelect(Math.max(0, selectedIdx - 1))}>
         <ChevronLeft className="h-5 w-5" />
       </button>
       <div className="flex-1 flex justify-center gap-2 overflow-x-auto scrollbar-hide">
-        {dates.map((d, i) => (
+        {indices.map((idx, i) => (
           <div
-            key={d.date}
+            key={dates[idx]?.date || i}
             className={
               'flex flex-col items-center px-4 cursor-pointer min-w-[90px] ' +
-              (i === selectedIdx ? 'font-bold text-black' : 'text-gray-500')
+              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
             }
-            onClick={() => onSelect(i)}
+            onClick={() => onSelect(idx)}
           >
-            <div className="text-sm mb-1">{d.date}</div>
+            <div className="text-sm mb-1">{dates[idx]?.date}</div>
             <div className={
               'text-base ' +
-              (d.price === minPrice ? 'text-green-600 font-semibold' : '')
+              (dates[idx]?.price === minPrice ? 'text-green-600 font-semibold' : '')
             }>
-              ₹{d.price.toLocaleString()}
+              ₹{dates[idx]?.price?.toLocaleString()}
             </div>
-            {i === selectedIdx && <div className="mt-1 h-1 w-8 bg-black rounded-full" />}
+            {i === 1 && <div className="mt-1 h-1 w-8 bg-black rounded-full" />}
           </div>
         ))}
       </div>

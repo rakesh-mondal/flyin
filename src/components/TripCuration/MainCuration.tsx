@@ -153,57 +153,52 @@ const mockDates = Array.from({ length: 14 }, (_, i) => ({
 
 function DatesCard({ dates, selectedIdx, onSelect }) {
   const minPrice = Math.min(...dates.map(d => d.price));
-  const [windowStart, setWindowStart] = useState(0);
-  const windowSize = 4;
-  const canScrollLeft = windowStart > 0;
-  const canScrollRight = windowStart + windowSize < dates.length;
-
-  useEffect(() => {
-    if (selectedIdx < windowStart) setWindowStart(selectedIdx);
-    else if (selectedIdx >= windowStart + windowSize) setWindowStart(selectedIdx - windowSize + 1);
-  }, [selectedIdx]);
-
-  const visibleDates = dates.slice(windowStart, windowStart + windowSize);
-
+  let indices = [];
+  if (dates.length === 0) {
+    indices = [];
+  } else if (selectedIdx === 0) {
+    indices = [0, 0, 1 < dates.length ? 1 : 0];
+  } else if (selectedIdx === dates.length - 1) {
+    indices = [dates.length - 2 >= 0 ? dates.length - 2 : dates.length - 1, dates.length - 1, dates.length - 1];
+  } else {
+    indices = [selectedIdx - 1, selectedIdx, selectedIdx + 1];
+  }
   return (
     <div className="flex items-center w-full py-1 mb-1">
       <button
         className="p-1 text-gray-400 hover:text-black"
-        disabled={!canScrollLeft}
-        onClick={() => setWindowStart(Math.max(0, windowStart - 1))}
+        disabled={selectedIdx === 0}
+        onClick={() => onSelect(Math.max(0, selectedIdx - 1))}
         style={{ minWidth: 28 }}
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
       <div className="flex-1 flex justify-between gap-0 overflow-x-hidden">
-        {visibleDates.map((d, i) => {
-          const globalIdx = windowStart + i;
-          return (
-            <div
-              key={d.date}
-              className={
-                'flex flex-col items-center cursor-pointer ' +
-                (globalIdx === selectedIdx ? 'font-bold text-black' : 'text-gray-500')
-              }
-              onClick={() => onSelect(globalIdx)}
-              style={{ fontSize: '12px', lineHeight: '16px', width: 70, minWidth: 70, maxWidth: 70 }}
-            >
-              <div className="mb-0.5" style={{ fontSize: '11px', fontWeight: 500 }}>{d.date}</div>
-              <div className={
-                'font-semibold ' +
-                (d.price === minPrice ? 'text-green-600' : '')
-              } style={{ fontSize: '12px' }}>
-                ₹{d.price.toLocaleString()}
-              </div>
-              {globalIdx === selectedIdx && <div className="mt-0.5 h-0.5 w-5 bg-black rounded-full" />}
+        {indices.map((idx, i) => (
+          <div
+            key={dates[idx]?.date || i}
+            className={
+              'flex flex-col items-center cursor-pointer ' +
+              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
+            }
+            onClick={() => onSelect(idx)}
+            style={{ fontSize: '12px', lineHeight: '16px', width: 70, minWidth: 70, maxWidth: 70 }}
+          >
+            <div className="mb-0.5" style={{ fontSize: '11px', fontWeight: 500 }}>{dates[idx]?.date}</div>
+            <div className={
+              'font-semibold ' +
+              (dates[idx]?.price === minPrice ? 'text-green-600' : '')
+            } style={{ fontSize: '12px' }}>
+              ₹{dates[idx]?.price?.toLocaleString()}
             </div>
-          );
-        })}
+            {i === 1 && <div className="mt-0.5 h-0.5 w-5 bg-black rounded-full" />}
+          </div>
+        ))}
       </div>
       <button
         className="p-1 text-gray-400 hover:text-black"
-        disabled={!canScrollRight}
-        onClick={() => setWindowStart(Math.min(dates.length - windowSize, windowStart + 1))}
+        disabled={selectedIdx === dates.length - 1}
+        onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}
         style={{ minWidth: 28 }}
       >
         <ChevronRight className="h-4 w-4" />
