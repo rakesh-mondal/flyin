@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DollarSign } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -42,7 +41,7 @@ const BudgetSheet = ({ budgetRange, setBudgetRange }: BudgetSheetProps) => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Button 
-              className="bg-black text-white hover:bg-black/90" 
+              className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-[#194E91]" 
               onClick={() => handleSetBudget(1000, 3000)}
             >
               Economy ($1,000 - $3,000)
@@ -72,7 +71,7 @@ const BudgetSheet = ({ budgetRange, setBudgetRange }: BudgetSheetProps) => {
         </div>
         <div className="mt-6 flex justify-end">
           <Button 
-            className="bg-black text-white hover:bg-black/90"
+            className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-[#194E91]"
             onClick={() => {
               toast.success(`Budget set to $${budgetRange.min} - $${budgetRange.max} per person`);
             }}

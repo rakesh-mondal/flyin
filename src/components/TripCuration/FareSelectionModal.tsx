@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Check, X as Cross, Luggage, Calendar, Armchair, Utensils } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const FEATURES = [
   { key: 'freeCancellation', label: 'Free cancellation', icon: Calendar },
@@ -216,12 +217,9 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                   <div className="text-xs text-green-700 bg-green-50 rounded px-2 py-1 mb-2 font-medium">
                     {option.promo}
                   </div>
-                  <button
-                    className="w-full bg-black text-white rounded px-4 py-2 text-sm font-semibold mt-2"
-                    onClick={() => onFareSelected({ ...trip, selectedFare: option })}
-                  >
+                  <Button className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-[#194E91] w-full py-3 rounded-lg font-semibold text-lg mt-2" onClick={() => onFareSelected({ ...trip, selectedFare: option })}>
                     Select
-                  </button>
+                  </Button>
                 </div>
               </React.Fragment>
             ))}

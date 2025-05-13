@@ -70,7 +70,7 @@ const FilterChips = ({
               <h3 className="text-sm font-semibold text-gray-900">Stops</h3>
             </div>
             <button 
-              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              className="text-xs font-medium text-primary hover:text-[#194E91]"
               onClick={() => {
                 onStopsChange([]);
                 toast.success("Stops filter reset");
@@ -136,7 +136,7 @@ const FilterChips = ({
               <h3 className="text-sm font-semibold text-gray-900">Flight Timings</h3>
             </div>
             <button 
-              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              className="text-xs font-medium text-primary hover:text-[#194E91]"
               onClick={() => {
                 if (typeof onDepartureTimeChange === 'function') onDepartureTimeChange('');
                 if (typeof onReturnTimeChange === 'function') onReturnTimeChange('');
@@ -161,7 +161,7 @@ const FilterChips = ({
               <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
             </div>
             <button 
-              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              className="text-xs font-medium text-primary hover:text-[#194E91]"
               onClick={() => {
                 onAirlinesChange([]);
                 toast.success("Airlines filter reset");

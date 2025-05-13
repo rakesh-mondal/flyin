@@ -180,7 +180,7 @@ const FlightListCard = ({
             <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
           </div>
           <div className="flex items-center">
-            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>Book now</Button>
+            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>Book now</Button>
           </div>
         </div>
       </div>
@@ -235,7 +235,7 @@ const FlightListCard = ({
           </div>
           {/* Flight details link in gray bar at bottom */}
           <div className="bg-gray-50 px-4 pt-10 pb-2 w-full text-right">
-            <button className="text-blue-600 text-sm font-medium hover:underline" onClick={onDetails}>Flight details</button>
+            <button className="text-primary text-sm font-medium hover:underline hover:text-[#194E91]" onClick={onDetails}>Flight details</button>
           </div>
         </>
       )}

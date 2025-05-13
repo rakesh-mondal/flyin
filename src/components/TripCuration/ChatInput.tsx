@@ -72,7 +72,7 @@ const ChatInput = ({ onSubmitMessage, userMessage, setUserMessage }: ChatInputPr
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20">
           <Button
-            className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/90"
+            className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary-hover hover:text-[#194E91]"
             size="icon"
             onClick={onSubmitMessage}
           >

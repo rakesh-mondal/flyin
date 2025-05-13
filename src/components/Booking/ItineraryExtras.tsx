@@ -9,7 +9,7 @@ const ItineraryExtras = () => (
         <a href="#" className="text-purple-600 underline ml-1">Visa Denial Cover</a>
         <div className="text-sm text-gray-700 mt-1">
           Get a full refund if your visa is rejected. Cancel up to 24 hrs before departure. T&C apply.
-          <a href="#" className="text-blue-600 ml-1">Learn more</a>
+          <a href="#" className="text-primary ml-1 hover:text-[#194E91]">Learn more</a>
         </div>
       </div>
       <div className="text-right">
@@ -21,7 +21,7 @@ const ItineraryExtras = () => (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="font-semibold text-gray-900">Protect your trip with Travel & Medical Insurance</span>
-        <span className="text-blue-700 font-bold">₹325</span>
+        <span className="text-primary font-bold">₹325</span>
         <button className="bg-blue-600 text-white px-4 py-1 rounded">Add</button>
       </div>
       <div className="flex space-x-6 mb-2">

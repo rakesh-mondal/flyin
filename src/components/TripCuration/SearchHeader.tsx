@@ -102,7 +102,7 @@ const SearchHeader = ({
         <div className="flex items-center justify-center p-3 sm:px-4">
           <Button 
             onClick={onUpdate}
-            className="w-full sm:w-auto h-9 px-4 bg-black hover:bg-black/90 text-white rounded-full text-sm"
+            className="w-full sm:w-auto h-9 px-4 bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] rounded-full text-sm"
           >
             Update
           </Button>

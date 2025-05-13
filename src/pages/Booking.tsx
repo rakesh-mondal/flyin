@@ -15,7 +15,7 @@ export default function Booking() {
       <div className="p-8 text-center text-gray-500">
         <div>No trip selected. Please start from the home page.</div>
         <button
-          className="mt-4 px-4 py-2 bg-black text-white rounded"
+          className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary-hover hover:text-[#194E91]"
           onClick={() => navigate('/')}
         >
           Go to Home

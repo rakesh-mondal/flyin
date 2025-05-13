@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MapPin, Calendar, ArrowRight, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -95,8 +94,8 @@ export default function TripProposal({ trip, onClick }: TripProps) {
         {/* Call to action */}
         <button 
           className={cn(
-            "mt-3 w-full rounded-full bg-black px-4 py-2.5 text-center text-sm font-medium text-white",
-            "transition-all duration-300 hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black/50"
+            "mt-3 w-full rounded-full bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground",
+            "transition-all duration-300 hover:bg-primary-hover hover:text-[#194E91] focus:outline-none focus:ring-2 focus:ring-[#194E91]/50"
           )}
         >
           View Details

@@ -134,7 +134,7 @@ const SearchSummary = ({
         <div className="flex items-center justify-center p-3 sm:px-4">
           <Button 
             onClick={onUpdate}
-            className="w-full sm:w-auto h-9 px-4 bg-black hover:bg-black/90 text-white rounded-full text-sm"
+            className="w-full sm:w-auto h-9 px-4 bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] rounded-full text-sm"
           >
             Update
           </Button>
@@ -1582,7 +1582,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                           </div>
                           <div className="flex items-center">
-                            <Button className="bg-black hover:bg-black/90 text-white font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
                           </div>
                         </div>
                       </div>
