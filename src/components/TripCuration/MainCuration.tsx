@@ -1643,8 +1643,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedOutboundDateIdx}
                           />
                           <hr className="my-1 border-gray-200" />
-                          <div className="mb-2 text-xs font-semibold text-gray-700">
-                            New York → Dubai · {outboundDates[selectedOutboundDateIdx]?.date}
+                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2">
+                            New York → Dubai
                           </div>
                           <div className="flex flex-col gap-2">
                             {filteredOutboundFlights.map((option, idx) => (
@@ -1685,8 +1685,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedInboundDateIdx}
                           />
                           <hr className="my-1 border-gray-200" />
-                          <div className="mb-2 text-xs font-semibold text-gray-700">
-                            Dubai → New York · {inboundDates[selectedInboundDateIdx]?.date}
+                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2">
+                            Dubai → New York
                           </div>
                           <div className="flex flex-col gap-2">
                             {filteredInboundFlights.map((option, idx) => (
