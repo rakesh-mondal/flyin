@@ -20,6 +20,7 @@ import TopHeader from './TopHeader';
 import SearchHeader from './SearchHeader';
 import { SlidingNumber } from '@/components/ui/sliding-number';
 import { format, addDays } from 'date-fns';
+import { GlowEffect } from '../ui/glow-effect';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -1521,9 +1522,19 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   {selectedOutbound && selectedInbound && (
                     <div className={cn(
                       "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 transition-all duration-700 sticky top-2 z-30 mb-2",
-                      glow && "ring-2 ring-blue-300/60 shadow-blue-200"
-                    )}>
-                      <div className="flex flex-row items-center px-4 py-4 gap-0">
+                      // Remove ring/shadow classes for glow
+                    )} style={{ position: 'relative', padding: '2px' }}>
+                      {glow && (
+                        <GlowEffect
+                          colors={["#194E91", "#194E91", "#FEC524", "#194E91", "#194E91"]}
+                          mode="breathe"
+                          blur={32}
+                          scale={1.16}
+                          duration={1.1}
+                          className="absolute inset-0 z-0 rounded-2xl pointer-events-none opacity-90"
+                        />
+                      )}
+                      <div className="flex flex-row items-center px-4 py-4 gap-0 relative z-10 bg-white rounded-xl">
                         {/* Outbound */}
                         <div className="flex flex-col items-center flex-1 min-w-0">
                           <div className="flex flex-row items-center w-full justify-center gap-3">
