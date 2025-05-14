@@ -1367,9 +1367,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   const scrollAirlineChips = (dir: 'left' | 'right') => {
     const el = airlineChipsScrollRef.current;
+    console.log('Arrow clicked', dir, el);
     if (!el) return;
-    const scrollAmount = 200; // px
-    el.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    const scrollAmount = 192; // px (card + gap)
+    if (el.scrollBy) {
+      el.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    } else {
+      el.scrollLeft += dir === 'left' ? -scrollAmount : scrollAmount;
+    }
   };
 
   if (loading) {
@@ -1637,7 +1642,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
                       style={{ minWidth: 28 }}
                       onClick={() => scrollAirlineChips('left')}
-                      disabled={!canScrollLeft}
                       aria-label="Scroll left"
                     >
                       <ChevronLeft className="h-4 w-4" />
@@ -1647,7 +1651,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
                       style={{ minWidth: 28 }}
                       onClick={() => scrollAirlineChips('right')}
-                      disabled={!canScrollRight}
                       aria-label="Scroll right"
                     >
                       <ChevronRight className="h-4 w-4" />
