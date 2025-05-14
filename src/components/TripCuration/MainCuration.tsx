@@ -1341,6 +1341,37 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     { date: 'Sun, 18 May', price: 30200 },
   ];
 
+  const airlineChipsScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  // Check scroll position for enabling/disabling arrows
+  useEffect(() => {
+    const checkScroll = () => {
+      const el = airlineChipsScrollRef.current;
+      if (!el) return;
+      setCanScrollLeft(el.scrollLeft > 0);
+      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    };
+    checkScroll();
+    const el = airlineChipsScrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll);
+      window.addEventListener('resize', checkScroll);
+    }
+    return () => {
+      if (el) el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, []);
+
+  const scrollAirlineChips = (dir: 'left' | 'right') => {
+    const el = airlineChipsScrollRef.current;
+    if (!el) return;
+    const scrollAmount = 200; // px
+    el.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
@@ -1599,40 +1630,62 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     </div>
                   )}
 
-                  {/* Quick Price Filters Card */}
-                  <div className="relative mt-4 mb-4">
-                    {/* Scroll indicator (fade effect) */}
-                    <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10 bg-gradient-to-l from-white via-white/80 to-transparent hidden sm:block" />
-                    <div className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-1 pb-1"
-                      style={{ WebkitOverflowScrolling: 'touch' }}
+                  {/* Quick Price Filters Card with Arrows - DatesCard style */}
+                  <div className="relative mt-4 mb-4 max-w-full overflow-hidden" style={{ minHeight: 56 }}>
+                    {/* Left Arrow (absolute, DatesCard style) */}
+                    <button
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
+                      style={{ minWidth: 28 }}
+                      onClick={() => scrollAirlineChips('left')}
+                      disabled={!canScrollLeft}
+                      aria-label="Scroll left"
                     >
-                      {airlines.map((airline) => (
-                        <button
-                          key={airline.id}
-                          className={cn(
-                            "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px] min-w-[160px] max-w-[180px] flex-shrink-0",
-                            selectedQuickFilters.includes(airline.id)
-                              ? "border-blue-500 bg-blue-50"
-                              : "border-gray-200 bg-white hover:border-gray-300"
-                          )}
-                          onClick={() => handleQuickFilterSelect(airline.id)}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <img 
-                              src={airline.logo} 
-                              alt={airline.name} 
-                              className="h-5 w-5 rounded bg-gray-100"
-                            />
-                            <div className="text-left">
-                              <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                              <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    {/* Right Arrow (absolute, DatesCard style) */}
+                    <button
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
+                      style={{ minWidth: 28 }}
+                      onClick={() => scrollAirlineChips('right')}
+                      disabled={!canScrollRight}
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                    <div className="flex-1 relative w-full">
+                      <div
+                        ref={airlineChipsScrollRef}
+                        className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pl-0 pr-0 pb-1 mx-auto w-[93%]"
+                        style={{ WebkitOverflowScrolling: 'touch' }}
+                      >
+                        {airlines.map((airline) => (
+                          <button
+                            key={airline.id}
+                            className={cn(
+                              "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px] min-w-[160px] max-w-[180px] flex-shrink-0",
+                              selectedQuickFilters.includes(airline.id)
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-gray-200 bg-white hover:border-gray-300"
+                            )}
+                            onClick={() => handleQuickFilterSelect(airline.id)}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <img 
+                                src={airline.logo} 
+                                alt={airline.name} 
+                                className="h-5 w-5 rounded bg-gray-100"
+                              />
+                              <div className="text-left">
+                                <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                                <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                              </div>
                             </div>
-                          </div>
-                          {selectedQuickFilters.includes(airline.id) && (
-                            <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
-                          )}
-                        </button>
-                      ))}
+                            {selectedQuickFilters.includes(airline.id) && (
+                              <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
