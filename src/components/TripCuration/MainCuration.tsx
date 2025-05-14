@@ -1516,7 +1516,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="flex">
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2 text-center relative cursor-pointer",
+                        "flex-1 border-r border-gray-200 p-3 text-center relative cursor-pointer",
                         selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('cheapest')}
@@ -1528,7 +1528,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <div className="font-bold text-base">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 border-r border-gray-200 p-2 text-center relative cursor-pointer",
+                        "flex-1 border-r border-gray-200 p-3 text-center relative cursor-pointer",
                         selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('best')}
@@ -1540,7 +1540,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <div className="font-bold text-base">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
                       </div>
                       <div className={cn(
-                        "flex-1 p-2 text-center relative cursor-pointer",
+                        "flex-1 p-3 text-center relative cursor-pointer",
                         selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
                       )}
                       onClick={() => setSelectedPriceCategory('quickest')}
