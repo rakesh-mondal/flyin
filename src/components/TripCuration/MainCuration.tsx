@@ -1636,7 +1636,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   )}
 
                   {/* Quick Price Filters Card with Arrows - DatesCard style */}
-                  <div className="relative mt-4 mb-4 max-w-full overflow-hidden" style={{ minHeight: 56 }}>
+                  <div className="relative mt-4 mb-2 max-w-full overflow-hidden" style={{ minHeight: 56 }}>
                     {/* Left Arrow (absolute, DatesCard style) */}
                     <button
                       className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
@@ -1658,7 +1658,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     <div className="flex-1 relative w-full">
                       <div
                         ref={airlineChipsScrollRef}
-                        className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pl-0 pr-0 pb-1 mx-auto w-[93%]"
+                        className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pl-0 pr-0 pt-1 pb-1 mx-auto w-[93%]"
                         style={{ WebkitOverflowScrolling: 'touch' }}
                       >
                         {airlines.map((airline) => (
@@ -1693,7 +1693,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   </div>
 
                   {/* Outbound & Inbound Flight Lists Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="p-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Outbound List */}
