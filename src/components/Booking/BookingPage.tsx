@@ -187,8 +187,8 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
   );
 };
 
-const StepCard = ({ step, title, children, open }: { step: number, title: string, children?: React.ReactNode, open: boolean }) => (
-  <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mt-8">
+const StepCard = ({ step, title, children, open, className = "" }: { step: number, title: string, children?: React.ReactNode, open: boolean, className?: string }) => (
+  <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
     <div className="flex items-center gap-3 mb-2">
       <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-lg">
         {open ? (
@@ -389,7 +389,7 @@ export default function BookingPage({ trip }: { trip: any }) {
               Continue
             </button>
           )}
-          <StepCard step={2} title="Choose add-ons" open={openStep === 2}>
+          <StepCard step={2} title="Choose add-ons" open={openStep === 2} className="mt-8">
             {openStep === 2 ? (
               <>
                 {AddOnsContent}
@@ -404,7 +404,7 @@ export default function BookingPage({ trip }: { trip: any }) {
               Continue
             </button>
           )}
-          <StepCard step={3} title="Add contact details" open={openStep === 3}>
+          <StepCard step={3} title="Add contact details" open={openStep === 3} className="mt-8">
             {openStep === 3 ? (
               <>
                 {/* Contact details form goes here */}
@@ -419,7 +419,7 @@ export default function BookingPage({ trip }: { trip: any }) {
               Continue
             </button>
           )}
-          <StepCard step={4} title="Add traveller details" open={openStep === 4}>
+          <StepCard step={4} title="Add traveller details" open={openStep === 4} className="mt-8">
             {openStep === 4 ? (
               <>
                 {/* Traveller details form goes here */}
