@@ -6,10 +6,10 @@ const ItineraryExtras = () => (
     <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 flex items-center justify-between">
       <div>
         <span className="font-semibold text-purple-700">This booking is covered by</span>
-        <a href="#" className="text-purple-600 underline ml-1">Visa Denial Cover</a>
+        <a href="#" className="text-[#194a8f] underline ml-1">Visa Denial Cover</a>
         <div className="text-sm text-gray-700 mt-1">
           Get a full refund if your visa is rejected. Cancel up to 24 hrs before departure. T&C apply.
-          <a href="#" className="text-primary ml-1 hover:text-[#194E91]">Learn more</a>
+          <a href="#" className="text-[#194a8f] ml-1 hover:underline">Learn more</a>
         </div>
       </div>
       <div className="text-right">

@@ -12,6 +12,14 @@ const steps = [
 
 const mockOffers = [
   {
+    code: 'HSBCCC',
+    icon: '', // Not needed, SVG will be rendered
+    discount: 'Flat ₹1513 off',
+    description: 'Applicable on HSBC Credit Cards',
+    details: 'Know more',
+    type: 'bank',
+  },
+  {
     code: 'HDFCEMI',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/HDFC_Bank_Logo.svg',
     discount: 'Flat ₹1500 off',
@@ -19,49 +27,96 @@ const mockOffers = [
     details: 'Know more',
     type: 'bank',
   },
-  {
-    code: 'CTDOM',
-    icon: 'https://cdn-icons-png.flaticon.com/512/5977/5977575.png',
-    discount: 'Flat ₹447 off',
-    description: 'Additional 5% cashback with Flipkart Axis Credit Card',
-    details: 'Know more',
-    type: 'bank',
-  },
 ];
 
 const CouponCard = () => {
   const [tab, setTab] = useState<'all' | 'bank'>('all');
+  const [couponInput, setCouponInput] = useState('');
   const offers = tab === 'all' ? mockOffers : mockOffers.filter(o => o.type === 'bank');
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 mb-6 w-full">
-      <div className="font-semibold text-base mb-3">Apply coupon or gift card</div>
-      <div className="flex gap-2 mb-3">
-        <input type="text" placeholder="Coupon/Gift card" className="border rounded px-2 py-1 flex-1 text-sm" />
-        <button className="bg-black text-white rounded px-4 py-1 text-sm font-semibold">Apply</button>
-      </div>
-      <div className="flex gap-2 mb-3">
-        <button onClick={() => setTab('all')} className={`px-3 py-1 rounded-full text-xs font-medium border ${tab === 'all' ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>All offers</button>
-        <button onClick={() => setTab('bank')} className={`px-3 py-1 rounded-full text-xs font-medium border ${tab === 'bank' ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>Bank offers</button>
-      </div>
-      <div className="flex flex-col gap-3">
-        {offers.map((offer) => (
-          <div key={offer.code} className="flex items-start gap-3 border-b last:border-b-0 pb-3 last:pb-0">
-            <img src={offer.icon} alt={offer.code} className="h-7 w-7 rounded bg-gray-100 object-contain mt-1" />
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="bg-gray-100 text-gray-800 rounded px-2 py-0.5 text-xs font-semibold tracking-wide">{offer.code}</span>
-                <button className="ml-auto text-blue-600 text-xs font-semibold">Apply</button>
+    <>
+      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 w-full">
+        <div className="font-semibold text-[16px] mb-3">Apply coupon or gift card</div>
+        <div className="flex items-center border border-gray-200 rounded-xl px-4 py-2 w-full mb-3">
+          <input
+            type="text"
+            placeholder="Coupon/Gift card"
+            value={couponInput}
+            onChange={e => setCouponInput(e.target.value)}
+            className="flex-1 border-none outline-none bg-transparent text-sm placeholder-gray-400 font-medium"
+          />
+          <button
+            className={`ml-2 font-bold text-sm bg-transparent shadow-none border-none p-0 hover:bg-transparent focus:outline-none ${couponInput ? 'text-[#194a8f]' : 'text-gray-500'}`}
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+        <div className="flex gap-2 my-4">
+          <button
+            onClick={() => setTab('all')}
+            className={`rounded-full px-4 py-1 text-xs font-bold border transition ${
+              tab === 'all'
+                ? 'border-[#194a8f] text-[#194a8f] bg-gray-100'
+                : 'border-gray-200 text-black bg-white'
+            }`}
+          >
+            All offers
+          </button>
+          <button
+            onClick={() => setTab('bank')}
+            className={`rounded-full px-4 py-1 text-xs font-bold border transition ${
+              tab === 'bank'
+                ? 'border-[#194a8f] text-[#194a8f] bg-gray-100'
+                : 'border-gray-200 text-black bg-white'
+            }`}
+          >
+            Bank offers
+          </button>
+        </div>
+        <div className="flex flex-col gap-3">
+          {offers.map((offer) => (
+            <div key={offer.code} className="flex flex-col gap-2 border-b last:border-b-0 pb-3 last:pb-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 bg-[#F1F6FF] rounded-xl px-3 py-1">
+                  {offer.code === 'HSBCCC' ? (
+                    <span className="w-6 h-6 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+                        <path d="M17.5006 6.42834H6.50742V17.5616H17.5006V6.42834Z" fill="white"/>
+                        <path d="M23.0002 12.0081L17.5036 6.42834V17.5747L23.0002 12.0081Z" fill="#DB0011"/>
+                        <path d="M12.004 12.0081L17.5006 6.42834H6.50742L12.004 12.0081Z" fill="#DB0011"/>
+                        <path d="M1 12.0081L6.50952 17.5747V6.42834L1 12.0081Z" fill="#DB0011"/>
+                        <path d="M12.004 12.0081L6.50742 17.5748H17.5006L12.004 12.0081Z" fill="#DB0011"/>
+                      </svg>
+                    </span>
+                  ) : offer.code === 'HDFCEMI' ? (
+                    <span className="w-6 h-6 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+                        <path d="M2 2.00146H22V22.0015H2V2.00146Z" fill="#ED232A"/>
+                        <path d="M5.50052 5.50234H18.5019V18.5038H5.50052V5.50234Z" fill="white"/>
+                        <path d="M11.0002 2.00146H12.9994V22.0015H11.0002V2.00146Z" fill="white"/>
+                        <path d="M2 11.0042H22V13.0034H2V11.0042Z" fill="white"/>
+                        <path d="M9.00125 9.00294H15.0015V15.0032H9.00125V9.00294Z" fill="#004C8F"/>
+                      </svg>
+                    </span>
+                  ) : (
+                    <img src={offer.icon} alt={offer.code} className="h-6 w-6 rounded object-contain" />
+                  )}
+                  <span className="font-bold text-black text-[14px]">{offer.code}</span>
+                </div>
+                <button className="font-medium text-[#194a8f] text-[14px] cursor-pointer">Apply</button>
               </div>
-              <div className="text-green-600 font-semibold text-sm mb-0.5">{offer.discount}</div>
-              <div className="text-xs text-gray-600">
-                {offer.description} <a href="#" className="text-blue-600 font-medium">{offer.details}</a>
+              <div className="font-bold text-green-600 text-xs">{offer.discount}</div>
+              <div className="font-medium text-gray-500 text-xs">
+                {offer.description}
+                <span className="font-medium text-[#194a8f] ml-1 cursor-pointer">Know more</span>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -209,34 +264,38 @@ const StepCard = ({ step, title, children, open, className = "" }: { step: numbe
 
 const SummarySidebar = ({ trip }: { trip: any }) => (
   <aside className="w-full max-w-xs sticky top-8">
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+    <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
       <div className="flex items-start justify-between mb-1">
-        <div className="text-lg font-semibold">Total price</div>
-        <div className="text-3xl font-bold text-right">₹26,083</div>
+        <div className="font-semibold text-[16px]">Total price</div>
+        <div className="font-bold text-[20px] text-right">₹26,083</div>
       </div>
-      <div className="text-sm text-gray-500 mb-4">1 adult</div>
+      <div className="text-[12px] text-gray-500 mb-4">1 adult</div>
       <hr className="my-3 border-gray-200" />
       <div className="flex flex-col gap-2 mb-3">
-        <div className="flex items-center justify-between text-base">
+        <div className="flex items-center justify-between text-[12px]">
           <span className="text-gray-600">Base fare (1 traveller)</span>
           <span className="font-medium text-gray-900">₹19,384</span>
         </div>
-        <div className="flex items-center justify-between text-base">
+        <div className="flex items-center justify-between text-[12px]">
           <span className="text-gray-600">Taxes and fees</span>
           <span className="font-medium text-gray-900">₹6,699</span>
         </div>
-        <div className="flex items-center justify-between text-base">
-          <span className="text-gray-400 flex items-center">Visa Denial Cover <svg className="ml-1" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#7C3AED"/><path d="M7.5 9.5L9 11L12 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+        <div className="flex items-center justify-between text-[12px]">
+          <span className="text-gray-400 flex items-center">Visa Denial Cover <svg className="ml-1" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#194a8f"/><path d="M7.5 9.5L9 11L12 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           <span className="font-semibold text-green-600">FREE</span>
         </div>
       </div>
       <hr className="my-3 border-gray-200" />
-      <div className="flex items-start gap-3 bg-orange-50 rounded-xl p-3 mt-2">
-        <span className="mt-1"><svg width="24" height="24" fill="none" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#FFF3E0"/><path d="M7 10V8.5A2.5 2.5 0 0 1 9.5 6h5A2.5 2.5 0 0 1 17 8.5V10" stroke="#FF6F00" strokeWidth="1.5"/><rect x="7" y="10" width="10" height="6" rx="2" stroke="#FF6F00" strokeWidth="1.5"/><path d="M10 13h4" stroke="#FF6F00" strokeWidth="1.5" strokeLinecap="round"/></svg></span>
+      <div className="flex items-start gap-3 bg-yellow-50 rounded-xl p-[10px] mt-2">
+        <span className="mt-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#194a8f" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+          </svg>
+        </span>
         <div className="flex-1">
-          <div className="text-sm font-medium text-gray-900 mb-0.5">Pay in 3 interest free EMIs</div>
-          <div className="text-lg font-bold text-gray-900 mb-0.5">at ₹8,694/mo <span className="text-blue-600 text-base font-semibold ml-1 cursor-pointer">· View plans</span></div>
-          <div className="text-xs text-gray-500">with your credit card</div>
+          <div className="text-[12px] font-medium text-gray-900 mb-0.5">Pay in 3 interest free EMIs</div>
+          <div className="text-[16px] font-bold text-gray-900 mb-0.5">at ₹8,694/mo <span className="text-[#194a8f] text-[12px] font-semibold ml-1 cursor-pointer">· View plans</span></div>
+          <div className="text-[12px] text-gray-500">with your credit card</div>
         </div>
       </div>
     </div>
@@ -437,7 +496,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
         </main>
         {/* Right: Summary */}
-        <div className="w-full md:w-96 flex-shrink-0">
+        <div className="w-full md:w-[300px] flex-shrink-0">
           <SummarySidebar trip={trip} />
         </div>
       </div>
