@@ -991,7 +991,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           price={summaryOption.price}
           currency={summaryOption.currency}
           onBook={() => onViewTrip(summaryOption)}
-          showOptions={false}
+          showOptions={true}
         />
         {/* Dates Card below summary row card */}
         <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />

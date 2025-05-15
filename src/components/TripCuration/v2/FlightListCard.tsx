@@ -75,6 +75,8 @@ const FlightListCard = ({
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
   const [glow, setGlow] = useState(false);
   const prevPriceRef = useRef(parseInt(price.toString().replace(/[^0-9]/g, '')) || 0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerFlight, setDrawerFlight] = useState<FlightLegOption | null>(null);
 
   useEffect(() => {
     const numericPrice = parseInt(price.toString().replace(/[^0-9]/g, '')) || 0;
@@ -101,6 +103,19 @@ const FlightListCard = ({
   const selectedOutbound = outboundOptions[selectedOutboundIdx] || outboundOptions[0];
   const selectedReturn = returnOptions[selectedReturnIdx] || returnOptions[0];
   
+  console.log('selectedOutbound', selectedOutbound, 'selectedReturn', selectedReturn);
+  if (!selectedOutbound || !selectedReturn) {
+    return (
+      <div style={{background: 'orange', padding: 20, color: 'black'}}>
+        MISSING FLIGHT DATA
+        <div>selectedOutbound: {JSON.stringify(selectedOutbound)}</div>
+        <div>selectedReturn: {JSON.stringify(selectedReturn)}</div>
+      </div>
+    );
+  }
+
+  console.log('FlightListCard rendered');
+
   const handleSelectOutbound = (idx: number) => {
     setSelectedOutboundIdx(idx);
   };
@@ -108,12 +123,6 @@ const FlightListCard = ({
   const handleSelectReturn = (idx: number) => {
     setSelectedReturnIdx(idx);
   };
-
-  if (!selectedOutbound || !selectedReturn) {
-    return null;
-  }
-
-  console.log('FlightListCard rendered');
 
   return (
     <div
@@ -184,7 +193,6 @@ const FlightListCard = ({
           </div>
         </div>
       </div>
-      {/* Only show options and details if showOptions is true */}
       {showOptions && (
         <>
           <div className="bg-gray-50 border-t border-gray-100 px-4 py-3">
@@ -206,6 +214,38 @@ const FlightListCard = ({
                       onClick={() => handleSelectOutbound(idx)}
                     >
                       <FlightLegRow option={opt} />
+                      {/* Info Row inside each outbound option */}
+                      <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
+                        <div className="flex items-center gap-4 text-gray-700 text-xs">
+                          {/* Visa */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
+                            <span>Visa req.</span>
+                          </span>
+                          {/* Prayer room */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 0a7 7 0 017 7v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a7 7 0 017-7z" /></svg>
+                            <span>Prayer rm.</span>
+                          </span>
+                          {/* Wi-Fi */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
+                            <span>Wi-Fi</span>
+                          </span>
+                          {/* Baggage */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
+                            <span>Baggage</span>
+                          </span>
+                        </div>
+                        <button
+                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
+                          type="button"
+                          onClick={e => { e.stopPropagation(); setDrawerFlight(opt); setDrawerOpen(true); }}
+                        >
+                          More info <span aria-hidden="true">→</span>
+                        </button>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -227,6 +267,38 @@ const FlightListCard = ({
                       onClick={() => handleSelectReturn(idx)}
                     >
                       <FlightLegRow option={opt} />
+                      {/* Info Row inside each return option */}
+                      <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
+                        <div className="flex items-center gap-4 text-gray-700 text-xs">
+                          {/* Visa */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
+                            <span>Visa req.</span>
+                          </span>
+                          {/* Prayer room */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 0a7 7 0 017 7v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a7 7 0 017-7z" /></svg>
+                            <span>Prayer rm.</span>
+                          </span>
+                          {/* Wi-Fi */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
+                            <span>Wi-Fi</span>
+                          </span>
+                          {/* Baggage */}
+                          <span className="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
+                            <span>Baggage</span>
+                          </span>
+                        </div>
+                        <button
+                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
+                          type="button"
+                          onClick={e => { e.stopPropagation(); setDrawerFlight(opt); setDrawerOpen(true); }}
+                        >
+                          More info <span aria-hidden="true">→</span>
+                        </button>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -237,6 +309,36 @@ const FlightListCard = ({
           <div className="bg-gray-50 px-4 pt-10 pb-2 w-full text-right">
             <button className="text-primary text-sm font-medium hover:underline hover:text-[#194E91]" onClick={onDetails}>Flight details</button>
           </div>
+          {/* Drawer for More info */}
+          {drawerOpen && drawerFlight && (
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/30" onClick={() => setDrawerOpen(false)}>
+              <div
+                className="bg-white shadow-lg h-full w-[320px] p-6 flex flex-col animate-slide-in-right relative"
+                style={{ animation: 'slideInRight 0.3s cubic-bezier(0.4,0,0.2,1)' }}
+                onClick={e => e.stopPropagation()}
+              >
+                <button className="absolute top-3 right-3 text-gray-500 hover:text-black" onClick={() => setDrawerOpen(false)}>
+                  ×
+                </button>
+                <h2 className="text-lg font-bold mb-4">Flight Details</h2>
+                <div className="mb-3">
+                  <div className="font-semibold">{drawerFlight.airlineName}</div>
+                  <div className="text-xs text-gray-500">{drawerFlight.departureCode} → {drawerFlight.arrivalCode}</div>
+                  <div className="text-xs text-gray-500">{drawerFlight.departureTime} - {drawerFlight.arrivalTime}</div>
+                  <div className="text-xs text-gray-500">{drawerFlight.duration} · {drawerFlight.stops}</div>
+                  {drawerFlight.layover && <div className="text-xs text-gray-500">Layover: {drawerFlight.layover}</div>}
+                </div>
+                {/* Add more mock details as needed */}
+                <div className="font-semibold mt-4 mb-2">Baggage</div>
+                <div className="text-xs text-gray-500 mb-2">Check-in: 23kg · Cabin: 7kg</div>
+                <div className="font-semibold mt-4 mb-2">Amenities</div>
+                <div className="text-xs text-gray-500 mb-2">Wi-Fi, Power, Entertainment, Meals</div>
+                <div className="font-semibold mt-4 mb-2">Airport Info</div>
+                <div className="text-xs text-gray-500 mb-2">Prayer room, Lounges, Food options</div>
+                <button className="mt-auto bg-primary text-white rounded px-4 py-2 font-semibold" onClick={() => setDrawerOpen(false)}>Close</button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
