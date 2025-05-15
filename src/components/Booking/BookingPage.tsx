@@ -205,10 +205,10 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
             </div>
           </div>
           {/* Content aligned with header */}
-          <div className="ml-4">
+          <div>
             {dir.segments.map((seg, idx) => (
               seg.layover ? (
-                <div key={idx} className="flex items-center bg-gray-50 rounded text-xs text-gray-700 px-4 py-3 my-4 border-l-4 border-blue-200 justify-center">
+                <div key={idx} className="flex items-center bg-gray-50 rounded text-xs text-gray-700 px-4 py-3 my-4 justify-center">
                   <span>
                     <span className="font-semibold text-blue-700">Layover</span>
                     {` in ${seg.airport} `}
