@@ -165,7 +165,7 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
     indices = [selectedIdx - 1, selectedIdx, selectedIdx + 1];
   }
   return (
-    <div className="flex items-center w-full py-1 mb-1">
+    <div className="flex items-center w-full py-1 mb-2">
       <button
         className="p-1 text-gray-400 hover:text-black"
         disabled={selectedIdx === 0}
@@ -192,7 +192,7 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
             } style={{ fontSize: '12px' }}>
               ₹{dates[idx]?.price?.toLocaleString()}
             </div>
-            {i === 1 && <div className="mt-0.5 h-0.5 w-5 bg-black rounded-full" />}
+            {i === 1 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
           </div>
         ))}
       </div>
@@ -1466,7 +1466,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       )} */}
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto max-h-screen" ref={mainScrollRef}>
+      <div className="flex-1" ref={mainScrollRef}>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* AI Message */}
           {(message || thinking) && isAiSearch && (
@@ -1722,16 +1722,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
                   {/* Outbound & Inbound Flight Lists Card */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="p-4">
+                    <div className="pt-2 pr-4 pb-4 pl-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Outbound List */}
                         <div>
-                          <DatesCard
-                            dates={outboundDates}
-                            selectedIdx={selectedOutboundDateIdx}
-                            onSelect={setSelectedOutboundDateIdx}
-                          />
-                          <hr className="my-1 border-gray-200" />
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>New York → Dubai</span>
                             <button
@@ -1751,6 +1745,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                               )}
                             </button>
                           </div>
+                          <hr className="my-1 border-gray-200" />
+                          <DatesCard
+                            dates={outboundDates}
+                            selectedIdx={selectedOutboundDateIdx}
+                            onSelect={setSelectedOutboundDateIdx}
+                          />
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => (
                               <button
@@ -1795,12 +1795,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         </div>
                         {/* Inbound List */}
                         <div>
-                          <DatesCard
-                            dates={inboundDates}
-                            selectedIdx={selectedInboundDateIdx}
-                            onSelect={setSelectedInboundDateIdx}
-                          />
-                          <hr className="my-1 border-gray-200" />
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>Dubai → New York</span>
                             <button
@@ -1820,6 +1814,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                               )}
                             </button>
                           </div>
+                          <hr className="my-1 border-gray-200" />
+                          <DatesCard
+                            dates={inboundDates}
+                            selectedIdx={selectedInboundDateIdx}
+                            onSelect={setSelectedInboundDateIdx}
+                          />
                           <div className="flex flex-col gap-2">
                             {sortedInboundFlights.map((option, idx) => (
                               <button
