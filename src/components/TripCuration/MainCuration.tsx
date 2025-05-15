@@ -1916,10 +1916,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Remove the close (X) icon button at the top-right */}
-            <button className="absolute top-3 right-3 text-gray-500 hover:text-black" onClick={() => setDrawerOpen(false)}>
-              ×
-            </button>
             <h2 className="text-lg font-bold mb-4">Flight Details</h2>
             {/* Airline info row (logo, name, flight number, cabin) */}
             <div className="flex items-center gap-4 mb-6">
