@@ -1398,8 +1398,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
     return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
   }
-  const sortedOutboundFlights = [...filteredOutboundFlights].sort((a, b) => flightSortFn(a, b, outboundSort, selectedOutboundIdx, filteredOutboundFlights));
-  const sortedInboundFlights = [...filteredInboundFlights].sort((a, b) => flightSortFn(a, b, inboundSort, selectedInboundIdx, filteredInboundFlights));
+  // Use filtered lists directly
+  const sortedOutboundFlights = filteredOutboundFlights;
+  const sortedInboundFlights = filteredInboundFlights;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerFlight, setDrawerFlight] = useState<any>(null);
