@@ -1381,21 +1381,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [outboundSort, setOutboundSort] = useState<'asc' | 'desc'>('asc');
   const [inboundSort, setInboundSort] = useState<'asc' | 'desc'>('asc');
 
-  function airlineSortFn(a, b, sortOrder) {
-    // Get airline ids for each flight
+  function flightSortFn(a, b, sortOrder, selectedIdx, flights) {
+    // Selected flight always on top
+    const selectedFlight = flights[selectedIdx];
+    if (a === selectedFlight && b !== selectedFlight) return -1;
+    if (b === selectedFlight && a !== selectedFlight) return 1;
+    // Then selected airlines
     const airlineIdA = airlines.find(al => al.name === a.airlineName)?.id || '';
     const airlineIdB = airlines.find(al => al.name === b.airlineName)?.id || '';
     const aSelected = selectedQuickFilters.includes(airlineIdA);
     const bSelected = selectedQuickFilters.includes(airlineIdB);
     if (aSelected && !bSelected) return -1;
     if (!aSelected && bSelected) return 1;
-    // If both are selected or both are not, sort by price
+    // Then by price
     const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
     const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
     return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
   }
-  const sortedOutboundFlights = [...filteredOutboundFlights].sort((a, b) => airlineSortFn(a, b, outboundSort));
-  const sortedInboundFlights = [...filteredInboundFlights].sort((a, b) => airlineSortFn(a, b, inboundSort));
+  const sortedOutboundFlights = [...filteredOutboundFlights].sort((a, b) => flightSortFn(a, b, outboundSort, selectedOutboundIdx, filteredOutboundFlights));
+  const sortedInboundFlights = [...filteredInboundFlights].sort((a, b) => flightSortFn(a, b, inboundSort, selectedInboundIdx, filteredInboundFlights));
 
   if (loading) {
     return (
