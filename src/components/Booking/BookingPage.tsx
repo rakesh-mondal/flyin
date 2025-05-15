@@ -184,58 +184,77 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
     <div className="w-full">
       {directions.map((dir, i) => (
         <div key={dir.title} className={i > 0 ? 'pt-8 border-t border-dashed border-gray-200 mt-8' : ''}>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="font-semibold text-lg">{dir.title}</span>
-            <span className="text-gray-400 text-base font-medium">{dir.date}</span>
-            {dir.arrivesNextDay && (
-              <span className="ml-2 px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 text-xs font-semibold">ARRIVES NEXT DAY</span>
-            )}
+          {/* Header precisely aligned with StepCard title text */}
+          <div className="flex items-center justify-between mb-4 ml-4">
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-base">{dir.title}</span>
+              <span className="text-gray-400 text-base font-medium">{dir.date}</span>
+              {dir.arrivesNextDay && (
+                <span className="ml-2 px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 text-xs font-semibold">ARRIVES NEXT DAY</span>
+              )}
+            </div>
+            <div className="flex gap-6 text-xs text-gray-600 items-center">
+              <span className="inline-flex items-center">
+                <svg className="inline mr-1" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
+                Check-in: <span className="font-semibold">{dir.segments.find(s => s.baggage)?.baggage.checkin}</span>
+              </span>
+              <span className="inline-flex items-center">
+                <svg className="inline mr-1" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
+                Cabin: <span className="font-semibold">{dir.segments.find(s => s.baggage)?.baggage.cabin}</span>
+              </span>
+            </div>
           </div>
-          {dir.segments.map((seg, idx) => (
-            seg.layover ? (
-              <div key={idx} className="bg-gray-50 rounded text-sm text-gray-700 flex items-center px-4 py-2 my-4">
-                <span>Layover in {seg.airport}</span>
-                <span className="ml-2 text-xs text-rose-500 font-medium">Short layover {seg.duration}</span>
-              </div>
-            ) : (
-              <div key={idx} className="py-3">
-                <div className="grid grid-cols-[70px_1fr] gap-2 items-start">
-                  {/* Left: Airline logo and info */}
-                  <div className="flex flex-col items-start text-left">
-                    <img src={getAirlineLogo(seg.airline)} alt={seg.airline} className="h-8 w-8 rounded bg-white border border-gray-200" />
-                    <span className="text-sm font-semibold text-gray-900 leading-tight mt-1">{seg.airline}</span>
-                    <span className="text-xs text-gray-500">{seg.code}</span>
-                    <span className="text-xs text-gray-500">{seg.class}</span>
+          {/* Content aligned with header */}
+          <div className="ml-4">
+            {dir.segments.map((seg, idx) => (
+              seg.layover ? (
+                <div key={idx} className="flex items-center bg-gray-50 rounded text-xs text-gray-700 px-4 py-3 my-4 border-l-4 border-blue-200 justify-center">
+                  <span>
+                    <span className="font-semibold text-blue-700">Layover</span>
+                    {` in ${seg.airport} `}
+                    <span className="ml-2 text-xs text-rose-500 font-medium">Short layover {seg.duration}</span>
+                  </span>
+                </div>
+              ) : (
+                <div key={idx} className="flex gap-6 items-center" style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+                  {/* Left: Airline Info */}
+                  <div className="flex flex-col items-center min-w-[90px] w-[90px]">
+                    <img src={getAirlineLogo(seg.airline)} alt={seg.airline} className="h-10 w-10 rounded bg-white border border-gray-200 object-contain mb-2" />
+                    <span className="font-semibold text-gray-900 text-sm text-center">{seg.airline}</span>
+                    <span className="text-xs text-gray-500 text-center">{seg.code}</span>
+                    <span className="text-xs text-gray-400 text-center font-medium">{seg.class}</span>
                   </div>
-                  {/* Right: Times, codes, airport, and baggage info */}
-                  <div className="flex flex-col w-full">
+                  {/* Right: Timeline and Details */}
+                  <div className="flex-1 flex flex-col relative">
+                    {/* Departure */}
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-base tracking-wide">{seg.depTime}</span>
-                      <span className="text-gray-700 font-medium text-sm">{seg.depCode}</span>
-                      <span className="text-gray-400 mx-1">•</span>
-                      <span className="text-gray-700 text-sm font-medium">{seg.depAirport}</span>
+                      <span className="font-bold text-lg text-gray-900">{seg.depTime}</span>
+                      <span className="text-base text-blue-900 font-sans">{seg.depCode}</span>
+                      <span className="text-gray-800 text-sm font-semibold">{seg.depAirport}</span>
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-gray-400"><svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#F3F4F6"/><path d="M8 4v4l2.5 2.5" stroke="#6B7280" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-                      <span className="text-gray-600 text-sm">{seg.duration}</span>
+                    {/* Timeline with duration */}
+                    <div className="flex items-center my-2 relative">
+                      <div className="flex flex-col items-center mr-3">
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#194a8f' }} />
+                        <div className="w-0.5 h-8" style={{ backgroundColor: '#90b4e8' }} />
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#194a8f' }} />
+                      </div>
+                      <span className="flex items-center mx-2 text-sm text-gray-600 font-medium">
+                        <svg className="mr-1" width="20" height="20" style={{ transform: 'scale(0.7)' }} viewBox="0 0 20 20"><g fill="#4D4D4D" fillRule="evenodd"><path d="M19.202 6.102c-1.055-2.459-2.847-4.246-5.325-5.304A9.83 9.83 0 009.984 0a9.728 9.728 0 00-3.882.798C3.643 1.853 1.844 3.64.787 6.102A9.732 9.732 0 000 9.984c0 1.356.258 2.659.787 3.893 1.057 2.462 2.857 4.26 5.315 5.314a9.728 9.728 0 003.882.798c1.355 0 2.654-.27 3.892-.798 2.48-1.057 4.271-2.856 5.326-5.314A9.782 9.782 0 0020 9.984a9.724 9.724 0 00-.798-3.882zm-1.597 8.3a8.773 8.773 0 01-3.215 3.203 8.613 8.613 0 01-4.406 1.181c-1.192 0-2.33-.23-3.412-.7-1.083-.47-2.017-1.088-2.8-1.87-.781-.781-1.404-1.725-1.87-2.81a8.61 8.61 0 01-.688-3.422c0-1.586.39-3.054 1.17-4.396a8.778 8.778 0 013.204-3.204 8.546 8.546 0 014.396-1.181c1.585 0 3.06.396 4.406 1.18a8.8 8.8 0 013.215 3.205 8.547 8.547 0 011.181 4.396 8.629 8.629 0 01-1.18 4.417z" fillRule="nonzero"></path><path d="M10.618 9.902V4.237c0-.339-.295-.612-.634-.612a.616.616 0 00-.602.612V9.99c0 .011.022.055.022.088a.572.572 0 00.164.492l3.27 3.27a.622.622 0 00.842 0 .59.59 0 000-.854l-3.062-3.083z"></path></g></svg>
+                        {seg.duration}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="font-bold text-base tracking-wide">{seg.arrTime}</span>
-                      <span className="text-gray-700 font-medium text-sm">{seg.arrCode}</span>
-                      <span className="text-gray-400 mx-1">•</span>
-                      <span className="text-gray-700 text-sm font-medium">{seg.arrAirport}</span>
-                    </div>
-                    {/* Baggage info below the airport name, aligned left */}
-                    <div className="flex flex-row gap-8 text-gray-600 text-xs font-normal mt-4">
-                      <span>Check-in baggage <span className="font-semibold">{seg.baggage.checkin} / adult</span></span>
-                      <span>Cabin baggage <span className="font-semibold">{seg.baggage.cabin} / adult</span></span>
+                    {/* Arrival */}
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-lg text-gray-900">{seg.arrTime}</span>
+                      <span className="text-base text-blue-900 font-sans">{seg.arrCode}</span>
+                      <span className="text-gray-800 text-sm font-semibold">{seg.arrAirport}</span>
                     </div>
                   </div>
                 </div>
-                <div className="border-b border-dashed border-gray-100 last:border-b-0" />
-              </div>
-            )
-          ))}
+              )
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -244,7 +263,7 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
 
 const StepCard = ({ step, title, children, open, className = "" }: { step: number, title: string, children?: React.ReactNode, open: boolean, className?: string }) => (
   <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
-    <div className="flex items-center gap-3 mb-2">
+    <div className="flex items-center gap-3 mb-6">
       <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-lg">
         {open ? (
           step
