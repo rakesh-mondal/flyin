@@ -21,25 +21,27 @@ const ItineraryExtras = () => (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="font-semibold text-gray-900">Protect your trip with Travel & Medical Insurance</span>
-        <span className="text-primary font-bold">₹325</span>
-        <button className="bg-blue-600 text-white px-4 py-1 rounded">Add</button>
+        <div className="flex items-center gap-2">
+          <span className="text-primary font-bold">₹325</span>
+          <button className="bg-blue-600 text-white px-4 py-1 rounded">Add</button>
+        </div>
       </div>
       <div className="flex space-x-6 mb-2">
         <div>
-          <div className="font-semibold">Medical Expenses Reimbursement</div>
+          <div className="text-sm font-semibold">Medical Expenses Reimbursement</div>
           <div className="text-xs text-gray-600">upto $1,00,000</div>
         </div>
         <div>
-          <div className="font-semibold">Baggage Loss</div>
+          <div className="text-sm font-normal">Baggage Loss</div>
           <div className="text-xs text-gray-600">upto $500</div>
         </div>
         <div>
-          <div className="font-semibold">Trip Cancellation</div>
+          <div className="text-sm font-normal">Trip Cancellation</div>
           <div className="text-xs text-gray-600">upto $2,500</div>
         </div>
       </div>
       <div className="flex items-center text-xs text-gray-500 mt-2">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Reliance_General_Insurance_Logo.png" alt="Reliance General Insurance" className="h-4 mr-2" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Logo-reliance-general-insurance-1.png" alt="Reliance General Insurance" className="h-6 mr-2 bg-white rounded align-middle" />
         This travel insurance is only valid for the age group of 90 days to 70 years. By adding the insurance, you agree to the Terms & conditions and Good health terms.
       </div>
     </div>
