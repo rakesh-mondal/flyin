@@ -32,11 +32,11 @@ const ItineraryExtras = () => (
           <div className="text-xs text-gray-600">upto $1,00,000</div>
         </div>
         <div>
-          <div className="text-sm font-normal">Baggage Loss</div>
+          <div className="text-sm font-semibold">Baggage Loss</div>
           <div className="text-xs text-gray-600">upto $500</div>
         </div>
         <div>
-          <div className="text-sm font-normal">Trip Cancellation</div>
+          <div className="text-sm font-semibold">Trip Cancellation</div>
           <div className="text-xs text-gray-600">upto $2,500</div>
         </div>
       </div>
