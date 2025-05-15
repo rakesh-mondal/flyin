@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -1377,6 +1377,26 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
   };
 
+  // Add state for sorting
+  const [outboundSort, setOutboundSort] = useState<'asc' | 'desc'>('asc');
+  const [inboundSort, setInboundSort] = useState<'asc' | 'desc'>('asc');
+
+  function airlineSortFn(a, b, sortOrder) {
+    // Get airline ids for each flight
+    const airlineIdA = airlines.find(al => al.name === a.airlineName)?.id || '';
+    const airlineIdB = airlines.find(al => al.name === b.airlineName)?.id || '';
+    const aSelected = selectedQuickFilters.includes(airlineIdA);
+    const bSelected = selectedQuickFilters.includes(airlineIdB);
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    // If both are selected or both are not, sort by price
+    const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+    const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+    return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+  }
+  const sortedOutboundFlights = [...filteredOutboundFlights].sort((a, b) => airlineSortFn(a, b, outboundSort));
+  const sortedInboundFlights = [...filteredInboundFlights].sort((a, b) => airlineSortFn(a, b, inboundSort));
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
@@ -1704,11 +1724,27 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedOutboundDateIdx}
                           />
                           <hr className="my-1 border-gray-200" />
-                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2">
-                            New York → Dubai
+                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
+                            <span>New York → Dubai</span>
+                            <button
+                              onClick={() => setOutboundSort(outboundSort === 'asc' ? 'desc' : 'asc')}
+                              className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none ml-2"
+                              aria-label="Sort by price"
+                            >
+                              Price
+                              {outboundSort === 'asc' ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                                </svg>
+                              )}
+                            </button>
                           </div>
                           <div className="flex flex-col gap-2">
-                            {filteredOutboundFlights.map((option, idx) => (
+                            {sortedOutboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
                                 className={cn(
@@ -1746,11 +1782,27 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedInboundDateIdx}
                           />
                           <hr className="my-1 border-gray-200" />
-                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2">
-                            Dubai → New York
+                          <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
+                            <span>Dubai → New York</span>
+                            <button
+                              onClick={() => setInboundSort(inboundSort === 'asc' ? 'desc' : 'asc')}
+                              className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none ml-2"
+                              aria-label="Sort by price"
+                            >
+                              Price
+                              {inboundSort === 'asc' ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                                </svg>
+                              )}
+                            </button>
                           </div>
                           <div className="flex flex-col gap-2">
-                            {filteredInboundFlights.map((option, idx) => (
+                            {sortedInboundFlights.map((option, idx) => (
                               <button
                                 key={idx}
                                 className={cn(
