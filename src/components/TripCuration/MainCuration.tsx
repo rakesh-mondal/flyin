@@ -1585,7 +1585,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   {/* Summary Row Card */}
                   {selectedOutbound && selectedInbound && (
                     <div className={cn(
-                      "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 transition-all duration-700 sticky top-2 z-30 mb-2"
+                      "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-4 transition-all duration-700 sticky top-2 z-30 mb-2"
                     )} style={{ position: 'relative', padding: '2px' }}>
                       {glow && (
                         <GlowEffect
