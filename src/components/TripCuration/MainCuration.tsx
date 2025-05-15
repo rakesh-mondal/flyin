@@ -1686,8 +1686,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     <div className="flex-1 relative w-full">
                       <div
                         ref={airlineChipsScrollRef}
-                        className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pl-0 pr-0 pt-1 pb-1 mx-auto w-[93%]"
-                        style={{ WebkitOverflowScrolling: 'touch' }}
+                        className="flex overflow-x-auto gap-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pl-0 pr-0 pt-1 pb-1 mx-auto w-[93%] scrollbar-none"
+                        style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                       >
                         {airlines.map((airline) => (
                           <button
@@ -1779,21 +1779,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   </div>
                                 </div>
                                 {/* Info Row */}
-                                <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
-                                  <div className="flex items-center gap-4 text-gray-700 text-xs">
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
-                                      <span>Visa req.</span>
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${option.wifi === false ? 'text-gray-300' : 'text-indigo-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
-                                      <span className={option.wifi === false ? 'text-gray-400' : ''}>Wi-Fi</span>
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" style={{ color: '#6b7280' }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                                      <span>Check-in: 23kg</span>
-                                    </span>
-                                  </div>
+                                <div className="flex items-center justify-between mt-2 px-1 py-1">
+                                  <div />
                                   <button
                                     className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
                                     type="button"
@@ -1861,21 +1848,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   </div>
                                 </div>
                                 {/* Info Row */}
-                                <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
-                                  <div className="flex items-center gap-4 text-gray-700 text-xs">
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
-                                      <span>Visa req.</span>
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${option.wifi === false ? 'text-gray-300' : 'text-indigo-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
-                                      <span className={option.wifi === false ? 'text-gray-400' : ''}>Wi-Fi</span>
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" style={{ color: '#6b7280' }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                                      <span>Check-in: 23kg</span>
-                                    </span>
-                                  </div>
+                                <div className="flex items-center justify-between mt-2 px-1 py-1">
+                                  <div />
                                   <button
                                     className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
                                     type="button"
