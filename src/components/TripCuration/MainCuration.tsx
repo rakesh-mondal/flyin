@@ -1665,6 +1665,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
                   {/* Quick Price Filters Card with Arrows - DatesCard style */}
                   <div className="relative mt-4 mb-2 max-w-full overflow-hidden" style={{ minHeight: 56 }}>
+                    {/* Left Gradient */}
+                    <div className="pointer-events-none absolute left-0 top-0 h-full w-16 z-10" style={{ background: "linear-gradient(to right, rgba(249,250,251,1) 0%, rgba(249,250,251,0.7) 60%, rgba(249,250,251,0) 100%)" }} />
+                    {/* Right Gradient */}
+                    <div className="pointer-events-none absolute right-0 top-0 h-full w-16 z-10" style={{ background: "linear-gradient(to left, rgba(249,250,251,1) 0%, rgba(249,250,251,0.7) 60%, rgba(249,250,251,0) 100%)" }} />
                     {/* Left Arrow (absolute, DatesCard style) */}
                     <button
                       className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
