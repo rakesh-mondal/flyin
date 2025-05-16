@@ -158,6 +158,19 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
       date: 'Fri, 16 May 2025',
       segments: [
         {
+          airline: 'IndiGo',
+          code: '6E-6284',
+          class: 'Economy',
+          depTime: '02:30',
+          depCode: 'AUH',
+          depAirport: 'Zayed International Airport, Terminal A, Abu Dhabi',
+          arrTime: '04:15',
+          arrCode: 'BOM',
+          arrAirport: 'Chatrapati Shivaji Airport, Terminal 2, Mumbai',
+          duration: '1h 45m',
+          baggage: { checkin: '30kg', cabin: '7kg' },
+        },
+        {
           layover: true,
           airport: 'Chatrapati Shivaji Airport, Mumbai (BOM)',
           duration: '2h 50m',
