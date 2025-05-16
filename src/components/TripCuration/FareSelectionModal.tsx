@@ -20,14 +20,14 @@ const LEGEND = [
 
 // Helper to get fare options based on trip
 function getFareOptions(trip) {
-  const basePrice = trip?.totalPrice || 350;
+  // Hardcoded realistic fares
   return [
     {
       id: 'base',
       label: 'Base fare',
-      price: basePrice,
-      currency: trip?.currency || 'AED',
-      description: 'Customise your journey with minimal fees—ideal for unpredictable schedules.',
+      price: 500,
+      currency: 'AED',
+      description: '', // Removed description
       features: {
         baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
         cancellation: false,
@@ -41,10 +41,10 @@ function getFareOptions(trip) {
     },
     {
       id: 'flex',
-      label: 'Cleartrip Flex',
-      price: basePrice + 75,
-      currency: trip?.currency || 'AED',
-      description: 'Customise your journey with minimal fees—ideal for unpredictable schedules.',
+      label: 'Flyin Flex',
+      price: 590,
+      currency: 'AED',
+      description: '', // Removed description
       features: {
         baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
         cancellation: true,
@@ -60,9 +60,9 @@ function getFareOptions(trip) {
     {
       id: 'standard',
       label: 'Standard fare',
-      price: basePrice + 125,
-      currency: trip?.currency || 'AED',
-      description: 'Customise your journey with minimal fees—ideal for unpredictable schedules.',
+      price: 615,
+      currency: 'AED',
+      description: '', // Removed description
       features: {
         baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
         cancellation: false,
