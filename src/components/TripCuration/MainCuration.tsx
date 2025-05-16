@@ -1761,7 +1761,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 )}
                                 onClick={() => handleManualOutboundSelect(idx)}
                               >
-                                <div className="flex items-start gap-3 py-1">
+                                <div className="flex items-center gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
@@ -1826,7 +1826,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 )}
                                 onClick={() => handleManualInboundSelect(idx)}
                               >
-                                <div className="flex items-start gap-3 py-1">
+                                <div className="flex items-center gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
