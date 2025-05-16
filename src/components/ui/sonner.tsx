@@ -1,10 +1,14 @@
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, toast } from "sonner"
 
+import React from "react"
+
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
+  // Determine if light mode is active
+  const isLight = theme === "light" || theme === "system"
 
   return (
     <Sonner
@@ -13,6 +17,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
+            (isLight
+              ? "custom-toast-light "
+              : "") +
             "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
           description: "group-[.toast]:text-muted-foreground",
           actionButton:

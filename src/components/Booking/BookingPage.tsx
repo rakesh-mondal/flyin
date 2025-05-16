@@ -263,25 +263,36 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
   );
 };
 
-const StepCard = ({ step, title, children, open, className = "" }: { step: number, title: string, children?: React.ReactNode, open: boolean, className?: string }) => (
-  <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
-    <div className="flex items-center gap-3 mb-6">
-      <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-lg">
-        {open ? (
-          step
-        ) : (
-          <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#4CAF50"/><path d="M6 10.5l2.5 2.5L14 8.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        )}
+const StepCard = ({ step, title, children, open, className = "" }: { step: number, title: string, children?: React.ReactNode, open: boolean, className?: string }) => {
+  // Determine style for the step circle
+  let circleClass = "w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg border";
+  let circleStyle = {};
+  let text = step;
+
+  if (step === 1 && open) {
+    // Step 1 open: black circle, white text
+    circleClass += " bg-black text-white border-black";
+  } else {
+    // Steps 2-4 or any step not open: white circle, black border, black text
+    circleClass += " bg-white text-black border-black";
+  }
+
+  return (
+    <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
+      <div className="flex items-center gap-3 mb-6">
+        <div className={circleClass} style={circleStyle}>
+          {text}
+        </div>
+        <span className="text-xl font-bold">{title}</span>
       </div>
-      <span className="text-xl font-bold">{title}</span>
+      {open ? (
+        children || <div className="text-gray-400 text-base mt-2">Coming soon...</div>
+      ) : (
+        children // Render summary or placeholder when collapsed
+      )}
     </div>
-    {open ? (
-      children || <div className="text-gray-400 text-base mt-2">Coming soon...</div>
-    ) : (
-      children // Render summary or placeholder when collapsed
-    )}
-  </div>
-);
+  );
+};
 
 const SummarySidebar = ({ trip }: { trip: any }) => (
   <aside className="w-full max-w-xs sticky top-8">

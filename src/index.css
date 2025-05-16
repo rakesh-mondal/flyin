@@ -96,6 +96,13 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
+
+  /* Custom toast color scheme for light mode only */
+  .custom-toast-light {
+    background: #222 !important;
+    color: #fff !important;
+    border: 1px solid #194E91 !important;
+  }
 }
 
 @layer utilities {
