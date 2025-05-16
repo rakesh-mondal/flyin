@@ -1887,6 +1887,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             }}
             onClick={e => e.stopPropagation()}
           >
+            {/* Close icon at top right */}
+            <button className="absolute top-4 right-4 text-gray-400 hover:text-black" onClick={() => setDrawerOpen(false)} aria-label="Close">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
             <h2 className="text-lg font-bold mb-4">Flight Details</h2>
             {/* Airline info row (logo, name, flight number, cabin) */}
             <div className="flex items-center gap-4 mb-6">
@@ -1943,10 +1947,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             {/* Airport info section */}
             <div className="mb-5">
               <div className="font-bold text-base mb-2">Airport Information</div>
-              <div className="mb-1 text-sm text-gray-700">Prayer Room: <span className="font-medium text-gray-900">Near Gate 12</span></div>
-              <div className="mb-1 text-sm text-gray-700">Lounges: <span className="font-medium text-gray-900">Emirates Lounge, Priority Pass</span></div>
-              <div className="text-sm text-gray-700">
-                <div className="font-normal mb-1">Food Options:</div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center text-sm text-gray-700">
+                  {/* Prayer Room Icon */}
+                  <svg className="h-5 w-5 text-blue-700 mr-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m0 0l-7-7m7 7l7-7" /></svg>
+                  <span className="font-medium text-gray-900">Prayer Room:</span>
+                  <span className="ml-1 text-gray-700">Near Gate 12</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  {/* Lounge Icon */}
+                  <svg className="h-5 w-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="7" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="1.5"/></svg>
+                  <span className="font-medium text-gray-900">Lounges:</span>
+                  <span className="ml-1 text-gray-700">Emirates Lounge, Priority Pass</span>
+                </div>
+              </div>
+              {/* Food options remain unchanged below */}
+              <div className="text-sm text-gray-700 mt-3">
+                <div className="flex items-center mb-1">
+                  <span className="font-medium text-gray-900">Food Options:</span>
+                </div>
                 <div className="flex flex-wrap gap-4">
                   <span className="flex items-center gap-2">
                     <img src="https://logo.clearbit.com/starbucks.com" alt="Starbucks" className="h-6 w-6 rounded shadow border bg-white" />
@@ -1989,7 +2008,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                 </span>
               </div>
             </div>
-            <button className="mt-auto bg-primary text-white rounded px-4 py-2 font-semibold" onClick={() => setDrawerOpen(false)}>Close</button>
           </div>
         </div>
       )}
