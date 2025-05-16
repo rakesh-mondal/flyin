@@ -1508,7 +1508,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
               ) : (
                 <>
                   {/* Merchandising Banner */}
-                  <div className="flex w-full gap-3 pb-4 -mx-2 px-2">
+                  <div className="flex w-full gap-3 pb-4 -mx-2 pl-2">
                     {/* Card 1 */}
                     <div className="flex-1 flex items-center rounded-xl px-4 py-3" style={{ background: '#ecf8f4' }}>
                       <div className="mr-3 flex-shrink-0">
@@ -1757,16 +1757,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 key={idx}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                 )}
                                 onClick={() => handleManualOutboundSelect(idx)}
                               >
-                                <div className="flex items-center gap-3 py-1">
+                                <div className="flex items-start gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                       <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                      {/* Removed: <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span> */}
                                     </div>
                                     <div className="flex items-center gap-2 text-xs text-gray-500">
                                       <span>{option.airlineName}</span>
@@ -1774,20 +1774,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       {option.layover && <span>· {option.layover}</span>}
                                     </div>
                                   </div>
-                                  <div className="text-right">
+                                  <div className="text-right flex flex-col items-end justify-between h-full">
                                     <div className="text-base font-bold text-black">₹{option.price}</div>
+                                    <button
+                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
+                                      type="button"
+                                      onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                    >
+                                      More info <span aria-hidden="true">→</span>
+                                    </button>
                                   </div>
-                                </div>
-                                {/* Info Row */}
-                                <div className="flex items-center justify-between mt-2 px-1 py-1">
-                                  <div />
-                                  <button
-                                    className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
-                                    type="button"
-                                    onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                  >
-                                    More info <span aria-hidden="true">→</span>
-                                  </button>
                                 </div>
                               </button>
                             ))}
@@ -1826,16 +1822,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 key={idx}
                                 className={cn(
                                   "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50 font-semibold" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                 )}
                                 onClick={() => handleManualInboundSelect(idx)}
                               >
-                                <div className="flex items-center gap-3 py-1">
+                                <div className="flex items-start gap-3 py-1">
                                   <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                       <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+                                      {/* Removed: <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span> */}
                                     </div>
                                     <div className="flex items-center gap-2 text-xs text-gray-500">
                                       <span>{option.airlineName}</span>
@@ -1843,20 +1839,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       {option.layover && <span>· {option.layover}</span>}
                                     </div>
                                   </div>
-                                  <div className="text-right">
+                                  <div className="text-right flex flex-col items-end justify-between h-full">
                                     <div className="text-base font-bold text-black">₹{option.price}</div>
+                                    <button
+                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
+                                      type="button"
+                                      onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                    >
+                                      More info <span aria-hidden="true">→</span>
+                                    </button>
                                   </div>
-                                </div>
-                                {/* Info Row */}
-                                <div className="flex items-center justify-between mt-2 px-1 py-1">
-                                  <div />
-                                  <button
-                                    className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
-                                    type="button"
-                                    onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                  >
-                                    More info <span aria-hidden="true">→</span>
-                                  </button>
                                 </div>
                               </button>
                             ))}
