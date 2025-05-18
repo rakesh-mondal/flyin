@@ -132,6 +132,7 @@ const LoadingSkeleton = () => (
 const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
   return (
     <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+      <h3 className="text-sm font-semibold text-gray-800 mb-2.5">Quick Filters</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {airlines.map((airline) => (
           <button
@@ -152,7 +153,7 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
               <img 
                 src={airline.logo} 
                 alt={airline.name} 
-                className="h-5 w-5 rounded bg-gray-100"
+                className="h-5 w-5 rounded object-contain bg-white p-0.5 border border-gray-100"
               />
               <TooltipProvider>
                 <Tooltip>
@@ -192,19 +193,29 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
   );
 };
 
-const stopsOptions = [
-  { label: 'Non-stop', value: 0 },
-  { label: '1 stop', value: 1 },
-  { label: '2+ stops', value: 2 }
-];
-const mealOptions = [
-  { label: 'Vegetarian', value: 'Vegetarian' },
-  { label: 'Vegan', value: 'Vegan' },
-  { label: 'Gluten-Free', value: 'Gluten-Free' },
-  { label: 'Halal', value: 'Halal' }
-];
+// Component for price range filters
+const PriceRangeFilters = ({ ranges, selectedRange, onChange }) => {
+  return (
+    <div className="mb-4 flex flex-wrap gap-2">
+      {ranges.map((range) => (
+        <button
+          key={range.id}
+          onClick={() => onChange(range.id === selectedRange ? null : range.id)}
+          className={cn(
+            "px-3 py-1.5 rounded-full text-xs font-medium transition-all border",
+            range.id === selectedRange
+              ? "bg-blue-50 border-blue-500 text-blue-700"
+              : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+          )}
+        >
+          {range.label}
+        </button>
+      ))}
+    </div>
+  );
+};
 
-// DatesCard component for horizontal date/price selection
+// Mock dates data
 const mockDates = [
   { date: 'Sun, 11 May', price: 6774 },
   { date: 'Mon, 12 May', price: 5264 },
@@ -212,850 +223,395 @@ const mockDates = [
   { date: 'Wed, 14 May', price: 6946 },
   { date: 'Thu, 15 May', price: 7890 },
   { date: 'Fri, 16 May', price: 8120 },
+  { date: 'Sat, 17 May', price: 7450 },
 ];
 
+// Improved DatesCard component
 function DatesCard({ dates, selectedIdx, onSelect }) {
   // Find lowest price for green highlight
   const minPrice = Math.min(...dates.map(d => d.price));
-  let indices = [];
-  if (dates.length === 0) {
-    indices = [];
-  } else if (selectedIdx === 0) {
-    indices = [0, 0, 1 < dates.length ? 1 : 0];
-  } else if (selectedIdx === dates.length - 1) {
-    indices = [dates.length - 2 >= 0 ? dates.length - 2 : dates.length - 1, dates.length - 1, dates.length - 1];
+  
+  // Calculate visible date indices with better logic
+  const visibleDates = [];
+  const totalToShow = Math.min(7, dates.length);
+  
+  if (dates.length <= totalToShow) {
+    // If we have 7 or fewer dates, show all of them
+    for (let i = 0; i < dates.length; i++) {
+      visibleDates.push(i);
+    }
   } else {
-    indices = [selectedIdx - 1, selectedIdx, selectedIdx + 1];
+    // For more than 7 dates, create a sliding window
+    let startIdx = Math.max(0, selectedIdx - Math.floor(totalToShow / 2));
+    if (startIdx + totalToShow > dates.length) {
+      startIdx = dates.length - totalToShow;
+    }
+    
+    for (let i = 0; i < totalToShow; i++) {
+      visibleDates.push(startIdx + i);
+    }
   }
+  
   return (
-    <div className="flex items-center w-full py-2 mb-4">
-      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === 0} onClick={() => onSelect(Math.max(0, selectedIdx - 1))}>
+    <div className="flex flex-col w-full mb-6">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-semibold text-gray-800">Flexible Dates</h3>
+        <div className="text-xs text-gray-500">Prices shown are for round trips</div>
+      </div>
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-1">
+        <div className="flex items-center w-full overflow-hidden">
+          <button 
+            className="p-1 text-gray-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
+            disabled={selectedIdx === 0} 
+            onClick={() => onSelect(Math.max(0, selectedIdx - 1))}
+          >
         <ChevronLeft className="h-5 w-5" />
       </button>
-      <div className="flex-1 flex justify-center gap-2 overflow-x-auto scrollbar-hide">
-        {indices.map((idx, i) => (
-          <div
-            key={dates[idx]?.date || i}
-            className={
-              'flex flex-col items-center px-4 cursor-pointer min-w-[90px] ' +
-              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
-            }
+          
+          <div className="flex-1 grid grid-cols-7 gap-0">
+            {visibleDates.map(idx => (
+              <button
+                key={dates[idx]?.date || idx}
+                className={cn(
+                  "flex flex-col items-center p-2 rounded-md transition-all",
+                  selectedIdx === idx 
+                    ? "bg-blue-50 border-blue-100" 
+                    : "hover:bg-gray-50"
+                )}
             onClick={() => onSelect(idx)}
           >
-            <div className="text-sm mb-1">{dates[idx]?.date}</div>
-            <div className={
-              'text-base ' +
-              (dates[idx]?.price === minPrice ? 'text-green-600 font-semibold' : '')
-            }>
+                <div className={cn(
+                  "text-sm mb-1",
+                  selectedIdx === idx ? "font-bold text-black" : "text-gray-600"
+                )}>
+                  {dates[idx]?.date}
+                </div>
+                <div className={cn(
+                  "text-sm font-medium",
+                  dates[idx]?.price === minPrice 
+                    ? "text-green-600" 
+                    : selectedIdx === idx ? "text-blue-600" : "text-gray-700"
+                )}>
               ₹{dates[idx]?.price?.toLocaleString()}
             </div>
-            {i === 1 && <div className="mt-1 h-1 w-8 bg-black rounded-full" />}
+                {selectedIdx === idx && (
+                  <div className="mt-1 h-1 w-4 rounded-full bg-blue-500" />
+                )}
+              </button>
+            ))}
           </div>
-        ))}
+          
+          <button 
+            className="p-1 text-gray-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
+            disabled={selectedIdx === dates.length - 1} 
+            onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
-      <button className="p-1 text-gray-400 hover:text-black" disabled={selectedIdx === dates.length - 1} onClick={() => onSelect(Math.min(dates.length - 1, selectedIdx + 1))}>
-        <ChevronRight className="h-5 w-5" />
-      </button>
     </div>
   );
 }
 
-const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-  const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
-  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
-  const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
-  const [selectedStops, setSelectedStops] = useState<number[]>([]);
-  const [wifiOnly, setWifiOnly] = useState(false);
-  const [selectedMeals, setSelectedMeals] = useState<string[]>([]);
-
-  // For demonstration, create FlightLegOption objects for each flight (same as v1)
-  const roundTripOptions = [
-    {
-      outboundFlight: {
-        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-        airlineName: mockFlights[0].airline,
-        departureTime: mockFlights[0].departureTime,
-        arrivalTime: mockFlights[0].arrivalTime,
-        departureCode: mockFlights[0].departureCode,
-        arrivalCode: mockFlights[0].arrivalCode,
-        departureCity: mockFlights[0].departureCity,
-        arrivalCity: mockFlights[0].arrivalCity,
-        duration: mockFlights[0].duration,
-        stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
-        date: 'May 7, 2025',
-        layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
-        price: '35,909'
-      },
-      returnFlight: {
-        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
-        airlineName: mockFlights[1].airline,
-        departureTime: mockFlights[1].departureTime,
-        arrivalTime: mockFlights[1].arrivalTime,
-        departureCode: mockFlights[1].departureCode,
-        arrivalCode: mockFlights[1].arrivalCode,
-        departureCity: mockFlights[1].departureCity,
-        arrivalCity: mockFlights[1].arrivalCity,
-        duration: mockFlights[1].duration,
-        stops: mockFlights[1].stops === 0 ? 'non-stop' : `${mockFlights[1].stops} stop${mockFlights[1].stops > 1 ? 's' : ''}`,
-        date: 'May 14, 2025',
-        layover: mockFlights[1].stops > 0 ? '1h in Mumbai' : undefined,
-        price: '30,000'
-      },
-      price: '65,909',
-      currency: '₹',
-      stock: '1 Left at this price',
-      coupon: 'Book for ₹500 off using coupon FLY',
-      promoBanner: 'Enjoy up to ₹500 off, use code SPRING Know more',
-      baggageTag: 'Hand baggage only',
-      moreOptions: [
-        {
-          outbound: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[0].airline,
-            departureTime: '22:00',
-            arrivalTime: '06:00',
-            departureCode: mockFlights[0].departureCode,
-            arrivalCode: mockFlights[0].arrivalCode,
-            departureCity: mockFlights[0].departureCity,
-            arrivalCity: mockFlights[0].arrivalCity,
-            duration: '8h 00m',
-            stops: 'non-stop',
-            date: 'May 7, 2025',
-            price: '32,909'
-          },
-          return: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[1].airline,
-            departureTime: '12:00',
-            arrivalTime: '20:00',
-            departureCode: mockFlights[1].departureCode,
-            arrivalCode: mockFlights[1].arrivalCode,
-            departureCity: mockFlights[1].departureCity,
-            arrivalCity: mockFlights[1].arrivalCity,
-            duration: '8h 00m',
-            stops: 'non-stop',
-            date: 'May 14, 2025',
-            price: '28,000'
-          },
-        },
-        {
-          outbound: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[0].airline,
-            departureTime: '23:30',
-            arrivalTime: '07:30',
-            departureCode: mockFlights[0].departureCode,
-            arrivalCode: mockFlights[0].arrivalCode,
-            departureCity: mockFlights[0].departureCity,
-            arrivalCity: mockFlights[0].arrivalCity,
-            duration: '8h 00m',
-            stops: 'non-stop',
-            date: 'May 7, 2025',
-            price: '33,909'
-          },
-          return: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[1].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[1].airline,
-            departureTime: '14:00',
-            arrivalTime: '22:00',
-            departureCode: mockFlights[1].departureCode,
-            arrivalCode: mockFlights[1].arrivalCode,
-            departureCity: mockFlights[1].departureCity,
-            arrivalCity: mockFlights[1].arrivalCity,
-            duration: '8h 00m',
-            stops: 'non-stop',
-            date: 'May 14, 2025',
-            price: '29,000'
-          },
-        },
-      ],
-    },
-    {
-      outboundFlight: {
-        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
-        airlineName: mockFlights[2].airline,
-        departureTime: mockFlights[2].departureTime,
-        arrivalTime: mockFlights[2].arrivalTime,
-        departureCode: mockFlights[2].departureCode,
-        arrivalCode: mockFlights[2].arrivalCode,
-        departureCity: mockFlights[2].departureCity,
-        arrivalCity: mockFlights[2].arrivalCity,
-        duration: mockFlights[2].duration,
-        stops: mockFlights[2].stops === 0 ? 'non-stop' : `${mockFlights[2].stops} stop${mockFlights[2].stops > 1 ? 's' : ''}`,
-        date: 'May 7, 2025',
-        layover: mockFlights[2].stops > 0 ? '3h in Abu Dhabi' : undefined,
-        price: '25,909'
-      },
-      returnFlight: {
-        airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-        airlineName: mockFlights[0].airline,
-        departureTime: mockFlights[0].departureTime,
-        arrivalTime: mockFlights[0].arrivalTime,
-        departureCode: mockFlights[0].departureCode,
-        arrivalCode: mockFlights[0].arrivalCode,
-        departureCity: mockFlights[0].departureCity,
-        arrivalCity: mockFlights[0].arrivalCity,
-        duration: mockFlights[0].duration,
-        stops: mockFlights[0].stops === 0 ? 'non-stop' : `${mockFlights[0].stops} stop${mockFlights[0].stops > 1 ? 's' : ''}`,
-        date: 'May 14, 2025',
-        layover: mockFlights[0].stops > 0 ? '2h in Dubai' : undefined,
-        price: '19,808'
-      },
-      price: '45,717',
-      currency: '₹',
-      stock: '2 Left at this price',
-      coupon: 'Book for ₹400 off using coupon FLY',
-      promoBanner: 'Special deal for early birds!',
-      baggageTag: 'Hand baggage only',
-      moreOptions: [
-        {
-          outbound: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[2].airline,
-            departureTime: '09:00',
-            arrivalTime: '18:00',
-            departureCode: mockFlights[2].departureCode,
-            arrivalCode: mockFlights[2].arrivalCode,
-            departureCity: mockFlights[2].departureCity,
-            arrivalCity: mockFlights[2].arrivalCity,
-            duration: '9h 00m',
-            stops: '1 stop',
-            date: 'May 7, 2025',
-            price: '24,909'
-          },
-          return: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[0].airline,
-            departureTime: '20:00',
-            arrivalTime: '05:00',
-            departureCode: mockFlights[0].departureCode,
-            arrivalCode: mockFlights[0].arrivalCode,
-            departureCity: mockFlights[0].departureCity,
-            arrivalCity: mockFlights[0].arrivalCity,
-            duration: '9h 00m',
-            stops: '1 stop',
-            date: 'May 14, 2025',
-            price: '18,808'
-          },
-        },
-        {
-          outbound: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[2].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[2].airline,
-            departureTime: '13:00',
-            arrivalTime: '22:00',
-            departureCode: mockFlights[2].departureCode,
-            arrivalCode: mockFlights[2].arrivalCode,
-            departureCity: mockFlights[2].departureCity,
-            arrivalCity: mockFlights[2].arrivalCity,
-            duration: '9h 00m',
-            stops: '1 stop',
-            date: 'May 7, 2025',
-            price: '23,909'
-          },
-          return: {
-            airlineLogo: `https://content.airhex.com/content/logos/airlines_${mockFlights[0].airlineCode.toLowerCase()}_350_100_r.png`,
-            airlineName: mockFlights[0].airline,
-            departureTime: '23:00',
-            arrivalTime: '08:00',
-            departureCode: mockFlights[0].departureCode,
-            arrivalCode: mockFlights[0].arrivalCode,
-            departureCity: mockFlights[0].departureCity,
-            arrivalCity: mockFlights[0].arrivalCity,
-            duration: '9h 00m',
-            stops: '1 stop',
-            date: 'May 14, 2025',
-            price: '20,808'
-          },
-        },
-      ],
-    },
+// SortOptions Component
+const SortOptions = ({ sortOption, onSortChange }) => {
+  const options = [
+    { id: 'recommended', label: 'Recommended' },
+    { id: 'price_low', label: 'Price: Low to High' },
+    { id: 'price_high', label: 'Price: High to Low' },
+    { id: 'duration', label: 'Duration: Shortest' },
+    { id: 'early_departure', label: 'Earliest Departure' },
+    { id: 'late_departure', label: 'Latest Departure' }
   ];
+  
+  return (
+    <div className="flex items-center gap-2 border-t border-gray-200 pt-4 pb-2">
+      <div className="text-sm font-medium text-gray-700">Sort by:</div>
+      <div className="flex flex-wrap gap-2">
+        {options.map(option => (
+          <button
+            key={option.id}
+            onClick={() => onSortChange(option.id)}
+            className={cn(
+              "px-3 py-1 rounded-md text-xs font-medium transition-all",
+              sortOption === option.id
+                ? "bg-gray-800 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-  // Initialize selected indices arrays based on roundTripOptions length
-  const [selectedOutboundIdxArr, setSelectedOutboundIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
-  const [selectedReturnIdxArr, setSelectedReturnIdxArr] = useState(() => Array(roundTripOptions.length).fill(0));
-
-  // Mock airlines data with price ranges
-  const airlines = [
+const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const [selectedFilterTab, setSelectedFilterTab] = useState('all');
+  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
+  const [selectedRange, setSelectedRange] = useState(null);
+  const [sortOption, setSortOption] = useState('recommended');
+  const [selectedDateIdx, setSelectedDateIdx] = useState(2); // Default to middle date
+  const [showCouponValue, setShowCouponValue] = useState(false);
+  
+  // Mock data for the airline quick filter
+  const mockAirlines = [
     {
       id: 'emirates',
       name: 'Emirates',
       iata: 'EK',
-      country: 'UAE',
+      logo: 'https://www.emirates.com/etc/designs/ecom/creative/emirate-logo-circle.svg',
+      price: '65,909',
+      country: 'United Arab Emirates',
       alliance: 'None',
-      rating: 4.7,
-      onTime: 89,
-      baggage: '30kg checked, 7kg cabin',
+      rating: '4.3/5',
+      onTime: 82,
+      baggage: '2 x 23kg included',
       wifi: true,
-      meal: 'Halal, Vegetarian, Vegan',
-      review: 'Spacious seats and excellent service.',
+      meal: 'Full meal service',
       website: 'https://www.emirates.com',
-      logo: 'https://airhex.com/images/airline-logos/emirates.png',
-      price: '65,909'
+      review: 'Great service and modern aircraft with excellent entertainment options.'
+    },
+    { 
+      id: 'airindia', 
+      name: 'Air India', 
+      iata: 'AI',
+      logo: 'https://airindia.com/image/AI_CircleLogo.png',
+      price: '59,035',
+      country: 'India',
+      alliance: 'Star Alliance',
+      rating: '3.8/5',
+      onTime: 76,
+      baggage: '2 x 23kg included',
+      wifi: false,
+      meal: 'Full meal service',
+      website: 'https://www.airindia.com',
+      review: 'Good value with decent service and generous baggage allowance.'
     },
     {
       id: 'etihad',
-      name: 'Etihad Airways',
+      name: 'Etihad', 
       iata: 'EY',
-      country: 'UAE',
+      logo: 'https://www.etihad.com/content/dam/eag/etihadairways/etihadcom/Global/logos/etihad-airways-logo-flag.svg',
+      price: '45,717',
+      country: 'United Arab Emirates',
       alliance: 'None',
-      rating: 4.5,
-      onTime: 85,
-      baggage: '23kg checked, 7kg cabin',
+      rating: '4.2/5',
+      onTime: 84,
+      baggage: '2 x 23kg included',
       wifi: true,
-      meal: 'Halal, Vegetarian',
-      review: 'Modern fleet and great lounges.',
+      meal: 'Full meal service',
       website: 'https://www.etihad.com',
-      logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
-      price: '47,000'
+      review: 'Excellent in-flight experience with attentive cabin crew.'
     },
-    {
-      id: 'qatar',
-      name: 'Qatar Airways',
-      iata: 'QR',
-      country: 'Qatar',
-      alliance: 'Oneworld',
-      rating: 4.8,
-      onTime: 92,
-      baggage: '30kg checked, 7kg cabin',
-      wifi: true,
-      meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
-      review: 'Award-winning business class.',
-      website: 'https://www.qatarairways.com',
-      logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
-      price: '46,000'
-    },
-    {
-      id: 'turkish',
-      name: 'Turkish Airlines',
-      iata: 'TK',
-      country: 'Turkey',
+    { 
+      id: 'lufthansa', 
+      name: 'Lufthansa', 
+      iata: 'LH',
+      logo: 'https://www.lufthansa.com/content/dam/lh/images/local_images/lcn_assets/lufthansa-logo.svg',
+      price: '72,500',
+      country: 'Germany',
       alliance: 'Star Alliance',
-      rating: 4.4,
+      rating: '4.1/5',
       onTime: 81,
-      baggage: '30kg checked, 8kg cabin',
+      baggage: '1 x 23kg included',
       wifi: true,
-      meal: 'Halal, Vegetarian, Vegan',
-      review: 'Best food among European carriers.',
-      website: 'https://www.turkishairlines.com',
-      logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
-      price: '44,000'
+      meal: 'Full meal service',
+      website: 'https://www.lufthansa.com',
+      review: 'German efficiency with good service and clean aircraft.'
     }
   ];
-
-  // Initialize selected airlines with all airlines when component mounts
-  React.useEffect(() => {
-    const allAirlineIds = airlines.map(a => a.id);
-    setSelectedAirlines(allAirlineIds);
-  }, []); // Empty dependency array ensures this runs only once on mount
-
-  const handleQuickFilterSelect = (airlineId: string) => {
-    // If the airline is already selected, deselect it
-    if (selectedQuickFilters.includes(airlineId)) {
-      const newSelectedFilters = selectedQuickFilters.filter(id => id !== airlineId);
-      setSelectedQuickFilters(newSelectedFilters);
-      // If no quick filters are selected, reset to all airlines
-      if (newSelectedFilters.length === 0) {
-        setSelectedAirlines(airlines.map(a => a.id));
-      }
-    } else {
-      // Add the new airline to selected quick filters
-      setSelectedQuickFilters([...selectedQuickFilters, airlineId]);
-      // Clear left side airline selections
-      setSelectedAirlines([]);
-    }
+  
+  // Price range options
+  const priceRanges = [
+    { id: 'budget', label: 'Under ₹50,000' },
+    { id: 'mid', label: '₹50,000 - ₹70,000' },
+    { id: 'premium', label: 'Above ₹70,000' }
+  ];
+  
+  // Handle filter tab selection
+  const handleFilterTabSelect = (tab: string) => {
+    setSelectedFilterTab(tab);
   };
-
-  // Filtering logic
-  const filteredTrips = (trips || mockTrips).filter(trip => {
-    // Airline filter
-    const airlineMatch = selectedAirlines.length === 0 || selectedAirlines.includes((trip.flight.airline || '').toLowerCase().replace(/\s/g, ''));
-    // Stops filter
-    const stopsMatch = selectedStops.length === 0 || selectedStops.some(stops => {
-      if (stops === 2) return trip.flight.stops >= 2;
-      return trip.flight.stops === stops;
-    });
-    // Wifi filter
-    const wifiMatch = !wifiOnly || trip.flight.wifi;
-    // Meal filter
-    const mealMatch = selectedMeals.length === 0 || selectedMeals.some(meal => (trip.flight.meal || '').toLowerCase().includes(meal.toLowerCase()));
-    return airlineMatch && stopsMatch && wifiMatch && mealMatch;
-  });
-
-  // Add summary options for demo
-  const summaryOptions = [
-    {
-      label: 'Best',
-      value: 'best',
-      option: roundTripOptions[0],
-    },
-    {
-      label: 'Cheapest',
-      value: 'cheapest',
-      option: roundTripOptions[1],
-    },
-    {
-      label: 'Quickest',
-      value: 'quickest',
-      option: roundTripOptions[2],
-    },
-  ];
-  const [selectedSummary, setSelectedSummary] = useState('best');
-  const summaryOption = summaryOptions.find(opt => opt.value === selectedSummary)?.option || roundTripOptions[0];
+  
+  // Handle airline quick filter selection
+  const handleQuickFilterSelect = (airlineIds: string[]) => {
+    setSelectedAirlines(airlineIds);
+  };
+  
+  // Handle price range filter selection
+  const handlePriceRangeSelect = (rangeId) => {
+    setSelectedRange(rangeId);
+  };
+  
+  // Toggle coupon visibility
+  const toggleCouponValue = () => {
+    setShowCouponValue(!showCouponValue);
+  };
+  
+  // Pass mock flights through the enrichFlightData function
+  const enrichedFlights = mockFlights.map(flight => enrichFlightData(flight));
 
   if (loading) {
     return <LoadingSkeleton />;
   }
 
-  // Generate more mock outbound and inbound flights for demo
-  const outboundFlights = [
-    {
-      airlineLogo: airlines[0].logo,
-      airlineName: airlines[0].name,
-      departureTime: '21:00',
-      arrivalTime: '07:05',
-      departureCode: 'JFK',
-      arrivalCode: 'DXB',
-      departureCity: 'New York',
-      arrivalCity: 'Dubai',
-      duration: '14h 35m',
-      stops: '1 stop',
-      layover: '2h in Dubai',
-      price: '35,909',
-      baggage: airlines[0].baggage,
-      wifi: airlines[0].wifi,
-      meal: airlines[0].meal,
-      rating: airlines[0].rating
-    },
-    {
-      airlineLogo: airlines[1].logo,
-      airlineName: airlines[1].name,
-      departureTime: '22:30',
-      arrivalTime: '09:00',
-      departureCode: 'JFK',
-      arrivalCode: 'DXB',
-      departureCity: 'New York',
-      arrivalCity: 'Dubai',
-      duration: '14h 30m',
-      stops: 'non-stop',
-      layover: null,
-      price: '37,500',
-      baggage: airlines[1].baggage,
-      wifi: airlines[1].wifi,
-      meal: airlines[1].meal,
-      rating: airlines[1].rating
-    },
-    {
-      airlineLogo: airlines[2].logo,
-      airlineName: airlines[2].name,
-      departureTime: '19:00',
-      arrivalTime: '05:30',
-      departureCode: 'JFK',
-      arrivalCode: 'DXB',
-      departureCity: 'New York',
-      arrivalCity: 'Dubai',
-      duration: '15h 00m',
-      stops: '2 stops',
-      layover: '3h in Doha',
-      price: '33,800',
-      baggage: airlines[2].baggage,
-      wifi: airlines[2].wifi,
-      meal: airlines[2].meal,
-      rating: airlines[2].rating
-    },
-    {
-      airlineLogo: airlines[3].logo,
-      airlineName: airlines[3].name,
-      departureTime: '23:15',
-      arrivalTime: '10:00',
-      departureCode: 'JFK',
-      arrivalCode: 'DXB',
-      departureCity: 'New York',
-      arrivalCity: 'Dubai',
-      duration: '14h 45m',
-      stops: '1 stop',
-      layover: '1h 30m in Istanbul',
-      price: '36,200',
-      baggage: airlines[3].baggage,
-      wifi: airlines[3].wifi,
-      meal: airlines[3].meal,
-      rating: airlines[3].rating
-    }
-  ];
-  const inboundFlights = [
-    {
-      airlineLogo: airlines[1].logo,
-      airlineName: airlines[1].name,
-      departureTime: '14:20',
-      arrivalTime: '20:20',
-      departureCode: 'DXB',
-      arrivalCode: 'JFK',
-      departureCity: 'Dubai',
-      arrivalCity: 'New York',
-      duration: '10h 30m',
-      stops: 'non-stop',
-      layover: null,
-      price: '30,000',
-      baggage: airlines[1].baggage,
-      wifi: airlines[1].wifi,
-      meal: airlines[1].meal,
-      rating: airlines[1].rating
-    },
-    {
-      airlineLogo: airlines[0].logo,
-      airlineName: airlines[0].name,
-      departureTime: '16:00',
-      arrivalTime: '22:30',
-      departureCode: 'DXB',
-      arrivalCode: 'JFK',
-      departureCity: 'Dubai',
-      arrivalCity: 'New York',
-      duration: '11h 00m',
-      stops: '1 stop',
-      layover: '2h in Dubai',
-      price: '31,500',
-      baggage: airlines[0].baggage,
-      wifi: airlines[0].wifi,
-      meal: airlines[0].meal,
-      rating: airlines[0].rating
-    },
-    {
-      airlineLogo: airlines[2].logo,
-      airlineName: airlines[2].name,
-      departureTime: '18:30',
-      arrivalTime: '01:00',
-      departureCode: 'DXB',
-      arrivalCode: 'JFK',
-      departureCity: 'Dubai',
-      arrivalCity: 'New York',
-      duration: '12h 30m',
-      stops: '2 stops',
-      layover: '3h in Doha',
-      price: '29,800',
-      baggage: airlines[2].baggage,
-      wifi: airlines[2].wifi,
-      meal: airlines[2].meal,
-      rating: airlines[2].rating
-    },
-    {
-      airlineLogo: airlines[3].logo,
-      airlineName: airlines[3].name,
-      departureTime: '20:00',
-      arrivalTime: '02:30',
-      departureCode: 'DXB',
-      arrivalCode: 'JFK',
-      departureCity: 'Dubai',
-      arrivalCity: 'New York',
-      duration: '13h 00m',
-      stops: '1 stop',
-      layover: '1h 45m in Istanbul',
-      price: '32,200',
-      baggage: airlines[3].baggage,
-      wifi: airlines[3].wifi,
-      meal: airlines[3].meal,
-      rating: airlines[3].rating
-    }
-  ];
-
   return (
-    <div>
-      {/* Filter UI */}
-      <div className="mb-4 flex flex-wrap gap-3 items-center">
-        {/* Stops filter */}
-        <div className="flex gap-2 items-center">
-          <span className="text-xs font-medium text-gray-700">Stops:</span>
-          {stopsOptions.map(opt => (
+    <div className="space-y-4">
+      {/* Date selection card */}
+      <DatesCard 
+        dates={mockDates} 
+        selectedIdx={selectedDateIdx} 
+        onSelect={setSelectedDateIdx} 
+      />
+      
+      {/* Quick filters section */}
+      <QuickPriceFilters 
+        airlines={mockAirlines} 
+        selectedAirlines={selectedAirlines} 
+        onAirlineSelect={handleQuickFilterSelect} 
+      />
+      
+      {/* Price range filters */}
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-semibold text-gray-800">Price Range</h3>
+        <button 
+          className="text-xs text-primary font-medium hover:underline flex items-center"
+          onClick={toggleCouponValue}
+        >
+          {showCouponValue ? 'Hide coupon values' : 'Show prices with coupon applied'}
+        </button>
+      </div>
+      <PriceRangeFilters 
+        ranges={priceRanges} 
+        selectedRange={selectedRange} 
+        onChange={handlePriceRangeSelect} 
+      />
+      
+      {/* Sorting options */}
+      <SortOptions 
+        sortOption={sortOption} 
+        onSortChange={setSortOption} 
+      />
+      
+      {/* Trips/Flights list */}
+      <div className="rounded-md space-y-4 mt-2">
+        {/* Display enriched flights from mockFlights */}
+        {enrichedFlights.map((flight) => (
+          <div key={flight.id} className="relative">
+            <FlightListCard
+              outboundFlight={{
+                airlineLogo: flight.airlineLogo,
+                airlineName: flight.airline,
+                departureTime: flight.departureTime,
+                arrivalTime: flight.arrivalTime,
+                departureCode: flight.departureCode,
+                arrivalCode: flight.arrivalCode,
+                duration: flight.duration,
+                stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                date: "Wed, 15 May"
+              }}
+              returnFlight={{
+                airlineLogo: flight.airlineLogo,
+                airlineName: flight.airline,
+                departureTime: "08:20",
+                arrivalTime: "14:35",
+                departureCode: flight.arrivalCode,
+                arrivalCode: flight.departureCode,
+                duration: flight.duration,
+                stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                date: "Thu, 22 May"
+              }}
+              price={flight.price.toString()}
+              currency="₹"
+              stock={
+                flight.id === 1 ? "Only 3 seats left at this price" : 
+                flight.id === 2 ? "Only 4 seats left" : 
+                flight.id === 3 ? "Only 2 seats left" : 
+                "Last seat available!"
+              }
+              coupon="Special Offer"
+              promoBanner={flight.tags.includes('Eco Saver') ? "Eco-friendly choice - 20% less carbon emissions" : undefined}
+              baggageTag={flight.tags.includes('Direct Flight') ? "Extra Baggage" : undefined}
+              moreOptions={[
+                {
+                  outbound: {
+                    airlineLogo: flight.airlineLogo,
+                    airlineName: flight.airline,
+                    departureTime: "18:45",
+                    arrivalTime: "06:25",
+                    departureCode: flight.departureCode,
+                    arrivalCode: flight.arrivalCode,
+                    duration: "12h 40m",
+                    stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                    layover: flight.stops > 0 ? "2h 15m in DEL" : undefined,
+                    date: "Wed, 15 May"
+                  },
+                  return: {
+                    airlineLogo: flight.airlineLogo,
+                    airlineName: flight.airline,
+                    departureTime: "10:30",
+                    arrivalTime: "16:45",
+                    departureCode: flight.arrivalCode,
+                    arrivalCode: flight.departureCode,
+                    duration: "11h 15m",
+                    stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                    layover: flight.stops > 0 ? "1h 30m in AUH" : undefined,
+                    date: "Thu, 22 May"
+                  }
+                },
+                {
+                  outbound: {
+                    airlineLogo: flight.airlineLogo,
+                    airlineName: flight.airline,
+                    departureTime: "06:15",
+                    arrivalTime: "16:55",
+                    departureCode: flight.departureCode,
+                    arrivalCode: flight.arrivalCode,
+                    duration: "15h 40m",
+                    stops: "1 stop",
+                    layover: "3h 30m in DOH",
+                    date: "Wed, 15 May"
+                  },
+                  return: {
+                    airlineLogo: flight.airlineLogo,
+                    airlineName: flight.airline,
+                    departureTime: "22:45",
+                    arrivalTime: "05:20",
+                    departureCode: flight.arrivalCode,
+                    arrivalCode: flight.departureCode,
+                    duration: "11h 35m",
+                    stops: "1 stop",
+                    layover: "2h 15m in DOH",
+                    date: "Thu, 22 May"
+                  }
+                }
+              ]}
+              onBook={() => onViewTrip(flight)}
+              onDetails={() => console.log('View details', flight)}
+              showOptions={expanded}
+            />
+            {!expanded && (
             <button
-              key={opt.value}
-              className={cn(
-                'px-2 py-1 rounded text-xs border',
-                selectedStops.includes(opt.value)
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-              )}
-              onClick={() => setSelectedStops(selectedStops.includes(opt.value)
-                ? selectedStops.filter(s => s !== opt.value)
-                : [...selectedStops, opt.value])}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        {/* Wifi filter */}
-        <div className="flex gap-2 items-center">
-          <span className="text-xs font-medium text-gray-700">WiFi:</span>
-          <button
-            className={cn(
-              'px-2 py-1 rounded text-xs border',
-              wifiOnly ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-            )}
-            onClick={() => setWifiOnly(w => !w)}
-          >
-            Yes
-          </button>
-        </div>
-        {/* Meal filter */}
-        <div className="flex gap-2 items-center">
-          <span className="text-xs font-medium text-gray-700">Meal:</span>
-          {mealOptions.map(opt => (
-            <button
-              key={opt.value}
-              className={cn(
-                'px-2 py-1 rounded text-xs border',
-                selectedMeals.includes(opt.value)
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-              )}
-              onClick={() => setSelectedMeals(selectedMeals.includes(opt.value)
-                ? selectedMeals.filter(m => m !== opt.value)
-                : [...selectedMeals, opt.value])}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-      {/* Results count */}
-      <div className="mb-2 text-xs text-gray-600">{filteredTrips.length} results found</div>
-      {/* Price Category Summary Cards */}
-      <div className="mb-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="flex">
-          <div className={cn(
-            "flex-1 border-r border-gray-200 p-2.5 text-center relative",
-            selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
-          )}
-          onClick={() => setSelectedPriceCategory('cheapest')}
-          >
-            <div className="absolute top-2 right-2">
-              <TooltipProvider>
-                <Tooltip open={activeTooltip === 'cheapest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'cheapest' ? null : 'cheapest')}>
-                  <TooltipTrigger asChild>
-                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'cheapest' ? null : 'cheapest')}>
-                      <Info className="h-4 w-4 text-primary hover:text-gray-600" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
-                        <Info className="h-4 w-4 text-primary flex-shrink-0" />
-                        <p className="font-semibold text-gray-900">Cheapest Flight Option</p>
-                      </div>
-                      <div className="space-y-2.5">
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Lowest price available for your route</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">May include longer layovers</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Best for budget-conscious travelers</p>
-                        </div>
-                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                          <span className="text-sm font-medium text-gray-900">Current best deal:</span>
-                          <span className="text-sm font-semibold text-primary">₹45,717</span>
-                        </div>
-                      </div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <div className="text-sm text-gray-500">Cheapest</div>
-              <div className="text-xs text-gray-500">28h 00m</div>
-            </div>
-            <div className="font-bold text-lg">₹45,717</div>
-          </div>
-          <div className={cn(
-            "flex-1 border-r border-gray-200 p-2.5 text-center relative",
-            selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
-          )}
-          onClick={() => setSelectedPriceCategory('best')}
-          >
-            <div className="absolute top-2 right-2">
-              <TooltipProvider>
-                <Tooltip open={activeTooltip === 'best'} onOpenChange={() => setActiveTooltip(activeTooltip === 'best' ? null : 'best')}>
-                  <TooltipTrigger asChild>
-                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'best' ? null : 'best')}>
-                      <Info className="h-4 w-4 text-primary hover:text-gray-600" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
-                        <Info className="h-4 w-4 text-primary flex-shrink-0" />
-                        <p className="font-semibold text-gray-900">AI Recommended Best Option</p>
-                      </div>
-                      <div className="space-y-2.5">
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Optimal balance of price and comfort</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Popular choice among travelers</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Good airline ratings and reviews</p>
-                        </div>
-                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                          <span className="text-sm font-medium text-gray-900">Current price:</span>
-                          <span className="text-sm font-semibold text-primary">₹59,035</span>
-                        </div>
-                      </div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <div className="text-sm font-medium">Best</div>
-              <div className="text-xs text-gray-500">10h 15m</div>
-            </div>
-            <div className="font-bold text-lg">₹59,035</div>
-          </div>
-          <div className={cn(
-            "flex-1 p-2.5 text-center relative",
-            selectedPriceCategory === 'quickest' && "bg-blue-50 border-b-2 border-b-blue-600"
-          )}
-          onClick={() => setSelectedPriceCategory('quickest')}
-          >
-            <div className="absolute top-2 right-2">
-              <TooltipProvider>
-                <Tooltip open={activeTooltip === 'quickest'} onOpenChange={() => setActiveTooltip(activeTooltip === 'quickest' ? null : 'quickest')}>
-                  <TooltipTrigger asChild>
-                    <button className="focus:outline-none" onClick={() => setActiveTooltip(activeTooltip === 'quickest' ? null : 'quickest')}>
-                      <Info className="h-4 w-4 text-primary hover:text-gray-600" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="end" className="w-[280px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
-                        <Info className="h-4 w-4 text-primary flex-shrink-0" />
-                        <p className="font-semibold text-gray-900">Fastest Travel Option</p>
-                      </div>
-                      <div className="space-y-2.5">
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Shortest total travel time</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">•</span>
-                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Minimal layover duration</p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-0.5 flex-shrink-0">•</span>
-                          <p className="text-sm text-gray-600 text-left">Ideal for time-sensitive travelers</p>
-                        </div>
-                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                          <span className="text-sm font-medium text-gray-900">Current duration:</span>
-                          <span className="text-sm font-semibold text-blue-600">10h 15m</span>
-                        </div>
-                      </div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <div className="text-sm text-gray-500">Quickest</div>
-              <div className="text-xs text-gray-500">10h 15m</div>
-            </div>
-            <div className="font-bold text-lg">₹59,035</div>
-          </div>
-        </div>
-      </div>
-      {/* Summary Card (non-interactive, just summary) */}
-      <div className="flex gap-2 mb-2">
-        {summaryOptions.map(opt => (
-          <button
-            key={opt.value}
-            className={`px-3 py-1 rounded border text-sm font-medium transition-colors ${selectedSummary === opt.value ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => setSelectedSummary(opt.value)}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-      <div className="rounded-xl border border-gray-200 mb-6 overflow-hidden">
-        <FlightListCard
-          outboundFlight={summaryOption.outboundFlight}
-          returnFlight={summaryOption.returnFlight}
-          price={summaryOption.price}
-          currency={summaryOption.currency}
-          onBook={() => onViewTrip(summaryOption)}
-          showOptions={true}
-        />
-        {/* Dates Card below summary row card */}
-        <DatesCard dates={mockDates} selectedIdx={0} onSelect={() => {}} />
-        {/* Flight details link/section - just below summary row */}
-        <div className="px-4 py-1.5 flex items-start">
-          <button className="text-blue-600 text-sm font-medium hover:underline" onClick={() => {}}>Flight details</button>
-        </div>
-        {/* Divider after Flight Details Link */}
-        <div className="border-t border-gray-100" />
-        {/* Quick Price Filters inside summary card */}
-        <div className="pt-3 pb-4 px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {airlines.map((airline) => (
-              <button
-                key={airline.id}
-                className={cn(
-                  "flex items-center justify-between p-2.5 rounded-lg border transition-all h-[52px]",
-                  selectedQuickFilters.includes(airline.id)
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white hover:border-gray-300"
-                )}
-                onClick={() => handleQuickFilterSelect(airline.id)}
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1 text-xs font-medium rounded-full border border-gray-200 shadow-sm text-gray-600 hover:text-primary"
+                onClick={() => setExpanded(true)}
               >
-                <div className="flex items-center gap-2.5">
-                  <img 
-                    src={airline.logo} 
-                    alt={airline.name} 
-                    className="h-5 w-5 rounded bg-gray-100"
-                  />
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="text-left cursor-pointer">
-                    <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" className="w-[260px] p-4 bg-white border border-gray-200 shadow-lg rounded-lg text-left">
-                        <div className="space-y-1">
-                          <div className="font-semibold text-gray-900">{airline.name} ({airline.iata})</div>
-                          <div className="text-xs text-gray-500 mb-1">{airline.country} · {airline.alliance}</div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span>⭐ {airline.rating}</span>
-                            <span>On-time: {airline.onTime}%</span>
-                          </div>
-                          <div className="text-xs">Baggage: {airline.baggage}</div>
-                          <div className="text-xs">WiFi: {airline.wifi ? 'Yes' : 'No'}</div>
-                          <div className="text-xs">Meal: {airline.meal}</div>
-                          <div className="text-xs italic text-gray-600 mt-1">"{airline.review}"</div>
-                          <a href={airline.website} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">Visit website</a>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <div className="text-left">
-                    <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
-                  </div>
-                </div>
-                {selectedQuickFilters.includes(airline.id) && (
-                  <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                )}
-              </button>
-            ))}
+                Show more options
+            </button>
+            )}
           </div>
-        </div>
+        ))}
+        {expanded && (
+          <button
+            className="w-full bg-white py-2 text-sm font-medium text-gray-600 hover:text-primary border border-gray-200 rounded-md mt-2"
+            onClick={() => setExpanded(false)}
+          >
+            Show less
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,46 @@
+{
+  "flights": [
+    {
+      "id": "FL123",
+      "airline": "Flyin Airways",
+      "origin": "NYC",
+      "destination": "LAX",
+      "departureTime": "2023-06-15T08:00:00",
+      "arrivalTime": "2023-06-15T11:15:00",
+      "duration": "3h 15m",
+      "price": 299.99,
+      "currency": "USD",
+      "cabinClass": "Economy",
+      "seatsAvailable": 12,
+      "aircraft": "Boeing 737-800"
+    },
+    {
+      "id": "FL456",
+      "airline": "Flyin Airways",
+      "origin": "NYC",
+      "destination": "LAX",
+      "departureTime": "2023-06-15T12:30:00",
+      "arrivalTime": "2023-06-15T15:45:00",
+      "duration": "3h 15m",
+      "price": 329.99,
+      "currency": "USD",
+      "cabinClass": "Economy",
+      "seatsAvailable": 8,
+      "aircraft": "Airbus A320"
+    },
+    {
+      "id": "FL789",
+      "airline": "Flyin Airways",
+      "origin": "NYC",
+      "destination": "LAX",
+      "departureTime": "2023-06-15T16:15:00",
+      "arrivalTime": "2023-06-15T19:30:00",
+      "duration": "3h 15m",
+      "price": 279.99,
+      "currency": "USD",
+      "cabinClass": "Economy",
+      "seatsAvailable": 15,
+      "aircraft": "Boeing 737-800"
+    }
+  ]
+} 

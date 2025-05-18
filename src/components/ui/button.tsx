@@ -18,6 +18,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        searchButton: "bg-[#2A5298] text-white hover:bg-[#FFD700] hover:[&_svg]:text-[#0894FF] [&_svg]:transition-colors [&_svg]:text-white rounded-full",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -1,0 +1,101 @@
+# Flyin Product Requirements Document – Enhancement Update  
+
+## 1. overview  
+Flyin is a consumer flight-booking web application whose current React codebase has grown organically over several years.  While the visual design still meets brand standards, the underlying architecture suffers from excessive prop-drilling, large monolithic components, missing service layers, and inconsistent loading and error behaviours.  
+
+The purpose of this enhancement initiative is to modernise the technical stack, standardise UX patterns, and pave the way for future feature growth **without changing any visual elements**.  This document captures the full scope of work, requirements, and constraints for version 2.0 of Flyin.
+
+---
+
+## 2. current state and limitations  
+| Area | Limitation | Impact |
+| ---- | ---------- | ------ |
+| State management | Local component state and prop-drilling | Duplicated logic, brittle data flow, difficult debugging |
+| Components | Files up to 80 KB with mixed concerns | Slow onboarding, low reusability, high regression risk |
+| Data access | Direct API calls inside UI components | Tight coupling, hard to mock, testing friction |
+| Error handling | Ad-hoc `try/catch` and alert dialogs | Inconsistent user experience, minimal analytics |
+| Type safety | TypeScript in non-strict mode | Runtime bugs, incomplete autocomplete |
+| Loading UX | Loader variants hard-coded per screen | Layout shift, confusing progress cues |
+| Performance | No data caching, unnecessary re-renders | Slower perceived speed, higher server load |
+| Testing | Sparse unit coverage, no visual regression | High chance of unnoticed UI breakage |
+
+---
+
+## 3. goals and objectives  
+* **Maintain pixel-perfect design parity** while refactoring internals.  
+* **Increase developer velocity** through smaller, typed, documented components.  
+* **Improve perceived performance** via standardised loaders and data caching.  
+* **Harden quality** with visual regression, unit, component, and E2E tests.  
+* **Enable future expansion** (hotels, cars, loyalty) through modular architecture.  
+
+---
+
+## 4. functional requirements  
+
+### 4.1 technical architecture  
+| Feature | Requirement | Acceptance criteria |
+| ------- | ----------- | ------------------- |
+| Central state store | Redux Toolkit (or equivalent) with slices for search, booking, user | No visual change; state persists across refresh |
+| Service layer | `services/` directory for flight, user, payment, auth | UI receives the same data shape in both mock and prod |
+| Component decomposition | Split files >30 KB; ensure single responsibility | Storybook stories render identically to prod |
+| TypeScript strict mode | Enable `strict` and resolve all errors | CI passes `tsc --noEmit` with zero errors |
+
+### 4.2 ux consistency  
+| Feature | Requirement | Acceptance criteria |
+| ------- | ----------- | ------------------- |
+| Loading states | Skeletons and spinners from a shared library | No content shift; timing matches design tokens |
+| Form validation | Reusable rules, inline errors, summary banner | Behaviours match today’s error styles |
+| Responsive fixes | Central break-points; larger touch targets on mobile | Desktop layouts unchanged; mobile Lighthouse ≥ 90 |
+
+### 4.3 booking flow  
+* Persist seat selection, payment details, and confirmation data across steps.  
+* Support modify / cancel with optimistic UI updates.  
+* Full parity with existing visual cues and URLs.
+
+### 4.4 navigation patterns  
+* Standardise breadcrumbs, progress indicators, and keyboard focus order.  
+* Back-button and deep-link behaviour remains identical.
+
+### 4.5 scalability features  
+| Feature | Requirement |
+| ------- | ----------- |
+| Component reusability | Theme-aware presentational components with props |
+| Routing restructure | File-based routes, lazy loading, guarded paths |
+| Data caching | SWR / React-Query with configurable TTL, offline support |
+| Feature flags | Granular toggles, audience targeting, remote config |
+
+---
+
+## 5. integration points  
+* **REST APIs**: flight search, booking, user, payment, loyalty.  
+* **Authentication**: existing OAuth provider; token refresh.  
+* **Analytics**: Segment events for search, booking, error, flag exposure.  
+* **CI/CD**: GitHub Actions pipeline; visual regression in Percy; Cypress E2E.  
+* **Design tokens**: consume Figma-exported JSON for colours, spacing, motion.
+
+---
+
+## 6. non-functional requirements  
+| Category | Metric / Requirement |
+| -------- | -------------------- |
+| Performance | TTI ≤ 2.5 s on 3G; core vitals (LCP < 2.5 s, CLS < 0.1) |
+| Security | OWASP top-10 compliance; CSP headers; dependency scanning |
+| Accessibility | WCAG 2.1 AA for new code; keyboard and screen-reader support |
+| Scalability | Support 3× current daily peak traffic without cold-start delay |
+| Observability | Centralised logs, distributed tracing, error budget alerts |
+
+---
+
+## 7. technical debt to be addressed  
+* Monolithic `MainCuration.tsx`, `BookingPage.tsx`, `FilterChips.tsx`.  
+* Non-strict TypeScript and missing reusable types.  
+* Direct API calls inside UI components.  
+* Ad-hoc loaders and alert-based error messages.  
+* Absence of automated visual regression tests.
+
+---
+
+## 8. migration strategy and backward compatibility  
+1. **Dual-build phase**  
+   * Introduce feature flags to route a percentage of traffic to the new store and service layer while rendering legacy UI.  
+2. **Component strangler**

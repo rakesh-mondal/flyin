@@ -396,9 +396,9 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         <div className="flex items-center justify-center p-3">
           <Button 
             type="submit" 
-            className="h-12 w-12 rounded-full bg-primary p-0 hover:bg-primary-hover text-primary-foreground"
+            className="h-12 w-12 rounded-full bg-primary p-0 hover:bg-primary-hover text-primary-foreground group"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-5 w-5 group-hover:text-[#0894FF] transition-colors duration-300" />
           </Button>
         </div>
       </form>

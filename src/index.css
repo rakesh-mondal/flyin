@@ -123,3 +123,23 @@
     @apply transition-all duration-300 ease-out;
   }
 }
+
+/* Custom search button hover effect */
+.search-button {
+  background-color: #2A5298 !important;
+  color: white !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.search-button:hover {
+  background-color: #FFD700 !important;
+}
+
+.search-button svg {
+  color: white !important;
+  transition: color 0.3s ease !important;
+}
+
+.search-button:hover svg {
+  color: #0894FF !important;
+}

@@ -2,12 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Check, X as Cross, Luggage, Calendar, Armchair, Utensils } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const FEATURES = [
-  { key: 'freeCancellation', label: 'Free cancellation', icon: Calendar },
-  { key: 'freeDateChange', label: 'Free date change', icon: Calendar },
-  { key: 'freeSeatSelection', label: 'Free seat selection', icon: Armchair },
-  { key: 'freeMealSelection', label: 'Free meal selection', icon: Utensils },
+  { key: 'freeCancellation', label: 'Free cancellation' },
+  { key: 'freeDateChange', label: 'Free date change' },
+  { key: 'freeSeatSelection', label: 'Free seat selection' },
+  { key: 'freeMealSelection', label: 'Free meal selection' },
+  { key: 'checkInLuggage', label: 'Check-in luggage' },
 ];
 
 const LEGEND = [
@@ -25,15 +27,17 @@ function getFareOptions(trip) {
     {
       id: 'base',
       label: 'Base fare',
-      price: 500,
+      price: 350,
       currency: 'AED',
-      description: '', // Removed description
       features: {
-        baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
+        baggage: {
+          cabin: 'Cabin luggage 7 kg',
+          checkin: 'Check-in luggage 15 kg'
+        },
         cancellation: false,
         cancellationFee: 200,
-        dateChange: true,
-        dateChangeFee: 25,
+        dateChange: false,
+        dateChangeFee: 200,
         seatSelection: false,
         mealSelection: false,
       },
@@ -41,46 +45,58 @@ function getFareOptions(trip) {
     },
     {
       id: 'flex',
-      label: 'Flyin Flex',
-      price: 590,
+      label: 'Cleartrip Flex',
+      price: 450,
       currency: 'AED',
-      description: '', // Removed description
       features: {
-        baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
+        baggage: {
+          cabin: 'Cabin luggage 7 kg',
+          checkin: 'Check-in luggage 15 kg'
+        },
         cancellation: true,
         cancellationFee: 25,
         dateChange: true,
         dateChangeFee: 25,
         seatSelection: true,
-        mealSelection: false,
-      },
-      promo: 'Get Flat AED 80 off using TRYCT for new users',
-      highlight: 'CTSPECIAL',
-    },
-    {
-      id: 'standard',
-      label: 'Standard fare',
-      price: 615,
-      currency: 'AED',
-      description: '', // Removed description
-      features: {
-        baggage: 'Cabin luggage 7 kg, Check-in luggage 15 kg',
-        cancellation: false,
-        cancellationFee: 25,
-        dateChange: true,
-        dateChangeFee: 25,
-        seatSelection: true,
-        mealSelection: false,
+        mealSelection: true,
       },
       promo: 'Get Flat AED 80 off using TRYCT for new users',
       highlight: 'Best deal',
+      badge: 'CTSPECIAL',
+    },
+    {
+      id: 'premium',
+      label: 'Flex fare',
+      price: 550,
+      currency: 'AED',
+      features: {
+        baggage: {
+          cabin: 'Cabin luggage 7 kg',
+          checkin: 'Check-in luggage 15 kg'
+        },
+        cancellation: true,
+        cancellationFee: 25,
+        dateChange: false,
+        dateChangeFee: 200,
+        seatSelection: false,
+        mealSelection: true,
+        expressCheckIn: true,
+        priorityBoarding: true,
+      },
     },
   ];
 }
 
 function featureMatch(option, filters) {
   // Only show cards that match all checked filters
-  return FEATURES.every(f => !filters[f.key] || option.features[f.key] === true);
+  return Object.entries(filters).every(([key, value]) => !value || (
+    key === 'freeCancellation' ? option.features.cancellation : 
+    key === 'freeDateChange' ? option.features.dateChange :
+    key === 'freeSeatSelection' ? option.features.seatSelection :
+    key === 'freeMealSelection' ? option.features.mealSelection :
+    key === 'checkInLuggage' ? option.features.baggage.checkin :
+    false
+  ));
 }
 
 const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
@@ -89,144 +105,397 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
     freeDateChange: false,
     freeSeatSelection: false,
     freeMealSelection: false,
+    checkInLuggage: false,
   });
-
+  
   const fareOptions = useMemo(() => getFareOptions(trip), [trip]);
   const filteredOptions = useMemo(
     () => fareOptions.filter(option => featureMatch(option, filters)),
     [fareOptions, filters]
   );
-
+  
+  const [selectedFare, setSelectedFare] = useState(filteredOptions[1]?.id || filteredOptions[0]?.id || '');
+  
+  // Track removed features by fare ID
+  const [removedFeatures, setRemovedFeatures] = useState({
+    flex: {
+      cancellation: false,
+      dateChange: false,
+      seatSelection: false,
+      mealSelection: false
+    },
+    premium: {
+      cancellation: false,
+      dateChange: false,
+      seatSelection: false,
+      mealSelection: false
+    }
+  });
+  
+  // Toggle feature removal for a specific fare
+  const toggleFeature = (fareId, feature) => {
+    setRemovedFeatures(prev => ({
+      ...prev,
+      [fareId]: {
+        ...prev[fareId],
+        [feature]: !prev[fareId]?.[feature]
+      }
+    }));
+  };
+  
   if (!trip) return null;
+  
+  const handleContinue = () => {
+    const selected = filteredOptions.find(option => option.id === selectedFare);
+    if (selected) {
+      // Apply feature removals to the selected fare
+      const modifiedSelectedFare = {
+        ...selected,
+        features: {
+          ...selected.features,
+          cancellation: removedFeatures[selected.id]?.cancellation ? false : selected.features.cancellation,
+          dateChange: removedFeatures[selected.id]?.dateChange ? false : selected.features.dateChange,
+          seatSelection: removedFeatures[selected.id]?.seatSelection ? false : selected.features.seatSelection,
+          mealSelection: removedFeatures[selected.id]?.mealSelection ? false : selected.features.mealSelection,
+        }
+      };
+      onFareSelected({ ...trip, selectedFare: modifiedSelectedFare });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
-      <DialogContent className="max-w-5xl w-full">
-        <DialogHeader>
-          <DialogTitle>Select your fare</DialogTitle>
-        </DialogHeader>
-        {/* Airline logo and name below the title */}
-        <div className="flex items-center gap-2">
-          {trip.outbound?.airlineLogo && (
-            <img src={trip.outbound.airlineLogo} alt={trip.outbound.airlineName} className="h-7 w-7 object-contain" />
-          )}
-          <span className="font-semibold text-base">{trip.outbound?.airlineName || 'Airline'}</span>
-        </div>
-        {/* Price, Outbound/Return details, Stops */}
-        <div className="flex flex-col gap-0 text-sm text-gray-700 ml-9">
-          <span>
-            {(trip.outbound?.departureCity || trip.outbound?.departureCode) + ' → ' + (trip.outbound?.arrivalCity || trip.outbound?.arrivalCode)} {trip.outbound?.departureTime} - {trip.outbound?.arrivalTime}
-            {trip.outbound?.stops !== undefined && (
-              <span> · {trip.outbound.stops}</span>
-            )}
-          </span>
-          {trip.return && (
-            <span>
-              {(trip.return.departureCity || trip.return.departureCode) + ' → ' + (trip.return.arrivalCity || trip.return.arrivalCode)} {trip.return.departureTime} - {trip.return.arrivalTime}
-              {trip.return.stops !== undefined && (
-                <span> · {trip.return.stops}</span>
-              )}
-            </span>
-          )}
-        </div>
-        {/* Quick feature filter bar (checkboxes) */}
-        <div className="flex gap-4 mb-6">
-          {FEATURES.map(f => (
-            <label key={f.key} className="flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={filters[f.key]}
-                onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })}
-                className="accent-black"
-              />
-              <span className="text-sm text-gray-700">{f.label}</span>
-            </label>
-          ))}
-        </div>
-        <div className="overflow-x-auto w-full">
-          <div
-            className="grid w-full"
-            style={{
-              gridTemplateColumns: `180px repeat(${filteredOptions.length}, minmax(260px, 1fr))`,
-              gridTemplateRows: 'auto repeat(5, 48px) auto',
-            }}
-          >
-            {/* Legend column: header is empty, then features */}
-            <div className="border-r pr-6" style={{ gridRow: '1 / span 1' }}></div>
-            <div className="flex items-center gap-3 border-r pr-6" style={{ gridRow: 2 }}><Luggage className="h-5 w-5 text-gray-500" /><span className="text-xs text-gray-700">Baggage</span></div>
-            <div className="flex items-center gap-3 border-r pr-6" style={{ gridRow: 3 }}><Calendar className="h-5 w-5 text-gray-500" /><span className="text-xs text-gray-700">Cancellation fee</span></div>
-            <div className="flex items-center gap-3 border-r pr-6" style={{ gridRow: 4 }}><Calendar className="h-5 w-5 text-gray-500" /><span className="text-xs text-gray-700">Date Change fee</span></div>
-            <div className="flex items-center gap-3 border-r pr-6" style={{ gridRow: 5 }}><Armchair className="h-5 w-5 text-gray-500" /><span className="text-xs text-gray-700">Seat selection</span></div>
-            <div className="flex items-center gap-3 border-r pr-6" style={{ gridRow: 6 }}><Utensils className="h-5 w-5 text-gray-500" /><span className="text-xs text-gray-700">Meal selection</span></div>
-            {/* Fare cards, one column per fare */}
-            {filteredOptions.map((option, colIdx) => (
-              <React.Fragment key={option.id}>
-                {/* Card header: airline logo, name, label, price, description, highlight, stops */}
-                <div
-                  className="border rounded-lg bg-white relative shadow-sm mx-2 px-5 pt-5 pb-2 flex flex-col items-center"
-                  style={{ gridColumn: colIdx + 2, gridRow: 1 }}
-                >
-                  {option.highlight && (
-                    <div className="absolute top-3 right-3 bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">
-                      {option.highlight}
-                    </div>
-                  )}
-                  <div className="font-semibold mb-1 text-sm">{option.label}</div>
-                  <div className="text-2xl font-bold mb-2">{option.currency} {option.price}</div>
-                  <div className="text-xs text-gray-600 mb-2">{option.description}</div>
-                </div>
-                {/* Baggage */}
-                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 2 }}>
-                  <Luggage className="h-4 w-4 text-gray-400" />
-                  <span>{option.features.baggage}</span>
-                </div>
-                {/* Cancellation fee */}
-                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 3 }}>
-                  {option.features.cancellation ? (
-                    <><Check className="inline h-4 w-4 text-green-600" /> Free cancellation for AED {option.features.cancellationFee}</>
-                  ) : (
-                    <><Cross className="inline h-4 w-4 text-gray-400" /> Starts at AED {option.features.cancellationFee}</>
-                  )}
-                </div>
-                {/* Date Change fee */}
-                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 4 }}>
-                  {option.features.dateChange ? (
-                    <><Check className="inline h-4 w-4 text-green-600" /> Free date change for AED {option.features.dateChangeFee}</>
-                  ) : (
-                    <><Cross className="inline h-4 w-4 text-gray-400" /> Paid date change</>
-                  )}
-                </div>
-                {/* Seat selection */}
-                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 5 }}>
-                  {option.features.seatSelection ? (
-                    <><Check className="inline h-4 w-4 text-green-600" /> Free seat selection</>
-                  ) : (
-                    <><Cross className="inline h-4 w-4 text-gray-400" /> Paid seat</>
-                  )}
-                </div>
-                {/* Meal selection */}
-                <div className="flex items-center gap-2 px-5 text-sm" style={{ gridColumn: colIdx + 2, gridRow: 6 }}>
-                  {option.features.mealSelection ? (
-                    <><Check className="inline h-4 w-4 text-green-600" /> Free meal</>
-                  ) : (
-                    <><Cross className="inline h-4 w-4 text-gray-400" /> Paid meal</>
-                  )}
-                </div>
-                {/* Promo and select button (immediately after features) */}
-                <div className="px-5 pb-5" style={{ gridColumn: colIdx + 2, gridRow: 7 }}>
-                  <div className="text-xs text-green-700 bg-green-50 rounded px-2 py-1 mb-2 font-medium">
-                    {option.promo}
-                  </div>
-                  <Button className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-[#194E91] w-full py-3 rounded-lg font-semibold text-lg mt-2" onClick={() => onFareSelected({ ...trip, selectedFare: option })}>
-                    Select
-                  </Button>
-                </div>
-              </React.Fragment>
+      <DialogContent className="max-w-7xl w-full p-0 overflow-hidden">
+        <div className="p-6">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">Select your fare</DialogTitle>
+          </DialogHeader>
+          
+          {/* Flight details */}
+          <div className="mt-1 text-sm text-gray-500">
+            {trip.outbound?.departureCode || 'JFK'} → {trip.outbound?.arrivalCode || 'LHR'} · {trip.outbound?.departureDate || 'Fri, 28 Mar'}
+          </div>
+          
+          {/* Filter checkboxes */}
+          <div className="flex flex-wrap gap-4 mt-3 border-b pb-4">
+            {FEATURES.map(f => (
+              <label key={f.key} className="flex items-center gap-1.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={filters[f.key]}
+                  onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 accent-blue-700"
+                />
+                <span className="text-sm text-gray-700">{f.label}</span>
+              </label>
             ))}
           </div>
-          {filteredOptions.length === 0 && (
-            <div className="text-gray-400 text-sm mt-4">No fares match the selected filters.</div>
-          )}
+          
+          {/* Fare selection */}
+          <div className="mt-4">
+            <div className="flex">
+              {/* Left column with labels */}
+              <div className="w-44 pt-10 bg-[#F9FAFB] pl-6">
+                <div className="text-lg font-semibold mb-8">Plans</div>
+                
+                <div className="flex items-center gap-2 h-[68px]">
+                  <Luggage className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Baggage</span>
+                </div>
+                
+                <div className="flex items-center gap-2 h-[40px]">
+                  <Calendar className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Cancellation</span>
+                </div>
+                
+                <div className="flex items-center gap-2 h-[40px]">
+                  <Calendar className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Date Change</span>
+                </div>
+                
+                <div className="flex items-center gap-2 h-[40px]">
+                  <Armchair className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Seat selection</span>
+                </div>
+                
+                <div className="flex items-center gap-2 h-[40px]">
+                  <Utensils className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Meal</span>
+                </div>
+                
+                <div className="flex items-center gap-2 h-[84px]">
+                  <span className="text-sm font-medium">Exclusive benefits</span>
+                </div>
+              </div>
+              
+              {/* Fare cards */}
+              <div className="flex-1">
+                <RadioGroup 
+                  value={selectedFare} 
+                  onValueChange={setSelectedFare}
+                  className="grid grid-cols-3 gap-1"
+                >
+                  {filteredOptions.map((option) => (
+                    <div key={option.id} className="relative">
+                      {option.highlight && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white text-[#184E91] text-xs px-4 py-0.5 rounded-b-md z-10 border border-[#184E91]">
+                          {option.highlight}
+                        </div>
+                      )}
+                      
+                      <div className={`border-2 ${selectedFare === option.id ? 'border-[#184E91]' : 'border-gray-200'} rounded-lg overflow-hidden transition-all duration-200`}>
+                        <div className="pt-8 pb-3 flex flex-col items-center relative border-b">
+                          {option.badge && (
+                            <div className="absolute right-3 top-3 bg-green-500 text-white text-xs px-2 py-0.5 rounded">
+                              {option.badge}
+                            </div>
+                          )}
+                          
+                          <div className="absolute top-4 left-4">
+                            <RadioGroupItem value={option.id} id={option.id} className="h-5 w-5 text-blue-700" />
+                          </div>
+                          
+                          <div className="text-base font-medium">{option.label}</div>
+                          <div className="text-3xl font-bold">{option.currency} {option.price}</div>
+                        </div>
+                        
+                        {/* Baggage */}
+                        <div className="px-3 py-2 border-b h-[68px]">
+                          <div className="flex items-start gap-2">
+                            <Check className="h-5 w-5 mt-0.5 text-green-500 flex-shrink-0" />
+                            <span className="text-sm">{option.features.baggage.cabin}</span>
+                          </div>
+                          <div className="flex items-start gap-2 mt-1">
+                            <Check className="h-5 w-5 mt-0.5 text-green-500 flex-shrink-0" />
+                            <span className="text-sm">{option.features.baggage.checkin}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Cancellation */}
+                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                          {option.features.cancellation && !removedFeatures[option.id]?.cancellation ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Free cancellation for AED 25</span>
+                                {option.id === 'flex' && (
+                                  <span 
+                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleFeature(option.id, 'cancellation');
+                                    }}
+                                  >
+                                    Remove
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ) : option.features.cancellation && removedFeatures[option.id]?.cancellation ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Cancellation fee starts at AED 200</span>
+                                <span 
+                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFeature(option.id, 'cancellation');
+                                  }}
+                                >
+                                  Add
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-start gap-2">
+                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
+                              <span className="text-sm min-w-[120px]">Cancellation fee starts at AED 200</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Date Change */}
+                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                          {option.features.dateChange && !removedFeatures[option.id]?.dateChange ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Free date change for AED 25</span>
+                                {option.id === 'flex' && (
+                                  <span 
+                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleFeature(option.id, 'dateChange');
+                                    }}
+                                  >
+                                    Remove
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ) : option.features.dateChange && removedFeatures[option.id]?.dateChange ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Date change fee starts at AED 200</span>
+                                <span 
+                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFeature(option.id, 'dateChange');
+                                  }}
+                                >
+                                  Add
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-start gap-2">
+                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
+                              <span className="text-sm min-w-[120px]">Date change fee starts at AED 200</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Seat selection */}
+                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                          {option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Seat selection for AED 25</span>
+                                {option.id === 'flex' && (
+                                  <span 
+                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleFeature(option.id, 'seatSelection');
+                                    }}
+                                  >
+                                    Remove
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ) : option.features.seatSelection && removedFeatures[option.id]?.seatSelection ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Chargeable seat</span>
+                                <span 
+                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFeature(option.id, 'seatSelection');
+                                  }}
+                                >
+                                  Add
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-start gap-2">
+                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
+                              <span className="text-sm min-w-[120px]">Chargeable seat</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Meal selection */}
+                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                          {option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Meal selection for AED 25</span>
+                                {option.id === 'flex' && (
+                                  <span 
+                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleFeature(option.id, 'mealSelection');
+                                    }}
+                                  >
+                                    Remove
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ) : option.features.mealSelection && removedFeatures[option.id]?.mealSelection ? (
+                            <div className="flex items-center gap-2 w-full">
+                              <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
+                              <div className="flex-1 flex justify-between items-center">
+                                <span className="text-sm transition-all duration-200 min-w-[120px]">Chargeable meal</span>
+                                <span 
+                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFeature(option.id, 'mealSelection');
+                                  }}
+                                >
+                                  Add
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-start gap-2">
+                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
+                              <span className="text-sm min-w-[120px]">Chargeable meal</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Exclusive benefits - Fixed height to prevent layout shift */}
+                        <div className="px-3 py-3 h-[84px] overflow-y-auto">
+                          {option.promo ? (
+                            <div className="bg-green-50 rounded p-2 flex items-start gap-2">
+                              <div className="text-green-500 font-bold text-xl mt-0.5">⊕</div>
+                              <div className="text-sm text-green-700">
+                                {option.promo}
+                              </div>
+                            </div>
+                          ) : option.features.expressCheckIn ? (
+                            <div className="flex flex-col gap-1 mt-1">
+                              <div className="flex items-center gap-2">
+                                <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                <span className="text-sm">Express Check-in</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                <span className="text-sm">Priority Boarding</span>
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </RadioGroup>
+                
+                {filteredOptions.length === 0 && (
+                  <div className="text-gray-400 text-center p-8">No fares match the selected filters.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Footer with price and continue button */}
+        <div className="flex items-center justify-between bg-white border-t p-4">
+          <div>
+            <div className="text-2xl font-bold">
+              AED {filteredOptions.find(o => o.id === selectedFare)?.price || 450}
+            </div>
+            <div className="text-sm text-gray-500">per person</div>
+          </div>
+          <Button 
+            onClick={handleContinue}
+            className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 min-w-[110px]"
+          >
+            Continue
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

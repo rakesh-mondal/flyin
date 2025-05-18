@@ -7,6 +7,36 @@ import { cn } from '@/lib/utils';
 import { GlowEffect } from './ui/glow-effect';
 import DualModeSearch from './DualModeSearch';
 
+// Custom SearchButton component with state management
+const SearchButton = () => {
+  const [isHovering, setIsHovering] = useState(false);
+  
+  return (
+    <Button 
+      type="submit" 
+      size="icon" 
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      style={{
+        height: '40px',
+        width: '40px',
+        borderRadius: '9999px',
+        backgroundColor: isHovering ? '#FFD700' : '#2A5298',
+        transition: 'background-color 0.3s ease',
+      }}
+    >
+      <Search 
+        style={{
+          height: '20px',
+          width: '20px',
+          color: isHovering ? '#0894FF' : 'white',
+          transition: 'color 0.3s ease',
+        }} 
+      />
+    </Button>
+  );
+};
+
 const flightSuggestions = [
   { id: 1, title: 'Cultural Dubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
   { id: 2, title: 'Magical Istanbul', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'For You', departure: 'LGA' },
@@ -113,13 +143,47 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
           >
             <Mic className="h-5 w-5" />
           </Button>
-          <Button 
-            type="submit" 
-            size="icon" 
-            className="h-10 w-10 rounded-full bg-black text-white hover:bg-black/90"
+          
+          {/* COMPLETELY REPLACEMENT BUTTON */}
+          <button 
+            type="submit"
+            onClick={() => {
+              console.log("SEARCH BUTTON CLICKED!");
+              document.body.style.backgroundColor = 'yellow';
+            }}
+            onMouseEnter={() => {
+              console.log("HOVERING ON SEARCH BUTTON!");
+              const btn = document.getElementById('search-btn');
+              if (btn) {
+                btn.style.backgroundColor = '#FFD700'; // Yellow
+                const icon = btn.querySelector('svg');
+                if (icon) icon.style.color = '#0894FF'; // Blue
+              }
+            }}
+            onMouseLeave={() => {
+              console.log("LEFT SEARCH BUTTON!");
+              const btn = document.getElementById('search-btn');
+              if (btn) {
+                btn.style.backgroundColor = '#2A5298'; // Blue
+                const icon = btn.querySelector('svg');
+                if (icon) icon.style.color = 'white';
+              }
+            }}
+            id="search-btn"
+            style={{
+              height: '40px',
+              width: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#2A5298',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
-            <Search className="h-5 w-5" />
-          </Button>
+            <Search style={{ color: 'white', height: '20px', width: '20px' }} />
+          </button>
         </div>
       </div>
     </form>

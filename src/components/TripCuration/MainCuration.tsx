@@ -770,7 +770,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[0].baggage,
       wifi: airlines[0].wifi,
       meal: airlines[0].meal,
-      rating: airlines[0].rating
+      rating: airlines[0].rating,
+      stock: '',
+      onTimePerformance: '80% On time'
     },
     {
       airlineLogo: airlines[1].logo,
@@ -788,7 +790,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[1].baggage,
       wifi: airlines[1].wifi,
       meal: airlines[1].meal,
-      rating: airlines[1].rating
+      rating: airlines[1].rating,
+      stock: '2 seats left'
     },
     {
       airlineLogo: airlines[2].logo,
@@ -806,7 +809,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
       meal: airlines[2].meal,
-      rating: airlines[2].rating
+      rating: airlines[2].rating,
+      stock: ''
     },
     {
       airlineLogo: airlines[3].logo,
@@ -843,7 +847,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[4].baggage,
       wifi: airlines[4].wifi,
       meal: airlines[4].meal,
-      rating: airlines[4].rating
+      rating: airlines[4].rating,
+      onTimePerformance: '85% On time'
     },
     {
       airlineLogo: airlines[5].logo,
@@ -953,7 +958,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[1].baggage,
       wifi: airlines[1].wifi,
       meal: airlines[1].meal,
-      rating: airlines[1].rating
+      rating: airlines[1].rating,
+      stock: '3 seats left',
+      onTimePerformance: '92% On time'
     },
     {
       airlineLogo: airlines[0].logo,
@@ -971,7 +978,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[0].baggage,
       wifi: airlines[0].wifi,
       meal: airlines[0].meal,
-      rating: airlines[0].rating
+      rating: airlines[0].rating,
+      stock: ''
     },
     {
       airlineLogo: airlines[2].logo,
@@ -1007,7 +1015,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[3].baggage,
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
-      rating: airlines[3].rating
+      rating: airlines[3].rating,
+      onTimePerformance: '78% On time'
     },
     // Additional airlines
     {
@@ -1770,12 +1779,21 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                       <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      {/* Removed: <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span> */}
+                                      {option.onTimePerformance && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#edf7ed] text-[#4d7c4d] border border-[#e5f2e5] ml-1">
+                                          {option.onTimePerformance}
+                                        </span>
+                                      )}
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
                                       <span>{option.airlineName}</span>
                                       <span>· {option.stops}</span>
                                       {option.layover && <span>· {option.layover}</span>}
+                                      {option.stock && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                          {option.stock}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                   <div className="text-right flex flex-col items-end justify-between h-full">
@@ -1835,12 +1853,21 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                       <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      {/* Removed: <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span> */}
+                                      {option.onTimePerformance && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#edf7ed] text-[#4d7c4d] border border-[#e5f2e5] ml-1">
+                                          {option.onTimePerformance}
+                                        </span>
+                                      )}
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
                                       <span>{option.airlineName}</span>
                                       <span>· {option.stops}</span>
                                       {option.layover && <span>· {option.layover}</span>}
+                                      {!option.onTimePerformance && option.stock && (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                          {option.stock}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                   <div className="text-right flex flex-col items-end justify-between h-full">
