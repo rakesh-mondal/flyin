@@ -21,6 +21,7 @@ import SearchHeader from './SearchHeader';
 import { SlidingNumber } from '@/components/ui/sliding-number';
 import { format, addDays } from 'date-fns';
 import { GlowEffect } from '@/components/ui/glow-effect';
+import { FlightDetails } from '../trip-detail/FlightDetails';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -1904,137 +1905,90 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       />
       {/* Drawer for More info */}
       {drawerOpen && drawerFlight && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/30" onClick={() => setDrawerOpen(false)}>
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={() => setDrawerOpen(false)}>
           <div
-            className="bg-white shadow-lg h-full w-[420px] p-6 flex flex-col animate-slide-in-right relative"
+            className="bg-white shadow-lg h-full w-[520px] flex flex-col animate-slide-in-right relative overflow-auto"
             style={{
-              animation: 'slideInRight 0.3s cubic-bezier(0.4,0,0.2,1)',
-              transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
-              transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)'
+              animation: 'slideInRight 0.3s ease-out',
+              transform: 'translateX(0)',
+              transition: 'transform 0.3s ease-out',
             }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Close icon at top right */}
-            <button className="absolute top-4 right-4 text-gray-400 hover:text-black" onClick={() => setDrawerOpen(false)} aria-label="Close">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-            <h2 className="text-lg font-bold mb-4">Flight Details</h2>
-            {/* Airline info row (logo, name, flight number, cabin) */}
-            <div className="flex items-center gap-4 mb-6">
-              <img src={drawerFlight.airlineLogo} alt={drawerFlight.airlineName} className="h-10 w-10 rounded bg-gray-100 border" />
-              <div className="flex flex-col min-w-0">
-                <span className="font-bold text-base text-black truncate">{drawerFlight.airlineName}</span>
-                <span className="text-xs text-gray-500 mt-0.5 font-normal">Flight: <span className="font-normal">EK 501</span></span>
-                <span className="text-xs text-gray-500 font-normal">Economy</span>
-              </div>
-            </div>
-            {/* Flight details section (no duplicate heading) */}
-            <div className="mb-5">
-              <div className="flex items-center gap-3 mb-1">
-                <span className="text-lg font-bold text-black">{drawerFlight.departureTime}</span>
-                <span className="text-base font-semibold text-blue-900">{drawerFlight.departureCode}</span>
-                <span className="mx-1 text-gray-400">
-                  <svg width="24" height="16" fill="none" viewBox="0 0 24 16"><path d="M2 8h20m0 0l-4-4m4 4l-4 4" stroke="#194E91" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </span>
-                <span className="text-base font-semibold text-blue-900">{drawerFlight.arrivalCode}</span>
-                <span className="text-lg font-bold text-black">{drawerFlight.arrivalTime}</span>
-              </div>
-              <div className="flex items-center gap-6 mb-1">
-                <span className="text-xs text-gray-500">{drawerFlight.departureCity || ''}</span>
-                <span className="text-xs text-gray-400">→</span>
-                <span className="text-xs text-gray-500">{drawerFlight.arrivalCity || ''}</span>
-              </div>
-              <div className="text-sm text-gray-700">
-                Duration: <span className="font-medium">{drawerFlight.duration}</span>
-                <span className="mx-1">·</span>
-                <span>{drawerFlight.stops}</span>
-              </div>
-              {drawerFlight.layover && (
-                <div className="text-xs text-gray-500 mt-1">Layover: {drawerFlight.layover}</div>
-              )}
-            </div>
-            {/* Aircraft info section */}
-            <div className="mb-5">
-              <div className="font-bold text-base mb-1">Aircraft Information</div>
-              <div className="text-sm text-gray-700 mb-1">Type: Boeing 777-300ER</div>
-              <div className="text-sm text-gray-700 mb-1">Seat Configuration: 3-4-3</div>
-            </div>
-            {/* Baggage details section */}
-            <div className="mb-5">
-              <div className="font-bold text-base mb-1">Baggage Details</div>
-              <div className="flex items-center text-sm text-gray-700 mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                Check-in: 23kg
-              </div>
-              <div className="flex items-center text-sm text-gray-700 mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                Cabin: 7kg
-              </div>
-            </div>
-            {/* Airport info section */}
-            <div className="mb-5">
-              <div className="font-bold text-base mb-2">Airport Information</div>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center text-sm text-gray-700">
-                  {/* Prayer Room Icon */}
-                  <svg className="h-5 w-5 text-blue-700 mr-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m0 0l-7-7m7 7l7-7" /></svg>
-                  <span className="font-medium text-gray-900">Prayer Room:</span>
-                  <span className="ml-1 text-gray-700">Near Gate 12</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  {/* Lounge Icon */}
-                  <svg className="h-5 w-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="7" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="1.5"/></svg>
-                  <span className="font-medium text-gray-900">Lounges:</span>
-                  <span className="ml-1 text-gray-700">Emirates Lounge, Priority Pass</span>
-                </div>
-              </div>
-              {/* Food options remain unchanged below */}
-              <div className="text-sm text-gray-700 mt-3">
-                <div className="flex items-center mb-1">
-                  <span className="font-medium text-gray-900">Food Options:</span>
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  <span className="flex items-center gap-2">
-                    <img src="https://logo.clearbit.com/starbucks.com" alt="Starbucks" className="h-6 w-6 rounded shadow border bg-white" />
-                    <span className="font-medium text-gray-900">Starbucks</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <img src="https://logo.clearbit.com/shakeshack.com" alt="Shake Shack" className="h-6 w-6 rounded shadow border bg-white" />
-                    <span className="font-medium text-gray-900">Shake Shack</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <img src="https://logo.clearbit.com/mcdonalds.com" alt="McDonald's" className="h-6 w-6 rounded shadow border bg-white" />
-                    <span className="font-medium text-gray-900">McDonald's</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <img src="https://logo.clearbit.com/subway.com" alt="Subway" className="h-6 w-6 rounded shadow border bg-white" />
-                    <span className="font-medium text-gray-900">Subway</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            {/* Amenities section */}
-            <div className="mb-5">
-              <div className="font-bold text-base mb-1">Amenities</div>
-              <div className="flex flex-wrap gap-3 text-sm text-gray-700">
-                <span className="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
-                  Wi-Fi
-                </span>
-                <span className="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6.75 12.75l4.5 4.5 6-6" /></svg>
-                  Power Outlets
-                </span>
-                <span className="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17.25l4.5-4.5-4.5-4.5" /></svg>
-                  Entertainment
-                </span>
-                <span className="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                  Meals
-                </span>
-              </div>
-            </div>
+            <FlightDetails 
+              flight={{
+                airline: drawerFlight.airlineName,
+                flightNumber: "AI 840", 
+                class: "Economy", 
+                departureTime: drawerFlight.departureTime,
+                departureCode: drawerFlight.departureCode,
+                departureCity: drawerFlight.departureCity || drawerFlight.departureCode,
+                arrivalTime: drawerFlight.arrivalTime,
+                arrivalCode: drawerFlight.arrivalCode,
+                arrivalCity: drawerFlight.arrivalCity || drawerFlight.arrivalCode,
+                duration: drawerFlight.duration,
+                stopType: drawerFlight.stops === 'Non-stop' ? 'non-stop' : drawerFlight.stops,
+                date: "Fri, 30 May",
+                segments: [
+                  {
+                    airline: drawerFlight.airlineName,
+                    flightNumber: "AI 840",
+                    departureTime: drawerFlight.departureTime,
+                    departureCode: drawerFlight.departureCode,
+                    departureCity: drawerFlight.departureCity || drawerFlight.departureCode,
+                    departureAirport: "King Khaled Int'l",
+                    arrivalTime: "15:05",
+                    arrivalCode: "JED",
+                    arrivalCity: "Jeddah",
+                    arrivalAirport: "King Abdulaziz Int'l",
+                    duration: "1h 55m",
+                    date: "Mon, 19 May"
+                  },
+                  {
+                    airline: drawerFlight.airlineName,
+                    flightNumber: "AI 853",
+                    departureTime: "16:05",
+                    departureCode: "JED",
+                    departureCity: "Jeddah",
+                    departureAirport: "King Abdulaziz Int'l",
+                    arrivalTime: drawerFlight.arrivalTime,
+                    arrivalCode: drawerFlight.arrivalCode,
+                    arrivalCity: drawerFlight.arrivalCity || drawerFlight.arrivalCode,
+                    arrivalAirport: "Dubai Int'l",
+                    duration: "3h",
+                    date: "Mon, 19 May"
+                  }
+                ],
+                layover: "1hr layover in Jeddah",
+                price: "₹35,909",
+                aircraft: {
+                  type: "Boeing 777-300ER",
+                  seatConfiguration: "3-4-3",
+                  seatType: "Standard (Limited seat tile)"
+                },
+                baggage: {
+                  checkIn: "23kg",
+                  cabin: "7kg"
+                },
+                airport: {
+                  prayerRoom: "Near Gate 12",
+                  lounges: "Emirates Lounge, Priority Pass",
+                  foodOptions: [
+                    { name: "Starbucks" },
+                    { name: "Shake Shack" },
+                    { name: "McDonald's" },
+                    { name: "Subway" }
+                  ],
+                  amenities: [
+                    { name: "Wi-Fi" },
+                    { name: "Power Outlets" },
+                    { name: "Entertainment" },
+                    { name: "Meals" }
+                  ]
+                }
+              }}
+              onClose={() => setDrawerOpen(false)}
+            />
           </div>
         </div>
       )}

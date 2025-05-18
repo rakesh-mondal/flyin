@@ -6,20 +6,51 @@ import { cn } from '@/lib/utils';
 import { getAirlineLogo } from '../../../utils/airlineLogos';
 import cashRegisterSound from '@/assets/cash-register.mp3'; // Place a short cash register sound in this path
 import { SlidingNumber } from '@/components/ui/sliding-number';
+import { FlightDetails } from '@/components/trip-detail/FlightDetails';
 
 interface FlightLegOption {
-  airlineLogo: string;
-  airlineName: string;
+  id: string;
   departureTime: string;
   arrivalTime: string;
   departureCode: string;
   arrivalCode: string;
-  duration: string;
-  stops: string;
-  layover?: string;
-  date: string;
   departureCity?: string;
   arrivalCity?: string;
+  duration: string;
+  stops?: string;
+  airline?: string;
+  airlineName?: string;
+  airlineCode?: string;
+  airlineLogo?: string;
+  price?: number;
+  date?: string;
+  layover?: string;
+  onTimePerformance?: string;
+  stock?: string;
+  stopType?: string;
+  flightNumber?: string;
+  class?: string;
+  aircraft?: {
+    type?: string;
+    seatConfiguration?: string;
+    seatType?: string;
+  };
+  baggage?: {
+    checkIn?: string;
+    cabin?: string;
+  };
+  airport?: {
+    prayerRoom?: string;
+    lounges?: string;
+    foodOptions?: {
+      name: string;
+      logo?: string;
+    }[];
+    amenities?: {
+      name: string;
+      icon?: React.ReactNode;
+    }[];
+  };
 }
 
 interface FlightListCardProps {
@@ -126,10 +157,10 @@ const FlightListCard = ({
   };
 
   // Add a handler to open the drawer with logging
-  const handleOpenDrawer = (flight: FlightLegOption) => {
-    console.log('Opening drawer for flight:', flight);
-    setDrawerFlight(flight);
+  const handleOpenDetail = (flightLeg: FlightLegOption) => {
+    setDrawerFlight(flightLeg);
     setDrawerOpen(true);
+    console.log("Opening flight details drawer for:", flightLeg);
   };
 
   return (
@@ -282,7 +313,7 @@ const FlightListCard = ({
                         <button
                           className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
                           type="button"
-                          onClick={e => { e.stopPropagation(); handleOpenDrawer(opt); }}
+                          onClick={e => { e.stopPropagation(); handleOpenDetail(opt); }}
                         >
                           More info <span aria-hidden="true">→</span>
                         </button>
@@ -335,7 +366,7 @@ const FlightListCard = ({
                         <button
                           className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
                           type="button"
-                          onClick={e => { e.stopPropagation(); handleOpenDrawer(opt); }}
+                          onClick={e => { e.stopPropagation(); handleOpenDetail(opt); }}
                         >
                           More info <span aria-hidden="true">→</span>
                         </button>
@@ -350,318 +381,59 @@ const FlightListCard = ({
           <div className="bg-gray-50 px-4 pt-10 pb-2 w-full text-right">
             <button className="text-primary text-sm font-medium hover:underline hover:text-[#194E91]" onClick={onDetails}>Flight details</button>
           </div>
-          {/* Drawer for More info - Updated with tabbed interface */}
+          {/* Flight details drawer */}
           {drawerOpen && drawerFlight && (
-            <div className="fixed inset-0 z-50 flex justify-end bg-black/30" onClick={() => setDrawerOpen(false)}>
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/40 transition-opacity duration-300" onClick={() => setDrawerOpen(false)}>
               <div
-                className="bg-white shadow-lg h-full w-[480px] flex flex-col animate-slide-in-right relative"
-                style={{ animation: 'slideInRight 0.3s cubic-bezier(0.4,0,0.2,1)' }}
+                className="bg-white shadow-lg h-full w-[420px] flex flex-col animate-slide-in-right relative overflow-auto"
+                style={{
+                  animation: 'slideInRight 0.3s ease-out',
+                  transform: 'translateX(0)',
+                  transition: 'transform 0.3s ease-out',
+                }}
                 onClick={e => e.stopPropagation()}
               >
-                {/* Tabs Header */}
-                <div className="flex border-b bg-gray-50">
-                  <button
-                    className={cn(
-                      "flex-1 py-4 text-center font-medium",
-                      activeTab === 'trip' 
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-white" 
-                        : "text-gray-500 hover:text-gray-800"
-                    )}
-                    onClick={() => setActiveTab('trip')}
-                  >
-                    Trip Details
-                  </button>
-                  <button
-                    className={cn(
-                      "flex-1 py-4 text-center font-medium",
-                      activeTab === 'facility' 
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-white" 
-                        : "text-gray-500 hover:text-gray-800"
-                    )}
-                    onClick={() => setActiveTab('facility')}
-                  >
-                    Flight and Facility Details
-                  </button>
-                  <button 
-                    className="p-4 text-gray-500 hover:text-black"
-                    onClick={() => setDrawerOpen(false)}
-                  >
-                    ✕
-                </button>
-                </div>
-
-                {/* Trip Details Tab Content */}
-                {activeTab === 'trip' && (
-                  <div className="p-6 flex-1 overflow-auto">
-                    <div className="mb-5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-lg font-semibold">{drawerFlight.departureCity || drawerFlight.departureCode}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M5 12h14M13 5l7 7-7 7" />
-                        </svg>
-                        <span className="text-lg font-semibold">{drawerFlight.arrivalCity || drawerFlight.arrivalCode}</span>
-                      </div>
-                      <div className="text-sm text-gray-700 flex items-center gap-2">
-                        <span>{drawerFlight.duration}</span>
-                        <span>•</span>
-                        <span>{drawerFlight.stops}</span>
-                        <span>•</span>
-                        <span>{drawerFlight.date}</span>
-                        <span>•</span>
-                        <span>Economy</span>
-                      </div>
-                    </div>
-
-                    <div className="border rounded-lg p-5 mb-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <img 
-                          src={getAirlineLogo(drawerFlight.airlineName)} 
-                          alt={drawerFlight.airlineName} 
-                          className="h-8 w-10 object-contain"
-                        />
-                        <div>
-                          <div className="font-medium">{drawerFlight.airlineName}</div>
-                          <div className="text-sm text-gray-500">AI {Math.floor(Math.random() * 900) + 100}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center mb-3">
-                        <div className="text-center mr-4">
-                          <div className="text-sm text-gray-500">{drawerFlight.date}</div>
-                          <div className="text-2xl font-bold">{drawerFlight.departureTime}</div>
-                          <div className="text-sm font-medium">{drawerFlight.departureCode} - {drawerFlight.departureCity || 'City'}</div>
-                          <div className="text-xs text-gray-500">King Airport Intl</div>
-                        </div>
-
-                        <div className="flex-1 px-4">
-                          <div className="text-sm text-center font-medium text-gray-500 mb-1">{drawerFlight.duration}</div>
-                          <div className="h-0.5 bg-gray-300 w-full relative flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-gray-500 absolute"></div>
-                          </div>
-                        </div>
-
-                        <div className="text-center ml-4">
-                          <div className="text-sm text-gray-500">{drawerFlight.date}</div>
-                          <div className="text-2xl font-bold">{drawerFlight.arrivalTime}</div>
-                          <div className="text-sm font-medium">{drawerFlight.arrivalCode} - {drawerFlight.arrivalCity || 'City'}</div>
-                          <div className="text-xs text-gray-500">King Airport Intl</div>
-                        </div>
-                      </div>
-
-                      {drawerFlight.layover && (
-                        <div className="my-4 border-t border-b border-dashed py-2">
-                          <button className="text-blue-600 text-sm font-medium w-full text-center">
-                            Change of flights • {drawerFlight.layover} layover in {drawerFlight.arrivalCode}
-                          </button>
-                        </div>
-                      )}
-
-                      {/* Add a second leg if there's a layover */}
-                      {drawerFlight.layover && (
-                        <div className="mt-5">
-                          <div className="flex items-center gap-3 mb-4">
-                            <img 
-                              src={getAirlineLogo(drawerFlight.airlineName)} 
-                              alt={drawerFlight.airlineName} 
-                              className="h-8 w-10 object-contain"
-                            />
-                            <div>
-                              <div className="font-medium">{drawerFlight.airlineName}</div>
-                              <div className="text-sm text-gray-500">AI {Math.floor(Math.random() * 900) + 100}</div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center">
-                            <div className="text-center mr-4">
-                              <div className="text-sm text-gray-500">{drawerFlight.date}</div>
-                              <div className="text-2xl font-bold">16:05</div>
-                              <div className="text-sm font-medium">{drawerFlight.arrivalCode} - Jeddah</div>
-                              <div className="text-xs text-gray-500">King Abdulaziz Intl</div>
-                            </div>
-
-                            <div className="flex-1 px-4">
-                              <div className="text-sm text-center font-medium text-gray-500 mb-1">3h</div>
-                              <div className="h-0.5 bg-gray-300 w-full relative flex items-center justify-center">
-                                <div className="w-2 h-2 rounded-full bg-gray-500 absolute"></div>
-                              </div>
-                            </div>
-
-                            <div className="text-center ml-4">
-                              <div className="text-sm text-gray-500">{drawerFlight.date}</div>
-                              <div className="text-2xl font-bold">20:05</div>
-                              <div className="text-sm font-medium">DXB - Dubai</div>
-                              <div className="text-xs text-gray-500">Dubai Intl</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Special Offers */}
-                    <div className="mt-8">
-                      <h3 className="text-lg font-semibold mb-3">Special Offers for you</h3>
-                      <div className="bg-orange-50 rounded-lg p-4 mb-4 flex justify-between">
-                        <div>
-                          <div className="text-orange-600 font-bold text-lg">TRAVEL UPDATE</div>
-                          <div className="text-sm mt-1">Due to evolving air travel conditions, please stay informed about the latest updates.</div>
-                          <button className="mt-2 bg-orange-500 text-white px-3 py-1 rounded text-sm">
-                            Know More
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Price and CTA */}
-                    <div className="py-4 border-t mt-auto flex justify-between items-center">
-                      <div>
-                        <div className="text-2xl font-bold">₹{price}</div>
-                        <div className="text-sm text-gray-500">per person</div>
-                      </div>
-                      <Button 
-                        className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded font-medium"
-                        onClick={() => { setDrawerOpen(false); onBook(); }}
-                      >
-                        Add flight
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Flight and Facility Details Tab Content */}
-                {activeTab === 'facility' && (
-                  <div className="p-6 flex-1 overflow-auto">
-                    {/* Aircraft Information */}
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold mb-4">Aircraft Information</h3>
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex justify-between py-2">
-                            <span className="text-gray-700">Type</span>
-                            <span className="font-medium">Boeing 777-300ER</span>
-                          </div>
-                          <div className="flex justify-between py-2">
-                            <span className="text-gray-700">Seat Configuration</span>
-                            <span className="font-medium">3-4-3</span>
-                          </div>
-                          <div className="flex justify-between py-2">
-                            <span className="text-gray-700">Seat Type</span>
-                            <span className="font-medium">Standard (Limited seat rile)</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Airport Facilities */}
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold mb-4">Airport Facilities</h3>
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="grid grid-cols-1 gap-3">
-                          <div className="flex justify-between items-center py-2">
-                            <div className="flex items-center gap-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                              </svg>
-                              <span>Prayer room</span>
-                            </div>
-                            <span className="text-gray-600">Near gate 12</span>
-                          </div>
-
-                          <div className="flex justify-between items-center py-2">
-                            <div className="flex items-center gap-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-                              </svg>
-                              <span>Lounges</span>
-                            </div>
-                            <span className="text-gray-600">Emirates lounge, priority pass</span>
-                          </div>
-
-                          <div className="py-2">
-                            <div className="flex items-center gap-2 mb-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                              </svg>
-                              <span>Food options</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 pl-7">
-                              <div className="flex items-center gap-1">
-                                <span className="text-green-600">☕</span>
-                                <span>Starbucks</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-green-600">🍔</span>
-                                <span>Shake Shack</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-green-600">🥪</span>
-                                <span>Subway</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-yellow-600">🍟</span>
-                                <span>McDonald's</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="py-2">
-                            <div className="flex items-center gap-2 mb-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              <span>Amenities</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 pl-7">
-                              <div className="flex items-center gap-1">
-                                <span className="text-blue-500">📶</span>
-                                <span>Wi-fi</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-gray-600">🔌</span>
-                                <span>Power outlets</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-purple-500">🎬</span>
-                                <span>Entertainment</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-pink-500">👶</span>
-                                <span>Baby care</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Special Offers */}
-                    <div className="mt-8">
-                      <h3 className="text-lg font-semibold mb-3">Special Offers for you</h3>
-                      <div className="bg-orange-50 rounded-lg p-4 mb-4 flex justify-between">
-                        <div>
-                          <div className="text-orange-600 font-bold text-lg">TRAVEL UPDATE</div>
-                          <div className="text-sm mt-1">Due to evolving air travel conditions, please stay informed about the latest updates.</div>
-                          <button className="mt-2 bg-orange-500 text-white px-3 py-1 rounded text-sm">
-                            Know More
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Price and CTA */}
-                    <div className="py-4 border-t mt-auto flex justify-between items-center">
-                      <div>
-                        <div className="text-2xl font-bold">₹{price}</div>
-                        <div className="text-sm text-gray-500">per person</div>
-                      </div>
-                      <Button 
-                        className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded font-medium"
-                        onClick={() => { setDrawerOpen(false); onBook(); }}
-                      >
-                        Add flight
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                <FlightDetails 
+                  flight={{
+                    airline: drawerFlight.airline || drawerFlight.airlineName,
+                    flightNumber: drawerFlight.flightNumber || "N/A",
+                    class: drawerFlight.class || "Economy",
+                    departureTime: drawerFlight.departureTime,
+                    departureCode: drawerFlight.departureCode,
+                    departureCity: drawerFlight.departureCity || drawerFlight.departureCode,
+                    arrivalTime: drawerFlight.arrivalTime,
+                    arrivalCode: drawerFlight.arrivalCode,
+                    arrivalCity: drawerFlight.arrivalCity || drawerFlight.arrivalCode,
+                    duration: drawerFlight.duration,
+                    stopType: drawerFlight.stopType || drawerFlight.stops || "non-stop",
+                    aircraft: {
+                      type: drawerFlight.aircraft?.type || "Boeing 777-300ER",
+                      seatConfiguration: drawerFlight.aircraft?.seatConfiguration || "3-4-3",
+                      seatType: drawerFlight.aircraft?.seatType || "Standard (Limited seat tile)"
+                    },
+                    baggage: {
+                      checkIn: drawerFlight.baggage?.checkIn || "23kg",
+                      cabin: drawerFlight.baggage?.cabin || "7kg"
+                    },
+                    airport: {
+                      prayerRoom: drawerFlight.airport?.prayerRoom || "Near Gate 12",
+                      lounges: drawerFlight.airport?.lounges || "Emirates Lounge, Priority Pass",
+                      foodOptions: drawerFlight.airport?.foodOptions || [
+                        { name: "Starbucks" },
+                        { name: "Shake Shack" },
+                        { name: "McDonald's" },
+                        { name: "Subway" }
+                      ],
+                      amenities: drawerFlight.airport?.amenities || [
+                        { name: "Wi-Fi" },
+                        { name: "Power Outlets" },
+                        { name: "Entertainment" },
+                        { name: "Meals" }
+                      ]
+                    }
+                  }}
+                  onClose={() => setDrawerOpen(false)}
+                />
               </div>
             </div>
           )}
