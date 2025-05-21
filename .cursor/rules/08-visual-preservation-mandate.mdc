@@ -3,3 +3,49 @@ description:
 globs:
 alwaysApply: false
 ---
+# Visual Preservation Mandate
+
+## CRITICAL REQUIREMENT
+
+**All technical enhancements MUST preserve the existing design, visuals, and layout of the application.** The current design is a key asset and must be maintained throughout all technical improvements.
+
+## Implementation Guidelines
+
+When modernizing the codebase:
+
+1. **Pixel-Perfect Preservation** 
+   - Maintain exact visual fidelity with current design
+   - Use visual regression testing to verify no visual changes
+   - Reference existing components for styling patterns
+
+2. **Refactor Inside-Out**
+   - Change internal implementation without affecting external appearance
+   - Ensure color schemes, spacing, and animations remain identical
+   - Maintain current responsive breakpoints
+
+3. **Verification Process**
+   - Take screenshots before and after changes to compare
+   - Use Percy for automated visual regression testing
+   - Verify changes across multiple viewport sizes
+
+## Examples of Allowed vs. Disallowed Changes
+
+✅ **Allowed**:
+- Refactoring component internals
+- Moving styles to more maintainable patterns
+- Extracting business logic to services
+- Adding type definitions
+
+❌ **Disallowed**:
+- Changing colors, spacing, or typography
+- Modifying responsive behavior
+- Changing animation timing
+- Altering layout or component positioning
+
+## Reference UI Components
+
+Before modifying any component, refer to these key UI components to understand the current design language:
+
+- [FlightSearchForm.tsx](mdc:src/components/FlightSearchForm.tsx)
+- [TripDetail.tsx](mdc:src/components/TripDetail.tsx)
+- [Navigation.tsx](mdc:src/components/Navigation.tsx)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ArrowRight } from 'lucide-react';
+import { X, ArrowRight, Coffee, Clock, Sofa, Baby } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FlightDetailsProps {
@@ -44,6 +44,7 @@ interface FlightDetailsProps {
     airport?: {
       prayerRoom: string;
       lounges: string;
+      babyRoom?: string;
       foodOptions: {
         name: string;
         logo?: string;
@@ -117,12 +118,13 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
     },
     airport: {
       prayerRoom: "Near Gate 12",
-      lounges: "Emirates Lounge, Priority Pass",
+      lounges: "Emirates lounge, priority pass",
+      babyRoom: "Near gate 14",
       foodOptions: [
-        { name: "Starbucks", logo: "/logos/starbucks.svg" },
-        { name: "Shake Shack", logo: "/logos/shakeshack.svg" },
-        { name: "McDonald's", logo: "/logos/mcdonalds.svg" },
-        { name: "Subway", logo: "/logos/subway.svg" }
+        { name: "Starbucks", logo: "/logos/starbucks.png" },
+        { name: "Shake Shack", logo: "/logos/shakeshack.png" },
+        { name: "McDonald's", logo: "/logos/mcdonalds.png" },
+        { name: "Subway", logo: "/logos/subway.png" }
       ],
       amenities: [
         { name: "Wi-Fi" },
@@ -134,6 +136,84 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
   };
 
   const data = flight || defaultFlight;
+
+  // Airport facilities data for all segments
+  const airportFacilities = [
+    {
+      name: data.segments?.[0]?.departureAirport || "King Khaled Intl Airport",
+      facilities: {
+        prayerRoom: "Near gate 10",
+        lounges: "Emirates lounge, priority pass",
+        babyRoom: "Near gate 14",
+        foodOptions: [
+          { name: "Starbucks", logo: "/logos/starbucks.png" },
+          { name: "Shake Shack", logo: "/logos/shakeshack.png" },
+          { name: "Subway", logo: "/logos/subway.png" },
+          { name: "McDonald's", logo: "/logos/mcdonalds.png" }
+        ]
+      }
+    },
+    {
+      name: data.segments?.[0]?.arrivalAirport || "King Abdulaziz Intl Airport",
+      facilities: {
+        prayerRoom: "Near gate 12",
+        lounges: "Emirates lounge, priority pass",
+        babyRoom: "Near gate 10",
+        foodOptions: [
+          { name: "Starbucks", logo: "/logos/starbucks.png" },
+          { name: "Shake Shack", logo: "/logos/shakeshack.png" },
+          { name: "Subway", logo: "/logos/subway.png" },
+          { name: "McDonald's", logo: "/logos/mcdonalds.png" }
+        ]
+      }
+    },
+    {
+      name: data.segments?.[1]?.arrivalAirport || "Dubai International Airport Terminal",
+      facilities: {
+        prayerRoom: "Near gate 12",
+        lounges: "Emirates lounge, priority pass",
+        babyRoom: "Near gate 10",
+        foodOptions: [
+          { name: "Starbucks", logo: "/logos/starbucks.png" },
+          { name: "Shake Shack", logo: "/logos/shakeshack.png" },
+          { name: "Subway", logo: "/logos/subway.png" },
+          { name: "McDonald's", logo: "/logos/mcdonalds.png" }
+        ]
+      }
+    }
+  ];
+
+  // Function to render the logo based on the logo property
+  const renderLogo = (food) => {
+    // Keep fallback for Shake Shack if its PNG is still problematic
+    if (food.logo === "shake-shack" && !food.logo.endsWith('.png')) { // A more robust check might be needed
+      return (
+        <div className="w-8 h-8 rounded-md mr-1 flex items-center justify-center" style={{ background: '#1D8938' }}>
+          <span className="text-white font-bold text-xs">SS</span>
+        </div>
+      );
+    }
+    // Default to img tag for all PNGs
+    return (
+      <img 
+        src={food.logo} 
+        alt={food.name} 
+        className="w-8 h-8 mr-1 object-contain rounded-md bg-white p-0.5"
+        style={{ maxWidth: '32px', maxHeight: '32px' }}
+        onError={(e) => {
+          // Fallback for any image that fails to load, e.g., show initials or a generic icon
+          const target = e.target as HTMLImageElement;
+          target.onerror = null; // Prevent infinite loop if fallback also fails
+          target.style.display = 'none'; // Hide broken image
+          // Optionally, replace with a placeholder div:
+          // const placeholder = document.createElement('div');
+          // placeholder.className = "w-8 h-8 rounded-md mr-1 flex items-center justify-center bg-gray-200 text-gray-500 text-xs";
+          // placeholder.textContent = food.name.substring(0, 2).toUpperCase();
+          // target.parentNode?.insertBefore(placeholder, target.nextSibling);
+        }}
+      />
+    );
+  };
 
   return (
     <div className="w-full h-full bg-white rounded-lg overflow-auto flex flex-col">
@@ -159,7 +239,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
           )}
           onClick={() => setActiveTab('facility')}
         >
-          Flight and Facility Details
+          Airport Details
         </button>
         <button 
           onClick={onClose}
@@ -277,145 +357,75 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
             </div>
           </>
         ) : (
-          // Flight and Facility details tab content
+          // Airport Details tab content
           <div className="text-gray-800">
-            {/* Aircraft Information Section */}
-            <div className="mb-6">
-              <h3 className="text-lg font-bold mb-3">Aircraft Information</h3>
-              <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-gray-600">Type</div>
-                  <div className="text-right font-medium">{data.aircraft?.type}</div>
-                  
-                  <div className="text-gray-600">Seat Configuration</div>
-                  <div className="text-right font-medium">{data.aircraft?.seatConfiguration}</div>
-                  
-                  <div className="text-gray-600">Seat Type</div>
-                  <div className="text-right font-medium">{data.aircraft?.seatType}</div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Airport Facilities Section */}
-            <div className="mb-6">
-              <h3 className="text-lg font-bold mb-3">Airport Facilities</h3>
-              <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-                      </svg>
+            {/* Airport Facilities Sections - One per each airport in the journey */}
+            {airportFacilities.map((airport, index) => (
+              <div className="mb-6" key={index}>
+                <h3 className="text-lg font-bold mb-3">{airport.name} Facilities</h3>
+                <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                  <div className="grid grid-cols-2 gap-y-4">
+                    {/* Prayer Room */}
+                    <div className="flex items-center gap-2">
+                      <div className="text-gray-500">
+                        <Clock className="h-5 w-5" />
+                      </div>
+                      <div className="text-gray-600 text-sm">Prayer room</div>
                     </div>
-                    <div className="text-gray-600">Prayer room</div>
-                  </div>
-                  <div className="text-right font-medium">{data.airport?.prayerRoom}</div>
-                  
-                  <div className="flex items-center gap-2">
-                    <div className="text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="2" y="7" width="20" height="15" rx="2"></rect>
-                        <path d="M16 2v5M8 2v5"></path>
-                      </svg>
+                    <div className="text-right font-medium text-sm">{airport.facilities.prayerRoom}</div>
+                    
+                    {/* Lounges */}
+                    <div className="flex items-center gap-2">
+                      <div className="text-gray-500">
+                        <Sofa className="h-5 w-5" />
+                      </div>
+                      <div className="text-gray-600 text-sm">Lounges</div>
                     </div>
-                    <div className="text-gray-600">Lounges</div>
-                  </div>
-                  <div className="text-right font-medium">{data.airport?.lounges}</div>
-                  
-                  <div className="flex items-center gap-2">
-                    <div className="text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-                        <line x1="6" y1="1" x2="6" y2="4"></line>
-                        <line x1="10" y1="1" x2="10" y2="4"></line>
-                        <line x1="14" y1="1" x2="14" y2="4"></line>
-                      </svg>
+                    <div className="text-right font-medium text-sm">{airport.facilities.lounges}</div>
+                    
+                    {/* Baby Room */}
+                    <div className="flex items-center gap-2">
+                      <div className="text-gray-500">
+                        <Baby className="h-5 w-5" />
+                      </div>
+                      <div className="text-gray-600 text-sm">Baby Room</div>
                     </div>
-                    <div className="text-gray-600">Food options</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex flex-wrap justify-end gap-2">
-                      {data.airport?.foodOptions?.map((food, idx) => (
-                        <div key={idx} className="inline-flex items-center bg-white px-2 py-1 rounded-md border border-gray-200 text-xs">
-                          {food.logo ? (
-                            <img src={food.logo} alt={food.name} className="h-4 w-4 mr-1" />
-                          ) : (
-                            <div className="h-3 w-3 bg-green-100 rounded-full mr-1 flex items-center justify-center">
-                              <span className="text-[8px] font-bold text-green-600">{food.name.charAt(0)}</span>
+                    <div className="text-right font-medium text-sm">{airport.facilities.babyRoom}</div>
+                    
+                    {/* Food Options - Using colored boxes for unavailable logos */}
+                    <div className="flex items-center gap-2">
+                      <div className="text-gray-500">
+                        <Coffee className="h-5 w-5" />
+                      </div>
+                      <div className="text-gray-600 text-sm">Food options</div>
+                    </div>
+                    <div className="text-right text-sm">
+                      <div className="grid grid-cols-2 gap-x-2">
+                        {/* Column 1: Starbucks and Shake Shack */}
+                        <div className="flex flex-col items-end">
+                          {airport.facilities.foodOptions.slice(0, 2).map((food, idx) => (
+                            <div key={idx} className="flex items-center justify-end mb-1 last:mb-0">
+                              {renderLogo(food)}
+                              <span className="text-sm text-gray-800 whitespace-nowrap">{food.name}</span>
                             </div>
-                          )}
-                          {food.name}
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <div className="text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="2" y="3" width="20" height="18" rx="2"></rect>
-                        <line x1="8" y1="10" x2="16" y2="10"></line>
-                        <line x1="8" y1="14" x2="16" y2="14"></line>
-                        <line x1="8" y1="18" x2="12" y2="18"></line>
-                      </svg>
-                    </div>
-                    <div className="text-gray-600">Amenities</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex flex-wrap justify-end gap-2">
-                      {data.airport?.amenities?.map((amenity, idx) => (
-                        <div key={idx} className="inline-flex items-center bg-white px-2 py-1 rounded-md border border-gray-200 text-xs">
-                          {amenity.icon || (
-                            <svg className="h-3 w-3 mr-1 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                          {amenity.name}
+                        
+                        {/* Column 2: Subway and McDonald's */}
+                        <div className="flex flex-col items-end">
+                          {airport.facilities.foodOptions.slice(2, 4).map((food, idx) => (
+                            <div key={idx} className="flex items-center justify-end mb-1 last:mb-0">
+                              {renderLogo(food)}
+                              <span className="text-sm text-gray-800 whitespace-nowrap">{food.name}</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Special Offers Section (same as in Trip tab) */}
-            <div>
-              <h3 className="text-lg font-bold mb-3">Special Offers for you</h3>
-              
-              <div className="relative">
-                <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
-                  <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 min-w-[180px] max-w-[200px] flex-shrink-0">
-                    <div className="text-amber-600 uppercase font-bold text-xs mb-1">TRAVEL UPDATE</div>
-                    <p className="text-gray-800 text-xs">
-                      Due to evolving air travel conditions, please stay informed about the latest updates.
-                    </p>
-                    <button className="mt-2 bg-amber-500 text-white px-3 py-1 rounded-md text-xs font-medium">
-                      Know More
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-indigo-50 border border-indigo-200 flex-col min-w-[180px] max-w-[200px] flex-shrink-0">
-                    <div className="font-medium text-xs mb-1">Domestic Fares starting at <span className="font-bold">₹1,199</span></div>
-                    <div className="font-medium text-xs">& Int'l Fares starting at <span className="font-bold">₹4,599</span></div>
-                    <div className="mt-2 p-1 bg-white rounded w-fit">
-                      <span className="text-indigo-600 font-bold text-xs">IndiGo</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 min-w-[180px] max-w-[200px] flex-shrink-0">
-                    <div className="text-blue-600 uppercase font-bold text-xs mb-1">FLIGHT PROTECTION</div>
-                    <p className="text-gray-800 text-xs">
-                      Add flight protection for only ₹299 per traveler.
-                    </p>
-                    <button className="mt-2 bg-blue-500 text-white px-3 py-1 rounded-md text-xs font-medium">
-                      Add Protection
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         )}
       </div>
@@ -427,7 +437,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
           <div className="text-gray-600 text-sm">per person</div>
         </div>
         <button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]">
-          Add flight
+          Select
         </button>
       </div>
     </div>

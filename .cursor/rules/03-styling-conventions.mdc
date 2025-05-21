@@ -3,3 +3,67 @@ description:
 globs:
 alwaysApply: false
 ---
+# Styling Conventions
+
+## Tailwind CSS
+
+The project uses Tailwind CSS for styling with the following conventions:
+
+- Class names are applied using the `className` prop
+- The `cn()` utility from [utils.ts](mdc:src/lib/utils.ts) is used for conditional classes
+- Shadcn UI components have consistent styling patterns
+
+Example from [button.tsx](mdc:src/components/ui/button.tsx):
+
+```tsx
+<Comp
+  className={cn(buttonVariants({ variant, size, className }))}
+  ref={ref}
+  {...props}
+/>
+```
+
+## Class Organization
+
+- Classes are organized by purpose (layout → sizing → spacing → colors → etc.)
+- Use responsive prefixes (sm:, md:, lg:) for responsive design
+- Extract commonly used class combinations into variables when appropriate
+
+Example of class organization:
+
+```tsx
+<div className="
+  flex flex-col lg:flex-row    /* Layout */
+  w-full max-w-screen-xl      /* Sizing */
+  p-4 gap-3                   /* Spacing */
+  bg-white rounded-lg          /* Colors and shape */
+  shadow-sm                    /* Effects */
+  transition-all duration-300  /* Animation */
+">
+```
+
+## Component Variants
+
+UI component variants are defined using `class-variance-authority` (cva) as seen in [button.tsx](mdc:src/components/ui/button.tsx):
+
+```tsx
+const buttonVariants = cva(
+  "inline-flex items-center justify-center...",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        // other variants...
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        // other sizes...
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+```

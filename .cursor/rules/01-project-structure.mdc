@@ -3,3 +3,32 @@ description:
 globs:
 alwaysApply: false
 ---
+# Project Structure Guide
+
+## Directory Structure
+
+The Flyin app is organized as follows:
+
+- **src/** - Main source code directory
+  - **app/** - App-specific routes and configurations
+  - **components/** - React components
+    - **ui/** - Reusable UI components (shadcn)
+    - **Booking/** - Booking-related components
+    - **TripCuration/** - Trip curation components
+    - **trip-detail/** - Trip detail components
+  - **data/** - Mock and sample data
+  - **hooks/** - Custom React hooks
+  - **lib/** - Utility functions and libraries
+  - **pages/** - Page components (e.g., [Search.tsx](mdc:src/pages/Search.tsx))
+  - **styles/** - CSS and style-related files
+  - **utils/** - Utility functions
+
+## Key Files
+
+- Entry point: [main.tsx](mdc:src/main.tsx)
+- Main application: [App.tsx](mdc:src/App.tsx)
+- Utility functions: [utils.ts](mdc:src/lib/utils.ts)
+
+## Page Structure
+
+Each page follows a similar pattern, as seen in [Search.tsx](mdc:src/pages/Search.tsx), acting as a container for components specific to that page's functionality.

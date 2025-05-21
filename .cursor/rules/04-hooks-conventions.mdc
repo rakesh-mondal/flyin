@@ -3,3 +3,66 @@ description:
 globs:
 alwaysApply: false
 ---
+# Custom Hooks Conventions
+
+## Naming Conventions
+
+- All custom hooks use the `use` prefix (e.g., `useScrollDirection`, `useToast`)
+- Hook filenames match the hook name (e.g., [use-scroll-direction.tsx](mdc:src/hooks/use-scroll-direction.tsx))
+- Use kebab-case for filenames and camelCase for hook names
+
+## Hook Structure
+
+Custom hooks follow this pattern:
+
+1. **Imports** - Dependencies, types, utilities
+2. **Types/Interfaces** - Hook params and return types
+3. **Hook Implementation** - The main hook logic
+4. **Return Statement** - Returning values/functions
+
+Example from [use-mobile.tsx](mdc:src/hooks/use-mobile.tsx):
+
+```tsx
+// 1. Imports
+import { useEffect, useState } from "react";
+
+// 2. Hook implementation
+export function useMobile() {
+  // State management
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Effects
+  useEffect(() => {
+    // Check if mobile
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener
+    window.addEventListener("resize", checkIfMobile);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
+
+  // 3. Return statement
+  return isMobile;
+}
+```
+
+## Common Hook Patterns
+
+- **State Hooks**: Manage complex state logic (e.g., `useForm`)
+- **UI Hooks**: Handle UI interactions (e.g., `useScrollDirection`)
+- **Lifecycle Hooks**: Manage component lifecycle (e.g., `useIntersectionObserver`)
+- **Feature Hooks**: Encapsulate specific feature logic
+
+Always follow these principles:
+- Keep hooks focused on a single responsibility
+- Handle cleanup in useEffect return functions
+- Document hook parameters and return values

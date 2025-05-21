@@ -3,3 +3,98 @@ description:
 globs:
 alwaysApply: false
 ---
+# Testing Guidelines
+
+Based on the PRD and existing codebase, follow these testing guidelines:
+
+## Visual Regression Testing
+
+- Use Percy for visual regression testing
+- Create baseline snapshots of all critical UI components
+- Automatically run visual tests on PRs to catch unintentional changes
+
+Example Percy setup:
+
+```typescript
+// In a test file
+describe('Component', () => {
+  it('renders correctly', () => {
+    // Render component
+    cy.percySnapshot('Component Name');
+  });
+});
+```
+
+## Unit Testing
+
+- Test individual functions and components
+- Focus on business logic and data transformations
+- Use Jest for unit testing
+- Aim for high coverage of critical paths
+
+Example unit test:
+
+```typescript
+// Testing a utility function
+describe('formatCurrency', () => {
+  it('formats correctly for USD', () => {
+    expect(formatCurrency(1234.56, 'USD')).toBe('$1,234.56');
+  });
+});
+```
+
+## Component Testing
+
+- Test component rendering and interactions
+- Use React Testing Library
+- Focus on user interactions rather than implementation details
+
+Example component test:
+
+```typescript
+import { render, screen, fireEvent } from '@testing-library/react';
+
+test('search form submits with correct values', () => {
+  const handleSearch = jest.fn();
+  render(<FlightSearchForm onSearch={handleSearch} />);
+  
+  // Fill form
+  fireEvent.change(screen.getByLabelText(/from/i), { target: { value: 'NYC' } });
+  fireEvent.change(screen.getByLabelText(/to/i), { target: { value: 'LAX' } });
+  
+  // Submit form
+  fireEvent.click(screen.getByRole('button', { name: /search/i }));
+  
+  // Assert
+  expect(handleSearch).toHaveBeenCalledWith(expect.stringContaining('NYC'));
+  expect(handleSearch).toHaveBeenCalledWith(expect.stringContaining('LAX'));
+});
+```
+
+## E2E Testing
+
+- Use Cypress for end-to-end testing
+- Focus on critical user flows (search, booking)
+- Test across different viewport sizes
+
+Example E2E test:
+
+```typescript
+describe('Flight Booking', () => {
+  it('completes a booking flow successfully', () => {
+    cy.visit('/');
+    cy.findByLabelText(/from/i).type('NYC');
+    cy.findByLabelText(/to/i).type('LAX');
+    cy.findByRole('button', { name: /search/i }).click();
+    cy.findByTestId('search-results').should('be.visible');
+    // Continue with booking flow...
+  });
+});
+```
+
+## Test Coverage Goals
+
+- 90%+ test coverage for business logic
+- 100% test coverage for utility functions
+- Visual regression tests for all UI components
+- E2E tests for all critical user flows

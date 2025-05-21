@@ -3,3 +3,66 @@ description:
 globs:
 alwaysApply: false
 ---
+# Component Conventions
+
+## Naming Conventions
+
+- **PascalCase** for all component files and component names
+- **UI Components**: Lowercase for shadcn/ui components (e.g., [button.tsx](mdc:src/components/ui/button.tsx))
+- **Feature Components**: PascalCase with descriptive names (e.g., [FlightSearchForm.tsx](mdc:src/components/FlightSearchForm.tsx))
+- **Page Components**: PascalCase matching route names (e.g., [Search.tsx](mdc:src/pages/Search.tsx))
+
+## Component Structure
+
+Components follow this general structure:
+
+1. **Imports** - React, UI components, hooks, utilities
+2. **Interfaces/Types** - Component props and data types
+3. **Constants** - Relevant constants for the component
+4. **Component Definition** - Using function declaration with props destructuring
+5. **Internal State** - useState, useRef declarations
+6. **Effects and Callbacks** - useEffect, handlers, and callbacks
+7. **Helper Functions** - Component-specific utilities
+8. **Return Statement** - JSX with clear organization
+
+Example from [FlightSearchForm.tsx](mdc:src/components/FlightSearchForm.tsx):
+
+```tsx
+// 1. Imports
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+
+// 2. Interfaces
+interface FlightSearchFormProps {
+  onSearch: (query: string) => void;
+}
+
+// 3. Constants
+const cabinClasses = [
+  { id: 'economy', name: 'Economy' },
+  // ...
+];
+
+// 4. Component Definition
+export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
+  // 5. Internal State
+  const [origin, setOrigin] = useState('');
+  
+  // 6. Handlers
+  const handleSubmit = (e: React.FormEvent) => {
+    // ...
+  };
+  
+  // 7. Helper Functions
+  const formatPassengerText = () => {
+    // ...
+  };
+  
+  // 8. Return JSX
+  return (
+    <div className="...">
+      {/* Component JSX */}
+    </div>
+  );
+}
+```

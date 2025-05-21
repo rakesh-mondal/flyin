@@ -3,3 +3,67 @@ description:
 globs:
 alwaysApply: false
 ---
+# TypeScript Type Conventions
+
+## Interface vs Type
+
+- Use **interfaces** for component props, making them easier to extend
+- Use **type aliases** for union types, mapped types, and utility types
+- Follow consistent naming patterns
+
+Example from [button.tsx](mdc:src/components/ui/button.tsx):
+
+```tsx
+// Interface for component props
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+// Type for variant utility
+const buttonVariants = cva(...)
+```
+
+## Type Organization
+
+- Place interfaces/types directly above the components that use them
+- Document complex types with JSDoc comments
+- For shared types, organize by domain (e.g., FlightTypes, BookingTypes)
+
+Example from [FlightSearchForm.tsx](mdc:src/components/FlightSearchForm.tsx):
+
+```tsx
+// Component-specific interface
+interface FlightSearchFormProps {
+  onSearch: (query: string) => void;
+}
+
+// Domain-specific interface
+interface PassengerCount {
+  adults: number;
+  children: number;
+  infants: number;
+}
+```
+
+## Type Safety Practices
+
+- Enable TypeScript strict mode in tsconfig
+- Use explicit return types for functions with complex logic
+- Prefer null over undefined for intentionally absent values
+- Use generics where appropriate for reusable components and hooks
+
+For function parameters and returns:
+
+```tsx
+// Explicit typing on functions
+function formatDate(date: Date): string {
+  return format(date, 'MMM dd, yyyy');
+}
+
+// Generic typing for hooks
+function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  // Implementation...
+}
+```

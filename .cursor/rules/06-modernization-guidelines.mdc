@@ -3,3 +3,75 @@ description:
 globs:
 alwaysApply: false
 ---
+# Modernization Guidelines
+
+Based on the project's PRD, these guidelines should be followed when modernizing the codebase:
+
+## State Management
+
+- Replace prop-drilling with Redux Toolkit state management
+- Create slices for search, booking, and user data
+- Ensure state persists across page refreshes
+
+```tsx
+// Example Redux slice structure to follow
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface SearchState {
+  // State properties
+}
+
+const searchSlice = createSlice({
+  name: 'search',
+  initialState,
+  reducers: {
+    // Actions
+  }
+});
+```
+
+## Component Decomposition
+
+- Break down files larger than 30 KB
+- Ensure components have single responsibility
+- Extract reusable patterns into shared components
+- Match Storybook stories to production visuals
+
+When decomposing a large component:
+1. Analyze current functionality
+2. Identify logical separation of concerns
+3. Extract UI elements into separate components
+4. Create container components for data/logic
+5. **Maintain identical visual output**
+
+## Service Layer Architecture
+
+- Create a `services/` directory for data access
+- Implement services for flight, user, payment, auth
+- Decouple API calls from UI components
+- Ensure consistent data shapes between mock and production
+
+```tsx
+// Service layer pattern
+export const flightService = {
+  search: async (params) => {
+    // Implementation
+  },
+  getDetails: async (id) => {
+    // Implementation
+  }
+};
+```
+
+## Error Handling
+
+- Replace ad-hoc try/catch blocks
+- Implement consistent error UI
+- Add analytics for error tracking
+- Provide user-friendly messages
+
+## UX Consistency
+
+- Standardize loading states (skeletons, spinners)
+- Use consistent form validation patterns
+- Fix responsive design issues while maintaining desktop layouts
