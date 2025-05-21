@@ -228,7 +228,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
           )}
           onClick={() => setActiveTab('trip')}
         >
-          Trip Details
+          Flight Details
         </button>
         <button 
           className={cn(
@@ -253,75 +253,119 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
       <div className="px-4 py-4 flex-1 overflow-auto">
         {activeTab === 'trip' ? (
           <>
-            {/* Route Header */}
+            {/* Header */}
             <div className="mb-4">
-              <h2 className="text-xl font-bold flex items-center">
+              <h2 className="text-[18px] font-bold flex items-center">
                 {data.departureCity} <span className="mx-2">→</span> {data.arrivalCity}
               </h2>
-              <div className="text-gray-600 mt-1">
-                {data.duration} • {data.stopType} • {data.date} • {data.class}
+              <div className="text-gray-600 mt-1 text-[14px] font-medium flex flex-wrap gap-2">
+                {data.duration} <span className="mx-1">•</span> {data.stopType} <span className="mx-1">•</span> {data.date} <span className="mx-1">•</span> {data.class}
               </div>
             </div>
 
-            {/* Flight Segments */}
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            {/* Flight Segments Card */}
+            <div className="rounded-2xl border border-gray-200 shadow-sm bg-white p-4 mb-6">
               {data.segments?.map((segment, index) => (
-                <div key={index}>
-                  <div className="flex items-center mb-2">
-                    <div className="w-6 h-6 bg-white rounded-full mr-2 flex items-center justify-center border border-gray-200 overflow-hidden">
-                      <span className="text-xs font-bold text-blue-600">
-                        {segment.airline?.charAt(0) || 'E'}
+                <div key={index} className={index !== 0 ? 'pt-8 border-t border-gray-200 relative' : ''}>
+                  {/* Layover pill */}
+                  {index !== 0 && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 w-full flex justify-center">
+                      <span className="px-4 py-0.5 rounded-full bg-white border border-gray-300 text-[11px] font-medium shadow-sm flex items-center gap-1 whitespace-nowrap justify-center">
+                        <span className="text-blue-700 font-semibold">Change of flights</span>
+                        <span className="mx-1">•</span>
+                        <span className="font-bold">1 hr</span> layover in Jeddah
                       </span>
                     </div>
-                    <div>
-                      <span className="font-medium">{segment.airline}</span> | <span className="text-gray-600">{segment.flightNumber}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex mt-3">
-                    {/* Left column - Departure */}
-                    <div className="w-28 text-left">
-                      <div className="text-gray-600">{segment.date}</div>
-                      <div className="text-2xl font-bold">{segment.departureTime}</div>
-                      <div className="text-gray-900 font-medium">{segment.departureCode} - {segment.departureCity}</div>
-                      <div className="text-gray-600 text-sm">{segment.departureAirport}</div>
-                    </div>
-                    
-                    {/* Middle - Flight duration */}
-                    <div className="flex-1 px-2 flex flex-col items-center justify-start pt-6">
-                      <div className="text-gray-500 text-sm mb-1">{segment.duration}</div>
-                      <div className="w-full flex items-center">
-                        <div className="h-[2px] flex-1 bg-gray-300"></div>
-                        <div className="h-2 w-2 rounded-full bg-gray-400 mx-1"></div>
-                      </div>
-                    </div>
-                    
-                    {/* Right column - Arrival */}
-                    <div className="w-28 text-right">
-                      <div className="text-gray-600">{segment.date}</div>
-                      <div className="text-2xl font-bold">{segment.arrivalTime}</div>
-                      <div className="text-gray-900 font-medium">{segment.arrivalCode} - {segment.arrivalCity}</div>
-                      <div className="text-gray-600 text-sm">{segment.arrivalAirport}</div>
-                    </div>
-                  </div>
-
-                  {/* Layover info */}
-                  {index < (data.segments.length - 1) && (
-                    <div className="my-4 py-2 border-t border-b border-dashed border-gray-300 flex justify-center">
-                      <div className="px-3 py-1.5 bg-blue-50 rounded-full text-sm text-blue-700 flex items-center">
-                        <span>Change of flights</span>
-                        <span className="mx-2">•</span>
-                        <span>{data.layover}</span>
-                      </div>
-                    </div>
                   )}
+                  {/* Airline row */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <img src="https://airhex.com/images/airline-logos/emirates.png" alt="Emirates" className="h-7 w-7 rounded bg-white border object-contain" />
+                      <span className="font-bold text-[14px] text-gray-900">Emirates</span>
+                      <span className="text-gray-500 font-medium">|</span>
+                      <span className="text-gray-700 font-normal text-[14px]">AI 840</span>
+                      <span className="ml-1 text-gray-400 cursor-pointer" title="Flight info">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><rect x="11" y="10" width="2" height="6" rx="1" fill="#A0AEC0"/><rect x="11" y="7" width="2" height="2" rx="1" fill="#A0AEC0"/></svg>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center px-2 py-0.5 rounded bg-green-50 text-green-700 text-[10px] font-semibold border border-green-100">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" className="mr-1"><path d="M5 13l4 4L19 7" stroke="#38A169" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        90% on-time
+                      </span>
+                      <span className="flex items-center px-2 py-0.5 rounded bg-yellow-50 text-yellow-800 text-[10px] font-semibold border border-yellow-100">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" className="mr-1"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#F6E05E"/></svg>
+                        4.6%(3124)
+                      </span>
+                    </div>
+                  </div>
+                  {/* Timeline + Content */}
+                  <div className="flex w-full">
+                    {/* Timeline and vertical line */}
+                    <div className="relative flex flex-col items-center mr-4" style={{ minWidth: 16 }}>
+                      {/* Top dot aligned with departure time */}
+                      <div className="flex items-center justify-center" style={{ height: 32 }}>
+                        <div className="w-2 h-2 rounded-full bg-gray-400" />
+                      </div>
+                      {/* Vertical line exactly between dots */}
+                      <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 20, bottom: 28, width: '2px', background: '#D1D5DB', zIndex: 0 }} />
+                      {/* Bottom dot aligned with arrival time */}
+                      <div className="flex items-center justify-center mt-auto" style={{ height: 48 }}>
+                        <div className="w-2 h-2 rounded-full bg-gray-400" />
+                      </div>
+                    </div>
+                    {/* Main content */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      {/* Departure Row */}
+                      <div className="flex items-center gap-3">
+                        <div className="text-[18px] font-bold text-gray-900 leading-tight">{segment.departureTime}</div>
+                        <div className="text-gray-700 font-medium text-[14px] leading-tight truncate">{segment.departureCode} – {segment.departureCity}, <span className="text-gray-500 font-normal">{segment.departureAirport}</span></div>
+                      </div>
+                      <div className="text-gray-500 text-[12px] mt-0.5 leading-tight">{segment.date}</div>
+                      {/* Duration, amenities, and baggage info on the same row, with equal gap above and below */}
+                      <div className="flex items-center py-[0.65rem] flex-wrap">
+                        <div className="flex items-center gap-2 flex-1">
+                          <div className="text-gray-700 font-medium text-[14px]">{segment.duration}</div>
+                          {/* Amenities icons as PNGs only */}
+                          <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain" />
+                          <img src="/icons/power.png" alt="Power" className="w-4 h-4 rounded-md bg-white object-contain" />
+                          <img src="/icons/entertainment.png" alt="Entertainment" className="w-4 h-4 rounded-md bg-white object-contain" />
+                          <img src="/icons/baby.png" alt="Baby" className="w-4 h-4 rounded-md bg-white object-contain" />
+                          <img src="/icons/meal.png" alt="Meal" className="w-4 h-4 rounded-md bg-white object-contain" />
+                        </div>
+                        {/* Baggage info as two lines in a column */}
+                        <div className="flex flex-col gap-1 min-w-[180px] items-end text-right">
+                          <div className="flex items-center text-gray-500 text-[10px]">
+                            <svg className="inline-block align-middle" width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#A0AEC0" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#A0AEC0" strokeWidth="2"/></svg>
+                            <span className="ml-1">Cabin Baggage :</span>
+                            <span className="font-bold text-gray-900 ml-1">7kg</span>
+                            <span className="font-bold text-gray-900 ml-1">per adult</span>
+                          </div>
+                          <div className="flex items-center text-gray-500 text-[10px]">
+                            <svg className="inline-block align-middle" width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#A0AEC0" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#A0AEC0" strokeWidth="2"/></svg>
+                            <span className="ml-1">Check-in Baggage :</span>
+                            <span className="font-bold text-gray-900 ml-1">15kg</span>
+                            <span className="font-bold text-gray-900 ml-1">per adult</span>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Arrival Row */}
+                      <div className="flex items-center gap-3 mt-2">
+                        <div className="text-[18px] font-bold text-gray-900 leading-tight">{segment.arrivalTime}</div>
+                        <div className="text-gray-700 font-medium text-[14px] leading-tight truncate">{segment.arrivalCode} – {segment.arrivalCity}, <span className="text-gray-500 font-normal">{segment.arrivalAirport}</span></div>
+                      </div>
+                      <div className="text-gray-500 text-[12px] mt-0.5 leading-tight">{segment.date}</div>
+                    </div>
+                  </div>
+                  {/* Add consistent margin after each segment except the last */}
+                  {index !== data.segments.length - 1 && <div className="mb-6" />}
                 </div>
               ))}
             </div>
 
             {/* Special Offers */}
             <div className="mt-6">
-              <h3 className="text-lg font-bold mb-3">Special Offers for you</h3>
+              <h3 className="text-[16px] font-bold mb-3">Special Offers for you</h3>
               
               <div className="relative">
                 <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
