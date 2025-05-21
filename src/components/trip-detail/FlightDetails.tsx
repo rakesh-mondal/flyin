@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, ArrowRight, Coffee, Clock, Sofa, Baby } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 
 interface FlightDetailsProps {
   flight?: {
@@ -283,10 +284,40 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       <img src="https://airhex.com/images/airline-logos/emirates.png" alt="Emirates" className="h-7 w-7 rounded bg-white border object-contain" />
                       <span className="font-bold text-[14px] text-gray-900">Emirates</span>
                       <span className="text-gray-500 font-medium">|</span>
-                      <span className="text-gray-700 font-normal text-[14px]">AI 840</span>
-                      <span className="ml-1 text-gray-400 cursor-pointer" title="Flight info">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><rect x="11" y="10" width="2" height="6" rx="1" fill="#A0AEC0"/><rect x="11" y="7" width="2" height="2" rx="1" fill="#A0AEC0"/></svg>
-                      </span>
+                      <span className="text-gray-700 font-normal text-[14px]">{segment.flightNumber}</span>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <span className="ml-1 text-gray-400 cursor-pointer flex items-center" tabIndex={0} aria-label="Flight info">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><rect x="11" y="10" width="2" height="6" rx="1" fill="#A0AEC0"/><rect x="11" y="7" width="2" height="2" rx="1" fill="#A0AEC0"/></svg>
+                          </span>
+                        </PopoverTrigger>
+                        <PopoverContent align="start" sideOffset={8} className="p-0 w-[320px] bg-white border border-gray-200 rounded-xl shadow-xl">
+                          <div className="p-4">
+                            <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+                              <div className="flex items-center gap-2 text-gray-500 text-[12px] leading-[18px]">
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M2 16l20-4M2 8l20 4M10 6.5L12 4l2 2.5M10 17.5L12 20l2-2.5" stroke="#A0AEC0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                Aircraft type
+                              </div>
+                              <div className="text-right font-medium text-gray-900 text-[12px] leading-[18px]">{data.aircraft?.type || '—'}</div>
+                              <div className="flex items-center gap-2 text-gray-500 text-[12px] leading-[18px]">
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2" stroke="#A0AEC0" strokeWidth="1.5"/><rect x="8" y="3" width="8" height="4" rx="1" stroke="#A0AEC0" strokeWidth="1.5"/></svg>
+                                Seat type
+                              </div>
+                              <div className="text-right font-semibold text-gray-900 text-[12px] leading-[18px]">{data.aircraft?.seatType || '—'}</div>
+                              <div className="flex items-center gap-2 text-gray-500 text-[12px] leading-[18px]">
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2" stroke="#A0AEC0" strokeWidth="1.5"/><rect x="8" y="3" width="8" height="4" rx="1" stroke="#A0AEC0" strokeWidth="1.5"/></svg>
+                                Seat configuration
+                              </div>
+                              <div className="text-right font-medium text-gray-900 text-[12px] leading-[18px]">{data.aircraft?.seatConfiguration || '—'}</div>
+                              <div className="flex items-center gap-2 text-gray-500 text-[12px] leading-[18px]">
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" stroke="#A0AEC0" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                                Low CO2 emission
+                              </div>
+                              <div className="text-right font-semibold text-gray-900 text-[12px] leading-[18px]">Low</div>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="flex items-center px-2 py-0.5 rounded bg-green-50 text-green-700 text-[10px] font-semibold border border-green-100">
@@ -406,7 +437,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
             {/* Airport Facilities Sections - One per each airport in the journey */}
             {airportFacilities.map((airport, index) => (
               <div className="mb-6" key={index}>
-                <h3 className="text-lg font-bold mb-3">{airport.name} Facilities</h3>
+                <h3 className="text-[16px] font-bold mb-3">{airport.name} Facilities</h3>
                 <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
                   <div className="grid grid-cols-2 gap-y-4">
                     {/* Prayer Room */}
@@ -416,7 +447,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       </div>
                       <div className="text-gray-600 text-sm">Prayer room</div>
                     </div>
-                    <div className="text-right font-medium text-sm">{airport.facilities.prayerRoom}</div>
+                    <div className="text-right font-semibold text-sm">{airport.facilities.prayerRoom}</div>
                     
                     {/* Lounges */}
                     <div className="flex items-center gap-2">
@@ -425,7 +456,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       </div>
                       <div className="text-gray-600 text-sm">Lounges</div>
                     </div>
-                    <div className="text-right font-medium text-sm">{airport.facilities.lounges}</div>
+                    <div className="text-right font-semibold text-sm">{airport.facilities.lounges}</div>
                     
                     {/* Baby Room */}
                     <div className="flex items-center gap-2">
@@ -434,7 +465,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       </div>
                       <div className="text-gray-600 text-sm">Baby Room</div>
                     </div>
-                    <div className="text-right font-medium text-sm">{airport.facilities.babyRoom}</div>
+                    <div className="text-right font-semibold text-sm">{airport.facilities.babyRoom}</div>
                     
                     {/* Food Options - Using colored boxes for unavailable logos */}
                     <div className="flex items-center gap-2">
