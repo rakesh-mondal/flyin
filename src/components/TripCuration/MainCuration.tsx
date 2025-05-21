@@ -178,7 +178,7 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
       <div className="flex-1 flex justify-between gap-0 overflow-x-hidden">
         {indices.map((idx, i) => (
           <div
-            key={dates[idx]?.date || i}
+            key={`${dates[idx]?.date}-${idx}`}
             className={
               'flex flex-col items-center cursor-pointer ' +
               (i === 1 ? 'font-bold text-black' : 'text-gray-500')
@@ -1799,13 +1799,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   </div>
                                   <div className="text-right flex flex-col items-end justify-between h-full">
                                     <div className="text-base font-bold text-black">₹{option.price}</div>
-                                    <button
-                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
-                                      type="button"
+                                    <span
+                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                      role="button"
+                                      tabIndex={0}
                                       onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
                                     >
                                       More info <span aria-hidden="true">→</span>
-                                    </button>
+                                    </span>
                                   </div>
                                 </div>
                               </button>
@@ -1873,13 +1875,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   </div>
                                   <div className="text-right flex flex-col items-end justify-between h-full">
                                     <div className="text-base font-bold text-black">₹{option.price}</div>
-                                    <button
-                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1"
-                                      type="button"
+                                    <span
+                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                      role="button"
+                                      tabIndex={0}
                                       onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
                                     >
                                       More info <span aria-hidden="true">→</span>
-                                    </button>
+                                    </span>
                                   </div>
                                 </div>
                               </button>
@@ -1907,7 +1911,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       {drawerOpen && drawerFlight && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={() => setDrawerOpen(false)}>
           <div
-            className="bg-white shadow-lg h-full w-[520px] flex flex-col animate-slide-in-right relative overflow-auto"
+            className="bg-white shadow-lg h-full w-[570px] flex flex-col animate-slide-in-right relative overflow-auto"
             style={{
               animation: 'slideInRight 0.3s ease-out',
               transform: 'translateX(0)',

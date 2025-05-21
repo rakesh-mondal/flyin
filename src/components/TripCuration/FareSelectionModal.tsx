@@ -100,6 +100,7 @@ function featureMatch(option, filters) {
 }
 
 const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
+  if (!trip) return null;
   const [filters, setFilters] = useState({
     freeCancellation: false,
     freeDateChange: false,
@@ -143,7 +144,31 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
     }));
   };
   
-  if (!trip) return null;
+  const [activeTab, setActiveTab] = useState('outbound');
+  
+  // Provide mock data for outbound and return if missing (for prototype)
+  const mockOutbound = {
+    airlineLogo: '/logos/indigo.png',
+    airlineName: 'Indigo',
+    departureTime: '13:10',
+    arrivalTime: '20:08',
+    stops: '1 stop',
+    departureCode: 'RUH',
+    arrivalCode: 'DXB',
+    departureDate: 'Fri, 28 Mar',
+  };
+  const mockReturn = {
+    airlineLogo: '/logos/indigo.png',
+    airlineName: 'Indigo',
+    departureTime: '09:10',
+    arrivalTime: '12:15',
+    stops: 'Non-stop',
+    departureCode: 'DXB',
+    arrivalCode: 'RUH',
+    departureDate: 'Fri, 28 Mar',
+  };
+  const outbound = trip.outbound || mockOutbound;
+  const inbound = trip.return || mockReturn;
   
   const handleContinue = () => {
     const selected = filteredOptions.find(option => option.id === selectedFare);
@@ -170,10 +195,52 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">Select your fare</DialogTitle>
           </DialogHeader>
-          
-          {/* Flight details */}
-          <div className="mt-1 text-sm text-gray-500">
-            {trip.outbound?.departureCode || 'JFK'} → {trip.outbound?.arrivalCode || 'LHR'} · {trip.outbound?.departureDate || 'Fri, 28 Mar'}
+          {/* Flight summary tabs (always show both for prototype) */}
+          <div className="flex gap-x-8 mt-2 mb-2">
+            {/* Outbound Tab */}
+            <button
+              className={`flex flex-row items-start px-2 pb-2 border-b-2 ${activeTab === 'outbound' ? 'border-blue-600' : 'border-transparent'}`}
+              onClick={() => setActiveTab('outbound')}
+              type="button"
+            >
+              <div className="flex flex-col items-center min-w-[60px]">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                  {outbound.airlineLogo ? (
+                    <img src={outbound.airlineLogo} alt={outbound.airlineName} className="w-6 h-6 object-contain" />
+                  ) : (
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M2 16l20-4M2 8l20 4M10 6.5L12 4l2 2.5M10 17.5L12 20l2-2.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  )}
+                </div>
+                <span className="text-[16px] font-medium text-black mt-1">{outbound.airlineName || 'Airline'}</span>
+              </div>
+              <div className="flex flex-col justify-center ml-4">
+                <span className="text-[20px] font-bold text-black">{outbound.departureTime || '—'} - {outbound.arrivalTime || '—'}</span>
+                <span className="text-[16px] font-bold text-gray-500">({outbound.stops || 'Non-stop'})</span>
+                <span className="text-[15px] text-gray-500 mt-0.5">{outbound.departureCode || '—'} → {outbound.arrivalCode || '—'} · {outbound.departureDate || '—'}</span>
+              </div>
+            </button>
+            {/* Return Tab (always show, use mock if missing) */}
+            <button
+              className={`flex flex-row items-start px-2 pb-2 border-b-2 ${activeTab === 'return' ? 'border-blue-600' : 'border-transparent'}`}
+              onClick={() => setActiveTab('return')}
+              type="button"
+            >
+              <div className="flex flex-col items-center min-w-[60px]">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                  {inbound.airlineLogo ? (
+                    <img src={inbound.airlineLogo} alt={inbound.airlineName} className="w-6 h-6 object-contain" />
+                  ) : (
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M2 16l20-4M2 8l20 4M10 6.5L12 4l2 2.5M10 17.5L12 20l2-2.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  )}
+                </div>
+                <span className="text-[16px] font-medium text-black mt-1">{inbound.airlineName || 'Airline'}</span>
+              </div>
+              <div className="flex flex-col justify-center ml-4">
+                <span className="text-[20px] font-bold text-black">{inbound.departureTime || '—'} - {inbound.arrivalTime || '—'}</span>
+                <span className="text-[16px] font-bold text-gray-500">({inbound.stops || 'Non-stop'})</span>
+                <span className="text-[15px] text-gray-500 mt-0.5">{inbound.departureCode || '—'} → {inbound.arrivalCode || '—'} · {inbound.departureDate || '—'}</span>
+              </div>
+            </button>
           </div>
           
           {/* Filter checkboxes */}
