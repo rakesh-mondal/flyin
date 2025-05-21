@@ -199,10 +199,11 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
           <div className="flex gap-x-8 mt-2 mb-2">
             {/* Outbound Tab */}
             <button
-              className={`flex flex-row items-start px-2 pb-2 border-b-2 ${activeTab === 'outbound' ? 'border-blue-600' : 'border-transparent'}`}
+              className={`flex flex-row items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'outbound' ? 'border-blue-600' : 'border-transparent'}`}
               onClick={() => setActiveTab('outbound')}
               type="button"
             >
+              {/* Left: Logo + Name */}
               <div className="flex flex-col items-center min-w-[60px]">
                 <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
                   {outbound.airlineLogo ? (
@@ -211,20 +212,24 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M2 16l20-4M2 8l20 4M10 6.5L12 4l2 2.5M10 17.5L12 20l2-2.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   )}
                 </div>
-                <span className="text-[16px] font-medium text-black mt-1">{outbound.airlineName || 'Airline'}</span>
+                <span className="text-[12px] font-medium text-black mt-1">{outbound.airlineName || 'Airline'}</span>
               </div>
-              <div className="flex flex-col justify-center ml-4">
-                <span className="text-[20px] font-bold text-black">{outbound.departureTime || '—'} - {outbound.arrivalTime || '—'}</span>
-                <span className="text-[16px] font-bold text-gray-500">({outbound.stops || 'Non-stop'})</span>
-                <span className="text-[15px] text-gray-500 mt-0.5">{outbound.departureCode || '—'} → {outbound.arrivalCode || '—'} · {outbound.departureDate || '—'}</span>
+              {/* Right: Details */}
+              <div className="flex flex-col items-start justify-center ml-4">
+                <span className="flex items-baseline gap-2">
+                  <span className="text-[14px] font-bold text-black">{outbound.departureTime || '—'} - {outbound.arrivalTime || '—'}</span>
+                  <span className="text-[12px] font-bold text-gray-500">({outbound.stops || 'Non-stop'})</span>
+                </span>
+                <span className="text-[12px] text-gray-500 mt-0.5">{outbound.departureCode || '—'} → {outbound.arrivalCode || '—'} · {outbound.departureDate || '—'}</span>
               </div>
             </button>
             {/* Return Tab (always show, use mock if missing) */}
             <button
-              className={`flex flex-row items-start px-2 pb-2 border-b-2 ${activeTab === 'return' ? 'border-blue-600' : 'border-transparent'}`}
+              className={`flex flex-row items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'return' ? 'border-blue-600' : 'border-transparent'}`}
               onClick={() => setActiveTab('return')}
               type="button"
             >
+              {/* Left: Logo + Name */}
               <div className="flex flex-col items-center min-w-[60px]">
                 <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
                   {inbound.airlineLogo ? (
@@ -233,12 +238,15 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M2 16l20-4M2 8l20 4M10 6.5L12 4l2 2.5M10 17.5L12 20l2-2.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   )}
                 </div>
-                <span className="text-[16px] font-medium text-black mt-1">{inbound.airlineName || 'Airline'}</span>
+                <span className="text-[12px] font-medium text-black mt-1">{inbound.airlineName || 'Airline'}</span>
               </div>
-              <div className="flex flex-col justify-center ml-4">
-                <span className="text-[20px] font-bold text-black">{inbound.departureTime || '—'} - {inbound.arrivalTime || '—'}</span>
-                <span className="text-[16px] font-bold text-gray-500">({inbound.stops || 'Non-stop'})</span>
-                <span className="text-[15px] text-gray-500 mt-0.5">{inbound.departureCode || '—'} → {inbound.arrivalCode || '—'} · {inbound.departureDate || '—'}</span>
+              {/* Right: Details */}
+              <div className="flex flex-col items-start justify-center ml-4">
+                <span className="flex items-baseline gap-2">
+                  <span className="text-[14px] font-bold text-black">{inbound.departureTime || '—'} - {inbound.arrivalTime || '—'}</span>
+                  <span className="text-[12px] font-bold text-gray-500">({inbound.stops || 'Non-stop'})</span>
+                </span>
+                <span className="text-[12px] text-gray-500 mt-0.5">{inbound.departureCode || '—'} → {inbound.arrivalCode || '—'} · {inbound.departureDate || '—'}</span>
               </div>
             </button>
           </div>
