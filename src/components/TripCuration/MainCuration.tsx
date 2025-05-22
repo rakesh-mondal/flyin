@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Header from './Header';
 import AiMessage from './AiMessage';
 import FilterChips from './FilterChips';
@@ -297,6 +297,21 @@ function extractAirportCode(layover: string | null | undefined): string | null {
   if (!layover) return null;
   const match = layover.match(/in ([A-Z]{3})/);
   return match ? match[1] : null;
+}
+
+// 1. Add a helper to generate a unique key for a flight
+function getFlightKey(f) {
+  return [
+    f.airlineName,
+    f.departureTime,
+    f.arrivalTime,
+    f.departureCode,
+    f.arrivalCode,
+    f.price,
+    f.duration,
+    f.stops,
+    f.layover
+  ].join('|');
 }
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
@@ -760,8 +775,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedDepartureId, setSelectedDepartureId] = useState<string | number>(departureOptions[0].id);
   const [selectedReturnId, setSelectedReturnId] = useState<string | number>(returnOptions[0].id);
 
-  // Add outboundFlights and inboundFlights arrays (copy from TripListV2)
-  const outboundFlights = [
+  // 1. Move original arrays to baseOutboundFlights/baseInboundFlights (no showSeatsLeft/_key)
+  const baseOutboundFlights = [
     {
       airlineLogo: airlines[0].logo,
       airlineName: airlines[0].name,
@@ -780,7 +795,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       meal: airlines[0].meal,
       rating: airlines[0].rating,
       stock: '',
-      onTimePerformance: '80% On time'
+      onTimePerformance: '80% On time',
     },
     {
       airlineLogo: airlines[1].logo,
@@ -799,7 +814,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[1].wifi,
       meal: airlines[1].meal,
       rating: airlines[1].rating,
-      stock: '2 seats left'
+      stock: '2 seats left',
     },
     {
       airlineLogo: airlines[2].logo,
@@ -818,7 +833,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[2].wifi,
       meal: airlines[2].meal,
       rating: airlines[2].rating,
-      stock: ''
+      stock: '',
     },
     {
       airlineLogo: airlines[3].logo,
@@ -836,7 +851,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[3].baggage,
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
-      rating: airlines[3].rating
+      rating: airlines[3].rating,
     },
     // Additional airlines
     {
@@ -856,7 +871,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[4].wifi,
       meal: airlines[4].meal,
       rating: airlines[4].rating,
-      onTimePerformance: '85% On time'
+      onTimePerformance: '85% On time',
     },
     {
       airlineLogo: airlines[5].logo,
@@ -874,7 +889,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[5].baggage,
       wifi: airlines[5].wifi,
       meal: airlines[5].meal,
-      rating: airlines[5].rating
+      rating: airlines[5].rating,
     },
     {
       airlineLogo: airlines[6].logo,
@@ -892,7 +907,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[6].baggage,
       wifi: airlines[6].wifi,
       meal: airlines[6].meal,
-      rating: airlines[6].rating
+      rating: airlines[6].rating,
     },
     {
       airlineLogo: airlines[7].logo,
@@ -910,7 +925,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[7].baggage,
       wifi: airlines[7].wifi,
       meal: airlines[7].meal,
-      rating: airlines[7].rating
+      rating: airlines[7].rating,
     },
     {
       airlineLogo: airlines[8].logo,
@@ -928,7 +943,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[8].baggage,
       wifi: airlines[8].wifi,
       meal: airlines[8].meal,
-      rating: airlines[8].rating
+      rating: airlines[8].rating,
     },
     {
       airlineLogo: airlines[9].logo,
@@ -946,10 +961,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[9].baggage,
       wifi: airlines[9].wifi,
       meal: airlines[9].meal,
-      rating: airlines[9].rating
+      rating: airlines[9].rating,
     }
   ];
-  const inboundFlights = [
+  const baseInboundFlights = [
     {
       airlineLogo: airlines[1].logo,
       airlineName: airlines[1].name,
@@ -968,7 +983,6 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       meal: airlines[1].meal,
       rating: airlines[1].rating,
       stock: '3 seats left',
-      onTimePerformance: '92% On time'
     },
     {
       airlineLogo: airlines[0].logo,
@@ -987,7 +1001,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[0].wifi,
       meal: airlines[0].meal,
       rating: airlines[0].rating,
-      stock: ''
+      stock: '',
     },
     {
       airlineLogo: airlines[2].logo,
@@ -1005,7 +1019,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
       meal: airlines[2].meal,
-      rating: airlines[2].rating
+      rating: airlines[2].rating,
+      stock: '',
     },
     {
       airlineLogo: airlines[3].logo,
@@ -1024,7 +1039,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
       rating: airlines[3].rating,
-      onTimePerformance: '78% On time'
+      onTimePerformance: '78% On time',
     },
     // Additional airlines
     {
@@ -1043,7 +1058,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[4].baggage,
       wifi: airlines[4].wifi,
       meal: airlines[4].meal,
-      rating: airlines[4].rating
+      rating: airlines[4].rating,
     },
     {
       airlineLogo: airlines[5].logo,
@@ -1061,7 +1076,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[5].baggage,
       wifi: airlines[5].wifi,
       meal: airlines[5].meal,
-      rating: airlines[5].rating
+      rating: airlines[5].rating,
     },
     {
       airlineLogo: airlines[6].logo,
@@ -1079,7 +1094,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[6].baggage,
       wifi: airlines[6].wifi,
       meal: airlines[6].meal,
-      rating: airlines[6].rating
+      rating: airlines[6].rating,
     },
     {
       airlineLogo: airlines[7].logo,
@@ -1097,7 +1112,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[7].baggage,
       wifi: airlines[7].wifi,
       meal: airlines[7].meal,
-      rating: airlines[7].rating
+      rating: airlines[7].rating,
     },
     {
       airlineLogo: airlines[8].logo,
@@ -1115,7 +1130,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[8].baggage,
       wifi: airlines[8].wifi,
       meal: airlines[8].meal,
-      rating: airlines[8].rating
+      rating: airlines[8].rating,
     },
     {
       airlineLogo: airlines[9].logo,
@@ -1133,13 +1148,30 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       baggage: airlines[9].baggage,
       wifi: airlines[9].wifi,
       meal: airlines[9].meal,
-      rating: airlines[9].rating
+      rating: airlines[9].rating,
     }
   ];
+  // 2. Use useMemo to assign showSeatsLeft deterministically and _key
+  const outboundFlights = useMemo(() =>
+    baseOutboundFlights.map((f, i) => ({
+      ...f,
+      showSeatsLeft: f.stops !== 'non-stop' && (i % 3 === 1),
+      _key: getFlightKey(f)
+    })),
+    []
+  );
+  const inboundFlights = useMemo(() =>
+    baseInboundFlights.map((f, i) => ({
+      ...f,
+      showSeatsLeft: f.stops !== 'non-stop' && (i % 4 === 2),
+      _key: getFlightKey(f)
+    })),
+    []
+  );
 
   // Add state for selected outbound/inbound flight
-  const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
-  const [selectedInboundIdx, setSelectedInboundIdx] = useState(0);
+  const [selectedOutboundKey, setSelectedOutboundKey] = useState(outboundFlights[0]?._key || '');
+  const [selectedInboundKey, setSelectedInboundKey] = useState(inboundFlights[0]?._key || '');
 
   // Helper to get time slot from a time string (e.g., '21:00')
   function getTimeSlot(time: string) {
@@ -1228,8 +1260,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   // Compute selected outbound/inbound flights and total price (from filtered lists)
   const hasOutbound = filteredOutboundFlights.length > 0;
   const hasInbound = filteredInboundFlights.length > 0;
-  const selectedOutbound = hasOutbound ? (filteredOutboundFlights[selectedOutboundIdx] || filteredOutboundFlights[0]) : null;
-  const selectedInbound = hasInbound ? (filteredInboundFlights[selectedInboundIdx] || filteredInboundFlights[0]) : null;
+  const selectedOutbound = hasOutbound ? (filteredOutboundFlights.find(f => f._key === selectedOutboundKey) || filteredOutboundFlights[0]) : null;
+  const selectedInbound = hasInbound ? (filteredInboundFlights.find(f => f._key === selectedInboundKey) || filteredInboundFlights[0]) : null;
   const totalPrice =
     (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0', 10) +
      parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0', 10)).toLocaleString();
@@ -1254,7 +1286,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     return `${h}h ${m.toString().padStart(2, '0')}m`;
   };
 
-  // When tab changes, update selectedOutboundIdx/selectedInboundIdx to match best pair
+  // When tab changes, update selectedOutboundKey/selectedInboundKey to match best pair
   useEffect(() => {
     if (!hasOutbound || !hasInbound) return;
     // If user has not manually selected, auto-select best pair for tab
@@ -1264,16 +1296,16 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       else if (selectedPriceCategory === 'quickest') pair = quickestPair;
       else pair = bestPair;
       if (pair) {
-        setSelectedOutboundIdx(pair.oi);
-        setSelectedInboundIdx(pair.ii);
+        setSelectedOutboundKey(pair.out._key);
+        setSelectedInboundKey(pair.inn._key);
       }
     }
   }, [selectedPriceCategory, filteredOutboundFlights, filteredInboundFlights, userHasManuallySelected]);
 
   // Ensure selected indices are valid after filtering
   useEffect(() => {
-    let outboundValid = selectedOutboundIdx < filteredOutboundFlights.length;
-    let inboundValid = selectedInboundIdx < filteredInboundFlights.length;
+    let outboundValid = filteredOutboundFlights.some(f => f._key === selectedOutboundKey);
+    let inboundValid = filteredInboundFlights.some(f => f._key === selectedInboundKey);
     if (!outboundValid || !inboundValid) {
       // If user's selection is no longer valid, reset to best pair and allow auto-selection again
       let pair = null;
@@ -1281,23 +1313,23 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       else if (selectedPriceCategory === 'quickest') pair = quickestPair;
       else pair = bestPair;
       if (pair) {
-        setSelectedOutboundIdx(pair.oi);
-        setSelectedInboundIdx(pair.ii);
+        setSelectedOutboundKey(pair.out._key);
+        setSelectedInboundKey(pair.inn._key);
       } else {
-        setSelectedOutboundIdx(0);
-        setSelectedInboundIdx(0);
+        setSelectedOutboundKey(filteredOutboundFlights[0]._key);
+        setSelectedInboundKey(filteredInboundFlights[0]._key);
       }
       setUserHasManuallySelected(false);
     }
-  }, [filteredOutboundFlights, filteredInboundFlights, selectedOutboundIdx, selectedInboundIdx, selectedPriceCategory, cheapestPair, quickestPair, bestPair]);
+  }, [filteredOutboundFlights, filteredInboundFlights, selectedOutboundKey, selectedInboundKey, selectedPriceCategory, cheapestPair, quickestPair, bestPair]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   // Handler for manual outbound selection
-  const handleManualOutboundSelect = (idx: number) => {
-    setSelectedOutboundIdx(idx);
+  const handleManualOutboundSelect = (flight) => {
+    if (flight) setSelectedOutboundKey(flight._key);
     setUserHasManuallySelected(true);
     if (!hasShownManualSelectToast) {
       toast.info("You can freely select any outbound and inbound flight combination.");
@@ -1305,8 +1337,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
   };
   // Handler for manual inbound selection
-  const handleManualInboundSelect = (idx: number) => {
-    setSelectedInboundIdx(idx);
+  const handleManualInboundSelect = (flight) => {
+    if (flight) setSelectedInboundKey(flight._key);
     setUserHasManuallySelected(true);
     if (!hasShownManualSelectToast) {
       toast.info("You can freely select any outbound and inbound flight combination.");
@@ -1775,15 +1807,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => {
                               // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
-                              const showSeatsLeft = option.stops !== 'non-stop' && Math.random() < 0.4;
+                              const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
                               return (
                                 <button
                                   key={idx}
                                   className={cn(
-                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                    option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                   )}
-                                  onClick={() => handleManualOutboundSelect(idx)}
+                                  onClick={() => handleManualOutboundSelect(option)}
                                 >
                                   <div className="flex items-center gap-3 py-1">
                                     <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
@@ -1867,15 +1899,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           <div className="flex flex-col gap-2">
                             {sortedInboundFlights.map((option, idx) => {
                               // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
-                              const showSeatsLeft = option.stops !== 'non-stop' && Math.random() < 0.4;
+                              const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
                               return (
                                 <button
                                   key={idx}
                                   className={cn(
-                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                    idx === selectedInboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                    option._key === selectedInboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                   )}
-                                  onClick={() => handleManualInboundSelect(idx)}
+                                  onClick={() => handleManualInboundSelect(option)}
                                 >
                                   <div className="flex items-center gap-3 py-1">
                                     <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
