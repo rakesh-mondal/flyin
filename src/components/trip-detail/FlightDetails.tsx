@@ -400,47 +400,48 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       <div className="flex items-center py-[0.65rem] flex-wrap">
                         <div className="flex items-center gap-2 flex-1">
                           <div className="text-gray-700 font-medium text-[14px]">{segment.duration}</div>
-                          {/* Amenities icons with tooltips */}
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
-                              In-flight Wi-Fi available
-                            </TooltipContent>
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <img src="/icons/power.png" alt="Power" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
-                              Power outlets at your seat
-                            </TooltipContent>
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <img src="/icons/entertainment.png" alt="Entertainment" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
-                              Personal entertainment screen
-                            </TooltipContent>
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <img src="/icons/baby.png" alt="Baby" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
-                              Baby care facilities available
-                            </TooltipContent>
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <img src="/icons/meal.png" alt="Meal" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
-                              Meal included
-                            </TooltipContent>
-                          </Tooltip>
+                          {/* Amenities icons with consolidated Popover */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <div className="flex items-center gap-2 flex-1 cursor-pointer group">
+                                {/* Amenities icons row (no tooltips) */}
+                                <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain" />
+                                <img src="/icons/power.png" alt="Power" className="w-4 h-4 rounded-md bg-white object-contain" />
+                                <img src="/icons/entertainment.png" alt="Entertainment" className="w-4 h-4 rounded-md bg-white object-contain" />
+                                <img src="/icons/baby.png" alt="Baby" className="w-4 h-4 rounded-md bg-white object-contain" />
+                                <img src="/icons/meal.png" alt="Meal" className="w-4 h-4 rounded-md bg-white object-contain" />
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent side="bottom" align="start" className="p-3 w-56 bg-white rounded-xl shadow-xl border border-gray-200">
+                              <div className="flex flex-col gap-3">
+                                {/* Wi-Fi */}
+                                <div className="flex items-center gap-2">
+                                  <img src="/icons/wifi.png" alt="Wi-Fi" className="w-5 h-5" />
+                                  <span className="text-sm text-green-700">Wi-fi available</span>
+                                </div>
+                                {/* Power */}
+                                <div className="flex items-center gap-2">
+                                  <img src="/icons/power.png" alt="Power" className="w-5 h-5" />
+                                  <span className="text-sm text-green-700">Power outlet available</span>
+                                </div>
+                                {/* Baby bassinet */}
+                                <div className="flex items-center gap-2">
+                                  <img src="/icons/baby.png" alt="Baby" className="w-5 h-5" />
+                                  <span className="text-sm text-red-600">No baby bassinet</span>
+                                </div>
+                                {/* Entertainment */}
+                                <div className="flex items-center gap-2">
+                                  <img src="/icons/entertainment.png" alt="Entertainment" className="w-5 h-5" />
+                                  <span className="text-sm text-red-600">No entertainment</span>
+                                </div>
+                                {/* Meal */}
+                                <div className="flex items-center gap-2">
+                                  <img src="/icons/meal.png" alt="Meal" className="w-5 h-5" />
+                                  <span className="text-sm text-red-600">No meal</span>
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
                         </div>
                         {/* Baggage info as two lines in a column */}
                         <div className="flex flex-col gap-1 min-w-[180px] items-end text-right">
