@@ -5,9 +5,10 @@ import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
 import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
 
 const steps = [
-  'Review your itinerary',
+  'Itinerary',
   'Choose add-ons',
   'Add contact details',
   'Add traveller details',
@@ -225,11 +226,53 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
             {dir.segments.map((seg, idx) => (
               seg.layover ? (
                 <div key={idx} className="flex items-center bg-gray-50 rounded text-xs text-gray-700 px-4 py-3 my-4 justify-center">
-                  <span>
-                    <span className="font-semibold text-blue-700">Layover</span>
-                    {` in ${seg.airport} `}
-                    <span className="ml-2 text-xs text-rose-500 font-medium">Short layover {seg.duration}</span>
-                  </span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <span className="cursor-pointer flex items-center gap-1 hover:underline">
+                        <span className="font-semibold text-blue-700">Layover</span>
+                        {` in ${seg.airport} `}
+                        <span className="ml-2 text-xs text-rose-500 font-medium">Short layover {seg.duration}</span>
+                        <Info className="ml-1 h-3.5 w-3.5 text-blue-500" />
+                      </span>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" align="center" className="bg-white rounded-xl shadow-xl border border-gray-200 p-0 max-w-xs w-[320px]">
+                      <div className="p-4">
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Footprints className="h-4 w-4 text-blue-500" />
+                            <span className="font-semibold text-sm text-gray-900">Walking Information</span>
+                          </div>
+                          <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                            <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Distance: ~800m between terminals</li>
+                            <li className="flex items-center gap-2"><Timer className="h-3 w-3 text-gray-400" />Walking time: 8-12 minutes</li>
+                            <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Escalators/moving walkways available</li>
+                          </ul>
+                        </div>
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <PlaneLanding className="h-4 w-4 text-blue-500" />
+                            <span className="font-semibold text-sm text-gray-900">Terminal Transfer</span>
+                          </div>
+                          <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                            <li>Arrival: <span className="font-medium">Terminal 1, Gate A12</span></li>
+                            <li>Departure: <span className="font-medium">Terminal 1, Gate B8</span></li>
+                            <li className="flex items-center gap-2"><BadgeCheck className="h-3 w-3 text-green-500" />Same terminal - no shuttle required</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <Info className="h-4 w-4 text-blue-500" />
+                            <span className="font-semibold text-sm text-gray-900">Important Notes</span>
+                          </div>
+                          <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                            <li>No visa required for transit</li>
+                            <li>Stay in international transit area</li>
+                            <li>Boarding begins 45 minutes before departure</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               ) : (
                 <div key={idx} className="flex gap-6 items-center" style={{ paddingTop: '10px', paddingBottom: '10px' }}>
@@ -316,13 +359,12 @@ const StepCard = ({ step, title, children, open, className = "" }: { step: numbe
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
       <div className="flex items-center gap-3 mb-6">
-        {/* Removed step number circle */}
         <span className="text-xl font-bold">{title}</span>
       </div>
       {open ? (
         children || <div className="text-gray-400 text-base mt-2">Coming soon...</div>
       ) : (
-        children // Render summary or placeholder when collapsed
+        children
       )}
     </div>
   );
