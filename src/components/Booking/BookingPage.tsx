@@ -10,8 +10,8 @@ import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lu
 const steps = [
   'Itinerary',
   'Choose add-ons',
-  'Add contact details',
   'Add traveller details',
+  'Add contact details',
 ];
 
 const mockOffers = [
@@ -482,139 +482,319 @@ export default function BookingPage({ trip }: { trip: any }) {
 
   const [openStep, setOpenStep] = useState(1);
 
-  // Add-ons content as per the provided design
-  const AddOnsContent = (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 mt-6">
-      <div className="font-semibold text-lg mb-6">Unsure of your travel plans? Get full flexibility with our add-ons</div>
-      <div className="flex flex-col gap-6">
-        {/* Add-on 1 */}
-        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
-          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
-          <div className="flex-1">
-            <div className="font-bold text-base">Change Date until 2 hrs before departure</div>
-            <div className="text-gray-600 text-sm mt-1">Great! Save up to ₹ 3300. You just pay the fare difference!</div>
-            <div className="flex items-center gap-4 mt-2">
-              <span className="font-bold text-lg">₹1,200</span>
-              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+  // Step summary components
+  const stepSummaries = [
+    // Step 1: Itinerary
+    (
+      <div className="flex flex-col gap-2 p-4 cursor-pointer group" onClick={() => setOpenStep(1)}>
+        {/* Outbound Flight Row */}
+        <div className="flex items-center gap-0 w-full min-h-[56px] justify-between">
+          <div className="flex items-center min-w-[120px] w-[120px] gap-2">
+            <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-8 w-8 rounded bg-white border border-gray-200 object-contain" />
+            <div className="flex flex-col justify-center leading-tight">
+              <span className="text-sm text-gray-900">IndiGo</span>
+              <span className="text-xs text-gray-500">6E-1419</span>
             </div>
           </div>
-          <input type="checkbox" className="w-5 h-5 mt-2" />
+          <div className="flex flex-col min-w-[170px] w-[170px] pl-2">
+            <span className="text-sm text-gray-900 truncate">Bangalore → Abu Dhabi</span>
+            <span className="text-gray-500 text-sm truncate">Fri, 16 May 2025</span>
+          </div>
+          <div className="flex flex-col min-w-[180px] w-[180px] items-start">
+            <span className="text-sm text-gray-900 whitespace-nowrap truncate">01:00 - 03:50</span>
+            <span className="text-gray-500 text-sm">4h 20m • Non stop</span>
+          </div>
+          <div className="flex items-center ml-4" style={{ minWidth: 106 }}>
+            <span className="border border-gray-400 rounded px-2 py-0.5 text-gray-500 font-semibold text-xs min-w-[70px] text-center">STANDARD</span>
+            {/* Down arrow only for the first row */}
+            <span className="flex items-center justify-center ml-4" style={{width: 36, height: 36}}>
+              <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          </div>
         </div>
-        {/* Add-on 2 */}
-        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
-          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
-          <div className="flex-1">
-            <div className="font-bold text-base">Get 90% refund on cancellation</div>
-            <div className="text-gray-600 text-sm mt-1">Great! Get refund of up to ₹ 5,931 in case of cancellation up to 4 hours before departure!</div>
-            <div className="flex items-center gap-4 mt-2">
-              <span className="font-bold text-lg">₹1,200</span>
-              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+        {/* Return Flight Row */}
+        <div className="flex items-center gap-0 w-full min-h-[56px] justify-between">
+          <div className="flex items-center min-w-[120px] w-[120px] gap-2">
+            <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-8 w-8 rounded bg-white border border-gray-200 object-contain" />
+            <div className="flex flex-col justify-center leading-tight">
+              <span className="text-sm text-gray-900">IndiGo</span>
+              <span className="text-xs text-gray-500">6E-1419</span>
             </div>
           </div>
-          <input type="checkbox" className="w-5 h-5 mt-2" />
-        </div>
-        {/* Add-on 3 */}
-        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
-          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
-          <div className="flex-1">
-            <div className="font-bold text-base">Choose Your Seat for Free</div>
-            <div className="text-gray-600 text-sm mt-1">Secure the seat you love–window, aisle, or extra legroom–absolutely free.</div>
-            <div className="flex items-center gap-4 mt-2">
-              <span className="font-bold text-lg">₹1,200</span>
-              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
-            </div>
+          <div className="flex flex-col min-w-[170px] w-[170px] pl-2">
+            <span className="text-sm text-gray-900 truncate">Abu Dhabi → Bangalore</span>
+            <span className="text-gray-500 text-sm truncate">Fri, 16 May 2025</span>
           </div>
-          <input type="checkbox" className="w-5 h-5 mt-2" />
-        </div>
-        {/* Add-on 4 */}
-        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
-          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
-          <div className="flex-1">
-            <div className="font-bold text-base">FlexiFly</div>
-            <div className="text-gray-600 text-sm mt-1">Great! Get refund of up to ₹ 5,931 in case of cancellation up to 24 hours before departure! OR Save up to ₹ 3300 on date change charges up to 2 hours before departure. You just pay the fare difference!</div>
-            <div className="flex items-center gap-4 mt-2">
-              <span className="font-bold text-lg">₹2,500</span>
-              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+          <div className="flex flex-col min-w-[180px] w-[180px] items-start">
+            <div className="flex flex-row items-center gap-2">
+              <span className="text-sm text-gray-900 whitespace-nowrap truncate">18:45 - 04:15</span>
+              <span className="bg-yellow-100 text-yellow-900 font-bold rounded px-2 py-1 text-xs">NEXT DAY</span>
             </div>
+            <span className="text-gray-500 text-sm">5h 10m • 1 stops</span>
           </div>
-          <input type="checkbox" className="w-5 h-5 mt-2" />
+          <div className="flex items-center ml-4" style={{ minWidth: 106 }}>
+            <span className="border border-gray-400 rounded px-2 py-0.5 text-gray-500 font-semibold text-xs min-w-[70px] text-center">STANDARD</span>
+            {/* Invisible down arrow for spacing */}
+            <span className="flex items-center justify-center ml-4" style={{width: 36, height: 36, visibility: 'hidden'}}>
+              <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    ),
+    // Step 2: Add-ons
+    (
+      <div className="p-4 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
+        <div className="flex items-center justify-between">
+          <span>Add-ons summary (to be implemented)</span>
+          <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 36, height: 36}}>
+            <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+    ),
+    // Step 3: Traveller details
+    (
+      <div className="p-4 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+        <div className="flex items-center justify-between">
+          <span>Traveller details summary (to be implemented)</span>
+          <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 36, height: 36}}>
+            <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+    ),
+    // Step 4: Contact details
+    (
+      <div className="p-4 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+        <div className="flex items-center justify-between">
+          <span>Contact details summary (to be implemented)</span>
+          <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 36, height: 36}}>
+            <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+    )
+  ];
 
-  // Itinerary summary for collapsed state (matches your screenshot)
-  const ItinerarySummary = (
-    <div className="flex flex-col gap-2 p-4 cursor-pointer group" onClick={() => setOpenStep(1)}>
-      {/* Outbound Flight Row */}
-      <div className="flex items-center gap-0 w-full min-h-[56px]">
-        {/* Logo + Airline + Code */}
-        <div className="flex items-center min-w-[120px] w-[120px] gap-2">
-          <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-8 w-8 rounded bg-white border border-gray-200 object-contain" />
-          <div className="flex flex-col justify-center leading-tight">
-            <span className="font-normal text-sm text-gray-900">IndiGo</span>
-            <span className="text-xs text-gray-500">6E-1419</span>
-          </div>
-        </div>
-        {/* Route + Date */}
-        <div className="flex flex-col min-w-[170px] w-[170px] pl-2">
-          <span className="font-normal text-sm text-gray-900 truncate">Bangalore → Abu Dhabi</span>
-          <span className="text-gray-500 text-sm truncate">Fri, 16 May 2025</span>
-        </div>
-        {/* Time + Duration/Stops */}
-        <div className="flex flex-col min-w-[180px] w-[180px] items-start">
-          <span className="font-normal text-sm text-gray-900 whitespace-nowrap truncate">01:00 - 03:50</span>
-          <span className="text-gray-500 text-sm">4h 20m • Non stop</span>
-        </div>
-        {/* Fare type */}
-        <span className="ml-4 border border-gray-400 rounded px-2 py-0.5 text-gray-500 font-semibold text-xs min-w-[70px] text-center">STANDARD</span>
-      </div>
-      {/* Return Flight Row */}
-      <div className="flex items-center gap-0 w-full min-h-[56px]">
-        {/* Logo + Airline + Code */}
-        <div className="flex items-center min-w-[120px] w-[120px] gap-2">
-          <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-8 w-8 rounded bg-white border border-gray-200 object-contain" />
-          <div className="flex flex-col justify-center leading-tight">
-            <span className="font-normal text-sm text-gray-900">IndiGo</span>
-            <span className="text-xs text-gray-500">6E-1419</span>
-          </div>
-        </div>
-        {/* Route + Date */}
-        <div className="flex flex-col min-w-[170px] w-[170px] pl-2">
-          <span className="font-normal text-sm text-gray-900 truncate">Abu Dhabi → Bangalore</span>
-          <span className="text-gray-500 text-sm truncate">Fri, 16 May 2025</span>
-        </div>
-        {/* Time + Duration/Stops + NEXT DAY badge */}
-        <div className="flex flex-col min-w-[180px] w-[180px] items-start">
-          <div className="flex flex-row items-center gap-2">
-            <span className="font-normal text-sm text-gray-900 whitespace-nowrap truncate">18:45 - 04:15</span>
-            <span className="bg-yellow-100 text-yellow-900 font-bold rounded px-2 py-1 text-xs">NEXT DAY</span>
-          </div>
-          <span className="text-gray-500 text-sm">5h 10m • 1 stops</span>
-        </div>
-        {/* Fare type */}
-        <span className="ml-4 border border-gray-400 rounded px-2 py-0.5 text-gray-500 font-semibold text-xs min-w-[70px] text-center">STANDARD</span>
-      </div>
-      {/* Expand indicator at bottom center */}
-      <div className="flex justify-center mt-2">
-        <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 36, height: 36}}>
-          <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13.5" stroke="#2563EB"/><path d="M10 12l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </span>
-      </div>
-    </div>
-  );
-
-  // Placeholder summaries for other steps
-  const AddOnsSummary = (
-    <div className="p-4 text-gray-500">Add-ons summary (to be implemented)</div>
-  );
-  const ContactSummary = (
-    <div className="p-4 text-gray-500">Contact details summary (to be implemented)</div>
-  );
-  const TravellerSummary = (
-    <div className="p-4 text-gray-500">Traveller details summary (to be implemented)</div>
-  );
-
+  // Step content components (existing logic)
+  const stepContents = [
+    // Step 1
+    (
+      <>
+        <StepCard step={1} title="Review your itinerary" open={true}>
+          <ItineraryReview trip={trip} />
+          <FareRules
+            directions={[
+              {
+                label: 'BLR → DEL: Standard fare',
+                highlights: [
+                  {
+                    icon: (
+                      <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
+                      ),
+                      text: 'Check-in/person: 15kg',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M9.44306 3.21053C9.44306 2.54197 8.90109 2 8.23253 2C7.56398 2 7.02201 2.54197 7.02201 3.21053M11.8641 12.2895C12.1984 12.2895 12.4694 12.0185 12.4694 11.6842V9.26316C12.4694 8.92888 12.1984 8.65789 11.8641 8.65789M4.62931 8.65801C4.29486 8.65539 4.02161 8.92424 4.01899 9.25851L4.00002 11.6795C3.9974 12.0138 4.2664 12.2869 4.60086 12.2895M10.6536 13.5V11.6842C10.6536 10.3471 9.56964 9.26316 8.23253 9.26316C6.89542 9.26316 5.81148 10.3471 5.81148 11.6842V13.5H10.6536ZM8.23253 3.21053C10.2382 3.21053 11.8641 4.83644 11.8641 6.84211V12.6842C11.8641 13.1348 11.4989 13.5 11.0483 13.5H5.41674C4.9662 13.5 4.60096 13.1348 4.60096 12.6842V6.84211C4.60096 4.83644 6.22687 3.21053 8.23253 3.21053ZM7.32938 6.84211H9.14517C9.47944 6.84211 9.75043 6.57112 9.75043 6.23684C9.75043 5.90256 9.47944 5.63158 9.14517 5.63158H7.32938C6.9951 5.63158 6.72411 5.90256 6.72411 6.23684C6.72411 6.57112 6.9951 6.84211 7.32938 6.84211Z" stroke="#1A1A1A" stroke-width="0.7"></path></svg>
+                        ),
+                      text: 'Cabin/person: 7kg',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M.667 14.653c0 .374.3.674.673.674H10c.373 0 .673-.3.673-.674V14H.667v.653zm5-8.66c-2.5 0-5 1.34-5 4.007h10c0-2.667-2.5-4.007-5-4.007zM2.413 8.667c.74-1.034 2.314-1.34 3.254-1.34s2.513.306 3.253 1.34H2.413zM.667 11.333h10v1.334h-10v-1.334zm11.333-8V.667h-1.333v2.666H7.333l.154 1.334h6.373L12.927 14H12v1.333h1.147c.56 0 1.02-.433 1.086-.98l1.1-11.02H12z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
+                        ),
+                      text: 'Paid Meal',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M5.06 3.607a1.336 1.336 0 0 1 0-1.887c.52-.52 1.367-.52 1.887 0s.52 1.367 0 1.887a1.324 1.324 0 0 1-1.887 0zM4 10.667v-6H2.667v6A3.335 3.335 0 0 0 6 14h4v-1.333H6c-1.107 0-2-.894-2-2zm9.333 2.713L9.953 10H7.667V7.547c.933.766 2.4 1.44 3.666 1.44v-1.44c-1.106.013-2.406-.58-3.113-1.36l-.933-1.034a1.43 1.43 0 0 0-.46-.333 1.483 1.483 0 0 0-.64-.153h-.02c-.827 0-1.5.673-1.5 1.5V10c0 1.107.893 2 2 2h3.38l2.333 2.333.953-.953z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
+                        ),
+                      text: 'Paid Seat',
+                    },
+                  ],
+                  cancellationPolicy: {
+                    label: 'Cancellation refund policy',
+                    timeline: [
+                      { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Refundable' },
+                      { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-refundable' },
+                    ],
+                    values: ['₹1,093', '₹0'],
+                    info: ['(i)', '(i)'],
+                  },
+                  dateChangePolicy: {
+                    label: 'Date change policy',
+                    timeline: [
+                      { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Changeable' },
+                      { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-changeable' },
+                    ],
+                    values: ['₹3,399 + Fare Difference', 'Non changeable'],
+                  },
+                },
+                {
+                  label: 'DEL → BLR: Standard fare',
+                  highlights: [
+                    {
+                      icon: (
+                        <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
+                        ),
+                      text: 'Check-in/person: 15kg',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M9.44306 3.21053C9.44306 2.54197 8.90109 2 8.23253 2C7.56398 2 7.02201 2.54197 7.02201 3.21053M11.8641 12.2895C12.1984 12.2895 12.4694 12.0185 12.4694 11.6842V9.26316C12.4694 8.92888 12.1984 8.65789 11.8641 8.65789M4.62931 8.65801C4.29486 8.65539 4.02161 8.92424 4.01899 9.25851L4.00002 11.6795C3.9974 12.0138 4.2664 12.2869 4.60086 12.2895M10.6536 13.5V11.6842C10.6536 10.3471 9.56964 9.26316 8.23253 9.26316C6.89542 9.26316 5.81148 10.3471 5.81148 11.6842V13.5H10.6536ZM8.23253 3.21053C10.2382 3.21053 11.8641 4.83644 11.8641 6.84211V12.6842C11.8641 13.1348 11.4989 13.5 11.0483 13.5H5.41674C4.9662 13.5 4.60096 13.1348 4.60096 12.6842V6.84211C4.60096 4.83644 6.22687 3.21053 8.23253 3.21053ZM7.32938 6.84211H9.14517C9.47944 6.84211 9.75043 6.57112 9.75043 6.23684C9.75043 5.90256 9.47944 5.63158 9.14517 5.63158H7.32938C6.9951 5.63158 6.72411 5.90256 6.72411 6.23684C6.72411 6.57112 6.9951 6.84211 7.32938 6.84211Z" stroke="#1A1A1A" stroke-width="0.7"></path></svg>
+                        ),
+                      text: 'Cabin/person: 7kg',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M.667 14.653c0 .374.3.674.673.674H10c.373 0 .673-.3.673-.674V14H.667v.653zm5-8.66c-2.5 0-5 1.34-5 4.007h10c0-2.667-2.5-4.007-5-4.007zM2.413 8.667c.74-1.034 2.314-1.34 3.254-1.34s2.513.306 3.253 1.34H2.413zM.667 11.333h10v1.334h-10v-1.334zm11.333-8V.667h-1.333v2.666H7.333l.154 1.334h6.373L12.927 14H12v1.333h1.147c.56 0 1.02-.433 1.086-.98l1.1-11.02H12z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
+                        ),
+                      text: 'Paid Meal',
+                    },
+                    {
+                      icon: (
+                        <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M5.06 3.607a1.336 1.336 0 0 1 0-1.887c.52-.52 1.367-.52 1.887 0s.52 1.367 0 1.887a1.324 1.324 0 0 1-1.887 0zM4 10.667v-6H2.667v6A3.335 3.335 0 0 0 6 14h4v-1.333H6c-1.107 0-2-.894-2-2zm9.333 2.713L9.953 10H7.667V7.547c.933.766 2.4 1.44 3.666 1.44v-1.44c-1.106.013-2.406-.58-3.113-1.36l-.933-1.034a1.43 1.43 0 0 0-.46-.333 1.483 1.483 0 0 0-.64-.153h-.02c-.827 0-1.5.673-1.5 1.5V10c0 1.107.893 2 2 2h3.38l2.333 2.333.953-.953z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
+                        ),
+                      text: 'Paid Seat',
+                    },
+                  ],
+                  cancellationPolicy: {
+                    label: 'Cancellation refund policy',
+                    timeline: [
+                      { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Refundable' },
+                      { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-refundable' },
+                    ],
+                    values: ['₹1,093', '₹0'],
+                    info: ['(i)', '(i)'],
+                  },
+                  dateChangePolicy: {
+                    label: 'Date change policy',
+                    timeline: [
+                      { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Changeable' },
+                      { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-changeable' },
+                    ],
+                    values: ['₹3,399 + Fare Difference', 'Non changeable'],
+                  },
+                },
+              ]}
+            />
+            <ItineraryExtras />
+            {/* Add flexibility add-ons section at the bottom of Step 1 */}
+          </StepCard>
+          <button
+            className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+            onClick={() => setOpenStep(2)}
+          >
+            Continue
+          </button>
+        </>
+      ),
+      // Step 2
+      (
+        <>
+          <StepCard step={2} title="Choose add-ons" open={true}>
+            {/* Only show Travel Essentials here, not AddOnsContent */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mb-6">
+              <div className="text-xl font-bold mb-4">Travel Essentials</div>
+              <div className="flex flex-col gap-4">
+                {/* Visa Requirement Checker */}
+                <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                  <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <CalendarIcon className="text-blue-700 w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-lg">Visa Requirement Checker</div>
+                    <div className="text-sm text-gray-700">Check visa requirements for Indian citizens. Most visitors need a visa to enter UAE</div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <span className="font-bold text-xl">₹2,000</span>
+                      <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                    </div>
+                  </div>
+                  <button className="ml-4 bg-blue-700 text-white rounded px-6 py-2 font-semibold">Remove</button>
+                </div>
+                {/* International sim cards */}
+                <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                  <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <DevicePhoneMobileIcon className="text-blue-700 w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-lg">International sim cards</div>
+                    <div className="text-sm text-gray-700">Get a sim card having 20 GB data, 60 min international call and valid till 8 days.</div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <span className="font-bold text-xl">₹300</span>
+                      <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                    </div>
+                  </div>
+                  <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                </div>
+                {/* Flight Alerts */}
+                <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                  <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <BellIcon className="text-blue-700 w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-lg">Flight Alerts</div>
+                    <div className="text-sm text-gray-700">Get real-time notifications about any flight changes by email and SMS.</div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <span className="font-bold text-xl">₹800</span>
+                      <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                    </div>
+                  </div>
+                  <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                </div>
+              </div>
+              {/* Footer */}
+              <div className="flex items-center justify-between mt-6">
+                <div className="flex items-center gap-2">
+                  <img src="/tripadd-logo.svg" alt="TripAdd" className="h-5" />
+                  <a href="#" className="text-blue-600 text-sm underline">View terms & conditions</a>
+                </div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" className="accent-blue-700" />
+                  I accept the terms and conditions of this policy
+                </label>
+              </div>
+            </div>
+          </StepCard>
+          <button
+            className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+            onClick={() => setOpenStep(3)}
+          >
+            Continue
+          </button>
+        </>
+      ),
+      // Step 3
+      (
+        <>
+          <StepCard step={3} title="Add traveller details" open={true}>
+            {/* Traveller details form goes here */}
+          </StepCard>
+          <button
+            className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+            onClick={() => setOpenStep(4)}
+          >
+            Continue
+          </button>
+        </>
+      ),
+      // Step 4
+      (
+        <>
+          <StepCard step={4} title="Add contact details" open={true}>
+            {/* Contact details form goes here */}
+          </StepCard>
+          <button
+            className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+            // Add your final action here, e.g., submit or review
+          >
+            Continue
+          </button>
+        </>
+      )
+    ];
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
@@ -625,228 +805,14 @@ export default function BookingPage({ trip }: { trip: any }) {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start min-h-screen">
         {/* Left: Step Content */}
         <main className="flex-1 min-w-0">
-          {openStep === 1 && (
-            <>
-              <StepCard step={1} title="Review your itinerary" open={true}>
-                <ItineraryReview trip={trip} />
-                <FareRules
-                  directions={[
-                    {
-                      label: 'BLR → DEL: Standard fare',
-                      highlights: [
-                        {
-                          icon: (
-                            <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
-                          ),
-                          text: 'Check-in/person: 15kg',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M9.44306 3.21053C9.44306 2.54197 8.90109 2 8.23253 2C7.56398 2 7.02201 2.54197 7.02201 3.21053M11.8641 12.2895C12.1984 12.2895 12.4694 12.0185 12.4694 11.6842V9.26316C12.4694 8.92888 12.1984 8.65789 11.8641 8.65789M4.62931 8.65801C4.29486 8.65539 4.02161 8.92424 4.01899 9.25851L4.00002 11.6795C3.9974 12.0138 4.2664 12.2869 4.60086 12.2895M10.6536 13.5V11.6842C10.6536 10.3471 9.56964 9.26316 8.23253 9.26316C6.89542 9.26316 5.81148 10.3471 5.81148 11.6842V13.5H10.6536ZM8.23253 3.21053C10.2382 3.21053 11.8641 4.83644 11.8641 6.84211V12.6842C11.8641 13.1348 11.4989 13.5 11.0483 13.5H5.41674C4.9662 13.5 4.60096 13.1348 4.60096 12.6842V6.84211C4.60096 4.83644 6.22687 3.21053 8.23253 3.21053ZM7.32938 6.84211H9.14517C9.47944 6.84211 9.75043 6.57112 9.75043 6.23684C9.75043 5.90256 9.47944 5.63158 9.14517 5.63158H7.32938C6.9951 5.63158 6.72411 5.90256 6.72411 6.23684C6.72411 6.57112 6.9951 6.84211 7.32938 6.84211Z" stroke="#1A1A1A" stroke-width="0.7"></path></svg>
-                          ),
-                          text: 'Cabin/person: 7kg',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M.667 14.653c0 .374.3.674.673.674H10c.373 0 .673-.3.673-.674V14H.667v.653zm5-8.66c-2.5 0-5 1.34-5 4.007h10c0-2.667-2.5-4.007-5-4.007zM2.413 8.667c.74-1.034 2.314-1.34 3.254-1.34s2.513.306 3.253 1.34H2.413zM.667 11.333h10v1.334h-10v-1.334zm11.333-8V.667h-1.333v2.666H7.333l.154 1.334h6.373L12.927 14H12v1.333h1.147c.56 0 1.02-.433 1.086-.98l1.1-11.02H12z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
-                          ),
-                          text: 'Paid Meal',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M5.06 3.607a1.336 1.336 0 0 1 0-1.887c.52-.52 1.367-.52 1.887 0s.52 1.367 0 1.887a1.324 1.324 0 0 1-1.887 0zM4 10.667v-6H2.667v6A3.335 3.335 0 0 0 6 14h4v-1.333H6c-1.107 0-2-.894-2-2zm9.333 2.713L9.953 10H7.667V7.547c.933.766 2.4 1.44 3.666 1.44v-1.44c-1.106.013-2.406-.58-3.113-1.36l-.933-1.034a1.43 1.43 0 0 0-.46-.333 1.483 1.483 0 0 0-.64-.153h-.02c-.827 0-1.5.673-1.5 1.5V10c0 1.107.893 2 2 2h3.38l2.333 2.333.953-.953z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
-                          ),
-                          text: 'Paid Seat',
-                        },
-                      ],
-                      cancellationPolicy: {
-                        label: 'Cancellation refund policy',
-                        timeline: [
-                          { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Refundable' },
-                          { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-refundable' },
-                        ],
-                        values: ['₹1,093', '₹0'],
-                        info: ['(i)', '(i)'],
-                      },
-                      dateChangePolicy: {
-                        label: 'Date change policy',
-                        timeline: [
-                          { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Changeable' },
-                          { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-changeable' },
-                        ],
-                        values: ['₹3,399 + Fare Difference', 'Non changeable'],
-                      },
-                    },
-                    {
-                      label: 'DEL → BLR: Standard fare',
-                      highlights: [
-                        {
-                          icon: (
-                            <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M5.08333 13.3333C4.78333 13.3333 4.52778 13.2277 4.31667 13.0166C4.10556 12.8055 4 12.55 4 12.25V5.66663C4 5.38886 4.09733 5.15286 4.292 4.95863C4.48622 4.76397 4.72222 4.66663 5 4.66663H6.33333V2.91663C6.33333 2.77219 6.38333 2.64708 6.48333 2.5413C6.58333 2.43597 6.71667 2.3833 6.88333 2.3833H9.11667C9.28333 2.3833 9.41667 2.43597 9.51667 2.5413C9.61667 2.64708 9.66667 2.77219 9.66667 2.91663V4.66663H10.9167C11.2167 4.66663 11.4722 4.77219 11.6833 4.9833C11.8944 5.19441 12 5.44997 12 5.74997V12.25C12 12.55 11.8944 12.8055 11.6833 13.0166C11.4722 13.2277 11.2167 13.3333 10.9167 13.3333C10.9167 13.4777 10.8696 13.6 10.7753 13.7C10.6807 13.8 10.5611 13.85 10.4167 13.85C10.2611 13.85 10.136 13.8 10.0413 13.7C9.94711 13.6 9.9 13.4777 9.9 13.3333H6.1C6.1 13.4777 6.05 13.6 5.95 13.7C5.85 13.8 5.72778 13.85 5.58333 13.85C5.43889 13.85 5.31956 13.8 5.22533 13.7C5.13067 13.6 5.08333 13.4777 5.08333 13.3333ZM6.91667 4.66663H9.08333V2.96663H6.91667V4.66663ZM5.08333 12.6666H10.9167C11.0389 12.6666 11.1389 12.6277 11.2167 12.55C11.2944 12.4722 11.3333 12.3722 11.3333 12.25V5.74997C11.3333 5.62775 11.2944 5.52775 11.2167 5.44997C11.1389 5.37219 11.0389 5.3333 10.9167 5.3333H5.08333C4.96111 5.3333 4.86111 5.37219 4.78333 5.44997C4.70556 5.52775 4.66667 5.62775 4.66667 5.74997V12.25C4.66667 12.3722 4.70556 12.4722 4.78333 12.55C4.86111 12.6277 4.96111 12.6666 5.08333 12.6666ZM5.53333 11.3666C5.53333 11.4555 5.56111 11.5277 5.61667 11.5833C5.67222 11.6389 5.74444 11.6666 5.83333 11.6666C5.92222 11.6666 5.99444 11.6389 6.05 11.5833C6.10556 11.5277 6.13333 11.4555 6.13333 11.3666V6.6333C6.13333 6.54441 6.10556 6.47219 6.05 6.41663C5.99444 6.36108 5.92222 6.3333 5.83333 6.3333C5.74444 6.3333 5.67222 6.36108 5.61667 6.41663C5.56111 6.47219 5.53333 6.54441 5.53333 6.6333V11.3666ZM7.7 11.3666C7.7 11.4555 7.72778 11.5277 7.78333 11.5833C7.83889 11.6389 7.91111 11.6666 8 11.6666C8.08889 11.6666 8.16111 11.6389 8.21667 11.5833C8.27222 11.5277 8.3 11.4555 8.3 11.3666V6.6333C8.3 6.54441 8.27222 6.47219 8.21667 6.41663C8.16111 6.36108 8.08889 6.3333 8 6.3333C7.91111 6.3333 7.83889 6.36108 7.78333 6.41663C7.72778 6.47219 7.7 6.54441 7.7 6.6333V11.3666ZM9.86667 11.3666C9.86667 11.4555 9.89444 11.5277 9.95 11.5833C10.0056 11.6389 10.0778 11.6666 10.1667 11.6666C10.2556 11.6666 10.3278 11.6389 10.3833 11.5833C10.4389 11.5277 10.4667 11.4555 10.4667 11.3666V6.6333C10.4667 6.54441 10.4389 6.47219 10.3833 6.41663C10.3278 6.36108 10.2556 6.3333 10.1667 6.3333C10.0778 6.3333 10.0056 6.36108 9.95 6.41663C9.89444 6.47219 9.86667 6.54441 9.86667 6.6333V11.3666Z" fill="#1C1B1F"></path></svg>
-                          ),
-                          text: 'Check-in/person: 15kg',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-6 h-6 text-gray-700" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" fill="none"></rect><path d="M9.44306 3.21053C9.44306 2.54197 8.90109 2 8.23253 2C7.56398 2 7.02201 2.54197 7.02201 3.21053M11.8641 12.2895C12.1984 12.2895 12.4694 12.0185 12.4694 11.6842V9.26316C12.4694 8.92888 12.1984 8.65789 11.8641 8.65789M4.62931 8.65801C4.29486 8.65539 4.02161 8.92424 4.01899 9.25851L4.00002 11.6795C3.9974 12.0138 4.2664 12.2869 4.60086 12.2895M10.6536 13.5V11.6842C10.6536 10.3471 9.56964 9.26316 8.23253 9.26316C6.89542 9.26316 5.81148 10.3471 5.81148 11.6842V13.5H10.6536ZM8.23253 3.21053C10.2382 3.21053 11.8641 4.83644 11.8641 6.84211V12.6842C11.8641 13.1348 11.4989 13.5 11.0483 13.5H5.41674C4.9662 13.5 4.60096 13.1348 4.60096 12.6842V6.84211C4.60096 4.83644 6.22687 3.21053 8.23253 3.21053ZM7.32938 6.84211H9.14517C9.47944 6.84211 9.75043 6.57112 9.75043 6.23684C9.75043 5.90256 9.47944 5.63158 9.14517 5.63158H7.32938C6.9951 5.63158 6.72411 5.90256 6.72411 6.23684C6.72411 6.57112 6.9951 6.84211 7.32938 6.84211Z" stroke="#1A1A1A" stroke-width="0.7"></path></svg>
-                          ),
-                          text: 'Cabin/person: 7kg',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M.667 14.653c0 .374.3.674.673.674H10c.373 0 .673-.3.673-.674V14H.667v.653zm5-8.66c-2.5 0-5 1.34-5 4.007h10c0-2.667-2.5-4.007-5-4.007zM2.413 8.667c.74-1.034 2.314-1.34 3.254-1.34s2.513.306 3.253 1.34H2.413zM.667 11.333h10v1.334h-10v-1.334zm11.333-8V.667h-1.333v2.666H7.333l.154 1.334h6.373L12.927 14H12v1.333h1.147c.56 0 1.02-.433 1.086-.98l1.1-11.02H12z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
-                          ),
-                          text: 'Paid Meal',
-                        },
-                        {
-                          icon: (
-                            <svg className="w-[18px] h-[18px] text-gray-700" width="18" height="18" viewBox="0 0 16 16"><g fill="none" fillRule="evenodd"><path d="M0 0h16v16H0z"></path><path d="M5.06 3.607a1.336 1.336 0 0 1 0-1.887c.52-.52 1.367-.52 1.887 0s.52 1.367 0 1.887a1.324 1.324 0 0 1-1.887 0zM4 10.667v-6H2.667v6A3.335 3.335 0 0 0 6 14h4v-1.333H6c-1.107 0-2-.894-2-2zm9.333 2.713L9.953 10H7.667V7.547c.933.766 2.4 1.44 3.666 1.44v-1.44c-1.106.013-2.406-.58-3.113-1.36l-.933-1.034a1.43 1.43 0 0 0-.46-.333 1.483 1.483 0 0 0-.64-.153h-.02c-.827 0-1.5.673-1.5 1.5V10c0 1.107.893 2 2 2h3.38l2.333 2.333.953-.953z" fill="#4D4D4D" fillRule="nonzero"></path></g></svg>
-                          ),
-                          text: 'Paid Seat',
-                        },
-                      ],
-                      cancellationPolicy: {
-                        label: 'Cancellation refund policy',
-                        timeline: [
-                          { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Refundable' },
-                          { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-refundable' },
-                        ],
-                        values: ['₹1,093', '₹0'],
-                        info: ['(i)', '(i)'],
-                      },
-                      dateChangePolicy: {
-                        label: 'Date change policy',
-                        timeline: [
-                          { start: 'Now', end: '16 May, 05:00', color: 'yellow', label: 'Changeable' },
-                          { start: '16 May, 05:00', end: '16 May, 08:00', color: 'red', label: 'Non-changeable' },
-                        ],
-                        values: ['₹3,399 + Fare Difference', 'Non changeable'],
-                      },
-                    },
-                  ]}
-                />
-                <ItineraryExtras />
-                {/* Add flexibility add-ons section at the bottom of Step 1 */}
-                {AddOnsContent}
-              </StepCard>
-              <button
-                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-                onClick={() => setOpenStep(2)}
-              >
-                Continue
-              </button>
-            </>
-          )}
-          {openStep === 2 && (
-            <>
-              {/* Show Step 1 summary above add-ons, wrapped in a compact card */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-3 w-full mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg font-semibold">Itinerary</span>
-                </div>
-                <div className="text-sm">
-                  {ItinerarySummary}
-                </div>
-              </div>
-              <StepCard step={2} title="Choose add-ons" open={true}>
-                {/* Only show Travel Essentials here, not AddOnsContent */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mb-6">
-                  <div className="text-xl font-bold mb-4">Travel Essentials</div>
-                  <div className="flex flex-col gap-4">
-                    {/* Visa Requirement Checker */}
-                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                        <CalendarIcon className="text-blue-700 w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-lg">Visa Requirement Checker</div>
-                        <div className="text-sm text-gray-700">Check visa requirements for Indian citizens. Most visitors need a visa to enter UAE</div>
-                        <div className="flex items-center gap-4 mt-2">
-                          <span className="font-bold text-xl">₹2,000</span>
-                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
-                        </div>
-                      </div>
-                      <button className="ml-4 bg-blue-700 text-white rounded px-6 py-2 font-semibold">Remove</button>
-                    </div>
-                    {/* International sim cards */}
-                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                        <DevicePhoneMobileIcon className="text-blue-700 w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-lg">International sim cards</div>
-                        <div className="text-sm text-gray-700">Get a sim card having 20 GB data, 60 min international call and valid till 8 days.</div>
-                        <div className="flex items-center gap-4 mt-2">
-                          <span className="font-bold text-xl">₹300</span>
-                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
-                        </div>
-                      </div>
-                      <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
-                    </div>
-                    {/* Flight Alerts */}
-                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                        <BellIcon className="text-blue-700 w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-lg">Flight Alerts</div>
-                        <div className="text-sm text-gray-700">Get real-time notifications about any flight changes by email and SMS.</div>
-                        <div className="flex items-center gap-4 mt-2">
-                          <span className="font-bold text-xl">₹800</span>
-                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
-                        </div>
-                      </div>
-                      <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
-                    </div>
-                  </div>
-                  {/* Footer */}
-                  <div className="flex items-center justify-between mt-6">
-                    <div className="flex items-center gap-2">
-                      <img src="/tripadd-logo.svg" alt="TripAdd" className="h-5" />
-                      <a href="#" className="text-blue-600 text-sm underline">View terms & conditions</a>
-                    </div>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input type="checkbox" className="accent-blue-700" />
-                      I accept the terms and conditions of this policy
-                    </label>
-                  </div>
-                </div>
-              </StepCard>
-              <button
-                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-                onClick={() => setOpenStep(3)}
-              >
-                Continue
-              </button>
-            </>
-          )}
-          {openStep === 3 && (
-            <>
-              <StepCard step={3} title="Add contact details" open={true}>
-                {/* Contact details form goes here */}
-              </StepCard>
-              <button
-                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-                onClick={() => setOpenStep(4)}
-              >
-                Continue
-              </button>
-            </>
-          )}
-          {openStep === 4 && (
-            <>
-              <StepCard step={4} title="Add traveller details" open={true}>
-                {/* Traveller details form goes here */}
-                {/* No continue button on last step */}
-              </StepCard>
-              <button
-                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-                // Add your final action here, e.g., submit or review
-              >
-                Continue
-              </button>
-            </>
-          )}
+          {/* Render all previous step summaries */}
+          {Array.from({ length: openStep - 1 }, (_, idx) => (
+            <div key={idx} className="bg-white rounded-2xl border border-gray-200 p-2 w-full mb-2">
+              <div className="text-xs">{stepSummaries[idx]}</div>
+            </div>
+          ))}
+          {/* Render current step content */}
+          {stepContents[openStep - 1]}
         </main>
         {/* Right: Summary */}
         <div className="w-full md:w-[300px] flex-shrink-0 self-start">
