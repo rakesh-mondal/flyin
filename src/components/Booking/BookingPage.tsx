@@ -402,15 +402,15 @@ const SummarySidebar = ({ trip }: { trip: any }) => {
             {addonsOpen && (
               <div className="mt-2 flex flex-col gap-1">
                 <div className="flex items-center justify-between text-[12px] text-gray-500">
-                  <span className="flex items-center text-left text-[#4B5563] font-medium">Flexi fare
-                    <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
-                  </span>
+                  <span className="flex items-center text-left text-[#4B5563] font-medium">Seat selection</span>
                   <span className="font-medium">₹900</span>
                 </div>
                 <div className="flex items-center justify-between text-[12px] text-gray-500">
-                  <span className="flex items-center text-left text-[#4B5563] font-medium">Trip Insurance
-                    <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
-                  </span>
+                  <span className="flex items-center text-left text-[#4B5563] font-medium">Meals</span>
+                  <span className="font-medium">₹900</span>
+                </div>
+                <div className="flex items-center justify-between text-[12px] text-gray-500">
+                  <span className="flex items-center text-left text-[#4B5563] font-medium">Baggage</span>
                   <span className="font-medium">₹900</span>
                 </div>
               </div>
@@ -484,45 +484,61 @@ export default function BookingPage({ trip }: { trip: any }) {
 
   // Add-ons content as per the provided design
   const AddOnsContent = (
-    <div className="space-y-8">
-      {/* Seat selection */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl text-gray-500">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24"><path d="M7 10V8.5A2.5 2.5 0 0 1 9.5 6h5A2.5 2.5 0 0 1 17 8.5V10" stroke="#555" strokeWidth="1.5"/><rect x="7" y="10" width="10" height="6" rx="2" stroke="#555" strokeWidth="1.5"/><path d="M10 13h4" stroke="#555" strokeWidth="1.5" strokeLinecap="round"/></svg>
-          </span>
-          <div>
-            <div className="text-sm font-semibold text-gray-900">Choose the seat you want</div>
-            <div className="text-green-700 text-xs mt-1">Seats are cheaper when pre booked</div>
+    <div className="bg-white rounded-xl border border-gray-200 p-6 mt-6">
+      <div className="font-semibold text-lg mb-6">Unsure of your travel plans? Get full flexibility with our add-ons</div>
+      <div className="flex flex-col gap-6">
+        {/* Add-on 1 */}
+        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
+          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
+          <div className="flex-1">
+            <div className="font-bold text-base">Change Date until 2 hrs before departure</div>
+            <div className="text-gray-600 text-sm mt-1">Great! Save up to ₹ 3300. You just pay the fare difference!</div>
+            <div className="flex items-center gap-4 mt-2">
+              <span className="font-bold text-lg">₹1,200</span>
+              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+            </div>
           </div>
+          <input type="checkbox" className="w-5 h-5 mt-2" />
         </div>
-        <button className="border border-blue-500 text-blue-600 font-semibold rounded-lg px-3 py-1.5 text-xs hover:bg-blue-50">Select seats</button>
-      </div>
-      {/* Meals */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl text-gray-500">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24"><path d="M7 10V8.5A2.5 2.5 0 0 1 9.5 6h5A2.5 2.5 0 0 1 17 8.5V10" stroke="#555" strokeWidth="1.5"/><rect x="7" y="10" width="10" height="6" rx="2" stroke="#555" strokeWidth="1.5"/><path d="M10 13h4" stroke="#555" strokeWidth="1.5" strokeLinecap="round"/></svg>
-          </span>
-          <div>
-            <div className="text-sm font-semibold text-gray-900">Add delicious meals</div>
-            <div className="text-green-700 text-xs mt-1">Meals are cheaper when pre-booked</div>
+        {/* Add-on 2 */}
+        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
+          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
+          <div className="flex-1">
+            <div className="font-bold text-base">Get 90% refund on cancellation</div>
+            <div className="text-gray-600 text-sm mt-1">Great! Get refund of up to ₹ 5,931 in case of cancellation up to 4 hours before departure!</div>
+            <div className="flex items-center gap-4 mt-2">
+              <span className="font-bold text-lg">₹1,200</span>
+              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+            </div>
           </div>
+          <input type="checkbox" className="w-5 h-5 mt-2" />
         </div>
-        <button className="border border-blue-500 text-blue-600 font-semibold rounded-lg px-3 py-1.5 text-xs hover:bg-blue-50">View menu</button>
-      </div>
-      {/* Baggage */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl text-gray-500">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" stroke="#555" strokeWidth="1.5"/><path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="#555" strokeWidth="1.5"/></svg>
-          </span>
-          <div>
-            <div className="text-sm font-semibold text-gray-900">Carrying more luggage? Get extra check-in baggage</div>
-            <div className="text-green-700 text-xs mt-1">Baggage is cheaper when pre-booked</div>
+        {/* Add-on 3 */}
+        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
+          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
+          <div className="flex-1">
+            <div className="font-bold text-base">Choose Your Seat for Free</div>
+            <div className="text-gray-600 text-sm mt-1">Secure the seat you love–window, aisle, or extra legroom–absolutely free.</div>
+            <div className="flex items-center gap-4 mt-2">
+              <span className="font-bold text-lg">₹1,200</span>
+              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+            </div>
           </div>
+          <input type="checkbox" className="w-5 h-5 mt-2" />
         </div>
-        <button className="border border-blue-500 text-blue-600 font-semibold rounded-lg px-3 py-1.5 text-xs hover:bg-blue-50">View baggage options</button>
+        {/* Add-on 4 */}
+        <div className="flex items-start gap-4 bg-[#F6FAF9] rounded-xl p-5">
+          <span className="mt-1"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#3B7C6A"/><path d="M8 12h8M12 8v8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></span>
+          <div className="flex-1">
+            <div className="font-bold text-base">FlexiFly</div>
+            <div className="text-gray-600 text-sm mt-1">Great! Get refund of up to ₹ 5,931 in case of cancellation up to 24 hours before departure! OR Save up to ₹ 3300 on date change charges up to 2 hours before departure. You just pay the fare difference!</div>
+            <div className="flex items-center gap-4 mt-2">
+              <span className="font-bold text-lg">₹2,500</span>
+              <a href="#" className="text-blue-600 text-sm font-medium underline">View benefits</a>
+            </div>
+          </div>
+          <input type="checkbox" className="w-5 h-5 mt-2" />
+        </div>
       </div>
     </div>
   );
@@ -721,6 +737,15 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
           {openStep === 2 && (
             <>
+              {/* Show Step 1 summary above add-ons, wrapped in a compact card */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-3 w-full mb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg font-semibold">Itinerary</span>
+                </div>
+                <div className="text-sm">
+                  {ItinerarySummary}
+                </div>
+              </div>
               <StepCard step={2} title="Choose add-ons" open={true}>
                 {AddOnsContent}
               </StepCard>
