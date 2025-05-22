@@ -282,7 +282,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                           </span>
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent align="center" sideOffset={8} className="bg-white rounded-xl shadow-xl border border-gray-200 p-0 max-w-xs w-[320px]">
+                      <TooltipContent side="bottom" align="center" sideOffset={8} className="bg-white rounded-xl shadow-xl border border-gray-200 p-0 max-w-xs w-[320px]">
                         <div className="p-4">
                           <div className="mb-3">
                             <div className="flex items-center gap-2 mb-1">
@@ -304,19 +304,6 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                               <li>Arrival: <span className="font-medium">Terminal 1, Gate A12</span></li>
                               <li>Departure: <span className="font-medium">Terminal 1, Gate B8</span></li>
                               <li className="flex items-center gap-2"><BadgeCheck className="h-3 w-3 text-green-500" />Same terminal - no shuttle required</li>
-                            </ul>
-                          </div>
-                          <div className="mb-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Utensils className="h-4 w-4 text-blue-500" />
-                              <span className="font-semibold text-sm text-gray-900">Facilities During Layover</span>
-                            </div>
-                            <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
-                              <li className="flex items-center gap-2"><Wifi className="h-3 w-3 text-gray-400" />Free WiFi throughout terminal</li>
-                              <li className="flex items-center gap-2"><Landmark className="h-3 w-3 text-gray-400" />Prayer rooms available</li>
-                              <li className="flex items-center gap-2"><ShoppingBag className="h-3 w-3 text-gray-400" />Duty-free shopping (limited time)</li>
-                              <li className="flex items-center gap-2"><Utensils className="h-3 w-3 text-gray-400" />Food courts and cafes</li>
-                              <li className="flex items-center gap-2"><Bed className="h-3 w-3 text-gray-400" />Rest areas with seating</li>
                             </ul>
                           </div>
                           <div>
