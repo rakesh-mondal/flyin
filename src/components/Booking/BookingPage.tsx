@@ -292,46 +292,84 @@ const StepCard = ({ step, title, children, open, className = "" }: { step: numbe
   );
 };
 
-const SummarySidebar = ({ trip }: { trip: any }) => (
-  <aside className="w-full max-w-xs sticky top-28 z-20">
-    <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
-      <div className="flex items-start justify-between mb-1">
-        <div className="font-semibold text-[16px]">Fare summary</div>
-        <div className="font-bold text-[20px] text-right">₹26,083</div>
+const SummarySidebar = ({ trip }: { trip: any }) => {
+  // State for add-ons expand/collapse
+  const [addonsOpen, setAddonsOpen] = useState(true);
+  return (
+    <aside className="w-full max-w-[300px] sticky top-4 z-20">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
+        {/* Top row */}
+        <div className="flex items-center justify-between mb-1">
+          <div className="font-bold text-[16px]">Fare summary</div>
+          <div className="text-base text-gray-500 font-normal">1 traveller</div>
+        </div>
+        {/* List */}
+        <div className="mt-4 flex flex-col gap-2">
+          <div className="flex items-center justify-between text-[12px]">
+            <span className="text-gray-600">Base fare</span>
+            <span className="font-bold text-gray-900">₹19,384</span>
+          </div>
+          <div className="flex items-center justify-between text-[12px]">
+            <span className="text-gray-600">Taxes & fees</span>
+            <span className="font-bold text-gray-900">₹2,741</span>
+          </div>
+          {/* Add-ons */}
+          <div>
+            <div className="flex items-center justify-between text-[12px] cursor-pointer select-none" onClick={() => setAddonsOpen(v => !v)}>
+              <span className="text-gray-600 text-left flex items-center">Add-ons
+                <svg className={`ml-1 w-4 h-4 transition-transform ${addonsOpen ? '' : 'rotate-180'}`} viewBox="0 0 20 20" fill="none"><path d="M6 8l4 4 4-4" stroke="#222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
+              <span className="font-bold text-gray-900">₹2,741</span>
+            </div>
+            {addonsOpen && (
+              <div className="mt-2 flex flex-col gap-1">
+                <div className="flex items-center justify-between text-[12px] text-gray-500">
+                  <span className="flex items-center text-left">Flexi fare
+                    <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
+                  </span>
+                  <span className="font-medium">₹900</span>
+                </div>
+                <div className="flex items-center justify-between text-[12px] text-gray-500">
+                  <span className="flex items-center text-left">Trip Insurance
+                    <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
+                  </span>
+                  <span className="font-medium">₹900</span>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Discount */}
+          <div className="flex items-center justify-between text-[12px] mt-2">
+            <span className="text-gray-600 flex items-center text-left">Discount
+              <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
+            </span>
+            <span className="font-bold text-green-600">-₹900</span>
+          </div>
+        </div>
+        <hr className="my-4 border-gray-200" />
+        {/* Total price */}
+        <div className="flex items-center justify-between text-[14px] font-bold">
+          <span>Total price</span>
+          <span>₹26,083</span>
+        </div>
+        {/* EMI section remains as is */}
+        <div className="flex items-start gap-3 bg-yellow-50 rounded-xl p-[10px] mt-4">
+          <span className="mt-1">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#194a8f" width="24" height="24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+            </svg>
+          </span>
+          <div className="flex-1">
+            <div className="text-[12px] font-medium text-gray-900 mb-0.5">Pay in 3 interest free EMIs</div>
+            <div className="text-[16px] font-bold text-gray-900 mb-0.5">at ₹8,694/mo <span className="text-[#194a8f] text-[12px] font-semibold ml-1 cursor-pointer">· View plans</span></div>
+            <div className="text-[12px] text-gray-500">with your credit card</div>
+          </div>
+        </div>
       </div>
-      <div className="text-[12px] text-gray-500 mb-4">1 adult</div>
-      <hr className="my-3 border-gray-200" />
-      <div className="flex flex-col gap-2 mb-3">
-        <div className="flex items-center justify-between text-[12px]">
-          <span className="text-gray-600">Base fare (1 traveller)</span>
-          <span className="font-medium text-gray-900">₹19,384</span>
-        </div>
-        <div className="flex items-center justify-between text-[12px]">
-          <span className="text-gray-600">Taxes and fees</span>
-          <span className="font-medium text-gray-900">₹6,699</span>
-        </div>
-        <div className="flex items-center justify-between text-[12px]">
-          <span className="text-gray-400 flex items-center">Visa Denial Cover <svg className="ml-1" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#194a8f"/><path d="M7.5 9.5L9 11L12 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-          <span className="font-semibold text-green-600">FREE</span>
-        </div>
-      </div>
-      <hr className="my-3 border-gray-200" />
-      <div className="flex items-start gap-3 bg-yellow-50 rounded-xl p-[10px] mt-2">
-        <span className="mt-1">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#194a8f" width="24" height="24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-          </svg>
-        </span>
-        <div className="flex-1">
-          <div className="text-[12px] font-medium text-gray-900 mb-0.5">Pay in 3 interest free EMIs</div>
-          <div className="text-[16px] font-bold text-gray-900 mb-0.5">at ₹8,694/mo <span className="text-[#194a8f] text-[12px] font-semibold ml-1 cursor-pointer">· View plans</span></div>
-          <div className="text-[12px] text-gray-500">with your credit card</div>
-        </div>
-      </div>
-    </div>
-    <CouponCard />
-  </aside>
-);
+      <CouponCard />
+    </aside>
+  );
+};
 
 // 2. Update HorizontalProgressBar to be in a card and match main+sidebar width
 function HorizontalProgressBar({ steps, currentStep }) {
@@ -490,7 +528,7 @@ export default function BookingPage({ trip }: { trip: any }) {
       <div className="mt-8 sticky top-0 z-30">
         <HorizontalProgressBar steps={steps} currentStep={openStep} />
       </div>
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start min-h-screen">
         {/* Left: Step Content */}
         <main className="flex-1 min-w-0">
           {openStep === 1 && (

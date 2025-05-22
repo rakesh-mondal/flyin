@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # Styling Conventions
@@ -67,3 +67,89 @@ const buttonVariants = cva(
   }
 )
 ```
+
+---
+description: Enforces pixel-perfect layout, alignment, and styling for Flight Details Card (timeline, amenities, baggage info)
+globs: src/components/trip-detail/FlightDetails.tsx
+alwaysApply: true
+---
+
+- **Flight Details Card UI (Pixel-Perfect)**
+  - Timeline (vertical line and dots):
+    - Top dot container height: 32px; bottom dot: 48px
+    - Vertical line: `top: 20px; bottom: 28px; width: 2px; background: #D1D5DB`
+    - Dots must be perfectly center-aligned with departure/arrival times
+    - Example:
+      ```tsx
+      <div className="relative flex flex-col items-center mr-4" style={{ minWidth: 16 }}>
+        <div style={{ height: 32 }}><div className="w-2 h-2 rounded-full bg-gray-400" /></div>
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 20, bottom: 28, width: '2px', background: '#D1D5DB' }} />
+        <div style={{ height: 48 }}><div className="w-2 h-2 rounded-full bg-gray-400" /></div>
+      </div>
+      ```
+  - Amenities icons:
+    - Use PNGs from `/public/icons/` (wifi.png, power.png, entertainment.png, baby.png, meal.png)
+    - All icons: `w-4 h-4 rounded-md bg-white object-contain`
+    - Left-aligned with duration text
+    - Example:
+      ```tsx
+      <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain" />
+      ```
+  - Baggage info:
+    - Two lines: "Cabin Baggage : 7kg per adult", "Check-in Baggage : 15kg per adult"
+    - Right-aligned: `items-end text-right` on column, `justify-end` on row
+    - Font weight: both value and 'per adult' are bold
+    - Example:
+      ```tsx
+      <div className="flex flex-col gap-1 min-w-[180px] items-end text-right">
+        <div className="flex items-center text-gray-500 text-[10px]">...<span className="font-bold">7kg</span><span className="font-bold">per adult</span></div>
+        <div className="flex items-center text-gray-500 text-[10px]">...<span className="font-bold">15kg</span><span className="font-bold">per adult</span></div>
+      </div>
+      ```
+  - Padding and spacing:
+    - Use `py-[0.65rem]` for vertical padding on amenities/baggage row
+    - Card uses `p-4` (1rem) for overall padding
+  - **Reference:** [FlightDetails.tsx](mdc:src/components/trip-detail/FlightDetails.tsx)
+  - **Cross-reference:** [08-visual-preservation-mandate.mdc](mdc:.cursor/rules/08-visual-preservation-mandate.mdc)
+  - **DO:**
+    - Match Figma/screenshots pixel-perfectly
+    - Use only approved icon assets and sizing
+    - Keep alignment and spacing consistent
+  - **DON'T:**
+    - Use SVGs for amenities icons in this card
+    - Change padding, alignment, or font sizes without design approval
+
+---
+description: Enforces sticky layout conventions for steps cards and sidebars in booking/checkout flows
+globs: src/components/Booking/BookingPage.tsx
+alwaysApply: true
+---
+
+- **Sticky UI Layout (Steps Card & Sidebar)**
+  - Steps/progress card at the top of booking/checkout pages must use `sticky` positioning to remain visible while scrolling
+    - Use Tailwind: `sticky top-0 z-30` (adjust `top-*` for header height if needed)
+    - Place sticky class on the outer wrapper of the steps card, not the inner content
+    - Example:
+      ```tsx
+      <div className="mt-8 sticky top-0 z-30">
+        <HorizontalProgressBar ... />
+      </div>
+      ```
+  - Sidebar (Fare summary, coupon, etc.) must also be sticky in desktop layouts
+    - Use Tailwind: `sticky top-28 z-20` (adjust `top-*` to sit below steps card)
+    - Add `self-start` to sidebar container in flex layouts to ensure correct alignment
+    - Example:
+      ```tsx
+      <div className="w-full md:w-[300px] flex-shrink-0 self-start">
+        <aside className="w-full max-w-xs sticky top-28 z-20">...</aside>
+      </div>
+      ```
+  - **DO:**
+    - Test sticky behavior in all supported browsers
+    - Adjust `top-*` values to account for fixed headers/other sticky elements
+    - Keep sticky elements within scrollable containers (avoid `overflow: hidden/auto` on parents)
+  - **DON'T:**
+    - Place sticky elements inside containers with `overflow: hidden/auto/scroll`
+    - Use sticky on elements that are not direct children of the scrollable area
+    - Forget to add `self-start` in flex layouts for vertical alignment
+  - **Reference:** [BookingPage.tsx](mdc:src/components/Booking/BookingPage.tsx)
