@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, ArrowRight, Coffee, Clock, Sofa, Baby } from 'lucide-react';
+import { X, ArrowRight, Coffee, Clock, Sofa, Baby, Footprints, Timer, MoveRight, Wifi, Landmark, ShoppingBag, Utensils, Bed, Info, PlaneLanding, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 interface FlightDetailsProps {
   flight?: {
@@ -270,13 +271,68 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                 <div key={index} className={index !== 0 ? 'pt-8 border-t border-gray-200 relative' : ''}>
                   {/* Layover pill */}
                   {index !== 0 && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 w-full flex justify-center">
-                      <span className="px-4 py-0.5 rounded-full bg-white border border-gray-300 text-[11px] font-medium shadow-sm flex items-center gap-1 whitespace-nowrap justify-center">
-                        <span className="text-blue-700 font-semibold">Change of flights</span>
-                        <span className="mx-1">•</span>
-                        <span className="font-bold">1 hr</span> layover in Jeddah
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 w-full flex justify-center cursor-pointer">
+                          <span className="px-4 py-0.5 rounded-full bg-white border border-gray-300 text-[11px] font-medium shadow-sm flex items-center gap-1 whitespace-nowrap justify-center">
+                            <span className="text-blue-700 font-semibold">Change of flights</span>
+                            <span className="mx-1">•</span>
+                            <span className="font-bold">1 hr</span> layover in Jeddah
+                            <Info className="ml-1 h-3.5 w-3.5 text-blue-500" />
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent align="center" sideOffset={8} className="bg-white rounded-xl shadow-xl border border-gray-200 p-0 max-w-xs w-[320px]">
+                        <div className="p-4">
+                          <div className="mb-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Footprints className="h-4 w-4 text-blue-500" />
+                              <span className="font-semibold text-sm text-gray-900">Walking Information</span>
+                            </div>
+                            <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                              <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Distance: ~800m between terminals</li>
+                              <li className="flex items-center gap-2"><Timer className="h-3 w-3 text-gray-400" />Walking time: 8-12 minutes</li>
+                              <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Escalators/moving walkways available</li>
+                            </ul>
+                          </div>
+                          <div className="mb-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <PlaneLanding className="h-4 w-4 text-blue-500" />
+                              <span className="font-semibold text-sm text-gray-900">Terminal Transfer</span>
+                            </div>
+                            <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                              <li>Arrival: <span className="font-medium">Terminal 1, Gate A12</span></li>
+                              <li>Departure: <span className="font-medium">Terminal 1, Gate B8</span></li>
+                              <li className="flex items-center gap-2"><BadgeCheck className="h-3 w-3 text-green-500" />Same terminal - no shuttle required</li>
+                            </ul>
+                          </div>
+                          <div className="mb-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Utensils className="h-4 w-4 text-blue-500" />
+                              <span className="font-semibold text-sm text-gray-900">Facilities During Layover</span>
+                            </div>
+                            <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                              <li className="flex items-center gap-2"><Wifi className="h-3 w-3 text-gray-400" />Free WiFi throughout terminal</li>
+                              <li className="flex items-center gap-2"><Landmark className="h-3 w-3 text-gray-400" />Prayer rooms available</li>
+                              <li className="flex items-center gap-2"><ShoppingBag className="h-3 w-3 text-gray-400" />Duty-free shopping (limited time)</li>
+                              <li className="flex items-center gap-2"><Utensils className="h-3 w-3 text-gray-400" />Food courts and cafes</li>
+                              <li className="flex items-center gap-2"><Bed className="h-3 w-3 text-gray-400" />Rest areas with seating</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <Info className="h-4 w-4 text-blue-500" />
+                              <span className="font-semibold text-sm text-gray-900">Important Notes</span>
+                            </div>
+                            <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
+                              <li>No visa required for transit</li>
+                              <li>Stay in international transit area</li>
+                              <li>Boarding begins 45 minutes before departure</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
                   {/* Airline row */}
                   <div className="flex items-center justify-between mb-2">
@@ -357,24 +413,59 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                       <div className="flex items-center py-[0.65rem] flex-wrap">
                         <div className="flex items-center gap-2 flex-1">
                           <div className="text-gray-700 font-medium text-[14px]">{segment.duration}</div>
-                          {/* Amenities icons as PNGs only */}
-                          <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain" />
-                          <img src="/icons/power.png" alt="Power" className="w-4 h-4 rounded-md bg-white object-contain" />
-                          <img src="/icons/entertainment.png" alt="Entertainment" className="w-4 h-4 rounded-md bg-white object-contain" />
-                          <img src="/icons/baby.png" alt="Baby" className="w-4 h-4 rounded-md bg-white object-contain" />
-                          <img src="/icons/meal.png" alt="Meal" className="w-4 h-4 rounded-md bg-white object-contain" />
+                          {/* Amenities icons with tooltips */}
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img src="/icons/wifi.png" alt="Wi-Fi" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
+                              In-flight Wi-Fi available
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img src="/icons/power.png" alt="Power" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
+                              Power outlets at your seat
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img src="/icons/entertainment.png" alt="Entertainment" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
+                              Personal entertainment screen
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img src="/icons/baby.png" alt="Baby" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
+                              Baby care facilities available
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img src="/icons/meal.png" alt="Meal" className="w-4 h-4 rounded-md bg-white object-contain cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={8} className="bg-black text-white px-3 py-2 rounded text-xs border-none shadow-lg">
+                              Meal included
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                         {/* Baggage info as two lines in a column */}
                         <div className="flex flex-col gap-1 min-w-[180px] items-end text-right">
                           <div className="flex items-center text-gray-500 text-[10px]">
                             <svg className="inline-block align-middle" width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#A0AEC0" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#A0AEC0" strokeWidth="2"/></svg>
-                            <span className="ml-1">Cabin Baggage :</span>
+                            <span className="ml-1">Cabin:</span>
                             <span className="font-bold text-gray-900 ml-1">7kg</span>
                             <span className="font-bold text-gray-900 ml-1">per adult</span>
                           </div>
                           <div className="flex items-center text-gray-500 text-[10px]">
                             <svg className="inline-block align-middle" width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#A0AEC0" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#A0AEC0" strokeWidth="2"/></svg>
-                            <span className="ml-1">Check-in Baggage :</span>
+                            <span className="ml-1">Check-in:</span>
                             <span className="font-bold text-gray-900 ml-1">15kg</span>
                             <span className="font-bold text-gray-900 ml-1">per adult</span>
                           </div>
