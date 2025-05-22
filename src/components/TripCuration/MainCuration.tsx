@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Ban, Luggage } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -290,6 +290,13 @@ function LineLoading({ duration = 4000 }) {
       `}</style>
     </div>
   );
+}
+
+// Helper to extract airport code from layover string (e.g., '2h in DXB')
+function extractAirportCode(layover: string | null | undefined): string | null {
+  if (!layover) return null;
+  const match = layover.match(/in ([A-Z]{3})/);
+  return match ? match[1] : null;
 }
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
@@ -1766,52 +1773,68 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedOutboundDateIdx}
                           />
                           <div className="flex flex-col gap-2">
-                            {sortedOutboundFlights.map((option, idx) => (
-                              <button
-                                key={idx}
-                                className={cn(
-                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                )}
-                                onClick={() => handleManualOutboundSelect(idx)}
-                              >
-                                <div className="flex items-center gap-3 py-1">
-                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      {option.onTimePerformance && (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#edf7ed] text-[#4d7c4d] border border-[#e5f2e5] ml-1">
-                                          {option.onTimePerformance}
+                            {sortedOutboundFlights.map((option, idx) => {
+                              // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
+                              const showSeatsLeft = option.stops !== 'non-stop' && Math.random() < 0.4;
+                              return (
+                                <button
+                                  key={idx}
+                                  className={cn(
+                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                    idx === selectedOutboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                  )}
+                                  onClick={() => handleManualOutboundSelect(idx)}
+                                >
+                                  <div className="flex items-center gap-3 py-1">
+                                    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-base font-bold text-black">
+                                          {option.departureTime}–{option.arrivalTime}
+                                          {option.stops === '1 stop' && (
+                                            <span className="ml-2 text-sm font-normal">via DXB</span>
+                                          )}
                                         </span>
-                                      )}
+                                      </div>
+                                      <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+                                        <span>{option.airlineName}</span>
+                                        <span>· {option.stops}</span>
+                                        {option.stops === 'non-stop' && (
+                                          <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                            <Luggage className="h-4 w-4 mr-0.5" />
+                                            <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                            <span
+                                              className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                              style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                            >
+                                              No check in baggage
+                                            </span>
+                                          </span>
+                                        )}
+                                        {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                        {showSeatsLeft && (
+                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                            2 seats left
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                      <span>{option.airlineName}</span>
-                                      <span>· {option.stops}</span>
-                                      {option.layover && <span>· {option.layover}</span>}
-                                      {option.stock && (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                          {option.stock}
-                                        </span>
-                                      )}
+                                    <div className="text-right flex flex-col items-end justify-between h-full">
+                                      <div className="text-base font-bold text-black">₹{option.price}</div>
+                                      <span
+                                        className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                      >
+                                        More info <span aria-hidden="true">→</span>
+                                      </span>
                                     </div>
                                   </div>
-                                  <div className="text-right flex flex-col items-end justify-between h-full">
-                                    <div className="text-base font-bold text-black">₹{option.price}</div>
-                                    <span
-                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                                      role="button"
-                                      tabIndex={0}
-                                      onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                    >
-                                      More info <span aria-hidden="true">→</span>
-                                    </span>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                         {/* Inbound List */}
@@ -1842,52 +1865,68 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             onSelect={setSelectedInboundDateIdx}
                           />
                           <div className="flex flex-col gap-2">
-                            {sortedInboundFlights.map((option, idx) => (
-                              <button
-                                key={idx}
-                                className={cn(
-                                  "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
-                                  idx === selectedInboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                )}
-                                onClick={() => handleManualInboundSelect(idx)}
-                              >
-                                <div className="flex items-center gap-3 py-1">
-                                  <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
-                                      {option.onTimePerformance && (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#edf7ed] text-[#4d7c4d] border border-[#e5f2e5] ml-1">
-                                          {option.onTimePerformance}
+                            {sortedInboundFlights.map((option, idx) => {
+                              // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
+                              const showSeatsLeft = option.stops !== 'non-stop' && Math.random() < 0.4;
+                              return (
+                                <button
+                                  key={idx}
+                                  className={cn(
+                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all",
+                                    idx === selectedInboundIdx ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                  )}
+                                  onClick={() => handleManualInboundSelect(idx)}
+                                >
+                                  <div className="flex items-center gap-3 py-1">
+                                    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-base font-bold text-black">
+                                          {option.departureTime}–{option.arrivalTime}
+                                          {option.stops === '1 stop' && (
+                                            <span className="ml-2 text-sm font-normal">via DXB</span>
+                                          )}
                                         </span>
-                                      )}
+                                      </div>
+                                      <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+                                        <span>{option.airlineName}</span>
+                                        <span>· {option.stops}</span>
+                                        {option.stops === 'non-stop' && (
+                                          <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                            <Luggage className="h-4 w-4 mr-0.5" />
+                                            <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                            <span
+                                              className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                              style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                            >
+                                              No check in baggage
+                                            </span>
+                                          </span>
+                                        )}
+                                        {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                        {showSeatsLeft && (
+                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                            2 seats left
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                      <span>{option.airlineName}</span>
-                                      <span>· {option.stops}</span>
-                                      {option.layover && <span>· {option.layover}</span>}
-                                      {!option.onTimePerformance && option.stock && (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                          {option.stock}
-                                        </span>
-                                      )}
+                                    <div className="text-right flex flex-col items-end justify-between h-full">
+                                      <div className="text-base font-bold text-black">₹{option.price}</div>
+                                      <span
+                                        className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                      >
+                                        More info <span aria-hidden="true">→</span>
+                                      </span>
                                     </div>
                                   </div>
-                                  <div className="text-right flex flex-col items-end justify-between h-full">
-                                    <div className="text-base font-bold text-black">₹{option.price}</div>
-                                    <span
-                                      className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                                      role="button"
-                                      tabIndex={0}
-                                      onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                    >
-                                      More info <span aria-hidden="true">→</span>
-                                    </span>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
