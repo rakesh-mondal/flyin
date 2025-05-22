@@ -3,7 +3,7 @@ import TopHeader from '../TripCuration/TopHeader';
 import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
-import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
 
@@ -726,6 +726,8 @@ export default function BookingPage({ trip }: { trip: any }) {
                   ]}
                 />
                 <ItineraryExtras />
+                {/* Add flexibility add-ons section at the bottom of Step 1 */}
+                {AddOnsContent}
               </StepCard>
               <button
                 className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
@@ -747,7 +749,68 @@ export default function BookingPage({ trip }: { trip: any }) {
                 </div>
               </div>
               <StepCard step={2} title="Choose add-ons" open={true}>
-                {AddOnsContent}
+                {/* Only show Travel Essentials here, not AddOnsContent */}
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mb-6">
+                  <div className="text-xl font-bold mb-4">Travel Essentials</div>
+                  <div className="flex flex-col gap-4">
+                    {/* Visa Requirement Checker */}
+                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                        <CalendarIcon className="text-blue-700 w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-lg">Visa Requirement Checker</div>
+                        <div className="text-sm text-gray-700">Check visa requirements for Indian citizens. Most visitors need a visa to enter UAE</div>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="font-bold text-xl">₹2,000</span>
+                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        </div>
+                      </div>
+                      <button className="ml-4 bg-blue-700 text-white rounded px-6 py-2 font-semibold">Remove</button>
+                    </div>
+                    {/* International sim cards */}
+                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                        <DevicePhoneMobileIcon className="text-blue-700 w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-lg">International sim cards</div>
+                        <div className="text-sm text-gray-700">Get a sim card having 20 GB data, 60 min international call and valid till 8 days.</div>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="font-bold text-xl">₹300</span>
+                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        </div>
+                      </div>
+                      <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                    </div>
+                    {/* Flight Alerts */}
+                    <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
+                      <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
+                        <BellIcon className="text-blue-700 w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-lg">Flight Alerts</div>
+                        <div className="text-sm text-gray-700">Get real-time notifications about any flight changes by email and SMS.</div>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="font-bold text-xl">₹800</span>
+                          <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        </div>
+                      </div>
+                      <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                    </div>
+                  </div>
+                  {/* Footer */}
+                  <div className="flex items-center justify-between mt-6">
+                    <div className="flex items-center gap-2">
+                      <img src="/tripadd-logo.svg" alt="TripAdd" className="h-5" />
+                      <a href="#" className="text-blue-600 text-sm underline">View terms & conditions</a>
+                    </div>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" className="accent-blue-700" />
+                      I accept the terms and conditions of this policy
+                    </label>
+                  </div>
+                </div>
               </StepCard>
               <button
                 className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
