@@ -41,11 +41,11 @@ function getFareOptions(trip) {
         seatSelection: false,
         mealSelection: false,
       },
-      promo: 'Get Flat AED 80 off using TRYCT for new users',
+      promo: 'Get Flat AED 80 off using TRYFL for new users',
     },
     {
       id: 'flex',
-      label: 'Cleartrip Flex',
+      label: 'Flyin Flex',
       price: 450,
       currency: 'AED',
       features: {
@@ -60,7 +60,7 @@ function getFareOptions(trip) {
         seatSelection: true,
         mealSelection: true,
       },
-      promo: 'Get Flat AED 80 off using TRYCT for new users',
+      promo: 'Get Flat AED 80 off using TRYFL for new users',
       highlight: 'Best deal',
       badge: 'CTSPECIAL',
     },
@@ -148,8 +148,8 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
   
   // Provide mock data for outbound and return if missing (for prototype)
   const mockOutbound = {
-    airlineLogo: '/logos/indigo.png',
-    airlineName: 'Indigo',
+    airlineLogo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
+    airlineName: 'Qatar Airways',
     departureTime: '13:10',
     arrivalTime: '20:08',
     stops: '1 stop',
@@ -158,8 +158,8 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
     departureDate: 'Fri, 28 Mar',
   };
   const mockReturn = {
-    airlineLogo: '/logos/indigo.png',
-    airlineName: 'Indigo',
+    airlineLogo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
+    airlineName: 'Qatar Airways',
     departureTime: '09:10',
     arrivalTime: '12:15',
     stops: 'Non-stop',
@@ -205,7 +205,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
             >
               {/* Left: Logo + Name */}
               <div className="flex flex-col items-center min-w-[60px]">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-[4px] bg-white">
                   {outbound.airlineLogo ? (
                     <img src={outbound.airlineLogo} alt={outbound.airlineName} className="w-6 h-6 object-contain" />
                   ) : (
@@ -231,7 +231,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
             >
               {/* Left: Logo + Name */}
               <div className="flex flex-col items-center min-w-[60px]">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-[4px] bg-white">
                   {inbound.airlineLogo ? (
                     <img src={inbound.airlineLogo} alt={inbound.airlineName} className="w-6 h-6 object-contain" />
                   ) : (
@@ -312,30 +312,25 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                 >
                   {filteredOptions.map((option) => (
                     <div key={option.id} className="relative">
-                      {option.highlight && (
-                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white text-[#184E91] text-xs px-4 py-0.5 rounded-b-md z-10 border border-[#184E91]">
-                          {option.highlight}
+                      {/* Badge: FLSPECIAL, slightly down from top right */}
+                      {option.badge && (
+                        <div className="absolute right-3 top-10 bg-green-500 text-white text-xs px-2 py-0.5 rounded">
+                          FLSPECIAL
                         </div>
                       )}
-                      
+                      {/* Radio button: top right */}
+                      <div className="absolute top-3 right-3">
+                        <RadioGroupItem value={option.id} id={option.id} className="h-5 w-5 text-blue-700" />
+                      </div>
                       <div className={`border-2 ${selectedFare === option.id ? 'border-[#184E91]' : 'border-gray-200'} rounded-lg overflow-hidden transition-all duration-200`}>
-                        <div className="pt-8 pb-3 flex flex-col items-center relative border-b">
-                          {option.badge && (
-                            <div className="absolute right-3 top-3 bg-green-500 text-white text-xs px-2 py-0.5 rounded">
-                              {option.badge}
-                            </div>
-                          )}
-                          
-                          <div className="absolute top-4 left-4">
-                            <RadioGroupItem value={option.id} id={option.id} className="h-5 w-5 text-blue-700" />
-                          </div>
-                          
-                          <div className="text-base font-medium">{option.label}</div>
-                          <div className="text-3xl font-bold">{option.currency} {option.price}</div>
+                        <div className="pt-8 pb-3 flex flex-col items-start relative border-b px-4">
+                          {/* Left-aligned label and price */}
+                          <div className="text-base font-medium text-left w-full" style={{ fontSize: '16px' }}>{option.label}</div>
+                          <div className="font-bold text-left w-full" style={{ fontSize: '24px' }}>{option.currency} {option.price}</div>
                         </div>
                         
                         {/* Baggage */}
-                        <div className="px-3 py-2 border-b h-[68px]">
+                        <div className="px-3 py-2 border-b border-dashed h-[68px]">
                           <div className="flex items-start gap-2">
                             <Check className="h-5 w-5 mt-0.5 text-green-500 flex-shrink-0" />
                             <span className="text-sm">{option.features.baggage.cabin}</span>
@@ -347,7 +342,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                         </div>
                         
                         {/* Cancellation */}
-                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
                           {option.features.cancellation && !removedFeatures[option.id]?.cancellation ? (
                             <div className="flex items-center gap-2 w-full">
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
@@ -391,7 +386,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                         </div>
                         
                         {/* Date Change */}
-                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
                           {option.features.dateChange && !removedFeatures[option.id]?.dateChange ? (
                             <div className="flex items-center gap-2 w-full">
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
@@ -435,7 +430,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                         </div>
                         
                         {/* Seat selection */}
-                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
                           {option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? (
                             <div className="flex items-center gap-2 w-full">
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
@@ -479,7 +474,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                         </div>
                         
                         {/* Meal selection */}
-                        <div className="px-3 py-2 border-b h-[40px] flex items-center">
+                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
                           {option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? (
                             <div className="flex items-center gap-2 w-full">
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
@@ -545,6 +540,11 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                           ) : null}
                         </div>
                       </div>
+                      {option.highlight && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white text-[#184E91] px-4 py-0.5 rounded-full z-10 border-2 border-[#184E91]" style={{ fontSize: '14px' }}>
+                          {option.highlight}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </RadioGroup>
