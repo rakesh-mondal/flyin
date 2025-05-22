@@ -277,25 +277,10 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
 };
 
 const StepCard = ({ step, title, children, open, className = "" }: { step: number, title: string, children?: React.ReactNode, open: boolean, className?: string }) => {
-  // Determine style for the step circle
-  let circleClass = "w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg border";
-  let circleStyle = {};
-  let text = step;
-
-  if (step === 1 && open) {
-    // Step 1 open: black circle, white text
-    circleClass += " bg-black text-white border-black";
-  } else {
-    // Steps 2-4 or any step not open: white circle, black border, black text
-    circleClass += " bg-white text-black border-black";
-  }
-
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
       <div className="flex items-center gap-3 mb-6">
-        <div className={circleClass} style={circleStyle}>
-          {text}
-        </div>
+        {/* Removed step number circle */}
         <span className="text-xl font-bold">{title}</span>
       </div>
       {open ? (
@@ -347,6 +332,33 @@ const SummarySidebar = ({ trip }: { trip: any }) => (
     <CouponCard />
   </aside>
 );
+
+// 2. Update HorizontalProgressBar to be in a card and match main+sidebar width
+function HorizontalProgressBar({ steps, currentStep }) {
+  return (
+    <div className="flex justify-center w-full">
+      <div className="w-full max-w-[1120px] rounded-2xl border border-gray-200 bg-white px-2 py-3 flex items-center justify-between mb-4">
+        {steps.map((label, idx) => {
+          const stepNum = idx + 1;
+          const isActive = currentStep === stepNum;
+          const isCompleted = currentStep > stepNum;
+          // Always show the label for every step
+          return (
+            <React.Fragment key={label}>
+              <div className="flex flex-col items-center flex-1 min-w-0">
+                <div className={`flex items-center justify-center w-7 h-7 rounded-full border-2 font-bold text-sm transition-all duration-200 ${isActive ? 'bg-black text-white border-black' : isCompleted ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-300'}`}>{stepNum}</div>
+                <span className={`mt-1 text-xs font-semibold text-center ${isActive ? 'text-black' : isCompleted ? 'text-blue-600' : 'text-gray-400'}`}>{label}</span>
+              </div>
+              {idx < steps.length - 1 && (
+                <div className={`flex-1 h-1 mx-1 md:mx-2 rounded ${currentStep > stepNum ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function BookingPage({ trip }: { trip: any }) {
   // Debug log for trip object
@@ -474,12 +486,16 @@ export default function BookingPage({ trip }: { trip: any }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 py-12 px-4 items-start">
-        {/* Left: Vertical Stepper and Content */}
+      {/* Add gap between header and steps card */}
+      <div className="mt-8">
+        <HorizontalProgressBar steps={steps} currentStep={openStep} />
+      </div>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start">
+        {/* Left: Step Content */}
         <main className="flex-1 min-w-0">
-          <StepCard step={1} title="Review your itinerary" open={openStep === 1}>
-            {openStep === 1 ? (
-              <>
+          {openStep === 1 && (
+            <>
+              <StepCard step={1} title="Review your itinerary" open={true}>
                 <ItineraryReview trip={trip} />
                 <FareRules
                   directions={[
@@ -578,62 +594,54 @@ export default function BookingPage({ trip }: { trip: any }) {
                   ]}
                 />
                 <ItineraryExtras />
-              </>
-            ) : ItinerarySummary}
-          </StepCard>
-          {openStep === 1 && (
-            <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-              onClick={() => setOpenStep(2)}
-            >
-              Continue
-            </button>
+              </StepCard>
+              <button
+                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+                onClick={() => setOpenStep(2)}
+              >
+                Continue
+              </button>
+            </>
           )}
-          <StepCard step={2} title="Choose add-ons" open={openStep === 2} className="mt-8">
-            {openStep === 2 ? (
-              <>
-                {AddOnsContent}
-              </>
-            ) : AddOnsSummary}
-          </StepCard>
           {openStep === 2 && (
-            <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-              onClick={() => setOpenStep(3)}
-            >
-              Continue
-            </button>
+            <>
+              <StepCard step={2} title="Choose add-ons" open={true}>
+                {AddOnsContent}
+              </StepCard>
+              <button
+                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+                onClick={() => setOpenStep(3)}
+              >
+                Continue
+              </button>
+            </>
           )}
-          <StepCard step={3} title="Add contact details" open={openStep === 3} className="mt-8">
-            {openStep === 3 ? (
-              <>
-                {/* Contact details form goes here */}
-              </>
-            ) : ContactSummary}
-          </StepCard>
           {openStep === 3 && (
-            <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-              onClick={() => setOpenStep(4)}
-            >
-              Continue
-            </button>
+            <>
+              <StepCard step={3} title="Add contact details" open={true}>
+                {/* Contact details form goes here */}
+              </StepCard>
+              <button
+                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+                onClick={() => setOpenStep(4)}
+              >
+                Continue
+              </button>
+            </>
           )}
-          <StepCard step={4} title="Add traveller details" open={openStep === 4} className="mt-8">
-            {openStep === 4 ? (
-              <>
+          {openStep === 4 && (
+            <>
+              <StepCard step={4} title="Add traveller details" open={true}>
                 {/* Traveller details form goes here */}
                 {/* No continue button on last step */}
-              </>
-            ) : TravellerSummary}
-          </StepCard>
-          {openStep === 4 && (
-            <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-              // Add your final action here, e.g., submit or review
-            >
-              Continue
-            </button>
+              </StepCard>
+              <button
+                className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+                // Add your final action here, e.g., submit or review
+              >
+                Continue
+              </button>
+            </>
           )}
         </main>
         {/* Right: Summary */}
