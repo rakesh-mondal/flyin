@@ -333,188 +333,116 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                         <div className="px-3 py-2 border-b border-dashed h-[68px]">
                           <div className="flex items-start gap-2">
                             <Check className="h-5 w-5 mt-0.5 text-green-500 flex-shrink-0" />
-                            <span className="text-sm">{option.features.baggage.cabin}</span>
+                            <span className="text-[12px]">{option.features.baggage.cabin}</span>
                           </div>
                           <div className="flex items-start gap-2 mt-1">
                             <Check className="h-5 w-5 mt-0.5 text-green-500 flex-shrink-0" />
-                            <span className="text-sm">{option.features.baggage.checkin}</span>
+                            <span className="text-[12px]">{option.features.baggage.checkin}</span>
                           </div>
                         </div>
                         
                         {/* Cancellation */}
-                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
-                          {option.features.cancellation && !removedFeatures[option.id]?.cancellation ? (
-                            <div className="flex items-center gap-2 w-full">
+                        <div className="px-3 py-2.5 border-b border-dashed">
+                          <div className="flex items-center gap-2 w-full">
+                            {option.features.cancellation && !removedFeatures[option.id]?.cancellation ? (
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Free cancellation for AED 25</span>
-                                {option.id === 'flex' && (
-                                  <span 
-                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleFeature(option.id, 'cancellation');
-                                    }}
-                                  >
-                                    Remove
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ) : option.features.cancellation && removedFeatures[option.id]?.cancellation ? (
-                            <div className="flex items-center gap-2 w-full">
+                            ) : (
                               <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Cancellation fee starts at AED 200</span>
-                                <span 
-                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                            )}
+                            <div className="flex-1 flex justify-between items-center">
+                              <span className="text-[12px] transition-all duration-200 min-w-[120px]">Free cancellation for AED 25</span>
+                              {option.id === 'flex' && (
+                                <span
+                                  className={`h-5 flex items-center text-xs font-medium cursor-pointer transition-colors duration-200 min-w-[45px] text-right ${option.features.cancellation && !removedFeatures[option.id]?.cancellation ? 'text-red-600 hover:text-red-700' : 'text-[#184E91] hover:text-blue-700'}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleFeature(option.id, 'cancellation');
                                   }}
                                 >
-                                  Add
+                                  {option.features.cancellation && !removedFeatures[option.id]?.cancellation ? 'Remove' : 'Add'}
                                 </span>
-                              </div>
+                              )}
                             </div>
-                          ) : (
-                            <div className="flex items-start gap-2">
-                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
-                              <span className="text-sm min-w-[120px]">Cancellation fee starts at AED 200</span>
-                            </div>
-                          )}
+                          </div>
+                          <div className={`text-[10px] font-semibold text-red-500 mt-0.5 ml-7 ${option.features.cancellation && removedFeatures[option.id]?.cancellation ? '' : 'invisible'}`}>Cancellation fee starts from AED 200 onwards.</div>
                         </div>
                         
                         {/* Date Change */}
-                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
-                          {option.features.dateChange && !removedFeatures[option.id]?.dateChange ? (
-                            <div className="flex items-center gap-2 w-full">
+                        <div className="px-3 py-2.5 border-b border-dashed">
+                          <div className="flex items-center gap-2 w-full">
+                            {option.features.dateChange && !removedFeatures[option.id]?.dateChange ? (
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Free date change for AED 25</span>
-                                {option.id === 'flex' && (
-                                  <span 
-                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleFeature(option.id, 'dateChange');
-                                    }}
-                                  >
-                                    Remove
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ) : option.features.dateChange && removedFeatures[option.id]?.dateChange ? (
-                            <div className="flex items-center gap-2 w-full">
+                            ) : (
                               <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Date change fee starts at AED 200</span>
-                                <span 
-                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                            )}
+                            <div className="flex-1 flex justify-between items-center">
+                              <span className="text-[12px] transition-all duration-200 min-w-[120px]">Free date change for AED 25</span>
+                              {option.id === 'flex' && (
+                                <span
+                                  className={`h-5 flex items-center text-xs font-medium cursor-pointer transition-colors duration-200 min-w-[45px] text-right ${option.features.dateChange && !removedFeatures[option.id]?.dateChange ? 'text-red-600 hover:text-red-700' : 'text-[#184E91] hover:text-blue-700'}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleFeature(option.id, 'dateChange');
                                   }}
                                 >
-                                  Add
+                                  {option.features.dateChange && !removedFeatures[option.id]?.dateChange ? 'Remove' : 'Add'}
                                 </span>
-                              </div>
+                              )}
                             </div>
-                          ) : (
-                            <div className="flex items-start gap-2">
-                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
-                              <span className="text-sm min-w-[120px]">Date change fee starts at AED 200</span>
-                            </div>
-                          )}
+                          </div>
+                          <div className={`text-[10px] font-semibold text-red-500 mt-0.5 ml-7 ${option.features.dateChange && removedFeatures[option.id]?.dateChange ? '' : 'invisible'}`}>Date change fee starts from AED 200 onwards.</div>
                         </div>
                         
                         {/* Seat selection */}
-                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
-                          {option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? (
-                            <div className="flex items-center gap-2 w-full">
+                        <div className="px-3 py-2.5 border-b border-dashed">
+                          <div className="flex items-center gap-2 w-full">
+                            {option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? (
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Seat selection for AED 25</span>
-                                {option.id === 'flex' && (
-                                  <span 
-                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleFeature(option.id, 'seatSelection');
-                                    }}
-                                  >
-                                    Remove
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ) : option.features.seatSelection && removedFeatures[option.id]?.seatSelection ? (
-                            <div className="flex items-center gap-2 w-full">
+                            ) : (
                               <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Chargeable seat</span>
-                                <span 
-                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                            )}
+                            <div className="flex-1 flex justify-between items-center">
+                              <span className="text-[12px] transition-all duration-200 min-w-[120px]">Seat selection for AED 25</span>
+                              {option.id === 'flex' && (
+                                <span
+                                  className={`h-5 flex items-center text-xs font-medium cursor-pointer transition-colors duration-200 min-w-[45px] text-right ${option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? 'text-red-600 hover:text-red-700' : 'text-[#184E91] hover:text-blue-700'}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleFeature(option.id, 'seatSelection');
                                   }}
                                 >
-                                  Add
+                                  {option.features.seatSelection && !removedFeatures[option.id]?.seatSelection ? 'Remove' : 'Add'}
                                 </span>
-                              </div>
+                              )}
                             </div>
-                          ) : (
-                            <div className="flex items-start gap-2">
-                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
-                              <span className="text-sm min-w-[120px]">Chargeable seat</span>
-                            </div>
-                          )}
+                          </div>
+                          <div className={`text-[10px] font-semibold text-red-500 mt-0.5 ml-7 ${option.features.seatSelection && removedFeatures[option.id]?.seatSelection ? '' : 'invisible'}`}>Seat selection fee starts from AED 200 onwards.</div>
                         </div>
                         
                         {/* Meal selection */}
-                        <div className="px-3 py-2 border-b border-dashed h-[40px] flex items-center">
-                          {option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? (
-                            <div className="flex items-center gap-2 w-full">
+                        <div className="px-3 py-2.5 border-b border-dashed">
+                          <div className="flex items-center gap-2 w-full">
+                            {option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? (
                               <Check className="h-5 w-5 text-green-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Meal selection for AED 25</span>
-                                {option.id === 'flex' && (
-                                  <span 
-                                    className="text-xs text-red-600 font-medium cursor-pointer transition-colors duration-200 hover:text-red-700 min-w-[45px] text-right" 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleFeature(option.id, 'mealSelection');
-                                    }}
-                                  >
-                                    Remove
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ) : option.features.mealSelection && removedFeatures[option.id]?.mealSelection ? (
-                            <div className="flex items-center gap-2 w-full">
+                            ) : (
                               <Cross className="h-5 w-5 text-red-500 flex-shrink-0 transition-all duration-200" />
-                              <div className="flex-1 flex justify-between items-center">
-                                <span className="text-sm transition-all duration-200 min-w-[120px]">Chargeable meal</span>
-                                <span 
-                                  className="text-xs text-[#184E91] font-medium cursor-pointer transition-colors duration-200 hover:text-blue-700 min-w-[45px] text-right" 
+                            )}
+                            <div className="flex-1 flex justify-between items-center">
+                              <span className="text-[12px] transition-all duration-200 min-w-[120px]">Meal selection for AED 25</span>
+                              {option.id === 'flex' && (
+                                <span
+                                  className={`h-5 flex items-center text-xs font-medium cursor-pointer transition-colors duration-200 min-w-[45px] text-right ${option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? 'text-red-600 hover:text-red-700' : 'text-[#184E91] hover:text-blue-700'}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleFeature(option.id, 'mealSelection');
                                   }}
                                 >
-                                  Add
+                                  {option.features.mealSelection && !removedFeatures[option.id]?.mealSelection ? 'Remove' : 'Add'}
                                 </span>
-                              </div>
+                              )}
                             </div>
-                          ) : (
-                            <div className="flex items-start gap-2">
-                              <Cross className="h-5 w-5 mt-0.5 text-red-500 flex-shrink-0" />
-                              <span className="text-sm min-w-[120px]">Chargeable meal</span>
-                            </div>
-                          )}
+                          </div>
+                          <div className={`text-[10px] font-semibold text-red-500 mt-0.5 ml-7 ${option.features.mealSelection && removedFeatures[option.id]?.mealSelection ? '' : 'invisible'}`}>Meal selection fee starts from AED 200 onwards.</div>
                         </div>
                         
                         {/* Exclusive benefits - Fixed height to prevent layout shift */}
