@@ -293,10 +293,10 @@ const StepCard = ({ step, title, children, open, className = "" }: { step: numbe
 };
 
 const SummarySidebar = ({ trip }: { trip: any }) => (
-  <aside className="w-full max-w-xs sticky top-8">
+  <aside className="w-full max-w-xs sticky top-28 z-20">
     <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
       <div className="flex items-start justify-between mb-1">
-        <div className="font-semibold text-[16px]">Total price</div>
+        <div className="font-semibold text-[16px]">Fare summary</div>
         <div className="font-bold text-[20px] text-right">₹26,083</div>
       </div>
       <div className="text-[12px] text-gray-500 mb-4">1 adult</div>
@@ -337,7 +337,7 @@ const SummarySidebar = ({ trip }: { trip: any }) => (
 function HorizontalProgressBar({ steps, currentStep }) {
   return (
     <div className="flex justify-center w-full">
-      <div className="w-full max-w-[1120px] rounded-2xl border border-gray-200 bg-white px-2 py-3 flex items-center justify-between mb-4">
+      <div className="w-full max-w-[1120px] rounded-2xl border border-gray-200 bg-white px-2 py-3 flex items-center justify-between mb-4 sticky top-0 z-30">
         {steps.map((label, idx) => {
           const stepNum = idx + 1;
           const isActive = currentStep === stepNum;
@@ -487,7 +487,7 @@ export default function BookingPage({ trip }: { trip: any }) {
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
       {/* Add gap between header and steps card */}
-      <div className="mt-8">
+      <div className="mt-8 sticky top-0 z-30">
         <HorizontalProgressBar steps={steps} currentStep={openStep} />
       </div>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start">
@@ -645,7 +645,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
         </main>
         {/* Right: Summary */}
-        <div className="w-full md:w-[300px] flex-shrink-0">
+        <div className="w-full md:w-[300px] flex-shrink-0 self-start">
           <SummarySidebar trip={trip} />
         </div>
       </div>
