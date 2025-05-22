@@ -4,6 +4,7 @@ import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
 import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 
 const steps = [
   'Review your itinerary',
@@ -257,6 +258,41 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
                       <span className="flex items-center mx-2 text-sm text-gray-600 font-medium">
                         <svg className="mr-1" width="20" height="20" style={{ transform: 'scale(0.7)' }} viewBox="0 0 20 20"><g fill="#4D4D4D" fillRule="evenodd"><path d="M19.202 6.102c-1.055-2.459-2.847-4.246-5.325-5.304A9.83 9.83 0 009.984 0a9.728 9.728 0 00-3.882.798C3.643 1.853 1.844 3.64.787 6.102A9.732 9.732 0 000 9.984c0 1.356.258 2.659.787 3.893 1.057 2.462 2.857 4.26 5.315 5.314a9.728 9.728 0 003.882.798c1.355 0 2.654-.27 3.892-.798 2.48-1.057 4.271-2.856 5.326-5.314A9.782 9.782 0 0020 9.984a9.724 9.724 0 00-.798-3.882zm-1.597 8.3a8.773 8.773 0 01-3.215 3.203 8.613 8.613 0 01-4.406 1.181c-1.192 0-2.33-.23-3.412-.7-1.083-.47-2.017-1.088-2.8-1.87-.781-.781-1.404-1.725-1.87-2.81a8.61 8.61 0 01-.688-3.422c0-1.586.39-3.054 1.17-4.396a8.778 8.778 0 013.204-3.204 8.546 8.546 0 014.396-1.181c1.585 0 3.06.396 4.406 1.18a8.8 8.8 0 013.215 3.205 8.547 8.547 0 011.181 4.396 8.629 8.629 0 01-1.18 4.417z" fillRule="nonzero"></path><path d="M10.618 9.902V4.237c0-.339-.295-.612-.634-.612a.616.616 0 00-.602.612V9.99c0 .011.022.055.022.088a.572.572 0 00.164.492l3.27 3.27a.622.622 0 00.842 0 .59.59 0 000-.854l-3.062-3.083z"></path></g></svg>
                         {seg.duration}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <span className="flex items-center gap-2 ml-3 cursor-pointer">
+                              <img src="/icons/wifi.png" alt="Wi-Fi" className="w-5 h-5 bg-gray-50 rounded" />
+                              <img src="/icons/power.png" alt="Power" className="w-5 h-5 bg-gray-50 rounded" />
+                              <img src="/icons/entertainment.png" alt="Entertainment" className="w-5 h-5 bg-gray-50 rounded" />
+                              <img src="/icons/baby.png" alt="Baby" className="w-5 h-5 bg-gray-50 rounded" />
+                              <img src="/icons/meal.png" alt="Meal" className="w-5 h-5 bg-gray-50 rounded" />
+                            </span>
+                          </PopoverTrigger>
+                          <PopoverContent side="bottom" align="start" className="p-3 w-56 bg-white rounded-xl shadow-xl border border-gray-200">
+                            <div className="flex flex-col gap-3">
+                              <div className="flex items-center gap-2">
+                                <img src="/icons/wifi.png" alt="Wi-Fi" className="w-5 h-5" />
+                                <span className="text-sm text-green-700">Wi-fi available</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src="/icons/power.png" alt="Power" className="w-5 h-5" />
+                                <span className="text-sm text-green-700">Power outlet available</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src="/icons/baby.png" alt="Baby" className="w-5 h-5" />
+                                <span className="text-sm text-red-600">No baby bassinet</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src="/icons/entertainment.png" alt="Entertainment" className="w-5 h-5" />
+                                <span className="text-sm text-red-600">No entertainment</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src="/icons/meal.png" alt="Meal" className="w-5 h-5" />
+                                <span className="text-sm text-red-600">No meal</span>
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </span>
                     </div>
                     {/* Arrival */}
@@ -306,17 +342,17 @@ const SummarySidebar = ({ trip }: { trip: any }) => {
         {/* List */}
         <div className="mt-4 flex flex-col gap-2">
           <div className="flex items-center justify-between text-[12px]">
-            <span className="text-gray-600">Base fare</span>
+            <span className="text-[#4B5563] font-medium">Base fare</span>
             <span className="font-bold text-gray-900">₹19,384</span>
           </div>
           <div className="flex items-center justify-between text-[12px]">
-            <span className="text-gray-600">Taxes & fees</span>
+            <span className="text-[#4B5563] font-medium">Taxes & fees</span>
             <span className="font-bold text-gray-900">₹2,741</span>
           </div>
           {/* Add-ons */}
           <div>
             <div className="flex items-center justify-between text-[12px] cursor-pointer select-none" onClick={() => setAddonsOpen(v => !v)}>
-              <span className="text-gray-600 text-left flex items-center">Add-ons
+              <span className="text-[#4B5563] font-medium text-left flex items-center">Add-ons
                 <svg className={`ml-1 w-4 h-4 transition-transform ${addonsOpen ? '' : 'rotate-180'}`} viewBox="0 0 20 20" fill="none"><path d="M6 8l4 4 4-4" stroke="#222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </span>
               <span className="font-bold text-gray-900">₹2,741</span>
@@ -324,13 +360,13 @@ const SummarySidebar = ({ trip }: { trip: any }) => {
             {addonsOpen && (
               <div className="mt-2 flex flex-col gap-1">
                 <div className="flex items-center justify-between text-[12px] text-gray-500">
-                  <span className="flex items-center text-left">Flexi fare
+                  <span className="flex items-center text-left text-[#4B5563] font-medium">Flexi fare
                     <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
                   </span>
                   <span className="font-medium">₹900</span>
                 </div>
                 <div className="flex items-center justify-between text-[12px] text-gray-500">
-                  <span className="flex items-center text-left">Trip Insurance
+                  <span className="flex items-center text-left text-[#4B5563] font-medium">Trip Insurance
                     <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
                   </span>
                   <span className="font-medium">₹900</span>
@@ -340,7 +376,7 @@ const SummarySidebar = ({ trip }: { trip: any }) => {
           </div>
           {/* Discount */}
           <div className="flex items-center justify-between text-[12px] mt-2">
-            <span className="text-gray-600 flex items-center text-left">Discount
+            <span className="text-[#4B5563] font-medium flex items-center text-left">Discount
               <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
             </span>
             <span className="font-bold text-green-600">-₹900</span>
