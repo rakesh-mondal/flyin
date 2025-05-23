@@ -692,7 +692,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                         <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 bg-blue-700 text-white rounded px-6 py-2 font-semibold">Remove</button>
+                    <button className="ml-4 bg-blue-700 text-white rounded px-3 py-1.5 text-xs font-medium">Remove</button>
                   </div>
                   {/* International sim cards */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
@@ -707,7 +707,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                         <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-3 py-1.5 text-xs font-medium">Add</button>
                   </div>
                   {/* Flight Alerts */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
@@ -722,7 +722,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                         <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-6 py-2 font-semibold">Add</button>
+                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-3 py-1.5 text-xs font-medium">Add</button>
                   </div>
                 </div>
                 {/* Footer */}
