@@ -6,6 +6,10 @@ import FareRules from './FareRules';
 import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const steps = [
   'Itinerary',
@@ -377,7 +381,7 @@ const StepCard = ({ step, title, children, open, className = "", isActive = fals
 
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-4">
         <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
           {step}
         </div>
@@ -441,7 +445,7 @@ const SummarySidebar = ({ trip }: { trip: any }) => {
           {/* Discount */}
           <div className="flex items-center justify-between text-[12px] mt-2">
             <span className="text-[#4B5563] font-medium flex items-center text-left">Discount
-              <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round"/></svg>
+              <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2"/><path d="M15 12H9" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </span>
             <span className="font-bold text-green-600">-₹900</span>
           </div>
@@ -503,11 +507,13 @@ export default function BookingPage({ trip }: { trip: any }) {
   console.log('BookingPage trip:', trip);
 
   const [openStep, setOpenStep] = useState(1);
+  const [showAdultForm, setShowAdultForm] = useState(false);
+  const [showChildForm, setShowChildForm] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-1 pb-12 px-4 items-start min-h-screen">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 pt-4 pb-12 px-4 items-start min-h-screen">
         {/* Left: Step Content */}
         <main className="flex-1 min-w-0">
           {/* Step 1: Review your itinerary */}
@@ -660,7 +666,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           </StepCard>
           {openStep === 1 && (
             <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(2)}
             >
               Continue
@@ -745,7 +751,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           </StepCard>
           {openStep === 2 && (
             <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(3)}
             >
               Continue
@@ -755,9 +761,268 @@ export default function BookingPage({ trip }: { trip: any }) {
           {/* Step 3: Add traveller details */}
           <StepCard step={3} title="Add traveller details" open={openStep >= 3} className="mt-6" isActive={openStep === 3} isCompleted={openStep > 3}>
             {openStep === 3 ? (
-              <div className="text-gray-500">
-                {/* Traveller details form goes here */}
-                Traveller details form will be here...
+              <div className="space-y-6">
+                {/* Adult Section */}
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-3">Adult (&gt;12 years)</h3>
+                  
+                  {/* Existing Travellers */}
+                  <div className="space-y-2 mb-3">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="mukesh" />
+                      <Label htmlFor="mukesh" className="text-sm font-medium text-gray-700 cursor-pointer">Mr Mukesh Khanna</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="rosie" />
+                      <Label htmlFor="rosie" className="text-sm font-medium text-gray-700 cursor-pointer">Mrs Rosie fernandez</Label>
+                    </div>
+                  </div>
+
+                  {/* Add New Adult Link */}
+                  {!showAdultForm ? (
+                    <button 
+                      onClick={() => setShowAdultForm(true)}
+                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm mb-4"
+                    >
+                      <span className="text-lg">+</span>
+                      ADD NEW ADULT
+                    </button>
+                  ) : null}
+
+                  {/* Adult Form - Show when showAdultForm is true */}
+                  {showAdultForm && (
+                    <>
+                      {/* Warning Message */}
+                      <div className="flex items-start gap-2 bg-yellow-50 rounded-lg p-3 mb-4">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <svg className="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <span className="text-xs text-yellow-800">Please ensure that your name matches your govt. ID such as Aadhaar, Passport or Driver's License</span>
+                      </div>
+
+                      {/* Personal Details */}
+                      <div className="mb-5">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Personal details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
+                            <Select>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">First name</Label>
+                            <Input 
+                              placeholder="Ex - 'Rakesh'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Input 
+                              placeholder="Ex - 'Rakesh'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of birth</Label>
+                            <Input 
+                              type="date" 
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
+                            <Input 
+                              placeholder="Ex - 'Indian'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Passport Details */}
+                      <div className="mb-5">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Passport details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
+                            <Input 
+                              placeholder="Ex - 'A1234567'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Issuing country</Label>
+                            <Input 
+                              placeholder="Ex - 'India'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Expiry date</Label>
+                            <Input 
+                              type="date" 
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Save/Cancel buttons */}
+                      <div className="flex gap-3 mb-4">
+                        <button 
+                          onClick={() => setShowAdultForm(false)}
+                          className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]"
+                        >
+                          Save Adult
+                        </button>
+                        <button 
+                          onClick={() => setShowAdultForm(false)}
+                          className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Child Section */}
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="text-base font-semibold text-gray-900 mb-3">Child (2-12 years)</h3>
+                  
+                  {/* Add New Child Link */}
+                  {!showChildForm ? (
+                    <button 
+                      onClick={() => setShowChildForm(true)}
+                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm mb-4"
+                    >
+                      <span className="text-lg">+</span>
+                      ADD NEW CHILD
+                    </button>
+                  ) : null}
+
+                  {/* Child Form - Show when showChildForm is true */}
+                  {showChildForm && (
+                    <>
+                      {/* Warning Message */}
+                      <div className="flex items-start gap-2 bg-yellow-50 rounded-lg p-3 mb-4">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <svg className="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <span className="text-xs text-yellow-800">Please ensure that your name matches your govt. ID such as Aadhaar, Passport or Driver's License</span>
+                      </div>
+
+                      {/* Personal Details */}
+                      <div className="mb-5">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Personal details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
+                            <Select>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">First name</Label>
+                            <Input 
+                              placeholder="Ex - 'Rakesh'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Input 
+                              placeholder="Ex - 'Rakesh'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of birth</Label>
+                            <Input 
+                              type="date" 
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
+                            <Input 
+                              placeholder="Ex - 'Indian'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Passport Details */}
+                      <div className="mb-5">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Passport details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
+                            <Input 
+                              placeholder="Ex - 'A1234567'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Issuing country</Label>
+                            <Input 
+                              placeholder="Ex - 'India'"
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Expiry date</Label>
+                            <Input 
+                              type="date" 
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Save/Cancel buttons */}
+                      <div className="flex gap-3 mb-4">
+                        <button 
+                          onClick={() => setShowChildForm(false)}
+                          className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]"
+                        >
+                          Save Child
+                        </button>
+                        <button 
+                          onClick={() => setShowChildForm(false)}
+                          className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             ) : openStep > 3 ? (
               // Summary view for completed Step 3
@@ -773,7 +1038,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           </StepCard>
           {openStep === 3 && (
             <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
+              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(4)}
             >
               Continue
@@ -783,18 +1048,104 @@ export default function BookingPage({ trip }: { trip: any }) {
           {/* Step 4: Add contact details */}
           <StepCard step={4} title="Add contact details" open={openStep >= 4} className="mt-6" isActive={openStep === 4} isCompleted={openStep > 4}>
             {openStep === 4 ? (
-              <div className="text-gray-500">
-                {/* Contact details form goes here */}
-                Contact details form will be here...
+              <div className="space-y-6">
+                {/* Information Text */}
+                <div className="text-sm text-gray-600 mb-4">
+                  Your ticket and flight information will be sent here
+                </div>
+
+                {/* Contact Information */}
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+                    <div>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">Contact name</Label>
+                      <Input 
+                        placeholder="Ex - 'Rakesh'"
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">Email address</Label>
+                      <Input 
+                        type="email"
+                        placeholder="Ex - 'Rakesh'"
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">Mobile number</Label>
+                      <div className="flex gap-2">
+                        <Select defaultValue="+91">
+                          <SelectTrigger className="h-8 text-sm w-20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="+91">+91</SelectItem>
+                            <SelectItem value="+1">+1</SelectItem>
+                            <SelectItem value="+44">+44</SelectItem>
+                            <SelectItem value="+971">+971</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Input 
+                          placeholder="Ex - '943-783-2034'"
+                          className="h-8 text-sm flex-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tax Details Section */}
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="text-base font-semibold text-gray-900 mb-3">Tax details</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    To claim credit for the TAX charged by airline, please enter your gst details
+                  </p>
+                  
+                  {/* GST Checkbox */}
+                  <div className="flex items-center space-x-2 mb-4">
+                    <Checkbox id="gst" defaultChecked />
+                    <Label htmlFor="gst" className="text-sm font-medium text-gray-700 cursor-pointer">
+                      I would like to add my GST Number
+                    </Label>
+                  </div>
+
+                  {/* GST Details */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">GSTIN</Label>
+                      <Input 
+                        placeholder="Ex - 'Rakesh'"
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">Company name</Label>
+                      <Input 
+                        placeholder="Ex - 'Rakesh'"
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : openStep > 4 ? (
+              // Summary view for completed Step 4
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
+                  <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 32, height: 32}}>
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                </div>
               </div>
             ) : null}
           </StepCard>
           {openStep === 4 && (
             <button
-              className="mt-8 bg-black text-white font-bold rounded px-6 py-3 text-lg"
-              // Add your final action here, e.g., submit or review
+              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
             >
-              Complete Booking
+              Continue to payment
             </button>
           )}
         </main>
