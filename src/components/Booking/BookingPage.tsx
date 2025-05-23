@@ -373,7 +373,7 @@ const StepCard = ({ step, title, children, open, className = "", isActive = fals
     if (isActive) {
       return "bg-black text-white border-black";
     } else if (isCompleted) {
-      return "bg-blue-600 text-white border-blue-600";
+      return "bg-[#194a8f] text-white border-[#194a8f]";
     } else {
       return "bg-white text-black border-black";
     }
@@ -488,11 +488,11 @@ function HorizontalProgressBar({ steps, currentStep }) {
           return (
             <React.Fragment key={label}>
               <div className="flex flex-col items-center flex-1 min-w-0">
-                <div className={`flex items-center justify-center w-7 h-7 rounded-full border-2 font-bold text-sm transition-all duration-200 ${isActive ? 'bg-black text-white border-black' : isCompleted ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-300'}`}>{stepNum}</div>
-                <span className={`mt-1 text-xs font-semibold text-center ${isActive ? 'text-black' : isCompleted ? 'text-blue-600' : 'text-gray-400'}`}>{label}</span>
+                <div className={`flex items-center justify-center w-7 h-7 rounded-full border-2 font-bold text-sm transition-all duration-200 ${isActive ? 'bg-black text-white border-black' : isCompleted ? 'bg-[#194a8f] text-white border-[#194a8f]' : 'bg-white text-gray-400 border-gray-300'}`}>{stepNum}</div>
+                <span className={`mt-1 text-xs font-semibold text-center ${isActive ? 'text-black' : isCompleted ? 'text-[#194a8f]' : 'text-gray-400'}`}>{label}</span>
               </div>
               {idx < steps.length - 1 && (
-                <div className={`flex-1 h-1 mx-1 md:mx-2 rounded ${currentStep > stepNum ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
+                <div className={`flex-1 h-1 mx-1 md:mx-2 rounded ${currentStep > stepNum ? 'bg-[#194a8f]' : 'bg-gray-200'}`}></div>
               )}
             </React.Fragment>
           );
@@ -681,58 +681,58 @@ export default function BookingPage({ trip }: { trip: any }) {
                 <div className="flex flex-col gap-4">
                   {/* Visa Requirement Checker */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                      <CalendarIcon className="text-blue-700 w-6 h-6" />
+                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
+                      <CalendarIcon className="text-[#194a8f] w-6 h-6" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-lg">Visa Requirement Checker</div>
                       <div className="text-sm text-gray-700">Check visa requirements for Indian citizens. Most visitors need a visa to enter UAE</div>
                       <div className="flex items-center gap-4 mt-2">
                         <span className="font-bold text-xl">₹2,000</span>
-                        <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 bg-blue-700 text-white rounded px-3 py-1.5 text-xs font-medium">Remove</button>
+                    <button className="ml-4 bg-[#194a8f] text-white rounded px-3 py-1.5 text-xs font-medium hover:bg-[#143a7a]">Remove</button>
                   </div>
                   {/* International sim cards */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                      <DevicePhoneMobileIcon className="text-blue-700 w-6 h-6" />
+                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
+                      <DevicePhoneMobileIcon className="text-[#194a8f] w-6 h-6" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-lg">International sim cards</div>
                       <div className="text-sm text-gray-700">Get a sim card having 20 GB data, 60 min international call and valid till 8 days.</div>
                       <div className="flex items-center gap-4 mt-2">
                         <span className="font-bold text-xl">₹300</span>
-                        <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-3 py-1.5 text-xs font-medium">Add</button>
+                    <button className="ml-4 border border-[#194a8f] text-[#194a8f] rounded px-3 py-1.5 text-xs font-medium hover:bg-[#194a8f] hover:text-white">Add</button>
                   </div>
                   {/* Flight Alerts */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center">
-                      <BellIcon className="text-blue-700 w-6 h-6" />
+                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
+                      <BellIcon className="text-[#194a8f] w-6 h-6" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-lg">Flight Alerts</div>
                       <div className="text-sm text-gray-700">Get real-time notifications about any flight changes by email and SMS.</div>
                       <div className="flex items-center gap-4 mt-2">
                         <span className="font-bold text-xl">₹800</span>
-                        <a href="#" className="text-blue-600 text-sm underline">View benefits</a>
+                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
                       </div>
                     </div>
-                    <button className="ml-4 border border-blue-700 text-blue-700 rounded px-3 py-1.5 text-xs font-medium">Add</button>
+                    <button className="ml-4 border border-[#194a8f] text-[#194a8f] rounded px-3 py-1.5 text-xs font-medium hover:bg-[#194a8f] hover:text-white">Add</button>
                   </div>
                 </div>
                 {/* Footer */}
                 <div className="flex items-center justify-between mt-6">
                   <div className="flex items-center gap-2">
                     <img src="/tripadd-logo.svg" alt="TripAdd" className="h-5" />
-                    <a href="#" className="text-blue-600 text-sm underline">View terms & conditions</a>
+                    <a href="#" className="text-[#194a8f] text-sm underline">View terms & conditions</a>
                   </div>
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="accent-blue-700" />
+                    <input type="checkbox" className="accent-[#194a8f]" />
                     I accept the terms and conditions of this policy
                   </label>
                 </div>
@@ -782,7 +782,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                   {!showAdultForm ? (
                     <button 
                       onClick={() => setShowAdultForm(true)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm mb-4"
+                      className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm mb-4"
                     >
                       <span className="text-lg">+</span>
                       ADD NEW ADULT
@@ -907,7 +907,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                   {!showChildForm ? (
                     <button 
                       onClick={() => setShowChildForm(true)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm mb-4"
+                      className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm mb-4"
                     >
                       <span className="text-lg">+</span>
                       ADD NEW CHILD
