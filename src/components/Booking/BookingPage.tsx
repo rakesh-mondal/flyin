@@ -1099,21 +1099,21 @@ export default function BookingPage({ trip }: { trip: any }) {
                 <div className="border-t border-gray-200 pt-6">
                   <h3 className="text-base font-semibold text-gray-900 mb-3">Tax details</h3>
                   <p className="text-sm text-gray-600 mb-4">
-                    To claim credit for the TAX charged by airline, please enter your gst details
+                    To claim credit for the TAX charged by airline, please enter your tax details
                   </p>
                   
-                  {/* GST Checkbox */}
+                  {/* TAX Checkbox */}
                   <div className="flex items-center space-x-2 mb-4">
                     <Checkbox id="gst" defaultChecked />
                     <Label htmlFor="gst" className="text-sm font-medium text-gray-700 cursor-pointer">
-                      I would like to add my GST Number
+                      I would like to add my TAX Number
                     </Label>
                   </div>
 
-                  {/* GST Details */}
+                  {/* TAX Details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-xs font-medium text-gray-700 mb-1">GSTIN</Label>
+                      <Label className="text-xs font-medium text-gray-700 mb-1">TAXNO</Label>
                       <Input 
                         placeholder="Ex - 'Rakesh'"
                         className="h-8 text-sm"
