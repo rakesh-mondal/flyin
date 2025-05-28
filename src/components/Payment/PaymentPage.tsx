@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopHeader from '../TripCuration/TopHeader';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { CreditCard, Building2, Trash2, Eye, EyeOff } from 'lucide-react';
 
 const PaymentPage = ({ trip }: { trip: any }) => {
+  const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'card' | 'netbanking'>('card');
   const [selectedCard, setSelectedCard] = useState<string>('');
   const [saveCard, setSaveCard] = useState(false);
@@ -296,7 +298,10 @@ const PaymentPage = ({ trip }: { trip: any }) => {
               </div>
 
               {/* Pay Now Button */}
-              <button className="w-full bg-[#194a8f] text-white font-semibold py-3 rounded-lg hover:bg-[#143a7a] transition-colors">
+              <button 
+                className="w-full bg-[#194a8f] text-white font-semibold py-3 rounded-lg hover:bg-[#143a7a] transition-colors"
+                onClick={() => navigate('/payment-confirmation', { state: { bookingData: { trip, paymentMethod: selectedPaymentMethod } } })}
+              >
                 Pay now
               </button>
             </div>

@@ -10,6 +10,7 @@ import SearchPage from './pages/Search';
 import SlidingNumberDemo from './components/ui/SlidingNumberDemo';
 import Booking from './pages/Booking';
 import Payment from './pages/Payment';
+import PaymentConfirmation from './pages/PaymentConfirmation';
 import Curation from './pages/Curation';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/Booking" element={<Booking />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
             <Route path="/sliding-number-demo" element={<SlidingNumberDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
