@@ -3,3 +3,165 @@ description:
 globs:
 alwaysApply: false
 ---
+# Step & Progress Patterns
+
+## Step Card Component Pattern
+
+**Use consistent step card structure with state-based styling:**
+
+```tsx
+interface StepCardProps {
+  step: number;
+  title: string;
+  children?: React.ReactNode;
+  open: boolean;
+  className?: string;
+  isActive?: boolean;
+  isCompleted?: boolean;
+}
+
+const StepCard = ({ step, title, children, open, isActive, isCompleted }: StepCardProps) => {
+  const getCircleClasses = () => {
+    if (isActive) {
+      return "bg-black text-white border-black";
+    } else if (isCompleted) {
+      return "bg-[#194a8f] text-white border-[#194a8f]";
+    } else {
+      return "bg-white text-black border-black";
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full">
+      <div className="flex items-center gap-4 mb-4">
+        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
+          {step}
+        </div>
+        <span className="text-xl font-bold">{title}</span>
+      </div>
+      {open && children}
+    </div>
+  );
+};
+```
+
+## Progress Bar Pattern
+
+**Horizontal progress with brand colors:**
+
+```tsx
+function HorizontalProgressBar({ steps, currentStep }) {
+  return (
+    <div className="flex justify-center w-full">
+      <div className="w-full max-w-[1120px] rounded-2xl border border-gray-200 bg-white px-2 py-3 flex items-center justify-between mb-4 sticky top-0 z-30">
+        {steps.map((label, idx) => {
+          const stepNum = idx + 1;
+          const isActive = currentStep === stepNum;
+          const isCompleted = currentStep > stepNum;
+          
+          return (
+            <React.Fragment key={label}>
+              <div className="flex flex-col items-center flex-1 min-w-0">
+                <div className={`flex items-center justify-center w-7 h-7 rounded-full border-2 font-bold text-sm transition-all duration-200 ${
+                  isActive ? 'bg-black text-white border-black' : 
+                  isCompleted ? 'bg-[#194a8f] text-white border-[#194a8f]' : 
+                  'bg-white text-gray-400 border-gray-300'
+                }`}>
+                  {stepNum}
+                </div>
+                <span className={`mt-1 text-xs font-semibold text-center ${
+                  isActive ? 'text-black' : 
+                  isCompleted ? 'text-[#194a8f]' : 
+                  'text-gray-400'
+                }`}>
+                  {label}
+                </span>
+              </div>
+              {idx < steps.length - 1 && (
+                <div className={`flex-1 h-1 mx-1 md:mx-2 rounded ${
+                  currentStep > stepNum ? 'bg-[#194a8f]' : 'bg-gray-200'
+                }`}></div>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+## Step Navigation Pattern
+
+**Multi-step form with continue buttons:**
+
+```tsx
+const [openStep, setOpenStep] = useState(1);
+
+// Continue button pattern
+{openStep === stepNumber && (
+  <button
+    className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+    onClick={() => setOpenStep(stepNumber + 1)}
+  >
+    {stepNumber === totalSteps ? 'Continue to payment' : 'Continue'}
+  </button>
+)}
+```
+
+## Step Summary Pattern
+
+**Collapsed view for completed steps:**
+
+```tsx
+// Summary view for completed steps
+{openStep > stepNumber ? (
+  <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(stepNumber)}>
+    <div className="flex items-center justify-between">
+      <span className="text-sm font-medium">Summary: Key details from step</span>
+      <span className="flex items-center justify-center group-hover:bg-[#e6f1ff] rounded-full transition-colors" style={{width: 32, height: 32}}>
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="11.5" stroke="#194a8f"/>
+          <path d="M8 10l4 4 4-4" stroke="#194a8f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+) : null}
+```
+
+## Step State Management
+
+**Use single state to control step progression:**
+
+```tsx
+// ✅ DO: Single state for step control
+const [openStep, setOpenStep] = useState(1);
+
+// Determine step states
+const isActive = (stepNum: number) => openStep === stepNum;
+const isCompleted = (stepNum: number) => openStep > stepNum;
+const isOpen = (stepNum: number) => openStep >= stepNum;
+
+// ❌ DON'T: Multiple boolean states
+const [step1Open, setStep1Open] = useState(true);
+const [step2Open, setStep2Open] = useState(false);
+const [step3Open, setStep3Open] = useState(false);
+```
+
+## DO:
+- Use consistent step numbering starting from 1
+- Apply brand colors for completed states
+- Implement sticky progress bars for long forms
+- Show summary content for completed steps
+- Use single state variable to control step progression
+
+## DON'T:
+- Use generic blue colors for step indicators
+- Create separate state variables for each step
+- Hide completed steps entirely (show summaries instead)
+- Use inconsistent button styling across steps
+- Forget hover states for interactive elements
+
+**Reference:** [BookingPage.tsx](mdc:src/components/Booking/BookingPage.tsx)
+**Cross-reference:** [03-styling-conventions.mdc](mdc:.cursor/rules/03-styling-conventions.mdc), [09-form-patterns.mdc](mdc:.cursor/rules/09-form-patterns.mdc)

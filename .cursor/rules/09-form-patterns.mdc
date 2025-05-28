@@ -3,3 +3,242 @@ description:
 globs:
 alwaysApply: false
 ---
+# Form Patterns & Interactive Elements
+
+## Form Component Usage
+
+**Always use shadcn UI components for forms:**
+- `Input` from `@/components/ui/input`
+- `Select` from `@/components/ui/select` 
+- `Checkbox` from `@/components/ui/checkbox`
+- `Label` from `@/components/ui/label`
+
+```tsx
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+```
+
+## Compact Form Styling
+
+**All forms must use compact sizing for consistency:**
+
+- **Input fields**: `h-8 text-sm` classes
+- **Labels**: `text-xs font-medium text-gray-700 mb-1`
+- **Form grids**: `gap-3` for spacing between fields
+- **Section spacing**: `mb-3` or `mb-4` between form sections
+
+```tsx
+// ✅ DO: Compact form field
+<div>
+  <Label className="text-xs font-medium text-gray-700 mb-1">Email</Label>
+  <Input className="h-8 text-sm" type="email" placeholder="Enter email" />
+</div>
+
+// ❌ DON'T: Default larger sizing
+<div>
+  <Label>Email</Label>
+  <Input type="email" placeholder="Enter email" />
+</div>
+```
+
+## Toggle Form Pattern
+
+**For expandable forms (Add New Item patterns):**
+
+```tsx
+const [showForm, setShowForm] = useState(false);
+
+// Toggle link with brand colors
+{!showForm ? (
+  <button 
+    onClick={() => setShowForm(true)}
+    className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm"
+  >
+    <span className="text-lg">+</span>
+    ADD NEW ITEM
+  </button>
+) : null}
+
+// Form with save/cancel using brand colors
+{showForm && (
+  <div className="space-y-3 mb-4">
+    {/* Form fields */}
+    <div className="flex gap-3">
+      <button 
+        onClick={() => setShowForm(false)}
+        className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]"
+      >
+        Save
+      </button>
+      <button 
+        onClick={() => setShowForm(false)}
+        className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+```
+
+## Button Patterns
+
+**Action buttons must follow size and color conventions:**
+
+- **Primary buttons**: Use brand blue `bg-[#194a8f] hover:bg-[#143a7a]`
+- **Secondary buttons**: Use `border border-gray-300 text-gray-700 hover:bg-gray-50`
+- **Small buttons** (Save/Cancel): `px-3 py-1.5 text-xs font-medium rounded-md`
+- **Medium buttons** (Continue): `px-5 py-2.5 text-base font-semibold rounded`
+
+```tsx
+// ✅ DO: Consistent button styling
+<button className="px-5 py-2.5 bg-[#194a8f] text-white font-semibold rounded text-base hover:bg-[#143a7a]">
+  Continue
+</button>
+
+// ✅ DO: Small action buttons
+<button className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]">
+  Save
+</button>
+
+// ❌ DON'T: Inconsistent colors or sizing
+<button className="bg-blue-500 text-white px-4 py-2">Continue</button>
+```
+
+## Form Grid Layouts
+
+**Use responsive grid patterns for form fields:**
+
+```tsx
+// ✅ DO: Responsive form grid
+<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+  <div>
+    <Label className="text-xs font-medium text-gray-700 mb-1">First Name</Label>
+    <Input className="h-8 text-sm" placeholder="First name" />
+  </div>
+  <div>
+    <Label className="text-xs font-medium text-gray-700 mb-1">Last Name</Label>
+    <Input className="h-8 text-sm" placeholder="Last name" />
+  </div>
+  <div>
+    <Label className="text-xs font-medium text-gray-700 mb-1">Email</Label>
+    <Input className="h-8 text-sm" type="email" placeholder="Email" />
+  </div>
+</div>
+```
+
+## Select Component Pattern
+
+**For dropdown selections:**
+
+```tsx
+<div>
+  <Label className="text-xs font-medium text-gray-700 mb-1">Country</Label>
+  <Select>
+    <SelectTrigger className="h-8 text-sm">
+      <SelectValue placeholder="Select country" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="us">United States</SelectItem>
+      <SelectItem value="uk">United Kingdom</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+```
+
+## Checkbox Pattern
+
+**For checkboxes with labels:**
+
+```tsx
+<div className="flex items-center space-x-2">
+  <Checkbox id="terms" />
+  <Label htmlFor="terms" className="text-sm font-medium text-gray-700 cursor-pointer">
+    I agree to the terms and conditions
+  </Label>
+</div>
+```
+
+## Form Section Organization
+
+**Group related fields with proper spacing:**
+
+```tsx
+<div className="space-y-6"> {/* Main form container */}
+  <div> {/* Section 1 */}
+    <h3 className="text-base font-semibold text-gray-900 mb-3">Personal Information</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {/* Form fields */}
+    </div>
+  </div>
+  
+  <div className="border-t border-gray-200 pt-6"> {/* Section 2 with divider */}
+    <h3 className="text-base font-semibold text-gray-900 mb-3">Contact Details</h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {/* Form fields */}
+    </div>
+  </div>
+</div>
+```
+
+## State Management for Forms
+
+**Use descriptive boolean state for form visibility:**
+- Name states clearly: `showAdultForm`, `showChildForm`, `showContactForm`
+- Initialize as `false` (forms closed by default)
+- Use conditional rendering with logical AND operator
+
+```tsx
+// ✅ DO: Clear state naming and initialization
+const [showAdultForm, setShowAdultForm] = useState(false);
+const [showChildForm, setShowChildForm] = useState(false);
+
+// ✅ DO: Conditional rendering pattern
+{showAdultForm && (
+  <div className="space-y-4">
+    {/* Form content */}
+  </div>
+)}
+
+// ❌ DON'T: Unclear state names
+const [isOpen, setIsOpen] = useState(true); // What is open?
+const [formVisible, setFormVisible] = useState(true); // Which form?
+```
+
+## Form Terminology Standards
+
+**Use generic, international-friendly terminology:**
+- **TAX** instead of region-specific terms (GST, VAT, etc.)
+- **TAXNO** for tax identification numbers
+- **Tax details** for tax-related sections
+
+```tsx
+// ✅ DO: Generic terminology
+<Label>TAXNO</Label>
+<p>To claim credit for the TAX charged by airline, please enter your tax details</p>
+<Label>I would like to add my TAX Number</Label>
+
+// ❌ DON'T: Region-specific terminology
+<Label>GSTIN</Label>
+<p>please enter your gst details</p>
+<Label>I would like to add my GST Number</Label>
+```
+
+## DO:
+- Always import and use shadcn UI components for forms
+- Apply compact sizing (`h-8`, `text-sm`, `text-xs`) consistently
+- Use brand colors for primary actions
+- Implement toggle patterns for expandable forms
+- Group related fields logically with proper spacing
+
+## DON'T:
+- Use HTML form elements directly without shadcn wrappers
+- Mix different sizing conventions within the same form
+- Use arbitrary colors instead of brand colors
+- Create forms without proper save/cancel functionality
+- Forget responsive grid layouts for form fields
+
+**Reference:** [BookingPage.tsx](mdc:src/components/Booking/BookingPage.tsx)
+**Cross-reference:** [03-styling-conventions.mdc](mdc:.cursor/rules/03-styling-conventions.mdc)

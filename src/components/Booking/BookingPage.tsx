@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopHeader from '../TripCuration/TopHeader';
 import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
@@ -506,6 +507,7 @@ export default function BookingPage({ trip }: { trip: any }) {
   // Debug log for trip object
   console.log('BookingPage trip:', trip);
 
+  const navigate = useNavigate();
   const [openStep, setOpenStep] = useState(1);
   const [showAdultForm, setShowAdultForm] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
@@ -1144,6 +1146,7 @@ export default function BookingPage({ trip }: { trip: any }) {
           {openStep === 4 && (
             <button
               className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+              onClick={() => navigate('/payment', { state: { trip } })}
             >
               Continue to payment
             </button>

@@ -5,6 +5,108 @@ alwaysApply: false
 ---
 # Styling Conventions
 
+## Brand Colors
+
+The project uses consistent brand colors throughout:
+
+- **Primary Brand Blue**: `#194a8f` - Used for primary buttons, links, and brand elements
+- **Primary Hover**: `#143a7a` - Darker shade for hover states
+- **Light Brand Blue**: `#e6f1ff` - Custom light background for icons and accents
+- **Success Green**: `#22c55e` - For success states and positive indicators
+- **Warning Yellow**: `#eab308` - For warnings and caution states
+- **Error Red**: `#ef4444` - For errors and destructive actions
+
+**NEVER use generic Tailwind blue classes (blue-100, blue-500, blue-600, blue-700, etc.)**
+**ALWAYS use the exact brand hex values above**
+
+Example usage:
+```tsx
+// ✅ DO: Primary button with brand colors
+<button className="bg-[#194a8f] hover:bg-[#143a7a] text-white">Primary Action</button>
+
+// ✅ DO: Primary link with brand colors
+<a className="text-[#194a8f] hover:text-[#143a7a]">Learn more</a>
+
+// ✅ DO: Icon background with light brand blue
+<div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
+  <Icon className="text-[#194a8f] w-6 h-6" />
+</div>
+
+// ❌ DON'T: Generic Tailwind blue classes
+<button className="bg-blue-600 hover:bg-blue-700">Primary Action</button>
+<a className="text-blue-600">Learn more</a>
+<div className="bg-blue-100">Icon container</div>
+```
+
+## Interactive Element Patterns
+
+**Add/Remove Action Links:**
+- Use "+" prefix for add actions: `+ ADD NEW ITEM`
+- Apply brand blue color with hover states
+- Use medium font weight and small text size
+
+```tsx
+// ✅ DO: Add action link pattern
+<button 
+  onClick={() => setShowForm(true)}
+  className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm"
+>
+  <span className="text-lg">+</span>
+  ADD NEW ADULT
+</button>
+
+// ✅ DO: Remove button with brand colors
+<button className="ml-4 bg-[#194a8f] text-white rounded px-3 py-1.5 text-xs font-medium hover:bg-[#143a7a]">
+  Remove
+</button>
+
+// ✅ DO: Add button with outline style
+<button className="ml-4 border border-[#194a8f] text-[#194a8f] rounded px-3 py-1.5 text-xs font-medium hover:bg-[#194a8f] hover:text-white">
+  Add
+</button>
+```
+
+**Icon Container Pattern:**
+- Use light brand blue background for icon containers
+- Apply brand blue color to icons themselves
+- Consistent sizing: `w-10 h-10` for containers, `w-6 h-6` for icons
+
+```tsx
+// ✅ DO: Consistent icon container styling
+<div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
+  <CalendarIcon className="text-[#194a8f] w-6 h-6" />
+</div>
+```
+
+## Form Styling Patterns
+
+Forms use shadcn UI components with consistent compact styling:
+
+- **Form Inputs**: Always use `h-8 text-sm` for compact appearance
+- **Form Labels**: Use `text-xs font-medium text-gray-700 mb-1` for consistent labeling
+- **Form Spacing**: Use `gap-3` for form grids, `mb-3` for section spacing
+- **Save/Cancel Buttons**: Small size with `px-3 py-1.5 text-xs font-medium rounded-md`
+
+Example form pattern:
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+  <div>
+    <Label className="text-xs font-medium text-gray-700 mb-1">Field Name</Label>
+    <Input className="h-8 text-sm" placeholder="Example input" />
+  </div>
+</div>
+
+// Action buttons
+<div className="flex gap-3">
+  <button className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]">
+    Save
+  </button>
+  <button className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50">
+    Cancel
+  </button>
+</div>
+```
+
 ## Tailwind CSS
 
 The project uses Tailwind CSS for styling with the following conventions:

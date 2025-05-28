@@ -12,6 +12,52 @@ alwaysApply: false
 - **Feature Components**: PascalCase with descriptive names (e.g., [FlightSearchForm.tsx](mdc:src/components/FlightSearchForm.tsx))
 - **Page Components**: PascalCase matching route names (e.g., [Search.tsx](mdc:src/pages/Search.tsx))
 
+## State Management Patterns
+
+**For form visibility and toggle states:**
+- Use descriptive boolean state names: `showAdultForm`, `showChildForm`, `openStep`
+- Initialize forms as closed: `useState(false)`
+- Use conditional rendering with logical AND operator for forms
+
+```tsx
+const [showAdultForm, setShowAdultForm] = useState(false);
+const [openStep, setOpenStep] = useState(1);
+
+// Conditional rendering
+{openStep === 3 && (
+  <div className="form-content">...</div>
+)}
+
+{!showAdultForm ? (
+  <button onClick={() => setShowAdultForm(true)}>+ ADD NEW ADULT</button>
+) : (
+  <div className="form-container">...</div>
+)}
+```
+
+## Form Component Patterns
+
+**Always prefer shadcn UI components over HTML elements:**
+- Import form components at the top with other UI imports
+- Group UI imports together for clarity
+
+```tsx
+// ✅ DO: Proper import organization
+import React, { useState } from 'react';
+import TopHeader from '../TripCuration/TopHeader';
+// ... other feature imports
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+
+// ❌ DON'T: Mix UI imports throughout the file
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import TopHeader from '../TripCuration/TopHeader';
+import { Select } from '@/components/ui/select';
+```
+
 ## Component Structure
 
 Components follow this general structure:
@@ -66,3 +112,5 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   );
 }
 ```
+
+**Reference:** [BookingPage.tsx](mdc:src/components/Booking/BookingPage.tsx), [09-form-patterns.mdc](mdc:.cursor/rules/09-form-patterns.mdc)
