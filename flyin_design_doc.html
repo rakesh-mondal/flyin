@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flyin - Frontend Design Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #ffffff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 1in;
+            font-size: 11pt;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #2563eb;
+        }
+        
+        .header h1 {
+            color: #1e40af;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header .subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .toc {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+            margin-bottom: 2rem;
+        }
+        
+        .toc h2 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+        }
+        
+        .toc a {
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toc a:hover {
+            color: #2563eb;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+            page-break-inside: avoid;
+        }
+        
+        .section h2 {
+            color: #1e40af;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .section h3 {
+            color: #374151;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        
+        .section h4 {
+            color: #4b5563;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        .section p {
+            margin-bottom: 0.8rem;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        
+        .inline-code {
+            background: #f1f5f9;
+            color: #dc2626;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tech-category {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .tech-category h4 {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+        
+        .tech-list li:before {
+            content: "•";
+            color: #3b82f6;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .architecture-diagram {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .color-group {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        
+        .color-sample {
+            width: 100%;
+            height: 30px;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .best-practices {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 0.7rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .checklist li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+                font-size: 10pt;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .code-block {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Flyin</h1>
+        <div class="subtitle">Frontend Design Documentation</div>
+        <div style="margin-top: 1rem; color: #6b7280; font-size: 0.9rem;">
+            Travel Booking Application - React & TypeScript
+        </div>
+    </div>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">1. Project Overview</a></li>
+            <li><a href="#tech-stack">2. Technology Stack</a></li>
+            <li><a href="#architecture">3. Architecture Overview</a></li>
+            <li><a href="#design-system">4. Design System</a></li>
+            <li><a href="#file-structure">5. File Structure</a></li>
+            <li><a href="#components">6. Component Library</a></li>
+            <li><a href="#styling">7. Styling Guidelines</a></li>
+            <li><a href="#development">8. Development Workflow</a></li>
+            <li><a href="#testing">9. Testing Strategy</a></li>
+            <li><a href="#performance">10. Performance Guidelines</a></li>
+            <li><a href="#accessibility">11. Accessibility Standards</a></li>
+            <li><a href="#deployment">12. Deployment Guidelines</a></li>
+        </ul>
+    </div>
+
+    <div class="section" id="overview">
+        <h2>1. Project Overview</h2>
+        
+        <p><strong>Flyin</strong> is a modern travel booking application built with React and TypeScript. The application provides users with comprehensive flight search, booking, payment processing, and trip curation features with a strong focus on user experience and performance optimization.</p>
+        
+        <h3>Key Features</h3>
+        <ul class="checklist">
+            <li>Advanced flight search and booking system</li>
+            <li>Intelligent trip curation and recommendations</li>
+            <li>Secure payment processing integration</li>
+            <li>Comprehensive user profile management</li>
+            <li>Responsive design with dark/light mode support</li>
+            <li>Internationalization (i18n) support for global users</li>
+        </ul>
+        
+        <div class="info-box">
+            <strong>Design Philosophy:</strong> The application follows modern design principles with Apple-inspired aesthetics, focusing on clean interfaces, smooth animations, and intuitive user interactions.
+        </div>
+    </div>
+
+    <div class="section" id="tech-stack">
+        <h2>2. Technology Stack</h2>
+        
+        <div class="tech-stack">
+            <div class="tech-category">
+                <h4>Core Technologies</h4>
+                <ul class="tech-list">
+                    <li>React 18.3.1</li>
+                    <li>TypeScript 5.5.3</li>
+                    <li>Vite 5.4.1</li>
+                    <li>Tailwind CSS 3.4.11</li>
+                    <li>shadcn/ui + Radix UI</li>
+                </ul>
+            </div>
+            
+            <div class="tech-category">
+                <h4>State Management</h4>
+                <ul class="tech-list">
+                    <li>Redux Toolkit 2.8.2</li>
+                    <li>React Query 5.56.2</li>
+                    <li>React Router DOM 6.26.2</li>
+                </ul>
+            </div>
+            
+            <div class="tech-category">
+                <h4>UI & Animation</h4>
+                <ul class="tech-list">
+                    <li>Lucide React 0.462.0</li>
+                    <li>Heroicons 2.2.0</li>
+                    <li>Framer Motion 12.10.5</li>
+                    <li>Recharts 2.12.7</li>
+                    <li>React Leaflet 4.2.1</li>
+                </ul>
+            </div>
+            
+            <div class="tech-category">
+                <h4>Development Tools</h4>
+                <ul class="tech-list">
+                    <li>Jest 29.7.0</li>
+                    <li>Cypress 14.3.3</li>
+                    <li>Storybook 8.6.14</li>
+                    <li>ESLint 9.9.0</li>
+                    <li>Percy CLI (Visual Testing)</li>
+                </ul>
+            </div>
+            
+            <div class="tech-category">
+                <h4>Form & Validation</h4>
+                <ul class="tech-list">
+                    <li>React Hook Form 7.53.0</li>
+                    <li>Zod 3.23.8</li>
+                    <li>date-fns 3.6.0</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="architecture">
+        <h2>3. Architecture Overview</h2>
+        
+        <h3>Application Structure</h3>
+        <div class="architecture-diagram">
+src/
+├── app/                    # App-level configuration
+├── components/             # Reusable UI components
+│   ├── ui/                # Base UI components (shadcn/ui)
+│   ├── Booking/           # Booking-specific components
+│   ├── Payment/           # Payment-specific components
+│   ├── TripCuration/      # Trip curation components
+│   └── trip-detail/       # Trip detail components
+├── context/               # React context providers
+├── data/                  # Static data and constants
+├── features/              # Feature-based modules
+├── hooks/                 # Custom React hooks
+├── lib/                   # Utility libraries and configurations
+├── pages/                 # Page components (routes)
+├── services/              # API services and external integrations
+├── stories/               # Storybook stories
+├── styles/                # Global styles and themes
+├── testing/               # Testing utilities
+└── utils/                 # Utility functions
+        </div>
+        
+        <h3>Routing Structure</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="inline-code">/</span></td>
+                    <td>Index.tsx</td>
+                    <td>Home page with search interface</td>
+                </tr>
+                <tr>
+                    <td><span class="inline-code">/search</span></td>
+                    <td>Search.tsx</td>
+                    <td>Flight search results page</td>
+                </tr>
+                <tr>
+                    <td><span class="inline-code">/curation</span></td>
+                    <td>Curation.tsx</td>
+                    <td>Trip curation and recommendations</td>
+                </tr>
+                <tr>
+                    <td><span class="inline-code">/booking</span></td>
+                    <td>Booking.tsx</td>
+                    <td>Flight booking interface</td>
+                </tr>
+                <tr>
+                    <td><span class="inline-code">/payment</span></td>
+                    <td>Payment.tsx</td>
+                    <td>Payment processing page</td>
+                </tr>
+                <tr>
+                    <td><span class="inline-code">/payment-confirmation</span></td>
+                    <td>PaymentConfirmation.tsx</td>
+                    <td>Booking confirmation page</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section page-break" id="design-system">
+        <h2>4. Design System</h2>
+        
+        <h3>Color Palette</h3>
+        
+        <h4>CSS Custom Properties</h4>
+        <div class="code-block">
+:root {
+  /* Primary Colors */
+  --primary: 215 70% 33%;           /* #2A5298 - Main brand blue */
+  --primary-foreground: 0 0% 100%;  /* White text on primary */
+  --primary-hover: 45 99% 59%;      /* #FFD700 - Gold hover state */
+  
+  /* Neutral Colors */
+  --background: 0 0% 100%;          /* White background */
+  --foreground: 0 0% 12%;           /* Dark text */
+  --muted: 0 0% 96%;                /* Light gray */
+  --muted-foreground: 0 0% 45%;     /* Medium gray text */
+  
+  /* Semantic Colors */
+  --destructive: 0 84% 60%;         /* Error red */
+  --border: 0 0% 90%;               /* Border gray */
+  --input: 0 0% 90%;                /* Input border */
+  --ring: 211 100% 45%;             /* Focus ring blue */
+}
+        </div>
+        
+        <div class="color-palette">
+            <div class="color-group">
+                <h4>Primary Colors</h4>
+                <div class="color-sample" style="background-color: #2A5298;"></div>
+                <div><strong>Primary:</strong> #2A5298</div>
+                <div class="color-sample" style="background-color: #FFD700;"></div>
+                <div><strong>Hover:</strong> #FFD700</div>
+            </div>
+            
+            <div class="color-group">
+                <h4>Apple Inspired</h4>
+                <div class="color-sample" style="background-color: #f5f5f7;"></div>
+                <div><strong>Gray:</strong> #f5f5f7</div>
+                <div class="color-sample" style="background-color: #0071e3;"></div>
+                <div><strong>Blue:</strong> #0071e3</div>
+            </div>
+        </div>
+        
+        <h3>Typography</h3>
+        
+        <h4>Font Families</h4>
+        <div class="code-block">
+font-family: {
+  sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 
+         'San Francisco', 'Helvetica Neue', 'sans-serif'],
+  display: ['Special Gothic Condensed One', 'sans-serif'],
+}
+        </div>
+        
+        <div class="best-practices">
+            <strong>Typography Best Practices:</strong>
+            <ul>
+                <li>Use Plus Jakarta Sans (200-800 weight range) for body text</li>
+                <li>Implement responsive scaling with Tailwind's responsive typography</li>
+                <li>Maintain optimal line height (1.5-1.6) for readability</li>
+                <li>Use Special Gothic Condensed One for display headings</li>
+            </ul>
+        </div>
+        
+        <h3>Animation System</h3>
+        
+        <h4>Custom Keyframes</h4>
+        <div class="code-block">
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+        </div>
+    </div>
+
+    <div class="section" id="components">
+        <h2>6. Component Library</h2>
+        
+        <h3>Base UI Components (shadcn/ui)</h3>
+        
+        <h4>Button Component</h4>
+        <div class="code-block">
+interface ButtonProps {
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  size?: 'default' | 'sm' | 'lg' | 'icon'
+  asChild?: boolean
+}
+
+// Usage Example
+&lt;Button variant="default" size="lg"&gt;
+  Search Flights
+&lt;/Button&gt;
+        </div>
+        
+        <h4>Form Components</h4>
+        <div class="code-block">
+// Form with validation
+&lt;Form {...form}&gt;
+  &lt;FormField
+    control={form.control}
+    name="departure"
+    render={({ field }) =&gt; (
+      &lt;FormItem&gt;
+        &lt;FormLabel&gt;Departure City&lt;/FormLabel&gt;
+        &lt;FormControl&gt;
+          &lt;Input placeholder="Enter departure city" {...field} /&gt;
+        &lt;/FormControl&gt;
+        &lt;FormMessage /&gt;
+      &lt;/FormItem&gt;
+    )}
+  /&gt;
+&lt;/Form&gt;
+        </div>
+        
+        <h3>Feature Components</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Key Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>FlightSearchForm</td>
+                    <td>Main flight search interface</td>
+                    <td>Date selection, city autocomplete, passenger count</td>
+                </tr>
+                <tr>
+                    <td>TravelCanvas</td>
+                    <td>Interactive travel visualization</td>
+                    <td>Map integration, route visualization</td>
+                </tr>
+                <tr>
+                    <td>Navigation</td>
+                    <td>Main application navigation</td>
+                    <td>Responsive design, mobile menu</td>
+                </tr>
+                <tr>
+                    <td>PaymentForm</td>
+                    <td>Secure payment processing</td>
+                    <td>Card validation, secure input handling</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Component Naming Conventions</h3>
+        
+        <div class="best-practices">
+            <strong>Naming Guidelines:</strong>
+            <ul>
+                <li><strong>PascalCase</strong> for component names</li>
+                <li><strong>camelCase</strong> for props and functions</li>
+                <li><strong>kebab-case</strong> for CSS classes</li>
+                <li><strong>UPPER_CASE</strong> for constants</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section page-break" id="styling">
+        <h2>7. Styling Guidelines</h2>
+        
+        <h3>Tailwind CSS Usage</h3>
+        
+        <h4>Utility-First Approach</h4>
+        <div class="code-block">
+// ✅ Preferred: Utility classes
+&lt;div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md"&gt;
+  &lt;h2 className="text-xl font-semibold text-gray-900"&gt;Flight Details&lt;/h2&gt;
+  &lt;Button className="bg-primary hover:bg-primary-hover"&gt;Book Now&lt;/Button&gt;
+&lt;/div&gt;
+
+// ✅ Acceptable: Component classes for complex patterns
+&lt;div className="flight-card"&gt;
+  {/* Content */}
+&lt;/div&gt;
+        </div>
+        
+        <h4>Responsive Design</h4>
+        <div class="code-block">
+// Mobile-first responsive design
+&lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"&gt;
+  {/* Responsive grid */}
+&lt;/div&gt;
+
+// Responsive text sizing
+&lt;h1 className="text-2xl md:text-3xl lg:text-4xl font-bold"&gt;
+  Find Your Perfect Flight
+&lt;/h1&gt;
+        </div>
+        
+        <h3>Custom Utility Classes</h3>
+        <div class="code-block">
+/* Apple-inspired effects */
+.apple-blur {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-effect {
+  @apply bg-white/70 dark:bg-black/70 apple-blur;
+}
+
+.apple-transition {
+  @apply transition-all duration-300 ease-out;
+}
+        </div>
+    </div>
+
+    <div class="section" id="development">
+        <h2>8. Development Workflow</h2>
+        
+        <h3>Component Development Process</h3>
+        
+        <ol>
+            <li><strong>Create Component Structure</strong></li>
+            <li><strong>Add Storybook Story</strong></li>
+            <li><strong>Write Unit Tests</strong></li>
+            <li><strong>Document Component Usage</strong></li>
+        </ol>
+        
+        <h3>Code Style Guidelines</h3>
+        
+        <h4>TypeScript Best Practices</h4>
+        <div class="code-block">
+// ✅ Use proper typing
+interface User {
+  id: string
+  name: string
+  email: string
+}
+
+// ✅ Use const assertions for immutable data
+const FLIGHT_STATUSES = ['scheduled', 'delayed', 'cancelled'] as const
+type FlightStatus = typeof FLIGHT_STATUSES[number]
+
+// ✅ Use proper error handling
+const fetchFlights = async (): Promise&lt;Flight[]&gt; =&gt; {
+  try {
+    const response = await api.get('/flights')
+    return response.data
+  } catch (error) {
+    console.error('Failed to fetch flights:', error)
+    throw new Error('Unable to load flights')
+  }
+}
+        </div>
+        
+        <h3>Git Workflow</h3>
+        
+        <h4>Branch Naming</h4>
+        <ul class="tech-list">
+            <li>feature/flight-search-enhancement</li>
+            <li>bugfix/payment-validation-error</li>
+            <li>hotfix/critical-booking-issue</li>
+            <li>chore/update-dependencies</li>
+        </ul>
+        
+        <h4>Commit Message Format</h4>
+        <div class="code-block">
+feat(search): add advanced filter options
+fix(payment): resolve validation error on card input
+docs(readme): update installation instructions
+style(button): improve hover state animation
+refactor(api): simplify flight search service
+test(booking): add unit tests for booking flow
+        </div>
+    </div>
+
+    <div class="section" id="testing">
+        <h2>9. Testing Strategy</h2>
+        
+        <h3>Unit Testing with Jest</h3>
+        
+        <h4>Component Testing Example</h4>
+        <div class="code-block">
+// __tests__/FlightCard.test.tsx
+import { render, screen, fireEvent } from '@testing-library/react'
+import { FlightCard } from '../FlightCard'
+
+const mockFlight = {
+  id: '1',
+  airline: 'Test Airlines',
+  departure: '2024-01-01T10:00:00Z',
+  arrival: '2024-01-01T14:00:00Z',
+  price: 299
+}
+
+describe('FlightCard', () => {
+  it('displays flight information correctly', () => {
+    render(&lt;FlightCard flight={mockFlight} onSelect={jest.fn()} /&gt;)
+    
+    expect(screen.getByText('Test Airlines')).toBeInTheDocument()
+    expect(screen.getByText('$299')).toBeInTheDocument()
+  })
+})
+        </div>
+        
+        <h3>E2E Testing with Cypress</h3>
+        
+        <h4>Test Structure Example</h4>
+        <div class="code-block">
+// cypress/e2e/flight-search.cy.ts
+describe('Flight Search', () => {
+  beforeEach(() => {
+    cy.visit('/search')
+  })
+  
+  it('should search for flights', () => {
+    cy.get('[data-testid="departure-input"]').type('New York')
+    cy.get('[data-testid="arrival-input"]').type('Los Angeles')
+    cy.get('[data-testid="search-button"]').click()
+    
+    cy.get('[data-testid="flight-results"]').should('be.visible')
+  })
+})
+        </div>
+        
+        <h3>Visual Testing with Percy</h3>
+        
+        <div class="info-box">
+            <strong>Visual Regression Testing:</strong> Percy is integrated to catch visual regressions across different components and pages, ensuring design consistency throughout development.
+        </div>
+    </div>
+
+    <div class="section page-break" id="performance">
+        <h2>10. Performance Guidelines</h2>
+        
+        <h3>Code Splitting</h3>
+        
+        <h4>Route-based Splitting</h4>
+        <div class="code-block">
+// App.tsx
+import { lazy, Suspense } from 'react'
+
+const SearchPage = lazy(() =&gt; import('./pages/Search'))
+const BookingPage = lazy(() =&gt; import('./pages/Booking'))
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/search" element={&lt;SearchPage /&gt;} /&gt;
+        &lt;Route path="/booking" element={&lt;BookingPage /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  )
+}
+        </div>
+        
+        <h3>Bundle Optimization</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Chunk</th>
+                    <th>Libraries</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>vendor</td>
+                    <td>react, react-dom</td>
+                    <td>Core React libraries</td>
+                </tr>
+                <tr>
+                    <td>ui</td>
+                    <td>@radix-ui components</td>
+                    <td>UI component libraries</td>
+                </tr>
+                <tr>
+                    <td>charts</td>
+                    <td>recharts</td>
+                    <td>Data visualization</td>
+                
