@@ -360,14 +360,24 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
   );
 };
 
-const StepCard = ({ step, title, children, open, className = "", isActive = false, isCompleted = false }: { 
+const StepCard = ({ 
+  step, 
+  title, 
+  children, 
+  open, 
+  className = "", 
+  isActive = false, 
+  isCompleted = false,
+  onHeaderClick 
+}: { 
   step: number, 
   title: string, 
   children?: React.ReactNode, 
   open: boolean, 
   className?: string,
   isActive?: boolean,
-  isCompleted?: boolean 
+  isCompleted?: boolean,
+  onHeaderClick?: () => void
 }) => {
   // Determine circle styling based on step state
   const getCircleClasses = () => {
@@ -382,11 +392,24 @@ const StepCard = ({ step, title, children, open, className = "", isActive = fals
 
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
-      <div className="flex items-center gap-4 mb-4">
-        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
-          {step}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-4">
+          <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
+            {step}
+          </div>
+          <span className="text-xl font-bold">{title}</span>
         </div>
-        <span className="text-xl font-bold">{title}</span>
+        {isCompleted && (
+          <button 
+            onClick={onHeaderClick}
+            className="flex items-center justify-center w-8 h-8 hover:bg-blue-50 rounded-full transition-colors group"
+          >
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="11.5" stroke="#2563EB"/>
+              <path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
       </div>
       {open ? (
         children || <div className="text-gray-400 text-base mt-2">Coming soon...</div>
@@ -519,7 +542,14 @@ export default function BookingPage({ trip }: { trip: any }) {
         {/* Left: Step Content */}
         <main className="flex-1 min-w-0">
           {/* Step 1: Review your itinerary */}
-          <StepCard step={1} title="Review your itinerary" open={openStep >= 1} isActive={openStep === 1} isCompleted={openStep > 1}>
+          <StepCard 
+            step={1} 
+            title="Review your itinerary" 
+            open={openStep >= 1} 
+            isActive={openStep === 1} 
+            isCompleted={openStep > 1}
+            onHeaderClick={() => setOpenStep(1)}
+          >
             {openStep === 1 ? (
               <>
                 <ItineraryReview trip={trip} />
@@ -638,9 +668,6 @@ export default function BookingPage({ trip }: { trip: any }) {
                     <span className="text-xs text-gray-500 truncate">01:00 - 03:50 • 4h 20m</span>
                   </div>
                   <span className="text-xs border border-gray-400 rounded px-2 py-1 text-gray-500 font-semibold">STANDARD</span>
-                  <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 32, height: 32}}>
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
                 </div>
                 {/* Return Flight Row */}
                 <div className="flex items-center gap-4 w-full">
@@ -659,10 +686,22 @@ export default function BookingPage({ trip }: { trip: any }) {
                     <span className="text-xs text-gray-500 truncate">18:45 - 04:15 • 5h 10m • 1 stop</span>
                   </div>
                   <span className="text-xs border border-gray-400 rounded px-2 py-1 text-gray-500 font-semibold">STANDARD</span>
-                  <span className="flex items-center justify-center" style={{width: 32, height: 32, visibility: 'hidden'}}>
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
                 </div>
+              </div>
+            ) : openStep > 2 ? (
+              // Summary view for completed Step 2
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
+                <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
+              </div>
+            ) : openStep > 3 ? (
+              // Summary view for completed Step 3
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+                <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
+              </div>
+            ) : openStep > 4 ? (
+              // Summary view for completed Step 4
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+                <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
@@ -676,7 +715,15 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
 
           {/* Step 2: Choose add-ons */}
-          <StepCard step={2} title="Choose add-ons" open={openStep >= 2} className="mt-6" isActive={openStep === 2} isCompleted={openStep > 2}>
+          <StepCard 
+            step={2} 
+            title="Choose add-ons" 
+            open={openStep >= 2} 
+            className="mt-6" 
+            isActive={openStep === 2} 
+            isCompleted={openStep > 2}
+            onHeaderClick={() => setOpenStep(2)}
+          >
             {openStep === 2 ? (
               <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mb-6">
                 <div className="text-xl font-bold mb-4">Travel Essentials</div>
@@ -742,12 +789,17 @@ export default function BookingPage({ trip }: { trip: any }) {
             ) : openStep > 2 ? (
               // Summary view for completed Step 2
               <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
-                  <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 32, height: 32}}>
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
-                </div>
+                <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
+              </div>
+            ) : openStep > 3 ? (
+              // Summary view for completed Step 3
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+                <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
+              </div>
+            ) : openStep > 4 ? (
+              // Summary view for completed Step 4
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+                <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
@@ -761,7 +813,15 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
 
           {/* Step 3: Add traveller details */}
-          <StepCard step={3} title="Add traveller details" open={openStep >= 3} className="mt-6" isActive={openStep === 3} isCompleted={openStep > 3}>
+          <StepCard 
+            step={3} 
+            title="Add traveller details" 
+            open={openStep >= 3} 
+            className="mt-6" 
+            isActive={openStep === 3} 
+            isCompleted={openStep > 3}
+            onHeaderClick={() => setOpenStep(3)}
+          >
             {openStep === 3 ? (
               <div className="space-y-6">
                 {/* Adult Section */}
@@ -1029,12 +1089,12 @@ export default function BookingPage({ trip }: { trip: any }) {
             ) : openStep > 3 ? (
               // Summary view for completed Step 3
               <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
-                  <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 32, height: 32}}>
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
-                </div>
+                <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
+              </div>
+            ) : openStep > 4 ? (
+              // Summary view for completed Step 4
+              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+                <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
@@ -1048,7 +1108,15 @@ export default function BookingPage({ trip }: { trip: any }) {
           )}
 
           {/* Step 4: Add contact details */}
-          <StepCard step={4} title="Add contact details" open={openStep >= 4} className="mt-6" isActive={openStep === 4} isCompleted={openStep > 4}>
+          <StepCard 
+            step={4} 
+            title="Add contact details" 
+            open={openStep >= 4} 
+            className="mt-6" 
+            isActive={openStep === 4} 
+            isCompleted={openStep > 4}
+            onHeaderClick={() => setOpenStep(4)}
+          >
             {openStep === 4 ? (
               <div className="space-y-6">
                 {/* Information Text */}
@@ -1134,12 +1202,7 @@ export default function BookingPage({ trip }: { trip: any }) {
             ) : openStep > 4 ? (
               // Summary view for completed Step 4
               <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
-                  <span className="flex items-center justify-center group-hover:bg-blue-50 rounded-full transition-colors" style={{width: 32, height: 32}}>
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.5" stroke="#2563EB"/><path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
-                </div>
+                <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
