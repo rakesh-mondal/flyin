@@ -391,20 +391,20 @@ const StepCard = ({
   };
 
   return (
-    <div className={`bg-white rounded-2xl border border-gray-200 p-6 w-full ${className}`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4">
-          <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
+    <div className={`bg-white rounded-2xl border border-gray-200 p-4 w-full ${className}`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-bold text-sm ${getCircleClasses()}`}>
             {step}
           </div>
-          <span className="text-xl font-bold">{title}</span>
+          <span className="text-lg font-bold">{title}</span>
         </div>
         {isCompleted && (
           <button 
             onClick={onHeaderClick}
-            className="flex items-center justify-center w-8 h-8 hover:bg-blue-50 rounded-full transition-colors group"
+            className="flex items-center justify-center w-7 h-7 hover:bg-blue-50 rounded-full transition-colors group"
           >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="11.5" stroke="#2563EB"/>
               <path d="M8 10l4 4 4-4" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -653,13 +653,13 @@ export default function BookingPage({ trip }: { trip: any }) {
               </>
             ) : openStep > 1 ? (
               // Summary view for completed Step 1
-              <div className="flex flex-col gap-3 py-3 cursor-pointer group" onClick={() => setOpenStep(1)}>
+              <div className="flex flex-col gap-2 py-2 cursor-pointer group" onClick={() => setOpenStep(1)}>
                 {/* Outbound Flight Row */}
-                <div className="flex items-center gap-4 w-full">
-                  <div className="flex items-center min-w-[100px] gap-3">
-                    <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-6 w-6 rounded bg-white border border-gray-200 object-contain" />
+                <div className="flex items-center gap-3 w-full">
+                  <div className="flex items-center min-w-[80px] gap-2">
+                    <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-5 w-5 rounded bg-white border border-gray-200 object-contain" />
                     <div className="flex flex-col justify-center leading-tight">
-                      <span className="text-sm font-medium text-gray-900">IndiGo</span>
+                      <span className="text-xs font-medium text-gray-900">IndiGo</span>
                       <span className="text-xs text-gray-500">6E-1419</span>
                     </div>
                   </div>
@@ -667,47 +667,47 @@ export default function BookingPage({ trip }: { trip: any }) {
                     <span className="text-sm font-medium text-gray-900 truncate">Bangalore → Abu Dhabi</span>
                     <span className="text-xs text-gray-500 truncate">01:00 - 03:50 • 4h 20m</span>
                   </div>
-                  <span className="text-xs border border-gray-400 rounded px-2 py-1 text-gray-500 font-semibold">STANDARD</span>
+                  <span className="text-xs border border-gray-400 rounded px-1.5 py-0.5 text-gray-500 font-semibold">STANDARD</span>
                 </div>
                 {/* Return Flight Row */}
-                <div className="flex items-center gap-4 w-full">
-                  <div className="flex items-center min-w-[100px] gap-3">
-                    <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-6 w-6 rounded bg-white border border-gray-200 object-contain" />
+                <div className="flex items-center gap-3 w-full">
+                  <div className="flex items-center min-w-[80px] gap-2">
+                    <img src={getAirlineLogo('IndiGo')} alt="IndiGo" className="h-5 w-5 rounded bg-white border border-gray-200 object-contain" />
                     <div className="flex flex-col justify-center leading-tight">
-                      <span className="text-sm font-medium text-gray-900">IndiGo</span>
+                      <span className="text-xs font-medium text-gray-900">IndiGo</span>
                       <span className="text-xs text-gray-500">6E-1419</span>
                     </div>
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-gray-900 truncate">Abu Dhabi → Bangalore</span>
-                      <span className="bg-yellow-100 text-yellow-900 font-bold rounded px-1.5 py-0.5 text-xs">NEXT DAY</span>
+                      <span className="bg-yellow-100 text-yellow-900 font-bold rounded px-1 py-0.5 text-xs">NEXT DAY</span>
                     </div>
                     <span className="text-xs text-gray-500 truncate">18:45 - 04:15 • 5h 10m • 1 stop</span>
                   </div>
-                  <span className="text-xs border border-gray-400 rounded px-2 py-1 text-gray-500 font-semibold">STANDARD</span>
+                  <span className="text-xs border border-gray-400 rounded px-1.5 py-0.5 text-gray-500 font-semibold">STANDARD</span>
                 </div>
               </div>
             ) : openStep > 2 ? (
               // Summary view for completed Step 2
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
                 <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
               </div>
             ) : openStep > 3 ? (
               // Summary view for completed Step 3
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
                 <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
               </div>
             ) : openStep > 4 ? (
               // Summary view for completed Step 4
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
                 <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
           {openStep === 1 && (
             <button
-              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+              className="mt-6 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(2)}
             >
               Continue
@@ -788,24 +788,24 @@ export default function BookingPage({ trip }: { trip: any }) {
               </div>
             ) : openStep > 2 ? (
               // Summary view for completed Step 2
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
                 <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
               </div>
             ) : openStep > 3 ? (
               // Summary view for completed Step 3
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
                 <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
               </div>
             ) : openStep > 4 ? (
               // Summary view for completed Step 4
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
                 <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
           {openStep === 2 && (
             <button
-              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+              className="mt-6 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(3)}
             >
               Continue
@@ -1088,19 +1088,19 @@ export default function BookingPage({ trip }: { trip: any }) {
               </div>
             ) : openStep > 3 ? (
               // Summary view for completed Step 3
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
                 <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
               </div>
             ) : openStep > 4 ? (
               // Summary view for completed Step 4
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
                 <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
           {openStep === 3 && (
             <button
-              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+              className="mt-6 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => setOpenStep(4)}
             >
               Continue
@@ -1201,14 +1201,14 @@ export default function BookingPage({ trip }: { trip: any }) {
               </div>
             ) : openStep > 4 ? (
               // Summary view for completed Step 4
-              <div className="py-3 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
+              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
                 <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
               </div>
             ) : null}
           </StepCard>
           {openStep === 4 && (
             <button
-              className="mt-8 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
+              className="mt-6 bg-[#194a8f] text-white font-semibold rounded px-5 py-2.5 text-base hover:bg-[#143a7a]"
               onClick={() => navigate('/payment', { state: { trip } })}
             >
               Continue to payment
