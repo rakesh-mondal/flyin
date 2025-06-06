@@ -771,7 +771,7 @@ export default function BookingPage({ trip }: { trip: any }) {
               <>
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 px-2 py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <span className="text-base font-semibold text-gray-900">
                         Smart Delay
                       </span>
@@ -876,7 +876,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Flight Notification Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 px-2 py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <span className="text-base font-semibold text-gray-900">
                         Flight Notification
                       </span>
@@ -928,7 +928,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Auto Check-in Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 px-2 py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <span className="text-base font-semibold text-gray-900">
                         Auto Check-in
                       </span>
@@ -980,7 +980,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Lost Luggage Protection Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 px-2 py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <span className="text-base font-semibold text-gray-900">
                         Lost Luggage Protection
                       </span>
@@ -1032,7 +1032,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* TripAdd Protection Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 px-2 py-2">
+                    <div className="flex items-center gap-2 py-2">
                       <span className="text-base font-semibold text-gray-900">
                         TripAdd Protection
                       </span>
