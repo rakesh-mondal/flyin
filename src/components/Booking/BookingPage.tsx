@@ -955,7 +955,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
                             <div className="flex gap-1">
                               <Select value={dobDayAdult1} onValueChange={setDobDayAdult1}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-16">
                                   <SelectValue placeholder="DD" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -967,15 +967,20 @@ export default function BookingPage({ trip }: { trip: any }) {
                                 </SelectContent>
                               </Select>
                               <Select value={dobMonthAdult1} onValueChange={setDobMonthAdult1}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-28">
                                   <SelectValue placeholder="MM" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {Array.from({length: 12}, (_, i) => (
-                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
-                                      {String(i+1).padStart(2, '0')}
-                                    </SelectItem>
-                                  ))}
+                                  {Array.from({length: 12}, (_, i) => {
+                                    const monthNumber = String(i+1).padStart(2, '0');
+                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const monthName = monthNames[i];
+                                    return (
+                                      <SelectItem key={i+1} value={monthNumber}>
+                                        {monthNumber} ({monthName})
+                                      </SelectItem>
+                                    );
+                                  })}
                                 </SelectContent>
                               </Select>
                               <Select value={dobYearAdult1} onValueChange={setDobYearAdult1}>
@@ -1087,7 +1092,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
                             <div className="flex gap-1">
                               <Select value={dobDayAdult2} onValueChange={setDobDayAdult2}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-16">
                                   <SelectValue placeholder="DD" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1099,15 +1104,20 @@ export default function BookingPage({ trip }: { trip: any }) {
                                 </SelectContent>
                               </Select>
                               <Select value={dobMonthAdult2} onValueChange={setDobMonthAdult2}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-28">
                                   <SelectValue placeholder="MM" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {Array.from({length: 12}, (_, i) => (
-                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
-                                      {String(i+1).padStart(2, '0')}
-                                    </SelectItem>
-                                  ))}
+                                  {Array.from({length: 12}, (_, i) => {
+                                    const monthNumber = String(i+1).padStart(2, '0');
+                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const monthName = monthNames[i];
+                                    return (
+                                      <SelectItem key={i+1} value={monthNumber}>
+                                        {monthNumber} ({monthName})
+                                      </SelectItem>
+                                    );
+                                  })}
                                 </SelectContent>
                               </Select>
                               <Select value={dobYearAdult2} onValueChange={setDobYearAdult2}>
@@ -1219,7 +1229,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
                             <div className="flex gap-1">
                               <Select value={dobDayChild1} onValueChange={setDobDayChild1}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-16">
                                   <SelectValue placeholder="DD" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -1231,15 +1241,20 @@ export default function BookingPage({ trip }: { trip: any }) {
                                 </SelectContent>
                               </Select>
                               <Select value={dobMonthChild1} onValueChange={setDobMonthChild1}>
-                                <SelectTrigger className="h-8 text-sm w-20">
+                                <SelectTrigger className="h-8 text-sm w-28">
                                   <SelectValue placeholder="MM" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {Array.from({length: 12}, (_, i) => (
-                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
-                                      {String(i+1).padStart(2, '0')}
-                                    </SelectItem>
-                                  ))}
+                                  {Array.from({length: 12}, (_, i) => {
+                                    const monthNumber = String(i+1).padStart(2, '0');
+                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const monthName = monthNames[i];
+                                    return (
+                                      <SelectItem key={i+1} value={monthNumber}>
+                                        {monthNumber} ({monthName})
+                                      </SelectItem>
+                                    );
+                                  })}
                                 </SelectContent>
                               </Select>
                               <Select value={dobYearChild1} onValueChange={setDobYearChild1}>
