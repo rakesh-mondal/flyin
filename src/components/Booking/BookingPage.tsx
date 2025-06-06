@@ -5,7 +5,7 @@ import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
 import TravellerInput from './TravellerInput';
-import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon, ExclamationTriangleIcon, ClockIcon, CheckBadgeIcon, ShieldCheckIcon, CheckIcon, WifiIcon, GiftIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon, ExclamationTriangleIcon, ClockIcon, CheckBadgeIcon, ShieldCheckIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Footprints, MoveRight, PlaneLanding, Info, X } from 'lucide-react';
@@ -786,23 +786,30 @@ export default function BookingPage({ trip }: { trip: any }) {
                   <div className="flex w-full flex-wrap items-center gap-12">
                     <div className="flex flex-col items-start gap-2">
                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <UserIcon className="w-5 h-5 text-gray-600" />
+                        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4 6.15385V15H16V6.15383C16 3.85325 16 2.70296 15.5177 1.84615C15.2017 1.28485 14.7473 0.81874 14.2 0.49468C13.3646 0 12.2431 0 10 0C7.75692 0 6.63538 0 5.8 0.49468C5.25273 0.81874 4.79827 1.28485 4.48231 1.84615C4 2.70296 4 3.85325 4 6.15385Z" fill="#80A9FA"/>
+                          <path d="M15.1786 19H4.82143C4.07648 19 3.61013 19 3.25 18.958V20.2499C3.25 20.6641 2.91421 20.9999 2.5 20.9999C2.08579 20.9999 1.75 20.6641 1.75 20.2499V18.3838C0.92435 17.8283 0.31864 16.9398 0.09402 15.8901C1.11759e-08 15.4507 0 14.9195 0 13.8571V9.2456C0 8.0054 0.94256 7 2.10526 7C3.26797 7 4.21053 8.0054 4.21053 9.2456V12.3333C4.21053 13.2761 4.21053 13.7475 4.50342 14.0404C4.79631 14.3333 5.26772 14.3333 6.21053 14.3333H13.7895C14.7323 14.3333 15.2037 14.3333 15.4966 14.0404C15.7895 13.7475 15.7895 13.2761 15.7895 12.3333V9.2456C15.7895 8.0054 16.732 7 17.8947 7C19.0574 7 20 8.0054 20 9.2456V13.8571C20 14.9195 20 15.4507 19.906 15.8901C19.6814 16.9398 19.0756 17.8283 18.25 18.3838V20.25C18.25 20.6642 17.9142 21 17.5 21C17.0858 21 16.75 20.6642 16.75 20.25V18.958C16.3899 19 15.9235 19 15.1786 19Z" fill="#204899"/>
+                        </svg>
                     </div>
                       <span className="text-sm font-medium text-gray-900">
                         Lounge Access
                       </span>
                   </div>
                     <div className="flex flex-col items-start gap-2">
-                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <GiftIcon className="w-5 h-5 text-green-600" />
+                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18.9272 0.90623V18.875C18.9272 19.0822 18.8449 19.2809 18.6984 19.4274C18.5519 19.5739 18.3532 19.6562 18.146 19.6562C17.9388 19.6562 17.7401 19.5739 17.5936 19.4274C17.4471 19.2809 17.3647 19.0822 17.3647 18.875V14.1875H12.6772C12.47 14.1875 12.2713 14.1052 12.1248 13.9587C11.9783 13.8121 11.896 13.6134 11.896 13.4062C11.9323 11.5348 12.1686 9.67267 12.6011 7.85154C13.5562 3.89744 15.3667 1.24705 17.8384 0.188457C17.9572 0.137569 18.0867 0.116947 18.2155 0.128441C18.3442 0.139935 18.4681 0.183185 18.576 0.254315C18.6839 0.325445 18.7725 0.422234 18.8338 0.536009C18.8951 0.649783 18.9272 0.77699 18.9272 0.90623ZM9.5415 0.7783C9.5262 0.675717 9.49063 0.577207 9.43686 0.488517C9.38308 0.399826 9.31219 0.322731 9.22831 0.261727C9.14443 0.200723 9.04924 0.157033 8.94829 0.133203C8.84735 0.109374 8.74267 0.105883 8.64037 0.122934C8.53806 0.139986 8.44017 0.177238 8.35241 0.232517C8.26465 0.287797 8.18878 0.359998 8.12922 0.444909C8.06966 0.52982 8.0276 0.625741 8.0055 0.727077C7.98339 0.828413 7.98169 0.933136 8.00049 1.03514L8.76025 5.59373H6.42725V0.90623C6.42725 0.69903 6.34494 0.500316 6.19842 0.353803C6.05191 0.20729 5.8532 0.12498 5.646 0.12498C5.4388 0.12498 5.24008 0.20729 5.09357 0.353803C4.94706 0.500316 4.86475 0.69903 4.86475 0.90623V5.59373H2.53174L3.2915 1.03514C3.3103 0.933136 3.3086 0.828413 3.2865 0.727077C3.26439 0.625741 3.22234 0.52982 3.16277 0.444909C3.10321 0.359998 3.02734 0.287797 2.93958 0.232517C2.85182 0.177238 2.75393 0.139986 2.65163 0.122934C2.54932 0.105883 2.44464 0.109374 2.3437 0.133203C2.24275 0.157033 2.14757 0.200723 2.06368 0.261727C1.9798 0.322731 1.90891 0.399826 1.85514 0.488517C1.80136 0.577207 1.76579 0.675717 1.75049 0.7783L0.969238 5.4658C0.962227 5.50809 0.958635 5.55087 0.958496 5.59373C0.960057 6.70097 1.35295 7.77201 2.06774 8.61762C2.78254 9.46322 3.77322 10.0289 4.86475 10.2148V18.875C4.86475 19.0822 4.94706 19.2809 5.09357 19.4274C5.24008 19.5739 5.4388 19.6562 5.646 19.6562C5.8532 19.6562 6.05191 19.5739 6.19842 19.4274C6.34494 19.2809 6.42725 19.0822 6.42725 18.875V10.2148C7.51877 10.0289 8.50946 9.46322 9.22425 8.61762C9.93905 7.77201 10.3319 6.70097 10.3335 5.59373C10.3334 5.55087 10.3298 5.50809 10.3228 5.4658L9.5415 0.7783Z" fill="#00AF17"/>
+                        </svg>
                     </div>
                       <span className="text-sm font-medium text-gray-900">
                         Complimentary meals
                       </span>
                       </div>
                     <div className="flex flex-col items-start gap-2">
-                      <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                        <WifiIcon className="w-5 h-5 text-yellow-600" />
+                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M23.0727 6.63538L12.9164 18.8844C12.7696 19.0617 12.5853 19.2042 12.3767 19.3017C12.1681 19.3991 11.9406 19.449 11.7104 19.4479C11.4808 19.4485 11.254 19.3982 11.0462 19.3008C10.8383 19.2034 10.6546 19.0612 10.5082 18.8844L0.34806 6.63538C0.214338 6.47562 0.114691 6.29021 0.055242 6.09053C-0.00420743 5.89086 -0.0222042 5.68114 0.0023572 5.47425C0.0267935 5.26685 0.0927364 5.0665 0.196255 4.88513C0.299774 4.70377 0.438749 4.5451 0.604896 4.41859C3.79668 1.99056 7.70005 0.682798 11.7104 0.697883C15.7207 0.682798 19.624 1.99056 22.8158 4.41859C22.982 4.5451 23.121 4.70377 23.2245 4.88513C23.328 5.0665 23.3939 5.26685 23.4184 5.47425C23.4429 5.68114 23.4249 5.89086 23.3655 6.09053C23.306 6.29021 23.2064 6.47562 23.0727 6.63538Z" fill="#14B8A6"/>
+                        </svg>
                     </div>
                       <span className="text-sm font-medium text-gray-900">Free Wi-fi</span>
                   </div>
@@ -890,24 +897,30 @@ export default function BookingPage({ trip }: { trip: any }) {
                   </div>
                                      <div className="flex w-full flex-wrap items-center gap-12">
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                         <BellIcon className="w-5 h-5 text-blue-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M4.19034 3.11748C6.01637 1.53858 8.39672 0.583496 11.0002 0.583496C16.7531 0.583496 21.4168 5.24719 21.4168 11.0002C21.4168 13.2253 20.7191 15.2875 19.5306 16.98L16.2085 11.0002H19.3335C19.3335 6.39779 15.6026 2.66683 11.0002 2.66683C8.76039 2.66683 6.72701 3.55044 5.22957 4.9881L4.19034 3.11748ZM17.81 18.8829C15.9839 20.4617 13.6036 21.4168 11.0002 21.4168C5.24719 21.4168 0.583496 16.7531 0.583496 11.0002C0.583496 8.77502 1.28119 6.71283 2.46975 5.02041L5.79183 11.0002H2.66683C2.66683 15.6026 6.39779 19.3335 11.0002 19.3335C13.24 19.3335 15.2733 18.4499 16.7708 17.0122L17.81 18.8829Z" fill="#C50000"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Real time updates
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                         <BellIcon className="w-5 h-5 text-green-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M5.55715 17.2917L0.916992 20.9375V1.66667C0.916992 1.09137 1.38337 0.625 1.95866 0.625H20.7087C21.284 0.625 21.7503 1.09137 21.7503 1.66667V16.25C21.7503 16.8253 21.284 17.2917 20.7087 17.2917H5.55715ZM4.8366 15.2083H19.667V2.70833H3.00033V16.6511L4.8366 15.2083ZM7.16699 7.91667H15.5003V10H7.16699V7.91667Z" fill="#14B8A6"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Available via Email & SMS
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                         <BellIcon className="w-5 h-5 text-purple-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M10.6667 20.9168C4.9137 20.9168 0.25 16.2531 0.25 10.5002C0.25 4.74719 4.9137 0.0834961 10.6667 0.0834961C16.4196 0.0834961 21.0833 4.74719 21.0833 10.5002C21.0833 16.2531 16.4196 20.9168 10.6667 20.9168ZM8.28127 18.487C7.27857 16.3605 6.66388 14.015 6.52845 11.5418H2.3978C2.81042 14.8507 5.16291 17.5571 8.28127 18.487ZM8.61531 11.5418C8.77198 14.0822 9.49771 16.4686 10.6667 18.5752C11.8356 16.4686 12.5614 14.0822 12.718 11.5418H8.61531ZM18.9355 11.5418H14.8049C14.6695 14.015 14.0548 16.3605 13.0521 18.487C16.1704 17.5571 18.5229 14.8507 18.9355 11.5418ZM2.3978 9.4585H6.52845C6.66388 6.98534 7.27857 4.63982 8.28127 2.51325C5.16291 3.44321 2.81042 6.14964 2.3978 9.4585ZM8.61531 9.4585H12.718C12.5614 6.9181 11.8356 4.53167 10.6667 2.42515C9.49771 4.53167 8.77198 6.9181 8.61531 9.4585ZM13.0521 2.51325C14.0548 4.63982 14.6695 6.98534 14.8049 9.4585H18.9355C18.5229 6.14964 16.1704 3.44321 13.0521 2.51325Z" fill="#194BFF"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">Access information world-wide</span>
                      </div>
@@ -942,16 +955,20 @@ export default function BookingPage({ trip }: { trip: any }) {
                   </div>
                                      <div className="flex w-full flex-wrap items-center gap-12">
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                         <UserIcon className="w-5 h-5 text-green-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M2.83577 15.1951H21.5858V2.69515H2.83577V15.1951ZM0.752441 1.65348C0.752441 1.07819 1.21882 0.611816 1.79411 0.611816H22.6274C23.2028 0.611816 23.6691 1.07819 23.6691 1.65348V16.2368C23.6691 16.8121 23.2028 17.2785 22.6274 17.2785H1.79411C1.21882 17.2785 0.752441 16.8121 0.752441 16.2368V1.65348ZM9.08577 6.86182C9.08577 6.28652 8.6194 5.82015 8.04411 5.82015C7.46882 5.82015 7.00244 6.28652 7.00244 6.86182C7.00244 7.43713 7.46882 7.90348 8.04411 7.90348C8.6194 7.90348 9.08577 7.43713 9.08577 6.86182ZM11.1691 6.86182C11.1691 8.58775 9.76999 9.98682 8.04411 9.98682C6.31822 9.98682 4.91911 8.58775 4.91911 6.86182C4.91911 5.13593 6.31822 3.73682 8.04411 3.73682C9.76999 3.73682 11.1691 5.13593 11.1691 6.86182ZM8.04598 13.1118C7.03893 13.1118 6.1289 13.5188 5.46799 14.1796L3.99486 12.7065C5.03049 11.6709 6.46421 11.0285 8.04598 11.0285C9.62776 11.0285 11.0615 11.6709 12.0971 12.7065L10.624 14.1796C9.96308 13.5188 9.05304 13.1118 8.04598 13.1118ZM16.5932 11.765L20.7598 7.59838L19.2867 6.12524L15.8566 9.55536L13.989 7.68775L12.5159 9.16088L15.12 11.765L15.8566 12.5016L16.5932 11.765Z" fill="#194BFF"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Auto generated boarding passes
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                         <ClockIcon className="w-5 h-5 text-blue-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="19" height="23" viewBox="0 0 19 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M9.5 0.0415039L18.0593 1.94357C18.5359 2.04948 18.875 2.4722 18.875 2.96043V13.3633C18.875 15.453 17.8306 17.4044 16.0919 18.5636L9.5 22.9582L2.90813 18.5636C1.16939 17.4044 0.125 15.453 0.125 13.3633V2.96043C0.125 2.4722 0.464094 2.04948 0.940698 1.94357L9.5 0.0415039ZM9.5 2.17566L2.20833 3.79602V13.3633C2.20833 14.7564 2.90458 16.0573 4.06375 16.8301L9.5 20.4543L14.9362 16.8301C16.0954 16.0573 16.7917 14.7564 16.7917 13.3633V3.79602L9.5 2.17566ZM14.1379 7.56424L15.611 9.03738L8.98187 15.6665L4.56249 11.2471L6.03563 9.7739L8.98115 12.7195L14.1379 7.56424Z" fill="#00AF17"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Instant Check-in
@@ -989,24 +1006,30 @@ export default function BookingPage({ trip }: { trip: any }) {
                   </div>
                                      <div className="flex w-full flex-wrap items-center gap-12">
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                         <ShieldCheckIcon className="w-5 h-5 text-red-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M10.8283 0.877441C16.5812 0.877441 21.245 5.54114 21.245 11.2941C21.245 17.047 16.5812 21.7108 10.8283 21.7108C5.07532 21.7108 0.411621 17.047 0.411621 11.2941H2.49495C2.49495 15.8965 6.22591 19.6274 10.8283 19.6274C15.4307 19.6274 19.1616 15.8965 19.1616 11.2941C19.1616 6.69173 15.4307 2.96077 10.8283 2.96077C7.96393 2.96077 5.43711 4.40592 3.93715 6.60686L6.66162 6.60661V8.68994H0.411621V2.43994H2.49495L2.49484 5.04325C4.39531 2.51364 7.42072 0.877441 10.8283 0.877441ZM11.87 6.08578L11.8697 10.8618L15.2477 14.2404L13.7745 15.7135L9.78641 11.7243L9.78662 6.08578H11.87Z" fill="#FF9350"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Return within 96 hours
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                         <ClockIcon className="w-5 h-5 text-green-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M20.0592 8.0695H21.1654C22.316 8.0695 23.2487 9.00224 23.2487 10.1528V14.3195C23.2487 15.4701 22.316 16.4028 21.1654 16.4028H20.0592C19.5466 20.5136 16.0399 23.6945 11.7904 23.6945V21.6112C15.2421 21.6112 18.0404 18.8129 18.0404 15.3612V9.11117C18.0404 5.65938 15.2421 2.86117 11.7904 2.86117C8.33858 2.86117 5.54036 5.65938 5.54036 9.11117V16.4028H2.41536C1.26477 16.4028 0.332031 15.4701 0.332031 14.3195V10.1528C0.332031 9.00224 1.26477 8.0695 2.41536 8.0695H3.5215C4.0341 3.95876 7.54076 0.777832 11.7904 0.777832C16.0399 0.777832 19.5466 3.95876 20.0592 8.0695ZM2.41536 10.1528V14.3195H3.45703V10.1528H2.41536ZM20.1237 10.1528V14.3195H21.1654V10.1528H20.1237ZM7.37311 16.1788L8.47743 14.4119C9.43787 15.0135 10.5735 15.3612 11.7904 15.3612C13.0072 15.3612 14.1429 15.0135 15.1033 14.4119L16.2077 16.1788C14.927 16.9809 13.4129 17.4445 11.7904 17.4445C10.1679 17.4445 8.65372 16.9809 7.37311 16.1788Z" fill="#14B8A6"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          24/7 customer support
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                         <CheckBadgeIcon className="w-5 h-5 text-blue-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M3.85684 2.61748C5.68287 1.03858 8.06323 0.0834961 10.6667 0.0834961C16.4196 0.0834961 21.0833 4.74719 21.0833 10.5002C21.0833 12.7253 20.3856 14.7875 19.1971 16.48L15.875 10.5002H19C19 5.89779 15.2691 2.16683 10.6667 2.16683C8.4269 2.16683 6.39351 3.05044 4.89607 4.4881L3.85684 2.61748ZM17.4765 18.3829C15.6504 19.9617 13.2701 20.9168 10.6667 20.9168C4.9137 20.9168 0.25 16.2531 0.25 10.5002C0.25 8.27502 0.947698 6.21283 2.13625 4.52041L5.45833 10.5002H2.33333C2.33333 15.1026 6.06429 18.8335 10.6667 18.8335C12.9065 18.8335 14.9398 17.9499 16.4373 16.5122L17.4765 18.3829Z" fill="#C50000"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">Real-Time Updates</span>
                      </div>
@@ -1041,24 +1064,31 @@ export default function BookingPage({ trip }: { trip: any }) {
                   </div>
                                      <div className="flex w-full flex-wrap items-center gap-12">
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                         <ShieldExclamationIcon className="w-5 h-5 text-purple-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M21.4006 6.51238C21.6239 7.34592 21.1294 8.20269 20.2958 8.42603L3.97644 12.7987C3.51474 12.9225 3.02809 12.7161 2.79609 12.2982L0.0639648 7.37665L1.57323 6.97228L4.14384 9.51874L9.45144 8.09655L4.75299 0.728173L6.76533 0.188965L14.0063 6.87603L19.487 5.40752C20.3205 5.18416 21.1773 5.67883 21.4006 6.51238ZM2.70387 15.7709H19.3705V17.8543H2.70387V15.7709Z" fill="#00AF17"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Instant Flight Updates
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                         <ShieldCheckIcon className="w-5 h-5 text-orange-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="24" height="21" viewBox="0 0 24 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M11.8099 0.753418C15.837 0.753418 19.1016 4.01801 19.1016 8.04508C19.1016 8.16332 19.0987 8.28091 19.0932 8.39776C21.525 9.25342 23.2682 11.5707 23.2682 14.2951C23.2682 17.7469 20.47 20.5451 17.0182 20.5451H6.60156C3.14978 20.5451 0.351562 17.7469 0.351562 14.2951C0.351562 11.5707 2.09475 9.25342 4.5266 8.39776C4.52104 8.28091 4.51823 8.16332 4.51823 8.04508C4.51823 4.01801 7.78282 0.753418 11.8099 0.753418ZM11.8099 2.83675C8.93342 2.83675 6.60156 5.16861 6.60156 8.04508C6.60156 8.12995 6.60357 8.21449 6.60758 8.29867L6.68137 9.8481L5.21805 10.363C3.56448 10.9448 2.4349 12.5127 2.4349 14.2951C2.4349 16.5962 4.30037 18.4618 6.60156 18.4618H17.0182C19.3194 18.4618 21.1849 16.5962 21.1849 14.2951C21.1849 11.993 19.3203 10.1284 17.0182 10.1284C15.1776 10.1284 13.6158 11.3219 13.0643 12.9771L11.0874 12.3181C11.9146 9.83519 14.2578 8.04508 17.0182 8.04508C17.0182 5.16861 14.6864 2.83675 11.8099 2.83675Z" fill="#194BFF"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">
                          Trip Weather Alerts
                        </span>
                      </div>
                      <div className="flex flex-col items-start gap-2">
-                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                         <CheckBadgeIcon className="w-5 h-5 text-green-600" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M4 6.15385V15H16V6.15383C16 3.85325 16 2.70296 15.5177 1.84615C15.2017 1.28485 14.7473 0.81874 14.2 0.49468C13.3646 0 12.2431 0 10 0C7.75692 0 6.63538 0 5.8 0.49468C5.25273 0.81874 4.79827 1.28485 4.48231 1.84615C4 2.70296 4 3.85325 4 6.15385Z" fill="#80A9FA"/>
+                           <path d="M15.1786 19H4.82143C4.07648 19 3.61013 19 3.25 18.958V20.2499C3.25 20.6641 2.91421 20.9999 2.5 20.9999C2.08579 20.9999 1.75 20.6641 1.75 20.2499V18.3838C0.92435 17.8283 0.31864 16.9398 0.09402 15.8901C1.11759e-08 15.4507 0 14.9195 0 13.8571V9.2456C0 8.0054 0.94256 7 2.10526 7C3.26797 7 4.21053 8.0054 4.21053 9.2456V12.3333C4.21053 13.2761 4.21053 13.7475 4.50342 14.0404C4.79631 14.3333 5.26772 14.3333 6.21053 14.3333H13.7895C14.7323 14.3333 15.2037 14.3333 15.4966 14.0404C15.7895 13.7475 15.7895 13.2761 15.7895 12.3333V9.2456C15.7895 8.0054 16.732 7 17.8947 7C19.0574 7 20 8.0054 20 9.2456V13.8571C20 14.9195 20 15.4507 19.906 15.8901C19.6814 16.9398 19.0756 17.8283 18.25 18.3838V20.25C18.25 20.6642 17.9142 21 17.5 21C17.0858 21 16.75 20.6642 16.75 20.25V18.958C16.3899 19 15.9235 19 15.1786 19Z" fill="#204899"/>
+                         </svg>
                        </div>
                        <span className="text-sm font-medium text-gray-900">Lounge Access on Delay</span>
                      </div>
