@@ -4,6 +4,7 @@ import TopHeader from '../TripCuration/TopHeader';
 import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
+import TravellerInput from './TravellerInput';
 import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
@@ -535,6 +536,34 @@ export default function BookingPage({ trip }: { trip: any }) {
   const [showAdultForm, setShowAdultForm] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
 
+  // Traveller form state variables
+  const [firstNameAdult1, setFirstNameAdult1] = useState('');
+  const [lastNameAdult1, setLastNameAdult1] = useState('');
+  const [genderAdult1, setGenderAdult1] = useState('');
+  const [nationalityAdult1, setNationalityAdult1] = useState('');
+  const [passportAdult1, setPassportAdult1] = useState('');
+  const [dobDayAdult1, setDobDayAdult1] = useState('');
+  const [dobMonthAdult1, setDobMonthAdult1] = useState('');
+  const [dobYearAdult1, setDobYearAdult1] = useState('');
+
+  const [firstNameAdult2, setFirstNameAdult2] = useState('');
+  const [lastNameAdult2, setLastNameAdult2] = useState('');
+  const [genderAdult2, setGenderAdult2] = useState('');
+  const [nationalityAdult2, setNationalityAdult2] = useState('');
+  const [passportAdult2, setPassportAdult2] = useState('');
+  const [dobDayAdult2, setDobDayAdult2] = useState('');
+  const [dobMonthAdult2, setDobMonthAdult2] = useState('');
+  const [dobYearAdult2, setDobYearAdult2] = useState('');
+
+  const [firstNameChild1, setFirstNameChild1] = useState('');
+  const [lastNameChild1, setLastNameChild1] = useState('');
+  const [genderChild1, setGenderChild1] = useState('');
+  const [nationalityChild1, setNationalityChild1] = useState('');
+  const [passportChild1, setPassportChild1] = useState('');
+  const [dobDayChild1, setDobDayChild1] = useState('');
+  const [dobMonthChild1, setDobMonthChild1] = useState('');
+  const [dobYearChild1, setDobYearChild1] = useState('');
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
@@ -824,180 +853,47 @@ export default function BookingPage({ trip }: { trip: any }) {
           >
             {openStep === 3 ? (
               <div className="space-y-6">
-                {/* Adult Section */}
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-3">Adult (&gt;12 years)</h3>
-                  
-                  {/* Existing Travellers */}
-                  <div className="space-y-2 mb-3">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="mukesh" />
-                      <Label htmlFor="mukesh" className="text-sm font-medium text-gray-700 cursor-pointer">Mr Mukesh Khanna</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="rosie" />
-                      <Label htmlFor="rosie" className="text-sm font-medium text-gray-700 cursor-pointer">Mrs Rosie fernandez</Label>
-                    </div>
+                {/* Note about passport names */}
+                <div className="bg-gray-50 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">NOTE</span>
+                    <span className="text-xs text-gray-700">Make sure the names you enter match the way they appear on your passport.</span>
                   </div>
-
-                  {/* Add New Adult Link */}
-                  {!showAdultForm ? (
-                    <button 
-                      onClick={() => setShowAdultForm(true)}
-                      className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm mb-4"
-                    >
-                      <span className="text-lg">+</span>
-                      ADD NEW ADULT
-                    </button>
-                  ) : null}
-
-                  {/* Adult Form - Show when showAdultForm is true */}
-                  {showAdultForm && (
-                    <>
-                      {/* Warning Message */}
-                      <div className="flex items-start gap-2 bg-yellow-50 rounded-lg p-3 mb-4">
-                        <div className="flex-shrink-0 mt-0.5">
-                          <svg className="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <span className="text-xs text-yellow-800">Please ensure that your name matches your govt. ID such as Aadhaar, Passport or Driver's License</span>
-                      </div>
-
-                      {/* Personal Details */}
-                      <div className="mb-5">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Personal details</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
-                            <Select>
-                              <SelectTrigger className="h-8 text-sm">
-                                <SelectValue placeholder="Select gender" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">First name</Label>
-                            <Input 
-                              placeholder="Ex - 'Rakesh'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
-                            <Input 
-                              placeholder="Ex - 'Rakesh'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of birth</Label>
-                            <Input 
-                              type="date" 
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
-                            <Input 
-                              placeholder="Ex - 'Indian'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Passport Details */}
-                      <div className="mb-5">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Passport details</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
-                            <Input 
-                              placeholder="Ex - 'A1234567'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Issuing country</Label>
-                            <Input 
-                              placeholder="Ex - 'India'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Expiry date</Label>
-                            <Input 
-                              type="date" 
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Save/Cancel buttons */}
-                      <div className="flex gap-3 mb-4">
-                        <button 
-                          onClick={() => setShowAdultForm(false)}
-                          className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]"
-                        >
-                          Save Adult
-                        </button>
-                        <button 
-                          onClick={() => setShowAdultForm(false)}
-                          className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </>
-                  )}
                 </div>
 
-                {/* Child Section */}
-                <div className="border-t border-gray-200 pt-6">
-                  <h3 className="text-base font-semibold text-gray-900 mb-3">Child (2-12 years)</h3>
+                {/* Adult 1 (Primary traveller) */}
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-gray-900">Adult 1 (Primary traveller)</h3>
                   
-                  {/* Add New Child Link */}
-                  {!showChildForm ? (
-                    <button 
-                      onClick={() => setShowChildForm(true)}
-                      className="flex items-center gap-2 text-[#194a8f] hover:text-[#143a7a] font-medium text-sm mb-4"
-                    >
-                      <span className="text-lg">+</span>
-                      ADD NEW CHILD
-                    </button>
-                  ) : null}
-
-                  {/* Child Form - Show when showChildForm is true */}
-                  {showChildForm && (
-                    <>
-                      {/* Warning Message */}
-                      <div className="flex items-start gap-2 bg-yellow-50 rounded-lg p-3 mb-4">
-                        <div className="flex-shrink-0 mt-0.5">
-                          <svg className="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <span className="text-xs text-yellow-800">Please ensure that your name matches your govt. ID such as Aadhaar, Passport or Driver's License</span>
-                      </div>
-
-                      {/* Personal Details */}
-                      <div className="mb-5">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Personal details</h4>
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <div className="space-y-4">
+                      <div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <TravellerInput
+                            label="First name"
+                            placeholder="First name"
+                            value={firstNameAdult1}
+                            onChange={setFirstNameAdult1}
+                            onTravellerSelect={(traveller) => {
+                              setFirstNameAdult1(traveller.firstName);
+                              setLastNameAdult1(traveller.lastName);
+                            }}
+                            showSavedTravellers={true}
+                          />
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Input 
+                              placeholder="Last name"
+                              value={lastNameAdult1}
+                              onChange={(e) => setLastNameAdult1(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
                           <div>
                             <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
-                            <Select>
+                            <Select value={genderAdult1} onValueChange={setGenderAdult1}>
                               <SelectTrigger className="h-8 text-sm">
-                                <SelectValue placeholder="Select gender" />
+                                <SelectValue placeholder="Gender" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="male">Male</SelectItem>
@@ -1006,84 +902,323 @@ export default function BookingPage({ trip }: { trip: any }) {
                               </SelectContent>
                             </Select>
                           </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">First name</Label>
-                            <Input 
-                              placeholder="Ex - 'Rakesh'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
-                            <Input 
-                              placeholder="Ex - 'Rakesh'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of birth</Label>
-                            <Input 
-                              type="date" 
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
-                            <Input 
-                              placeholder="Ex - 'Indian'"
-                              className="h-8 text-sm"
-                            />
-                          </div>
                         </div>
                       </div>
 
-                      {/* Passport Details */}
-                      <div className="mb-5">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Passport details</h4>
+                      <div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
+                            <Select value={nationalityAdult1} onValueChange={setNationalityAdult1}>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Nationality (e.g. India)" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="indian">Indian</SelectItem>
+                                <SelectItem value="american">American</SelectItem>
+                                <SelectItem value="british">British</SelectItem>
+                                <SelectItem value="canadian">Canadian</SelectItem>
+                                <SelectItem value="australian">Australian</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                           <div>
                             <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
                             <Input 
-                              placeholder="Ex - 'A1234567'"
+                              placeholder="Passport Number"
+                              value={passportAdult1}
+                              onChange={(e) => setPassportAdult1(e.target.value)}
                               className="h-8 text-sm"
                             />
                           </div>
                           <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Issuing country</Label>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
+                            <div className="flex gap-1">
+                              <Select value={dobDayAdult1} onValueChange={setDobDayAdult1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="DD" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 31}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobMonthAdult1} onValueChange={setDobMonthAdult1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="MM" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 12}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobYearAdult1} onValueChange={setDobYearAdult1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="YYYY" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 80}, (_, i) => {
+                                    const year = new Date().getFullYear() - 18 - i;
+                                    return (
+                                      <SelectItem key={year} value={String(year)}>
+                                        {year}
+                                      </SelectItem>
+                                    );
+                                  })}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Adult 2 */}
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-gray-900">Adult 2</h3>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <div className="space-y-4">
+                      <div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <TravellerInput
+                            label="First name"
+                            placeholder="First name"
+                            value={firstNameAdult2}
+                            onChange={setFirstNameAdult2}
+                            onTravellerSelect={(traveller) => {
+                              setFirstNameAdult2(traveller.firstName);
+                              setLastNameAdult2(traveller.lastName);
+                            }}
+                            showSavedTravellers={true}
+                          />
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
                             <Input 
-                              placeholder="Ex - 'India'"
+                              placeholder="Last name"
+                              value={lastNameAdult2}
+                              onChange={(e) => setLastNameAdult2(e.target.value)}
                               className="h-8 text-sm"
                             />
                           </div>
                           <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Expiry date</Label>
-                            <Input 
-                              type="date" 
-                              className="h-8 text-sm"
-                            />
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
+                            <Select value={genderAdult2} onValueChange={setGenderAdult2}>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
                       </div>
 
-                      {/* Save/Cancel buttons */}
-                      <div className="flex gap-3 mb-4">
-                        <button 
-                          onClick={() => setShowChildForm(false)}
-                          className="px-3 py-1.5 bg-[#194a8f] text-white text-xs font-medium rounded-md hover:bg-[#143a7a]"
-                        >
-                          Save Child
-                        </button>
-                        <button 
-                          onClick={() => setShowChildForm(false)}
-                          className="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50"
-                        >
-                          Cancel
-                        </button>
+                      <div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
+                            <Select value={nationalityAdult2} onValueChange={setNationalityAdult2}>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Nationality (e.g. India)" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="indian">Indian</SelectItem>
+                                <SelectItem value="american">American</SelectItem>
+                                <SelectItem value="british">British</SelectItem>
+                                <SelectItem value="canadian">Canadian</SelectItem>
+                                <SelectItem value="australian">Australian</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
+                            <Input 
+                              placeholder="Passport Number"
+                              value={passportAdult2}
+                              onChange={(e) => setPassportAdult2(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
+                            <div className="flex gap-1">
+                              <Select value={dobDayAdult2} onValueChange={setDobDayAdult2}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="DD" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 31}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobMonthAdult2} onValueChange={setDobMonthAdult2}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="MM" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 12}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobYearAdult2} onValueChange={setDobYearAdult2}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="YYYY" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 80}, (_, i) => {
+                                    const year = new Date().getFullYear() - 18 - i;
+                                    return (
+                                      <SelectItem key={year} value={String(year)}>
+                                        {year}
+                                      </SelectItem>
+                                    );
+                                  })}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </>
-                  )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Child 1 (2-12 yrs) */}
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-gray-900">Child 1 (2-12 yrs)</h3>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <div className="space-y-4">
+                      <div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <TravellerInput
+                            label="First name"
+                            placeholder="First name"
+                            value={firstNameChild1}
+                            onChange={setFirstNameChild1}
+                            onTravellerSelect={(traveller) => {
+                              setFirstNameChild1(traveller.firstName);
+                              setLastNameChild1(traveller.lastName);
+                            }}
+                            showSavedTravellers={true}
+                          />
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Input 
+                              placeholder="Last name"
+                              value={lastNameChild1}
+                              onChange={(e) => setLastNameChild1(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Gender</Label>
+                            <Select value={genderChild1} onValueChange={setGenderChild1}>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Nationality</Label>
+                            <Select value={nationalityChild1} onValueChange={setNationalityChild1}>
+                              <SelectTrigger className="h-8 text-sm">
+                                <SelectValue placeholder="Nationality (e.g. India)" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="indian">Indian</SelectItem>
+                                <SelectItem value="american">American</SelectItem>
+                                <SelectItem value="british">British</SelectItem>
+                                <SelectItem value="canadian">Canadian</SelectItem>
+                                <SelectItem value="australian">Australian</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Passport Number</Label>
+                            <Input 
+                              placeholder="Passport Number"
+                              value={passportChild1}
+                              onChange={(e) => setPassportChild1(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
+                            <div className="flex gap-1">
+                              <Select value={dobDayChild1} onValueChange={setDobDayChild1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="DD" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 31}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobMonthChild1} onValueChange={setDobMonthChild1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="MM" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 12}, (_, i) => (
+                                    <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                                      {String(i+1).padStart(2, '0')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Select value={dobYearChild1} onValueChange={setDobYearChild1}>
+                                <SelectTrigger className="h-8 text-sm w-20">
+                                  <SelectValue placeholder="YYYY" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({length: 12}, (_, i) => {
+                                    const year = new Date().getFullYear() - 2 - i;
+                                    return (
+                                      <SelectItem key={year} value={String(year)}>
+                                        {year}
+                                      </SelectItem>
+                                    );
+                                  })}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : openStep > 3 ? (
