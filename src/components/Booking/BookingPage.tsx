@@ -771,7 +771,7 @@ export default function BookingPage({ trip }: { trip: any }) {
               <>
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-gray-900">
                         Smart Delay
                       </span>
@@ -782,43 +782,43 @@ export default function BookingPage({ trip }: { trip: any }) {
                         View policy
                       </button>
                     </div>
-                  </div>
+                      </div>
                   <div className="flex w-full flex-wrap items-center gap-12">
                     <div className="flex flex-col items-start gap-2">
                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
                         <UserIcon className="w-5 h-5 text-gray-600" />
-                      </div>
+                    </div>
                       <span className="text-sm font-medium text-gray-900">
                         Lounge Access
                       </span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
+                  </div>
+                    <div className="flex flex-col items-start gap-2">
                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                         <GiftIcon className="w-5 h-5 text-green-600" />
-                      </div>
+                    </div>
                       <span className="text-sm font-medium text-gray-900">
                         Complimentary meals
                       </span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
+                      </div>
+                    <div className="flex flex-col items-start gap-2">
                       <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
                         <WifiIcon className="w-5 h-5 text-yellow-600" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">Free Wi-fi</span>
                     </div>
+                      <span className="text-sm font-medium text-gray-900">Free Wi-fi</span>
+                  </div>
                     <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
                       <span className="text-base font-bold text-gray-900">
                         AED 200
                       </span>
                       <Button
-                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-[#143a7a]"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-[#143a7a]"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
                       </Button>
                     </div>
-                  </div>
-                </div>
+                      </div>
+                    </div>
 
                 {/* Smart Delay Policy Modal */}
                 <Dialog open={smartDelayModalOpen} onOpenChange={setSmartDelayModalOpen}>
@@ -829,14 +829,14 @@ export default function BookingPage({ trip }: { trip: any }) {
                         <button className="text-blue-600 text-sm font-medium hover:underline">
                           View T&Cs
                         </button>
-                      </div>
+                  </div>
                     </DialogHeader>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                           <CheckIcon className="w-3 h-3 text-green-600" />
-                        </div>
+                </div>
                         <p className="text-sm text-gray-700">
                           It is applicable for flights delayed by more than 2 hrs
                         </p>
@@ -876,7 +876,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Flight Notification Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-gray-900">
                         Flight Notification
                       </span>
@@ -894,29 +894,29 @@ export default function BookingPage({ trip }: { trip: any }) {
                          <BellIcon className="w-5 h-5 text-blue-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         SMS Alerts
+                         Real time updates
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                          <BellIcon className="w-5 h-5 text-green-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         Email Updates
+                         Available via Email & SMS
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
                          <BellIcon className="w-5 h-5 text-purple-600" />
                        </div>
-                       <span className="text-sm font-medium text-gray-900">Push Notifications</span>
+                       <span className="text-sm font-medium text-gray-900">Access information world-wide</span>
                      </div>
                     <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
                       <span className="text-base font-bold text-gray-900">
                         AED 50
                       </span>
                       <Button
-                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
@@ -928,7 +928,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Auto Check-in Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-gray-900">
                         Auto Check-in
                       </span>
@@ -946,29 +946,24 @@ export default function BookingPage({ trip }: { trip: any }) {
                          <UserIcon className="w-5 h-5 text-green-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         Automatic Process
+                         Auto generated boarding passes
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                          <ClockIcon className="w-5 h-5 text-blue-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         24hr Before
+                         Instant Check-in
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
-                       <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                         <CheckBadgeIcon className="w-5 h-5 text-orange-600" />
-                       </div>
-                       <span className="text-sm font-medium text-gray-900">Seat Selection</span>
-                     </div>
+
                     <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
                       <span className="text-base font-bold text-gray-900">
                         AED 75
                       </span>
                       <Button
-                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
@@ -980,7 +975,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* Lost Luggage Protection Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-gray-900">
                         Lost Luggage Protection
                       </span>
@@ -998,29 +993,29 @@ export default function BookingPage({ trip }: { trip: any }) {
                          <ShieldCheckIcon className="w-5 h-5 text-red-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         Coverage up to
+                         Return within 96 hours
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                          <ClockIcon className="w-5 h-5 text-green-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         24hr Support
+                         24/7 customer support
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                          <CheckBadgeIcon className="w-5 h-5 text-blue-600" />
                        </div>
-                       <span className="text-sm font-medium text-gray-900">Quick Claims</span>
+                       <span className="text-sm font-medium text-gray-900">Real-Time Updates</span>
                      </div>
                     <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
                       <span className="text-base font-bold text-gray-900">
                         AED 120
                       </span>
                       <Button
-                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
@@ -1032,7 +1027,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                 {/* TripAdd Protection Card */}
                 <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
                   <div className="flex w-full items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-gray-900">
                         TripAdd Protection
                       </span>
@@ -1050,29 +1045,29 @@ export default function BookingPage({ trip }: { trip: any }) {
                          <ShieldExclamationIcon className="w-5 h-5 text-purple-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         Trip Cancellation
+                         Instant Flight Updates
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
                          <ShieldCheckIcon className="w-5 h-5 text-orange-600" />
                        </div>
                        <span className="text-sm font-medium text-gray-900">
-                         Medical Coverage
+                         Trip Weather Alerts
                        </span>
                      </div>
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex flex-col items-start gap-2">
                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                          <CheckBadgeIcon className="w-5 h-5 text-green-600" />
                        </div>
-                       <span className="text-sm font-medium text-gray-900">24/7 Support</span>
+                       <span className="text-sm font-medium text-gray-900">Lounge Access on Delay</span>
                      </div>
                     <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
                       <span className="text-base font-bold text-gray-900">
                         AED 300
                       </span>
                       <Button
-                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
@@ -1085,23 +1080,23 @@ export default function BookingPage({ trip }: { trip: any }) {
                 <Dialog open={flightNotificationModalOpen} onOpenChange={setFlightNotificationModalOpen}>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader className="space-y-0 pb-4">
-                      <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                         <DialogTitle className="text-lg font-semibold">Flight Notification</DialogTitle>
                         <button className="text-blue-600 text-sm font-medium hover:underline">
                           View T&Cs
                         </button>
-                      </div>
+                  </div>
                     </DialogHeader>
                     
                     <div className="space-y-4">
                                              <div className="flex items-start gap-3">
                          <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                            <CheckIcon className="w-3 h-3 text-green-600" />
-                         </div>
+                </div>
                          <p className="text-sm text-gray-700">
                            Get real-time updates about flight status and gate changes
                          </p>
-                       </div>
+              </div>
                        
                        <div className="flex items-start gap-3">
                          <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
