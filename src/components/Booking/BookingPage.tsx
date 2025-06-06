@@ -863,15 +863,18 @@ export default function BookingPage({ trip }: { trip: any }) {
 
                 {/* Adult 1 (Primary traveller) */}
                 <div className="space-y-4">
-                  <h3 className="text-base font-semibold text-gray-900">Adult 1 (Primary traveller)</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold text-gray-900">Adult 1</h3>
+                    <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-md">Primary traveller</span>
+                  </div>
                   
                   <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <div className="space-y-4">
                       <div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <TravellerInput
-                            label="First name"
-                            placeholder="First name"
+                            label="First Name"
+                            placeholder="First Name"
                             value={firstNameAdult1}
                             onChange={setFirstNameAdult1}
                             onTravellerSelect={(traveller) => {
@@ -881,9 +884,9 @@ export default function BookingPage({ trip }: { trip: any }) {
                             showSavedTravellers={true}
                           />
                           <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last Name</Label>
                             <Input 
-                              placeholder="Last name"
+                              placeholder="Last Name"
                               value={lastNameAdult1}
                               onChange={(e) => setLastNameAdult1(e.target.value)}
                               className="h-8 text-sm"
@@ -990,8 +993,8 @@ export default function BookingPage({ trip }: { trip: any }) {
                       <div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <TravellerInput
-                            label="First name"
-                            placeholder="First name"
+                            label="First Name"
+                            placeholder="First Name"
                             value={firstNameAdult2}
                             onChange={setFirstNameAdult2}
                             onTravellerSelect={(traveller) => {
@@ -1001,9 +1004,9 @@ export default function BookingPage({ trip }: { trip: any }) {
                             showSavedTravellers={true}
                           />
                           <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last Name</Label>
                             <Input 
-                              placeholder="Last name"
+                              placeholder="Last Name"
                               value={lastNameAdult2}
                               onChange={(e) => setLastNameAdult2(e.target.value)}
                               className="h-8 text-sm"
@@ -1110,8 +1113,8 @@ export default function BookingPage({ trip }: { trip: any }) {
                       <div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <TravellerInput
-                            label="First name"
-                            placeholder="First name"
+                            label="First Name"
+                            placeholder="First Name"
                             value={firstNameChild1}
                             onChange={setFirstNameChild1}
                             onTravellerSelect={(traveller) => {
@@ -1121,9 +1124,9 @@ export default function BookingPage({ trip }: { trip: any }) {
                             showSavedTravellers={true}
                           />
                           <div>
-                            <Label className="text-xs font-medium text-gray-700 mb-1">Last name</Label>
+                            <Label className="text-xs font-medium text-gray-700 mb-1">Last Name</Label>
                             <Input 
-                              placeholder="Last name"
+                              placeholder="Last Name"
                               value={lastNameChild1}
                               onChange={(e) => setLastNameChild1(e.target.value)}
                               className="h-8 text-sm"
