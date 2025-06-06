@@ -811,7 +811,7 @@ export default function BookingPage({ trip }: { trip: any }) {
                         AED 200
                       </span>
                       <Button
-                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-[#143a7a]"
+                        className="h-8 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
                         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                       >
                         Add
