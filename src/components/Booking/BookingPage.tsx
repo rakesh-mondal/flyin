@@ -564,6 +564,11 @@ export default function BookingPage({ trip }: { trip: any }) {
   const [dobMonthChild1, setDobMonthChild1] = useState('');
   const [dobYearChild1, setDobYearChild1] = useState('');
 
+  // Passport expiry state variables
+  const [passportExpiredAdult1, setPassportExpiredAdult1] = useState(false);
+  const [passportExpiredAdult2, setPassportExpiredAdult2] = useState(false);
+  const [passportExpiredChild1, setPassportExpiredChild1] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
@@ -880,6 +885,12 @@ export default function BookingPage({ trip }: { trip: any }) {
                             onTravellerSelect={(traveller) => {
                               setFirstNameAdult1(traveller.firstName);
                               setLastNameAdult1(traveller.lastName);
+                              // Auto-fill passport if available
+                              if (traveller.passportNumber) {
+                                setPassportAdult1(traveller.passportNumber);
+                              }
+                              // Set expiry status
+                              setPassportExpiredAdult1(traveller.passportExpired || false);
                             }}
                             showSavedTravellers={true}
                           />
@@ -931,8 +942,11 @@ export default function BookingPage({ trip }: { trip: any }) {
                               placeholder="Passport Number"
                               value={passportAdult1}
                               onChange={(e) => setPassportAdult1(e.target.value)}
-                              className="h-8 text-sm"
+                              className={`h-8 text-sm ${passportExpiredAdult1 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
+                            {passportExpiredAdult1 && (
+                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                            )}
                           </div>
                           <div>
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
@@ -1000,6 +1014,12 @@ export default function BookingPage({ trip }: { trip: any }) {
                             onTravellerSelect={(traveller) => {
                               setFirstNameAdult2(traveller.firstName);
                               setLastNameAdult2(traveller.lastName);
+                              // Auto-fill passport if available
+                              if (traveller.passportNumber) {
+                                setPassportAdult2(traveller.passportNumber);
+                              }
+                              // Set expiry status
+                              setPassportExpiredAdult2(traveller.passportExpired || false);
                             }}
                             showSavedTravellers={true}
                           />
@@ -1051,8 +1071,11 @@ export default function BookingPage({ trip }: { trip: any }) {
                               placeholder="Passport Number"
                               value={passportAdult2}
                               onChange={(e) => setPassportAdult2(e.target.value)}
-                              className="h-8 text-sm"
+                              className={`h-8 text-sm ${passportExpiredAdult2 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
+                            {passportExpiredAdult2 && (
+                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                            )}
                           </div>
                           <div>
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>
@@ -1120,6 +1143,12 @@ export default function BookingPage({ trip }: { trip: any }) {
                             onTravellerSelect={(traveller) => {
                               setFirstNameChild1(traveller.firstName);
                               setLastNameChild1(traveller.lastName);
+                              // Auto-fill passport if available
+                              if (traveller.passportNumber) {
+                                setPassportChild1(traveller.passportNumber);
+                              }
+                              // Set expiry status
+                              setPassportExpiredChild1(traveller.passportExpired || false);
                             }}
                             showSavedTravellers={true}
                           />
@@ -1171,8 +1200,11 @@ export default function BookingPage({ trip }: { trip: any }) {
                               placeholder="Passport Number"
                               value={passportChild1}
                               onChange={(e) => setPassportChild1(e.target.value)}
-                              className="h-8 text-sm"
+                              className={`h-8 text-sm ${passportExpiredChild1 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
+                            {passportExpiredChild1 && (
+                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                            )}
                           </div>
                           <div>
                             <Label className="text-xs font-medium text-gray-700 mb-1">Date of Birth</Label>

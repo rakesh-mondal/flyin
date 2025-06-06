@@ -7,6 +7,8 @@ interface SavedTraveller {
   firstName: string;
   lastName: string;
   fullName: string;
+  passportNumber?: string;
+  passportExpired?: boolean;
 }
 
 interface TravellerInputProps {
@@ -20,9 +22,30 @@ interface TravellerInputProps {
 }
 
 const savedTravellers: SavedTraveller[] = [
-  { id: '1', firstName: 'Rakesh', lastName: 'Mondal', fullName: 'Rakesh Mondal' },
-  { id: '2', firstName: 'Saanvi', lastName: 'Mondal', fullName: 'Saanvi Mondal' },
-  { id: '3', firstName: 'Sharmistha', lastName: 'Mondal', fullName: 'Sharmistha Mondal' }
+  { 
+    id: '1', 
+    firstName: 'Rakesh', 
+    lastName: 'Mondal', 
+    fullName: 'Rakesh Mondal',
+    passportNumber: 'M1234567',
+    passportExpired: false
+  },
+  { 
+    id: '2', 
+    firstName: 'Saanvi', 
+    lastName: 'Mondal', 
+    fullName: 'Saanvi Mondal',
+    passportNumber: 'M7654321',
+    passportExpired: true  // Edge case: Saanvi's passport is expired
+  },
+  { 
+    id: '3', 
+    firstName: 'Sharmistha', 
+    lastName: 'Mondal', 
+    fullName: 'Sharmistha Mondal',
+    passportNumber: 'M1122334',
+    passportExpired: false
+  }
 ];
 
 export default function TravellerInput({
