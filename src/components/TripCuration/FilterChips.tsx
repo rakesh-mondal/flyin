@@ -64,7 +64,7 @@ const FilterChips = ({
             }}
           >
             <Bell className="h-4 w-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-900">Get Price Alerts</span>
+            <span className="text-sm font-semibold text-gray-900">Get Price Alerts</span>
           </button>
         </div>
         {/* Header with flight count */}
