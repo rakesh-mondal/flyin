@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, PlaneTakeoff, Hotel, DollarSign, Info, ChevronDown } from 'lucide-react';
+import { Calendar, PlaneTakeoff, Hotel, DollarSign, Info, ChevronDown, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import FlightTimings from './FlightTimings';
+import PriceAlertsModal from './PriceAlertsModal';
 import { cn } from '@/lib/utils';
 
 interface FilterChipsProps {
@@ -29,6 +30,8 @@ const FilterChips = ({
   selectedStops = [],
   onStopsChange = () => {},
 }: FilterChipsProps) => {
+  const [isPriceAlertsModalOpen, setIsPriceAlertsModalOpen] = useState(false);
+
   useEffect(() => {
     if (!selectedAirlines || selectedAirlines.length === 0) {
       onAirlinesChange(['emirates', 'air-india', 'etihad', 'vistara', 'qatar', 'lufthansa', 'singapore']);
@@ -52,6 +55,18 @@ const FilterChips = ({
   try {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+        {/* Get Price Alerts */}
+        <div className="px-4 py-3 border-b border-gray-200">
+          <button 
+            className="flex items-center gap-2 w-full text-left bg-blue-50 hover:bg-blue-100 rounded-lg p-2 transition-colors"
+            onClick={() => {
+              setIsPriceAlertsModalOpen(true);
+            }}
+          >
+            <Bell className="h-4 w-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-900">Get Price Alerts</span>
+          </button>
+        </div>
         {/* Header with flight count */}
         <div className="px-4 py-3 border-b border-gray-200">
           <div className="flex items-center justify-between">
@@ -413,6 +428,12 @@ const FilterChips = ({
             </div>
           </div>
         </div>
+        
+        {/* Price Alerts Modal */}
+        <PriceAlertsModal
+          isOpen={isPriceAlertsModalOpen}
+          onClose={() => setIsPriceAlertsModalOpen(false)}
+        />
       </div>
     );
   } catch (err) {
