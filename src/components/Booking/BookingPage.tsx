@@ -5,9 +5,11 @@ import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
 import TravellerInput from './TravellerInput';
-import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon, ExclamationTriangleIcon, ClockIcon, CheckBadgeIcon, ShieldCheckIcon, CheckIcon, WifiIcon, GiftIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Footprints, MoveRight, PlaneLanding, Info, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -15,7 +17,7 @@ import { Label } from '@/components/ui/label';
 
 const steps = [
   'Itinerary',
-  'Choose add-ons',
+  'Recommended for you',
   'Add traveller details',
   'Add contact details',
 ];
@@ -250,7 +252,7 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
                           </div>
                           <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
                             <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Distance: ~800m between terminals</li>
-                            <li className="flex items-center gap-2"><Timer className="h-3 w-3 text-gray-400" />Walking time: 8-12 minutes</li>
+                            <li className="flex items-center gap-2"><ClockIcon className="h-3 w-3 text-gray-400" />Walking time: 8-12 minutes</li>
                             <li className="flex items-center gap-2"><MoveRight className="h-3 w-3 text-gray-400" />Escalators/moving walkways available</li>
                           </ul>
                         </div>
@@ -262,7 +264,7 @@ const ItineraryReview = ({ trip }: { trip: any }) => {
                           <ul className="ml-6 mt-1 text-xs text-gray-700 space-y-0.5">
                             <li>Arrival: <span className="font-medium">Terminal 1, Gate A12</span></li>
                             <li>Departure: <span className="font-medium">Terminal 1, Gate B8</span></li>
-                            <li className="flex items-center gap-2"><BadgeCheck className="h-3 w-3 text-green-500" />Same terminal - no shuttle required</li>
+                            <li className="flex items-center gap-2"><CheckBadgeIcon className="h-3 w-3 text-green-500" />Same terminal - no shuttle required</li>
                           </ul>
                         </div>
                         <div>
@@ -569,6 +571,13 @@ export default function BookingPage({ trip }: { trip: any }) {
   const [passportExpiredAdult2, setPassportExpiredAdult2] = useState(false);
   const [passportExpiredChild1, setPassportExpiredChild1] = useState(false);
 
+  // Modal state for policies
+  const [smartDelayModalOpen, setSmartDelayModalOpen] = useState(false);
+  const [flightNotificationModalOpen, setFlightNotificationModalOpen] = useState(false);
+  const [autoCheckinModalOpen, setAutoCheckinModalOpen] = useState(false);
+  const [lostLuggageModalOpen, setLostLuggageModalOpen] = useState(false);
+  const [tripAddModalOpen, setTripAddModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TopHeader />
@@ -748,10 +757,10 @@ export default function BookingPage({ trip }: { trip: any }) {
             </button>
           )}
 
-          {/* Step 2: Choose add-ons */}
+          {/* Step 2: Recommended for you */}
           <StepCard 
             step={2} 
-            title="Choose add-ons" 
+            title="Recommended for you" 
             open={openStep >= 2} 
             className="mt-6" 
             isActive={openStep === 2} 
@@ -759,81 +768,535 @@ export default function BookingPage({ trip }: { trip: any }) {
             onHeaderClick={() => setOpenStep(2)}
           >
             {openStep === 2 ? (
-              <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full mb-6">
-                <div className="text-xl font-bold mb-4">Travel Essentials</div>
-                <div className="flex flex-col gap-4">
-                  {/* Visa Requirement Checker */}
-                  <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
-                      <CalendarIcon className="text-[#194a8f] w-6 h-6" />
+              <>
+                <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4">
+                  <div className="flex w-full items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <span className="text-base font-semibold text-gray-900">
+                        Smart Delay
+                      </span>
+                      <button 
+                        className="text-[#194a8f] text-sm font-medium hover:underline"
+                        onClick={() => setSmartDelayModalOpen(true)}
+                      >
+                        View policy
+                      </button>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-lg">Visa Requirement Checker</div>
-                      <div className="text-sm text-gray-700">Check visa requirements for Indian citizens. Most visitors need a visa to enter UAE</div>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="font-bold text-xl">₹2,000</span>
-                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
-                      </div>
-                    </div>
-                    <button className="ml-4 bg-[#194a8f] text-white rounded px-3 py-1.5 text-xs font-medium hover:bg-[#143a7a]">Remove</button>
                   </div>
-                  {/* International sim cards */}
-                  <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
-                      <DevicePhoneMobileIcon className="text-[#194a8f] w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-lg">International sim cards</div>
-                      <div className="text-sm text-gray-700">Get a sim card having 20 GB data, 60 min international call and valid till 8 days.</div>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="font-bold text-xl">₹300</span>
-                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
+                  <div className="flex w-full flex-wrap items-center gap-12">
+                    <div className="flex flex-col items-start gap-2">
+                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <UserIcon className="w-5 h-5 text-gray-600" />
                       </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        Lounge Access
+                      </span>
                     </div>
-                    <button className="ml-4 border border-[#194a8f] text-[#194a8f] rounded px-3 py-1.5 text-xs font-medium hover:bg-[#194a8f] hover:text-white">Add</button>
-                  </div>
-                  {/* Flight Alerts */}
-                  <div className="flex items-start gap-4 bg-gray-50 rounded-lg p-4">
-                    <div className="bg-[#e6f1ff] rounded-full w-10 h-10 flex items-center justify-center">
-                      <BellIcon className="text-[#194a8f] w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-lg">Flight Alerts</div>
-                      <div className="text-sm text-gray-700">Get real-time notifications about any flight changes by email and SMS.</div>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="font-bold text-xl">₹800</span>
-                        <a href="#" className="text-[#194a8f] text-sm underline">View benefits</a>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <GiftIcon className="w-5 h-5 text-green-600" />
                       </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        Complimentary meals
+                      </span>
                     </div>
-                    <button className="ml-4 border border-[#194a8f] text-[#194a8f] rounded px-3 py-1.5 text-xs font-medium hover:bg-[#194a8f] hover:text-white">Add</button>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <WifiIcon className="w-5 h-5 text-yellow-600" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Free Wi-fi</span>
+                    </div>
+                    <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
+                      <span className="text-base font-bold text-gray-900">
+                        AED 200
+                      </span>
+                      <Button
+                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-[#143a7a]"
+                        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                      >
+                        Add
+                      </Button>
+                    </div>
                   </div>
                 </div>
-                {/* Footer */}
-                <div className="flex items-center justify-between mt-6">
-                  <div className="flex items-center gap-2">
-                    <img src="/tripadd-logo.svg" alt="TripAdd" className="h-5" />
-                    <a href="#" className="text-[#194a8f] text-sm underline">View terms & conditions</a>
+
+                {/* Smart Delay Policy Modal */}
+                <Dialog open={smartDelayModalOpen} onOpenChange={setSmartDelayModalOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="space-y-0 pb-4">
+                      <div className="flex items-center gap-2">
+                        <DialogTitle className="text-lg font-semibold">Smart Delay</DialogTitle>
+                        <button className="text-blue-600 text-sm font-medium hover:underline">
+                          View T&Cs
+                        </button>
+                      </div>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckIcon className="w-3 h-3 text-green-600" />
+                        </div>
+                        <p className="text-sm text-gray-700">
+                          It is applicable for flights delayed by more than 2 hrs
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckIcon className="w-3 h-3 text-green-600" />
+                        </div>
+                        <p className="text-sm text-gray-700">
+                          Presence of a adult( 18 or above) is necessary to avail this service
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckIcon className="w-3 h-3 text-green-600" />
+                        </div>
+                        <p className="text-sm text-gray-700">
+                          This service is non-transferable to other flights
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <span className="text-lg font-semibold text-gray-900">AED 200</span>
+                      <Button 
+                        className="bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] text-white px-6 font-semibold transition-colors"
+                        onClick={() => setSmartDelayModalOpen(false)}
+                      >
+                        Add to fare
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Flight Notification Card */}
+                <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
+                  <div className="flex w-full items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <span className="text-base font-semibold text-gray-900">
+                        Flight Notification
+                      </span>
+                      <button 
+                        className="text-[#194a8f] text-sm font-medium hover:underline"
+                        onClick={() => setFlightNotificationModalOpen(true)}
+                      >
+                        View policy
+                      </button>
+                    </div>
                   </div>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="accent-[#194a8f]" />
-                    I accept the terms and conditions of this policy
-                  </label>
+                                     <div className="flex w-full flex-wrap items-center gap-12">
+                     <div className="flex flex-col items-start gap-2">
+                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                         <BellIcon className="w-5 h-5 text-blue-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         SMS Alerts
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                         <BellIcon className="w-5 h-5 text-green-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         Email Updates
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                         <BellIcon className="w-5 h-5 text-purple-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">Push Notifications</span>
+                     </div>
+                    <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
+                      <span className="text-base font-bold text-gray-900">
+                        AED 50
+                      </span>
+                      <Button
+                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+
+                {/* Auto Check-in Card */}
+                <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
+                  <div className="flex w-full items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <span className="text-base font-semibold text-gray-900">
+                        Auto Check-in
+                      </span>
+                      <button 
+                        className="text-[#194a8f] text-sm font-medium hover:underline"
+                        onClick={() => setAutoCheckinModalOpen(true)}
+                      >
+                        View policy
+                      </button>
+                    </div>
+                  </div>
+                                     <div className="flex w-full flex-wrap items-center gap-12">
+                     <div className="flex flex-col items-start gap-2">
+                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                         <UserIcon className="w-5 h-5 text-green-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         Automatic Process
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                         <ClockIcon className="w-5 h-5 text-blue-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         24hr Before
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                         <CheckBadgeIcon className="w-5 h-5 text-orange-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">Seat Selection</span>
+                     </div>
+                    <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
+                      <span className="text-base font-bold text-gray-900">
+                        AED 75
+                      </span>
+                      <Button
+                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lost Luggage Protection Card */}
+                <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
+                  <div className="flex w-full items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <span className="text-base font-semibold text-gray-900">
+                        Lost Luggage Protection
+                      </span>
+                      <button 
+                        className="text-[#194a8f] text-sm font-medium hover:underline"
+                        onClick={() => setLostLuggageModalOpen(true)}
+                      >
+                        View policy
+                      </button>
+                    </div>
+                  </div>
+                                     <div className="flex w-full flex-wrap items-center gap-12">
+                     <div className="flex flex-col items-start gap-2">
+                       <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                         <ShieldCheckIcon className="w-5 h-5 text-red-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         Coverage up to
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                         <ClockIcon className="w-5 h-5 text-green-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         24hr Support
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                         <CheckBadgeIcon className="w-5 h-5 text-blue-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">Quick Claims</span>
+                     </div>
+                    <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
+                      <span className="text-base font-bold text-gray-900">
+                        AED 120
+                      </span>
+                      <Button
+                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TripAdd Protection Card */}
+                <div className="flex w-full flex-col items-start rounded-md border border-solid border-gray-200 bg-white px-4 py-4 mt-4">
+                  <div className="flex w-full items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <span className="text-base font-semibold text-gray-900">
+                        TripAdd Protection
+                      </span>
+                      <button 
+                        className="text-[#194a8f] text-sm font-medium hover:underline"
+                        onClick={() => setTripAddModalOpen(true)}
+                      >
+                        View policy
+                      </button>
+                    </div>
+                  </div>
+                                     <div className="flex w-full flex-wrap items-center gap-12">
+                     <div className="flex flex-col items-start gap-2">
+                       <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                         <ShieldExclamationIcon className="w-5 h-5 text-purple-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         Trip Cancellation
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                         <ShieldCheckIcon className="w-5 h-5 text-orange-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">
+                         Medical Coverage
+                       </span>
+                     </div>
+                     <div className="flex flex-col items-center gap-2">
+                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                         <CheckBadgeIcon className="w-5 h-5 text-green-600" />
+                       </div>
+                       <span className="text-sm font-medium text-gray-900">24/7 Support</span>
+                     </div>
+                    <div className="flex grow shrink-0 basis-0 flex-col items-end justify-center gap-1">
+                      <span className="text-base font-bold text-gray-900">
+                        AED 300
+                      </span>
+                      <Button
+                        className="h-10 w-20 flex-none bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] transition-colors"
+                        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Flight Notification Modal */}
+                <Dialog open={flightNotificationModalOpen} onOpenChange={setFlightNotificationModalOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="space-y-0 pb-4">
+                      <div className="flex items-center gap-2">
+                        <DialogTitle className="text-lg font-semibold">Flight Notification</DialogTitle>
+                        <button className="text-blue-600 text-sm font-medium hover:underline">
+                          View T&Cs
+                        </button>
+                      </div>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                                             <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Get real-time updates about flight status and gate changes
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Receive notifications via SMS, email, and push notifications
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Works for all flight segments and connections
+                         </p>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <span className="text-lg font-semibold text-gray-900">AED 50</span>
+                      <Button 
+                        className="bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] text-white px-6 font-semibold transition-colors"
+                        onClick={() => setFlightNotificationModalOpen(false)}
+                      >
+                        Add to fare
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Auto Check-in Modal */}
+                <Dialog open={autoCheckinModalOpen} onOpenChange={setAutoCheckinModalOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="space-y-0 pb-4">
+                      <div className="flex items-center gap-2">
+                        <DialogTitle className="text-lg font-semibold">Auto Check-in</DialogTitle>
+                        <button className="text-blue-600 text-sm font-medium hover:underline">
+                          View T&Cs
+                        </button>
+                      </div>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                                             <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Automatic check-in 24 hours before departure
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Best available seat selection automatically
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Boarding pass sent via email and SMS
+                         </p>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <span className="text-lg font-semibold text-gray-900">AED 75</span>
+                      <Button 
+                        className="bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] text-white px-6 font-semibold transition-colors"
+                        onClick={() => setAutoCheckinModalOpen(false)}
+                      >
+                        Add to fare
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Lost Luggage Protection Modal */}
+                <Dialog open={lostLuggageModalOpen} onOpenChange={setLostLuggageModalOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="space-y-0 pb-4">
+                      <div className="flex items-center gap-2">
+                        <DialogTitle className="text-lg font-semibold">Lost Luggage Protection</DialogTitle>
+                        <button className="text-blue-600 text-sm font-medium hover:underline">
+                          View T&Cs
+                        </button>
+                      </div>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                                             <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Coverage up to AED 2,000 for lost or delayed luggage
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           24/7 support team to track and assist with claims
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Quick claims processing within 48 hours
+                         </p>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <span className="text-lg font-semibold text-gray-900">AED 120</span>
+                      <Button 
+                        className="bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] text-white px-6 font-semibold transition-colors"
+                        onClick={() => setLostLuggageModalOpen(false)}
+                      >
+                        Add to fare
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* TripAdd Protection Modal */}
+                <Dialog open={tripAddModalOpen} onOpenChange={setTripAddModalOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="space-y-0 pb-4">
+                      <div className="flex items-center gap-2">
+                        <DialogTitle className="text-lg font-semibold">TripAdd Protection</DialogTitle>
+                        <button className="text-blue-600 text-sm font-medium hover:underline">
+                          View T&Cs
+                        </button>
+                      </div>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                                             <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Trip cancellation coverage up to full fare amount
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           Medical emergency coverage up to AED 10,000
+                         </p>
+                       </div>
+                       
+                       <div className="flex items-start gap-3">
+                         <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <CheckIcon className="w-3 h-3 text-green-600" />
+                         </div>
+                         <p className="text-sm text-gray-700">
+                           24/7 emergency assistance and travel support
+                         </p>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <span className="text-lg font-semibold text-gray-900">AED 300</span>
+                      <Button 
+                        className="bg-[#194a8f] hover:bg-yellow-400 hover:text-[#194a8f] text-white px-6 font-semibold transition-colors"
+                        onClick={() => setTripAddModalOpen(false)}
+                      >
+                        Add to fare
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </>
             ) : openStep > 2 ? (
               // Summary view for completed Step 2
               <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(2)}>
-                <span className="text-sm font-medium">Add-ons: Visa Checker (₹2,000) • 2 more items</span>
-              </div>
-            ) : openStep > 3 ? (
-              // Summary view for completed Step 3
-              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(3)}>
-                <span className="text-sm font-medium">Traveller: John Doe • +91 98765 43210</span>
-              </div>
-            ) : openStep > 4 ? (
-              // Summary view for completed Step 4
-              <div className="py-2 text-gray-500 cursor-pointer group" onClick={() => setOpenStep(4)}>
-                <span className="text-sm font-medium">Contact: john.doe@email.com • +91 98765 43210</span>
+                <span className="text-sm font-medium">Recommended items selected</span>
               </div>
             ) : null}
           </StepCard>
