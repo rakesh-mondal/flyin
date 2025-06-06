@@ -5,7 +5,7 @@ import { getAirlineLogo } from '../../utils/airlineLogos';
 import ItineraryExtras from './ItineraryExtras';
 import FareRules from './FareRules';
 import TravellerInput from './TravellerInput';
-import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, BriefcaseIcon, CakeIcon, UserIcon, CalendarIcon, DevicePhoneMobileIcon, BellIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Footprints, MoveRight, Timer, PlaneLanding, BadgeCheck, Info } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -945,7 +945,10 @@ export default function BookingPage({ trip }: { trip: any }) {
                               className={`h-8 text-sm ${passportExpiredAdult1 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
                             {passportExpiredAdult1 && (
-                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" />
+                                This passport has expired. Please renew before travel.
+                              </p>
                             )}
                           </div>
                           <div>
@@ -1074,7 +1077,10 @@ export default function BookingPage({ trip }: { trip: any }) {
                               className={`h-8 text-sm ${passportExpiredAdult2 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
                             {passportExpiredAdult2 && (
-                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" />
+                                This passport has expired. Please renew before travel.
+                              </p>
                             )}
                           </div>
                           <div>
@@ -1203,7 +1209,10 @@ export default function BookingPage({ trip }: { trip: any }) {
                               className={`h-8 text-sm ${passportExpiredChild1 ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}`}
                             />
                             {passportExpiredChild1 && (
-                              <p className="text-xs text-red-600 mt-1">⚠️ This passport has expired. Please renew before travel.</p>
+                              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                                <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" />
+                                This passport has expired. Please renew before travel.
+                              </p>
                             )}
                           </div>
                           <div>
