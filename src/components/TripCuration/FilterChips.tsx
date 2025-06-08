@@ -212,7 +212,7 @@ const FilterChips = ({
           </div>
         </div>
         {/* Airlines Section */}
-        <div>
+        <div className="border-b border-gray-200">
           <div className="w-full px-4 py-3 flex items-center justify-between">
             <div className="flex items-center">
               <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
@@ -472,7 +472,7 @@ const FilterChips = ({
         </div>
 
         {/* Price Section */}
-        <div>
+        <div className="border-b border-gray-200">
           <div className="w-full px-4 py-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-gray-900">Price</h3>
