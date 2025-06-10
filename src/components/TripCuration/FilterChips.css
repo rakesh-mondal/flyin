@@ -1,0 +1,56 @@
+/* Range slider styles for FilterChips component */
+.range-slider-min, 
+.range-slider-max,
+.stopover-slider-min, 
+.stopover-slider-max, 
+.total-duration-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.range-slider-min::-webkit-slider-thumb, 
+.range-slider-max::-webkit-slider-thumb,
+.stopover-slider-min::-webkit-slider-thumb, 
+.stopover-slider-max::-webkit-slider-thumb, 
+.total-duration-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #194E91;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.range-slider-min::-moz-range-thumb, 
+.range-slider-max::-moz-range-thumb,
+.stopover-slider-min::-moz-range-thumb, 
+.stopover-slider-max::-moz-range-thumb, 
+.total-duration-slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #194E91;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.range-slider-min::-webkit-slider-thumb {
+  z-index: 1;
+}
+
+.range-slider-max::-webkit-slider-thumb {
+  z-index: 2;
+} 
