@@ -190,7 +190,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
   );
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-white">
+    <div className="relative min-h-screen w-full overflow-hidden bg-white">
       {/* Logo - repositioned to top left */}
       <div className="absolute left-4 sm:left-6 top-4 sm:top-6 z-20">
         <img 
@@ -201,7 +201,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
       </div>
       
       {/* Main content */}
-      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-gray-900">
+      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-gray-900 pb-16">
         {/* Personalized greeting */}
         <h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center">
           Hello Rakesh,
