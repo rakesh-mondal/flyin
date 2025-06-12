@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, User, ChevronDown, Globe, DollarSign } from 'lucide-react';
+import { Phone, User, ChevronDown } from 'lucide-react';
 
 interface TopHeaderProps {
   isSignedIn?: boolean;
@@ -64,14 +64,10 @@ const TopHeader = ({
           <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5">7</span>
         </div>
         
-        {/* My Bookings */}
-        <a href="#" className="hidden sm:inline hover:text-[#194E91] transition-colors">My Bookings</a>
-        
         {/* Language Selector */}
         <div className="relative group">
           <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
-            <Globe className="h-4 w-4" />
-            <span className="hidden sm:inline">{selectedLanguage.flag}</span>
+            <span className="text-base">{selectedLanguage.flag}</span>
             <span className="hidden md:inline">{selectedLanguage.name}</span>
             <ChevronDown className="h-3 w-3" />
           </button>
@@ -98,8 +94,7 @@ const TopHeader = ({
         {/* Currency Selector */}
         <div className="relative group">
           <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
-            <DollarSign className="h-4 w-4" />
-            <span className="hidden sm:inline">{selectedCurrency.flag}</span>
+            <span className="text-base">{selectedCurrency.flag}</span>
             <span>{selectedCurrency.code}</span>
             <ChevronDown className="h-3 w-3" />
           </button>
