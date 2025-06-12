@@ -34,8 +34,6 @@ const TopHeader = ({
 }: TopHeaderProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[1]); // Default to SAR
-  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
 
   return (
     <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14">
@@ -70,11 +68,8 @@ const TopHeader = ({
         <a href="#" className="hidden sm:inline hover:text-[#194E91] transition-colors">My Bookings</a>
         
         {/* Language Selector */}
-        <div className="relative">
-          <button 
-            onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-            className="flex items-center gap-1 hover:text-[#194E91] transition-colors"
-          >
+        <div className="relative group">
+          <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
             <Globe className="h-4 w-4" />
             <span className="hidden sm:inline">{selectedLanguage.flag}</span>
             <span className="hidden md:inline">{selectedLanguage.name}</span>
@@ -82,35 +77,27 @@ const TopHeader = ({
           </button>
           
           {/* Language Dropdown */}
-          {isLanguageOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-              <div className="py-2">
-                {languages.map((language) => (
-                  <button
-                    key={language.code}
-                    onClick={() => {
-                      setSelectedLanguage(language);
-                      setIsLanguageOpen(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                      selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                    }`}
-                  >
-                    <span className="mr-2">{language.flag}</span>
-                    {language.name}
-                  </button>
-                ))}
-              </div>
+          <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div className="py-2">
+              {languages.map((language) => (
+                <button
+                  key={language.code}
+                  onClick={() => setSelectedLanguage(language)}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                    selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                >
+                  <span className="mr-2">{language.flag}</span>
+                  {language.name}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </div>
         
         {/* Currency Selector */}
-        <div className="relative">
-          <button 
-            onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-            className="flex items-center gap-1 hover:text-[#194E91] transition-colors"
-          >
+        <div className="relative group">
+          <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
             <DollarSign className="h-4 w-4" />
             <span className="hidden sm:inline">{selectedCurrency.flag}</span>
             <span>{selectedCurrency.code}</span>
@@ -118,28 +105,23 @@ const TopHeader = ({
           </button>
           
           {/* Currency Dropdown */}
-          {isCurrencyOpen && (
-            <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-              <div className="py-2">
-                {currencies.map((currency) => (
-                  <button
-                    key={currency.code}
-                    onClick={() => {
-                      setSelectedCurrency(currency);
-                      setIsCurrencyOpen(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                      selectedCurrency.code === currency.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                    }`}
-                  >
-                    <span className="mr-2">{currency.flag}</span>
-                    <span className="font-medium">{currency.code}</span>
-                    <span className="text-gray-500 ml-2">({currency.symbol}) {currency.name}</span>
-                  </button>
-                ))}
-              </div>
+          <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div className="py-2">
+              {currencies.map((currency) => (
+                <button
+                  key={currency.code}
+                  onClick={() => setSelectedCurrency(currency)}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                    selectedCurrency.code === currency.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                >
+                  <span className="mr-2">{currency.flag}</span>
+                  <span className="font-medium">{currency.code}</span>
+                  <span className="text-gray-500 ml-2">({currency.symbol}) {currency.name}</span>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </div>
         
         {/* WhatsApp Contact */}
