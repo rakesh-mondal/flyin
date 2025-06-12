@@ -39,7 +39,9 @@ const TopHeader = ({
     <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14">
       {/* Left: Logo and nav */}
       <div className="flex items-center gap-8">
-        <img src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" alt="Flyin.com" className="h-7" />
+        <a href="/" className="hover:opacity-80 transition-opacity">
+          <img src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" alt="Flyin.com" className="h-7" />
+        </a>
         <nav className="hidden lg:flex gap-6 text-sm font-medium text-[#1a2a3a]">
           <a href="#" className="hover:text-[#194E91] transition-colors">Flights</a>
           <a href="#" className="hover:text-[#194E91] transition-colors">Hotels</a>
