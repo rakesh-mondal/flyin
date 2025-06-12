@@ -51,7 +51,7 @@ const TopHeader = ({
         </nav>
       </div>
       
-      {/* Right: Deals, User Section, Language, Currency, Contact, Awards */}
+      {/* Right: Deals, My Bookings, Language, Currency, Contact, Awards, User Section */}
       <div className="flex items-center gap-4 text-sm font-medium text-[#1a2a3a]">
         {/* Deals */}
         <div className="relative flex items-center">
@@ -65,40 +65,6 @@ const TopHeader = ({
           <span className="hidden sm:inline">Deals</span>
           <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5">7</span>
         </div>
-        
-        {/* User Section */}
-        {isSignedIn ? (
-          <div className="relative group">
-            <button className="flex items-center gap-2 hover:text-[#194E91] transition-colors">
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Hello {userName}</span>
-              <ChevronDown className="h-3 w-3" />
-            </button>
-            
-            {/* User Dropdown Menu */}
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div className="py-2">
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Profile</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Bookings</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
-                <hr className="my-1" />
-                <button 
-                  onClick={onSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <button 
-            onClick={onSignIn}
-            className="hover:text-[#194E91] transition-colors"
-          >
-            Sign In
-          </button>
-        )}
         
         {/* My Bookings */}
         <a href="#" className="hidden sm:inline hover:text-[#194E91] transition-colors">My Bookings</a>
@@ -193,6 +159,40 @@ const TopHeader = ({
           alt="Middle East's Leading Online Travel Agency Awards" 
           className="h-6 hidden lg:block" 
         />
+        
+        {/* User Section - Moved to last position */}
+        {isSignedIn ? (
+          <div className="relative group">
+            <button className="flex items-center gap-2 hover:text-[#194E91] transition-colors">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Hello {userName}</span>
+              <ChevronDown className="h-3 w-3" />
+            </button>
+            
+            {/* User Dropdown Menu */}
+            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Profile</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Bookings</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
+                <hr className="my-1" />
+                <button 
+                  onClick={onSignOut}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <button 
+            onClick={onSignIn}
+            className="hover:text-[#194E91] transition-colors"
+          >
+            Sign In
+          </button>
+        )}
       </div>
       
       {/* Mobile Menu Button */}
