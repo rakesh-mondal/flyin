@@ -14,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Autocomplete } from './ui/Autocomplete';
+import { City } from '../data/cities';
 
 interface FlightSearchFormProps {
   onSearch: (query: string) => void;
@@ -49,6 +51,8 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   const [isRoundTrip, setIsRoundTrip] = useState(true);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isPassengerOpen, setIsPassengerOpen] = useState(false);
+  const [selectedOriginCity, setSelectedOriginCity] = useState<City | null>(null);
+  const [selectedDestinationCity, setSelectedDestinationCity] = useState<City | null>(null);
 
   // Update isRoundTrip when tripType changes
   React.useEffect(() => {
@@ -82,17 +86,22 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       toast.error('Please enter both cities to swap');
       return;
     }
-    const temp = origin;
+    const tempOrigin = origin;
+    const tempOriginCity = selectedOriginCity;
     setOrigin(destination);
-    setDestination(temp);
+    setDestination(tempOrigin);
+    setSelectedOriginCity(selectedDestinationCity);
+    setSelectedDestinationCity(tempOriginCity);
   };
 
   const clearOrigin = () => {
     setOrigin('');
+    setSelectedOriginCity(null);
   };
 
   const clearDestination = () => {
     setDestination('');
+    setSelectedDestinationCity(null);
   };
 
   const updatePassengerCount = (type: keyof PassengerCount, action: 'increment' | 'decrement') => {
@@ -175,22 +184,21 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       </div>
 
       {/* Search Form */}
-      <div className="overflow-hidden rounded-3xl bg-white border border-border shadow-sm">
-        <form onSubmit={handleSubmit} className="flex w-full flex-col lg:flex-row">
+      <div className="rounded-3xl bg-white border border-border shadow-sm">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col lg:flex-row" style={{ overflow: 'visible' }}>
           {/* Location Fields Group */}
-          <div className="relative flex flex-1 lg:flex-[2] flex-col sm:flex-row">
+          <div className="relative flex flex-1 lg:flex-[2] flex-col sm:flex-row" style={{ overflow: 'visible' }}>
             {/* Origin input */}
-            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border">
+            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
               <div className="px-5 py-3">
                 <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
                   From
                 </label>
                 <div className="relative">
-                  <input
-                    id="origin"
-                    type="text"
+                  <Autocomplete
                     value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
+                    onChange={setOrigin}
+                    onSelect={setSelectedOriginCity}
                     placeholder="City or Airport"
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
@@ -198,7 +206,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     <button
                       type="button"
                       onClick={clearOrigin}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -208,17 +216,16 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             </div>
 
             {/* Destination input */}
-            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border">
+            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
               <div className="px-5 py-3">
                 <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
                   To
                 </label>
                 <div className="relative">
-                  <input
-                    id="destination"
-                    type="text"
+                  <Autocomplete
                     value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
+                    onChange={setDestination}
+                    onSelect={setSelectedDestinationCity}
                     placeholder="City or Airport"
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
@@ -226,7 +233,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     <button
                       type="button"
                       onClick={clearDestination}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
                     >
                       <X className="h-4 w-4" />
                     </button>
