@@ -68,6 +68,15 @@ export const Selected: Story = {
   },
 };
 
+// Flight with discounted price
+export const DiscountedPrice: Story = {
+  args: {
+    flight: sampleFlightDataWithLayovers[0], // Emirates with originalPrice
+    onClick: () => console.log('Discounted flight card clicked'),
+    isSelected: false,
+  },
+};
+
 // Multiple cards showcase
 export const LayoverShowcase = {
   render: () => (
@@ -75,6 +84,25 @@ export const LayoverShowcase = {
       <h3 className="text-lg font-semibold mb-4">Layover Tag Examples</h3>
       <div className="space-y-4">
         {sampleFlightDataWithLayovers.map((flight) => (
+          <FlightResultCard
+            key={flight.id}
+            flight={flight}
+            onClick={() => console.log(`Flight ${flight.id} clicked`)}
+            isSelected={false}
+          />
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+// Pricing showcase with discounts
+export const PricingShowcase = {
+  render: () => (
+    <div className="space-y-4 max-w-4xl">
+      <h3 className="text-lg font-semibold mb-4">Pricing Examples (With and Without Discounts)</h3>
+      <div className="space-y-4">
+        {sampleFlightDataWithLayovers.filter(flight => flight.originalPrice).map((flight) => (
           <FlightResultCard
             key={flight.id}
             flight={flight}

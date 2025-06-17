@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calendar, Clock, Leaf, PlaneTakeoff, Heart, Share, ChevronDown } from 'lucide-react';
-import { Card, CardContent } from '../ui/card';
+import { Heart, Share } from 'lucide-react';
+import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import SimilarFlightOptions from './SimilarFlightOptions';
-import { similarFlightOptions } from '@/data/sampleFlightData';
 import { SlidingNumber } from '@/components/ui/sliding-number';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
@@ -24,6 +22,7 @@ interface FlightResultCardProps {
     duration: string;
     stops: number;
     price: number;
+    originalPrice?: number;
     baseFare: number;
     taxes: number;
     fees: number;
@@ -232,6 +231,14 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
             
             {/* Right column for price and action */}
             <div className="bg-gray-50 p-4 flex flex-col items-center justify-center border-l border-gray-200 min-w-[180px]">
+              {/* Show original price if there's a discount */}
+              {flight.originalPrice && flight.originalPrice > flight.price && (
+                <div className="text-sm text-gray-500 line-through mb-1">
+                  ₹{flight.originalPrice.toLocaleString()}
+                </div>
+              )}
+              
+              {/* Current price */}
               <div className="text-2xl font-bold">
                 <span>₹</span><SlidingNumber value={flight.price} />
               </div>

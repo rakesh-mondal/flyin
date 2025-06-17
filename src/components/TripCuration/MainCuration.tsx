@@ -795,6 +795,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '2h in Dubai',
       price: '35,909',
+      originalPrice: '42,000',
       baggage: airlines[0].baggage,
       wifi: airlines[0].wifi,
       meal: airlines[0].meal,
@@ -834,6 +835,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '2 stops',
       layover: '6h 30m in Doha',
       price: '33,800',
+      originalPrice: '38,900',
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
       meal: airlines[2].meal,
@@ -983,6 +985,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '30,000',
+      originalPrice: '34,500',
       baggage: airlines[1].baggage,
       wifi: airlines[1].wifi,
       meal: airlines[1].meal,
@@ -1701,13 +1704,20 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         {/* Price & Action */}
                         <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
                           <div className="flex flex-col justify-center items-end">
+                            {/* Show original price if there's a discount */}
+                            {(selectedOutbound && selectedInbound) && (
+                              <div className="text-sm text-gray-500 line-through">
+                                ₹{(parseInt((selectedOutbound?.originalPrice || (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0') + 5000).toString())?.replace(/[^0-9]/g, '') || '0') + 
+                                   parseInt((selectedInbound?.originalPrice || (parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0') + 5000).toString())?.replace(/[^0-9]/g, '') || '0')).toLocaleString()}
+                              </div>
+                            )}
+                            {/* Current price */}
                             <div className="text-xl font-bold text-black">
                               <span className="whitespace-nowrap flex items-center gap-1 font-sans tabular-nums">
                                 <span>₹</span>
                                 <SlidingNumber value={parseInt(totalPrice.replace(/[^0-9]/g, '')) || 0} />
                               </span>
                             </div>
-                            <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
                           </div>
                           <div className="flex items-center">
                             <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
