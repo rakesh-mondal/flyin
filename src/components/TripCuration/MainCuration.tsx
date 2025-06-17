@@ -22,6 +22,11 @@ import { SlidingNumber } from '@/components/ui/sliding-number';
 import { format, addDays } from 'date-fns';
 import { GlowEffect } from '@/components/ui/glow-effect';
 import { FlightDetails } from '../trip-detail/FlightDetails';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface TripCurationProps {
   searchQuery: string;
@@ -827,7 +832,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       arrivalCity: 'Dubai',
       duration: '15h 00m',
       stops: '2 stops',
-      layover: '3h in Doha',
+      layover: '6h 30m in Doha',
       price: '33,800',
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
@@ -956,7 +961,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       arrivalCity: 'Amsterdam',
       duration: '13h 30m',
       stops: '1 stop',
-      layover: '2h in Paris',
+      layover: '1h 45m in Paris',
       price: '39,800',
       baggage: airlines[9].baggage,
       wifi: airlines[9].wifi,
@@ -1014,7 +1019,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       arrivalCity: 'New York',
       duration: '12h 30m',
       stops: '2 stops',
-      layover: '3h in Doha',
+      layover: '5h 15m in Doha',
       price: '29,800',
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
@@ -1808,63 +1813,78 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             {sortedOutboundFlights.map((option, idx) => {
                               // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
                               const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
+                              const layoverTag = getLayoverTagType(option.layover);
                               return (
-                                <button
-                                  key={idx}
-                                  className={cn(
-                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
-                                    option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                  )}
-                                  onClick={() => handleManualOutboundSelect(option)}
-                                >
-                                  <div className="flex items-center gap-3 py-1">
-                                    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-base font-bold text-black">
-                                          {option.departureTime}–{option.arrivalTime}
-                                          {option.stops === '1 stop' && (
-                                            <span className="ml-2 text-sm font-normal">via DXB</span>
+                                <TooltipProvider key={idx}>
+                                  <button
+                                    className={cn(
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                      option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                    )}
+                                    onClick={() => handleManualOutboundSelect(option)}
+                                  >
+                                    <div className="flex items-center gap-3 py-1">
+                                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-base font-bold text-black">
+                                            {option.departureTime}–{option.arrivalTime}
+                                            {option.stops === '1 stop' && (
+                                              <span className="ml-2 text-sm font-normal">via DXB</span>
+                                            )}
+                                          </span>
+                                          {/* Layover Tag - positioned next to time/via text */}
+                                          {layoverTag && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-2", layoverTag.color)}>
+                                                  {layoverTag.tag}
+                                                </span>
+                                              </TooltipTrigger>
+                                              <TooltipContent className="bg-black text-white border-black">
+                                                <p className="text-xs">Layover: {option.layover}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
                                           )}
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+                                          <span>{option.airlineName}</span>
+                                          <span>· {option.stops}</span>
+                                          {option.stops === 'non-stop' && (
+                                            <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                              <Luggage className="h-4 w-4 mr-0.5" />
+                                              <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                              <span
+                                                className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                                style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                              >
+                                                No check in baggage
+                                              </span>
+                                            </span>
+                                          )}
+                                          {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                          {showSeatsLeft && (
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                              2 seats left
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className="text-right flex flex-col items-end justify-between h-full">
+                                        <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        <span
+                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                        >
+                                          More info <span aria-hidden="true">→</span>
                                         </span>
                                       </div>
-                                      <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                        <span>{option.airlineName}</span>
-                                        <span>· {option.stops}</span>
-                                        {option.stops === 'non-stop' && (
-                                          <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
-                                            <Luggage className="h-4 w-4 mr-0.5" />
-                                            <Ban className="h-3 w-3 text-red-500 -ml-1" />
-                                            <span
-                                              className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
-                                              style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
-                                            >
-                                              No check in baggage
-                                            </span>
-                                          </span>
-                                        )}
-                                        {/* Show 'e seats left' tag randomly for non-non-stop flights */}
-                                        {showSeatsLeft && (
-                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                            2 seats left
-                                          </span>
-                                        )}
-                                      </div>
                                     </div>
-                                    <div className="text-right flex flex-col items-end justify-between h-full">
-                                      <div className="text-base font-bold text-black">₹{option.price}</div>
-                                      <span
-                                        className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                                        role="button"
-                                        tabIndex={0}
-                                        onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                      >
-                                        More info <span aria-hidden="true">→</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </button>
+                                  </button>
+                                </TooltipProvider>
                               );
                             })}
                           </div>
@@ -1900,63 +1920,78 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             {sortedInboundFlights.map((option, idx) => {
                               // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
                               const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
+                              const layoverTag = getLayoverTagType(option.layover);
                               return (
-                                <button
-                                  key={idx}
-                                  className={cn(
-                                    "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
-                                    option._key === selectedInboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                  )}
-                                  onClick={() => handleManualInboundSelect(option)}
-                                >
-                                  <div className="flex items-center gap-3 py-1">
-                                    <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-base font-bold text-black">
-                                          {option.departureTime}–{option.arrivalTime}
-                                          {option.stops === '1 stop' && (
-                                            <span className="ml-2 text-sm font-normal">via DXB</span>
+                                <TooltipProvider key={idx}>
+                                  <button
+                                    className={cn(
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                      option._key === selectedInboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
+                                    )}
+                                    onClick={() => handleManualInboundSelect(option)}
+                                  >
+                                    <div className="flex items-center gap-3 py-1">
+                                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-base font-bold text-black">
+                                            {option.departureTime}–{option.arrivalTime}
+                                            {option.stops === '1 stop' && (
+                                              <span className="ml-2 text-sm font-normal">via DXB</span>
+                                            )}
+                                          </span>
+                                          {/* Layover Tag - positioned next to time/via text */}
+                                          {layoverTag && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-2", layoverTag.color)}>
+                                                  {layoverTag.tag}
+                                                </span>
+                                              </TooltipTrigger>
+                                              <TooltipContent className="bg-black text-white border-black">
+                                                <p className="text-xs">Layover: {option.layover}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
                                           )}
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+                                          <span>{option.airlineName}</span>
+                                          <span>· {option.stops}</span>
+                                          {option.stops === 'non-stop' && (
+                                            <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                              <Luggage className="h-4 w-4 mr-0.5" />
+                                              <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                              <span
+                                                className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                                style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                              >
+                                                No check in baggage
+                                              </span>
+                                            </span>
+                                          )}
+                                          {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                          {showSeatsLeft && (
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
+                                              2 seats left
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className="text-right flex flex-col items-end justify-between h-full">
+                                        <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        <span
+                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                        >
+                                          More info <span aria-hidden="true">→</span>
                                         </span>
                                       </div>
-                                      <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                        <span>{option.airlineName}</span>
-                                        <span>· {option.stops}</span>
-                                        {option.stops === 'non-stop' && (
-                                          <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
-                                            <Luggage className="h-4 w-4 mr-0.5" />
-                                            <Ban className="h-3 w-3 text-red-500 -ml-1" />
-                                            <span
-                                              className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
-                                              style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
-                                            >
-                                              No check in baggage
-                                            </span>
-                                          </span>
-                                        )}
-                                        {/* Show 'e seats left' tag randomly for non-non-stop flights */}
-                                        {showSeatsLeft && (
-                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                            2 seats left
-                                          </span>
-                                        )}
-                                      </div>
                                     </div>
-                                    <div className="text-right flex flex-col items-end justify-between h-full">
-                                      <div className="text-base font-bold text-black">₹{option.price}</div>
-                                      <span
-                                        className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                                        role="button"
-                                        tabIndex={0}
-                                        onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                      >
-                                        More info <span aria-hidden="true">→</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </button>
+                                  </button>
+                                </TooltipProvider>
                               );
                             })}
                           </div>
@@ -2069,4 +2104,31 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       )}
     </div>
   );
+}
+
+// Utility function to determine layover tag type
+function getLayoverTagType(layoverInfo: string | null) {
+  if (!layoverInfo) return null;
+  
+  // Extract duration from layover string (e.g., "6h 30m in Dubai" -> "6h 30m")
+  const durationMatch = layoverInfo.match(/(\d+h)?\s*(\d+m)?/);
+  if (!durationMatch) return null;
+  
+  const hours = durationMatch[1] ? parseInt(durationMatch[1]) : 0;
+  const minutes = durationMatch[2] ? parseInt(durationMatch[2]) : 0;
+  const totalMinutes = hours * 60 + minutes;
+  
+  if (totalMinutes < 120) { // Less than 2 hours
+    return {
+      tag: 'Short Layover',
+      color: 'bg-red-50 text-red-700 border-red-200'
+    };
+  } else if (totalMinutes > 240) { // More than 4 hours
+    return {
+      tag: 'Long Layover', 
+      color: 'bg-orange-50 text-orange-700 border-orange-200'
+    };
+  }
+  
+  return null; // Normal layover (2-4 hours) - no tag
 }
