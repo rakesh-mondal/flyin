@@ -354,19 +354,13 @@ const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: s
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
-              aria-label="More sorting options"
-            >
-              <SortIcon className="h-4 w-4 text-gray-500" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent className="bg-black text-white border-black">
-            <p className="text-xs">Sort options</p>
-          </TooltipContent>
-        </Tooltip>
+        <button 
+          className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
+          aria-label="Sort options"
+          title="Sort options"
+        >
+          <SortIcon className="h-4 w-4 text-gray-500" />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wide">
