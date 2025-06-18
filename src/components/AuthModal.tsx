@@ -26,7 +26,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { X, Eye, EyeOff, CircleCheck, Users, ShoppingCart, RefreshCw, Headphones } from 'lucide-react';
+import { X, Eye, EyeOff, CircleCheck, Users, ShoppingCart, RefreshCw, Wallet } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -79,7 +79,7 @@ const benefits = [
     title: 'Manage Your Booking',
   },
   {
-    icon: Headphones,
+    icon: Wallet,
     title: 'Get immediate refund to wallet',
   },
 ];
@@ -128,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl p-0 bg-white rounded-lg overflow-hidden">
+      <DialogContent className="max-w-3xl p-0 bg-white rounded-lg overflow-hidden">
         <div className="flex min-h-[500px]">
           {/* Left side - Benefits */}
           <div className="w-2/5 bg-gradient-to-br from-[#194a8f] to-[#143a7a] p-6 text-white flex flex-col justify-center">
