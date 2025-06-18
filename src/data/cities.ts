@@ -5,17 +5,88 @@ export interface City {
   country: string;
   countryCode: string;
   searchTerms: string[];
+  // New properties for enhanced dropdown
+  type?: 'city' | 'airport' | 'nearby';
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  parentCity?: string; // For airports that belong to a city
+  distance?: number; // Distance from parent city in km (for nearby airports)
+  airportName?: string; // Full airport name
+}
+
+// Function to calculate distance between two coordinates (in km)
+function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+           Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+           Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
 }
 
 export const CITIES: City[] = [
   // Major Middle Eastern Cities
+  {
+    id: 'dubai-any',
+    name: 'Dubai',
+    code: 'Any',
+    country: 'United Arab Emirates',
+    countryCode: 'AE',
+    searchTerms: ['dubai', 'dxb', 'uae', 'emirates'],
+    type: 'city',
+    coordinates: { lat: 25.2048, lng: 55.2708 }
+  },
   {
     id: 'dxb',
     name: 'Dubai',
     code: 'DXB',
     country: 'United Arab Emirates',
     countryCode: 'AE',
-    searchTerms: ['dubai', 'dxb', 'uae', 'emirates']
+    searchTerms: ['dubai', 'dxb', 'uae', 'emirates'],
+    type: 'airport',
+    parentCity: 'dubai-any',
+    coordinates: { lat: 25.2532, lng: 55.3657 },
+    airportName: 'Dubai International Airport'
+  },
+  {
+    id: 'dwc',
+    name: 'Dubai',
+    code: 'DWC',
+    country: 'United Arab Emirates',
+    countryCode: 'AE',
+    searchTerms: ['dubai', 'dwc', 'al maktoum', 'uae', 'emirates'],
+    type: 'airport',
+    parentCity: 'dubai-any',
+    coordinates: { lat: 24.8960, lng: 55.1611 },
+    airportName: 'Al Maktoum International Airport'
+  },
+  {
+    id: 'shj',
+    name: 'Sharjah',
+    code: 'SHJ',
+    country: 'United Arab Emirates',
+    countryCode: 'AE',
+    searchTerms: ['sharjah', 'shj', 'uae', 'emirates', 'dubai'],
+    type: 'nearby',
+    parentCity: 'dubai-any',
+    coordinates: { lat: 25.3285, lng: 55.5177 },
+    airportName: 'Sharjah International Airport'
+  },
+  {
+    id: 'rkt',
+    name: 'Ras Al Khaimah',
+    code: 'RKT',
+    country: 'United Arab Emirates',
+    countryCode: 'AE',
+    searchTerms: ['ras al khaimah', 'rkt', 'uae', 'emirates', 'dubai'],
+    type: 'nearby',
+    parentCity: 'dubai-any',
+    coordinates: { lat: 25.6137, lng: 55.9394 },
+    airportName: 'Ras Al Khaimah International Airport'
   },
   {
     id: 'auh',
@@ -23,7 +94,10 @@ export const CITIES: City[] = [
     code: 'AUH',
     country: 'United Arab Emirates',
     countryCode: 'AE',
-    searchTerms: ['abu dhabi', 'auh', 'uae', 'emirates']
+    searchTerms: ['abu dhabi', 'auh', 'uae', 'emirates'],
+    type: 'airport',
+    coordinates: { lat: 24.4330, lng: 54.6511 },
+    airportName: 'Abu Dhabi International Airport'
   },
   {
     id: 'doh',
@@ -31,7 +105,10 @@ export const CITIES: City[] = [
     code: 'DOH',
     country: 'Qatar',
     countryCode: 'QA',
-    searchTerms: ['doha', 'doh', 'qatar']
+    searchTerms: ['doha', 'doh', 'qatar'],
+    type: 'airport',
+    coordinates: { lat: 25.2731, lng: 51.6086 },
+    airportName: 'Hamad International Airport'
   },
   {
     id: 'ruh',
@@ -39,7 +116,10 @@ export const CITIES: City[] = [
     code: 'RUH',
     country: 'Saudi Arabia',
     countryCode: 'SA',
-    searchTerms: ['riyadh', 'ruh', 'saudi', 'saudi arabia']
+    searchTerms: ['riyadh', 'ruh', 'saudi', 'saudi arabia'],
+    type: 'airport',
+    coordinates: { lat: 24.9576, lng: 46.6988 },
+    airportName: 'King Khalid International Airport'
   },
   {
     id: 'jed',
@@ -47,7 +127,10 @@ export const CITIES: City[] = [
     code: 'JED',
     country: 'Saudi Arabia',
     countryCode: 'SA',
-    searchTerms: ['jeddah', 'jed', 'saudi', 'saudi arabia']
+    searchTerms: ['jeddah', 'jed', 'saudi', 'saudi arabia'],
+    type: 'airport',
+    coordinates: { lat: 21.6796, lng: 39.1564 },
+    airportName: 'King Abdulaziz International Airport'
   },
   {
     id: 'kwi',
@@ -55,7 +138,10 @@ export const CITIES: City[] = [
     code: 'KWI',
     country: 'Kuwait',
     countryCode: 'KW',
-    searchTerms: ['kuwait', 'kuwait city', 'kwi']
+    searchTerms: ['kuwait', 'kuwait city', 'kwi'],
+    type: 'airport',
+    coordinates: { lat: 29.2267, lng: 47.9689 },
+    airportName: 'Kuwait International Airport'
   },
   {
     id: 'bah',
@@ -63,17 +149,34 @@ export const CITIES: City[] = [
     code: 'BAH',
     country: 'Bahrain',
     countryCode: 'BH',
-    searchTerms: ['manama', 'bahrain', 'bah']
+    searchTerms: ['manama', 'bahrain', 'bah'],
+    type: 'airport',
+    coordinates: { lat: 26.2708, lng: 50.6336 },
+    airportName: 'Bahrain International Airport'
   },
   
-  // US Cities
+  // US Cities - New York
+  {
+    id: 'nyc-any',
+    name: 'New York',
+    code: 'Any',
+    country: 'United States',
+    countryCode: 'US',
+    searchTerms: ['new york', 'nyc', 'manhattan'],
+    type: 'city',
+    coordinates: { lat: 40.7128, lng: -74.0060 }
+  },
   {
     id: 'jfk',
     name: 'New York',
     code: 'JFK',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['new york', 'nyc', 'jfk', 'john f kennedy', 'manhattan']
+    searchTerms: ['new york', 'nyc', 'jfk', 'john f kennedy', 'manhattan'],
+    type: 'airport',
+    parentCity: 'nyc-any',
+    coordinates: { lat: 40.6413, lng: -73.7781 },
+    airportName: 'John F. Kennedy International Airport'
   },
   {
     id: 'lga',
@@ -81,7 +184,11 @@ export const CITIES: City[] = [
     code: 'LGA',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['new york', 'nyc', 'lga', 'laguardia', 'manhattan']
+    searchTerms: ['new york', 'nyc', 'lga', 'laguardia', 'manhattan'],
+    type: 'airport',
+    parentCity: 'nyc-any',
+    coordinates: { lat: 40.7769, lng: -73.8740 },
+    airportName: 'LaGuardia Airport'
   },
   {
     id: 'ewr',
@@ -89,7 +196,11 @@ export const CITIES: City[] = [
     code: 'EWR',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['new york', 'nyc', 'ewr', 'newark', 'newark liberty']
+    searchTerms: ['new york', 'nyc', 'ewr', 'newark', 'newark liberty'],
+    type: 'airport',
+    parentCity: 'nyc-any',
+    coordinates: { lat: 40.6895, lng: -74.1745 },
+    airportName: 'Newark Liberty International Airport'
   },
   {
     id: 'lax',
@@ -97,7 +208,10 @@ export const CITIES: City[] = [
     code: 'LAX',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['los angeles', 'la', 'lax', 'california']
+    searchTerms: ['los angeles', 'la', 'lax', 'california'],
+    type: 'airport',
+    coordinates: { lat: 34.0522, lng: -118.2437 },
+    airportName: 'Los Angeles International Airport'
   },
   {
     id: 'ord',
@@ -105,7 +219,10 @@ export const CITIES: City[] = [
     code: 'ORD',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['chicago', 'ord', 'ohare', 'illinois']
+    searchTerms: ['chicago', 'ord', 'ohare', 'illinois'],
+    type: 'airport',
+    coordinates: { lat: 41.9742, lng: -87.9073 },
+    airportName: "O'Hare International Airport"
   },
   {
     id: 'mia',
@@ -113,17 +230,34 @@ export const CITIES: City[] = [
     code: 'MIA',
     country: 'United States',
     countryCode: 'US',
-    searchTerms: ['miami', 'mia', 'florida']
+    searchTerms: ['miami', 'mia', 'florida'],
+    type: 'airport',
+    coordinates: { lat: 25.7933, lng: -80.2906 },
+    airportName: 'Miami International Airport'
   },
   
-  // European Cities
+  // European Cities - London
+  {
+    id: 'london-any',
+    name: 'London',
+    code: 'Any',
+    country: 'United Kingdom',
+    countryCode: 'GB',
+    searchTerms: ['london', 'uk', 'england'],
+    type: 'city',
+    coordinates: { lat: 51.5074, lng: -0.1278 }
+  },
   {
     id: 'lhr',
     name: 'London',
     code: 'LHR',
     country: 'United Kingdom',
     countryCode: 'GB',
-    searchTerms: ['london', 'lhr', 'heathrow', 'uk', 'england']
+    searchTerms: ['london', 'lhr', 'heathrow', 'uk', 'england'],
+    type: 'airport',
+    parentCity: 'london-any',
+    coordinates: { lat: 51.4700, lng: -0.4543 },
+    airportName: 'Heathrow Airport'
   },
   {
     id: 'lgw',
@@ -131,7 +265,11 @@ export const CITIES: City[] = [
     code: 'LGW',
     country: 'United Kingdom',
     countryCode: 'GB',
-    searchTerms: ['london', 'lgw', 'gatwick', 'uk', 'england']
+    searchTerms: ['london', 'lgw', 'gatwick', 'uk', 'england'],
+    type: 'airport',
+    parentCity: 'london-any',
+    coordinates: { lat: 51.1481, lng: -0.1903 },
+    airportName: 'Gatwick Airport'
   },
   {
     id: 'cdg',
@@ -139,7 +277,10 @@ export const CITIES: City[] = [
     code: 'CDG',
     country: 'France',
     countryCode: 'FR',
-    searchTerms: ['paris', 'cdg', 'charles de gaulle', 'france']
+    searchTerms: ['paris', 'cdg', 'charles de gaulle', 'france'],
+    type: 'airport',
+    coordinates: { lat: 49.0097, lng: 2.5479 },
+    airportName: 'Charles de Gaulle Airport'
   },
   {
     id: 'fra',
@@ -147,7 +288,10 @@ export const CITIES: City[] = [
     code: 'FRA',
     country: 'Germany',
     countryCode: 'DE',
-    searchTerms: ['frankfurt', 'fra', 'germany']
+    searchTerms: ['frankfurt', 'fra', 'germany'],
+    type: 'airport',
+    coordinates: { lat: 50.0379, lng: 8.5622 },
+    airportName: 'Frankfurt Airport'
   },
   {
     id: 'ist',
@@ -155,7 +299,10 @@ export const CITIES: City[] = [
     code: 'IST',
     country: 'Turkey',
     countryCode: 'TR',
-    searchTerms: ['istanbul', 'ist', 'turkey']
+    searchTerms: ['istanbul', 'ist', 'turkey'],
+    type: 'airport',
+    coordinates: { lat: 41.2753, lng: 28.7519 },
+    airportName: 'Istanbul Airport'
   },
   {
     id: 'ams',
@@ -163,7 +310,10 @@ export const CITIES: City[] = [
     code: 'AMS',
     country: 'Netherlands',
     countryCode: 'NL',
-    searchTerms: ['amsterdam', 'ams', 'netherlands', 'holland']
+    searchTerms: ['amsterdam', 'ams', 'netherlands', 'holland'],
+    type: 'airport',
+    coordinates: { lat: 52.3105, lng: 4.7683 },
+    airportName: 'Amsterdam Schiphol Airport'
   },
   {
     id: 'mad',
@@ -171,7 +321,10 @@ export const CITIES: City[] = [
     code: 'MAD',
     country: 'Spain',
     countryCode: 'ES',
-    searchTerms: ['madrid', 'mad', 'spain']
+    searchTerms: ['madrid', 'mad', 'spain'],
+    type: 'airport',
+    coordinates: { lat: 40.4983, lng: -3.5676 },
+    airportName: 'Adolfo Suárez Madrid–Barajas Airport'
   },
   {
     id: 'bcn',
@@ -179,7 +332,10 @@ export const CITIES: City[] = [
     code: 'BCN',
     country: 'Spain',
     countryCode: 'ES',
-    searchTerms: ['barcelona', 'bcn', 'spain']
+    searchTerms: ['barcelona', 'bcn', 'spain'],
+    type: 'airport',
+    coordinates: { lat: 41.2971, lng: 2.0785 },
+    airportName: 'Josep Tarradellas Barcelona–El Prat Airport'
   },
   {
     id: 'fco',
@@ -187,7 +343,10 @@ export const CITIES: City[] = [
     code: 'FCO',
     country: 'Italy',
     countryCode: 'IT',
-    searchTerms: ['rome', 'fco', 'fiumicino', 'italy']
+    searchTerms: ['rome', 'fco', 'fiumicino', 'italy'],
+    type: 'airport',
+    coordinates: { lat: 41.7999, lng: 12.2462 },
+    airportName: 'Leonardo da Vinci International Airport'
   },
   {
     id: 'muc',
@@ -195,7 +354,10 @@ export const CITIES: City[] = [
     code: 'MUC',
     country: 'Germany',
     countryCode: 'DE',
-    searchTerms: ['munich', 'muc', 'germany']
+    searchTerms: ['munich', 'muc', 'germany'],
+    type: 'airport',
+    coordinates: { lat: 48.3537, lng: 11.7750 },
+    airportName: 'Munich Airport'
   },
   
   // Asian Cities
@@ -205,7 +367,10 @@ export const CITIES: City[] = [
     code: 'SIN',
     country: 'Singapore',
     countryCode: 'SG',
-    searchTerms: ['singapore', 'sin', 'changi']
+    searchTerms: ['singapore', 'sin', 'changi'],
+    type: 'airport',
+    coordinates: { lat: 1.3644, lng: 103.9915 },
+    airportName: 'Singapore Changi Airport'
   },
   {
     id: 'del',
@@ -213,7 +378,10 @@ export const CITIES: City[] = [
     code: 'DEL',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['delhi', 'new delhi', 'del', 'india']
+    searchTerms: ['delhi', 'new delhi', 'del', 'india'],
+    type: 'airport',
+    coordinates: { lat: 28.5665, lng: 77.1031 },
+    airportName: 'Indira Gandhi International Airport'
   },
   {
     id: 'bom',
@@ -221,7 +389,10 @@ export const CITIES: City[] = [
     code: 'BOM',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['mumbai', 'bombay', 'bom', 'india']
+    searchTerms: ['mumbai', 'bombay', 'bom', 'india'],
+    type: 'airport',
+    coordinates: { lat: 19.0896, lng: 72.8656 },
+    airportName: 'Chhatrapati Shivaji Maharaj International Airport'
   },
   {
     id: 'blr',
@@ -229,7 +400,10 @@ export const CITIES: City[] = [
     code: 'BLR',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['bangalore', 'bengaluru', 'blr', 'india']
+    searchTerms: ['bangalore', 'bengaluru', 'blr', 'india'],
+    type: 'airport',
+    coordinates: { lat: 13.1986, lng: 77.7066 },
+    airportName: 'Kempegowda International Airport'
   },
   {
     id: 'maa',
@@ -237,7 +411,10 @@ export const CITIES: City[] = [
     code: 'MAA',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['chennai', 'madras', 'maa', 'india']
+    searchTerms: ['chennai', 'madras', 'maa', 'india'],
+    type: 'airport',
+    coordinates: { lat: 12.9902, lng: 80.1693 },
+    airportName: 'Chennai International Airport'
   },
   {
     id: 'hyd',
@@ -245,7 +422,10 @@ export const CITIES: City[] = [
     code: 'HYD',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['hyderabad', 'hyd', 'india']
+    searchTerms: ['hyderabad', 'hyd', 'india'],
+    type: 'airport',
+    coordinates: { lat: 17.2313, lng: 78.4298 },
+    airportName: 'Rajiv Gandhi International Airport'
   },
   {
     id: 'ccu',
@@ -253,7 +433,10 @@ export const CITIES: City[] = [
     code: 'CCU',
     country: 'India',
     countryCode: 'IN',
-    searchTerms: ['kolkata', 'calcutta', 'ccu', 'india']
+    searchTerms: ['kolkata', 'calcutta', 'ccu', 'india'],
+    type: 'airport',
+    coordinates: { lat: 22.6544, lng: 88.4479 },
+    airportName: 'Netaji Subhas Chandra Bose International Airport'
   },
   {
     id: 'nrt',
@@ -261,7 +444,10 @@ export const CITIES: City[] = [
     code: 'NRT',
     country: 'Japan',
     countryCode: 'JP',
-    searchTerms: ['tokyo', 'nrt', 'narita', 'japan']
+    searchTerms: ['tokyo', 'nrt', 'narita', 'japan'],
+    type: 'airport',
+    coordinates: { lat: 35.7647, lng: 140.3864 },
+    airportName: 'Narita International Airport'
   },
   {
     id: 'hnd',
@@ -269,7 +455,10 @@ export const CITIES: City[] = [
     code: 'HND',
     country: 'Japan',
     countryCode: 'JP',
-    searchTerms: ['tokyo', 'hnd', 'haneda', 'japan']
+    searchTerms: ['tokyo', 'hnd', 'haneda', 'japan'],
+    type: 'airport',
+    coordinates: { lat: 35.5494, lng: 139.7798 },
+    airportName: 'Tokyo Haneda Airport'
   },
   {
     id: 'hkg',
@@ -277,7 +466,10 @@ export const CITIES: City[] = [
     code: 'HKG',
     country: 'Hong Kong',
     countryCode: 'HK',
-    searchTerms: ['hong kong', 'hkg', 'hongkong']
+    searchTerms: ['hong kong', 'hkg', 'hongkong'],
+    type: 'airport',
+    coordinates: { lat: 22.3080, lng: 113.9185 },
+    airportName: 'Hong Kong International Airport'
   },
   {
     id: 'bkk',
@@ -285,7 +477,10 @@ export const CITIES: City[] = [
     code: 'BKK',
     country: 'Thailand',
     countryCode: 'TH',
-    searchTerms: ['bangkok', 'bkk', 'thailand']
+    searchTerms: ['bangkok', 'bkk', 'thailand'],
+    type: 'airport',
+    coordinates: { lat: 13.6900, lng: 100.7501 },
+    airportName: 'Suvarnabhumi Airport'
   },
   {
     id: 'kul',
@@ -293,7 +488,10 @@ export const CITIES: City[] = [
     code: 'KUL',
     country: 'Malaysia',
     countryCode: 'MY',
-    searchTerms: ['kuala lumpur', 'kul', 'malaysia']
+    searchTerms: ['kuala lumpur', 'kul', 'malaysia'],
+    type: 'airport',
+    coordinates: { lat: 2.7456, lng: 101.7072 },
+    airportName: 'Kuala Lumpur International Airport'
   },
   
   // African Cities  
@@ -303,7 +501,10 @@ export const CITIES: City[] = [
     code: 'CAI',
     country: 'Egypt',
     countryCode: 'EG',
-    searchTerms: ['cairo', 'cai', 'egypt']
+    searchTerms: ['cairo', 'cai', 'egypt'],
+    type: 'airport',
+    coordinates: { lat: 30.1219, lng: 31.4056 },
+    airportName: 'Cairo International Airport'
   },
   {
     id: 'cpt',
@@ -311,7 +512,10 @@ export const CITIES: City[] = [
     code: 'CPT',
     country: 'South Africa',
     countryCode: 'ZA',
-    searchTerms: ['cape town', 'cpt', 'south africa']
+    searchTerms: ['cape town', 'cpt', 'south africa'],
+    type: 'airport',
+    coordinates: { lat: -33.9648, lng: 18.6017 },
+    airportName: 'Cape Town International Airport'
   },
   
   // Canadian Cities
@@ -321,7 +525,10 @@ export const CITIES: City[] = [
     code: 'YYZ',
     country: 'Canada',
     countryCode: 'CA',
-    searchTerms: ['toronto', 'yyz', 'canada', 'pearson']
+    searchTerms: ['toronto', 'yyz', 'canada', 'pearson'],
+    type: 'airport',
+    coordinates: { lat: 43.6777, lng: -79.6248 },
+    airportName: 'Toronto Pearson International Airport'
   },
   {
     id: 'yvr',
@@ -329,7 +536,10 @@ export const CITIES: City[] = [
     code: 'YVR',
     country: 'Canada',
     countryCode: 'CA',
-    searchTerms: ['vancouver', 'yvr', 'canada']
+    searchTerms: ['vancouver', 'yvr', 'canada'],
+    type: 'airport',
+    coordinates: { lat: 49.1967, lng: -123.1815 },
+    airportName: 'Vancouver International Airport'
   },
   
   // Australian Cities
@@ -339,7 +549,10 @@ export const CITIES: City[] = [
     code: 'SYD',
     country: 'Australia',
     countryCode: 'AU',
-    searchTerms: ['sydney', 'syd', 'australia']
+    searchTerms: ['sydney', 'syd', 'australia'],
+    type: 'airport',
+    coordinates: { lat: -33.9399, lng: 151.1753 },
+    airportName: 'Kingsford Smith Airport'
   },
   {
     id: 'mel',
@@ -347,7 +560,10 @@ export const CITIES: City[] = [
     code: 'MEL',
     country: 'Australia',
     countryCode: 'AU',
-    searchTerms: ['melbourne', 'mel', 'australia']
+    searchTerms: ['melbourne', 'mel', 'australia'],
+    type: 'airport',
+    coordinates: { lat: -37.6690, lng: 144.8410 },
+    airportName: 'Melbourne Airport'
   }
 ];
 
@@ -356,15 +572,69 @@ export function searchCities(query: string): City[] {
   
   const searchQuery = query.toLowerCase().trim();
   
-  return CITIES.filter(city => {
-    // Search in city name, airport code, country, and search terms
+  // Filter cities that match the search query
+  const matchingCities = CITIES.filter(city => {
     return (
       city.name.toLowerCase().includes(searchQuery) ||
       city.code.toLowerCase().includes(searchQuery) ||
       city.country.toLowerCase().includes(searchQuery) ||
       city.searchTerms.some(term => term.includes(searchQuery))
     );
-  }).slice(0, 8); // Limit to 8 results for better UX
+  });
+
+  // Group and organize results
+  const organizedResults: City[] = [];
+  const processedCities = new Set<string>();
+
+  // Find city entries and their related airports
+  matchingCities.forEach(city => {
+    if (city.type === 'city') {
+      // Add the city "Any" option first
+      organizedResults.push(city);
+      processedCities.add(city.id);
+
+      // Find all airports for this city
+      const cityAirports = matchingCities.filter(airport => 
+        airport.parentCity === city.id && airport.type === 'airport'
+      );
+      
+      // Add airports for this city
+      cityAirports.forEach(airport => {
+        organizedResults.push(airport);
+        processedCities.add(airport.id);
+      });
+
+      // Find nearby airports and calculate distances
+      const nearbyAirports = matchingCities.filter(airport => 
+        airport.parentCity === city.id && airport.type === 'nearby'
+      );
+
+      nearbyAirports.forEach(airport => {
+        if (city.coordinates && airport.coordinates) {
+          const distance = Math.round(calculateDistance(
+            city.coordinates.lat,
+            city.coordinates.lng,
+            airport.coordinates.lat,
+            airport.coordinates.lng
+          ));
+          // Create a copy with calculated distance
+          const airportWithDistance = { ...airport, distance };
+          organizedResults.push(airportWithDistance);
+          processedCities.add(airport.id);
+        }
+      });
+    }
+  });
+
+  // Add standalone airports that don't belong to a searched city
+  matchingCities.forEach(city => {
+    if (!processedCities.has(city.id) && city.type === 'airport') {
+      organizedResults.push(city);
+      processedCities.add(city.id);
+    }
+  });
+
+  return organizedResults.slice(0, 10); // Limit to 10 results for better UX
 }
 
 export function getCityByCode(code: string): City | undefined {
