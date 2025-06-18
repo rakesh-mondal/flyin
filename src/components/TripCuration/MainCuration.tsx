@@ -842,6 +842,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '37,500',
+      originalPrice: '42,500',
       baggage: airlines[1].baggage,
       wifi: airlines[1].wifi,
       meal: airlines[1].meal,
@@ -881,6 +882,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '1h 30m in Istanbul',
       price: '36,200',
+      originalPrice: '41,200',
       baggage: airlines[3].baggage,
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
@@ -900,6 +902,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '40,000',
+      originalPrice: '45,000',
       baggage: airlines[4].baggage,
       wifi: airlines[4].wifi,
       meal: airlines[4].meal,
@@ -919,6 +922,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '2h in London',
       price: '38,500',
+      originalPrice: '43,500',
       baggage: airlines[5].baggage,
       wifi: airlines[5].wifi,
       meal: airlines[5].meal,
@@ -937,6 +941,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '42,000',
+      originalPrice: '47,000',
       baggage: airlines[6].baggage,
       wifi: airlines[6].wifi,
       meal: airlines[6].meal,
@@ -955,6 +960,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '41,500',
+      originalPrice: '46,500',
       baggage: airlines[7].baggage,
       wifi: airlines[7].wifi,
       meal: airlines[7].meal,
@@ -973,6 +979,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '43,000',
+      originalPrice: '48,000',
       baggage: airlines[8].baggage,
       wifi: airlines[8].wifi,
       meal: airlines[8].meal,
@@ -991,6 +998,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '1h 45m in Paris',
       price: '39,800',
+      originalPrice: '44,800',
       baggage: airlines[9].baggage,
       wifi: airlines[9].wifi,
       meal: airlines[9].meal,
@@ -1031,6 +1039,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '2h in Dubai',
       price: '31,500',
+      originalPrice: '36,500',
       baggage: airlines[0].baggage,
       wifi: airlines[0].wifi,
       meal: airlines[0].meal,
@@ -1050,6 +1059,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '2 stops',
       layover: '5h 15m in Doha',
       price: '29,800',
+      originalPrice: '34,800',
       baggage: airlines[2].baggage,
       wifi: airlines[2].wifi,
       meal: airlines[2].meal,
@@ -1069,6 +1079,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '1h 45m in Istanbul',
       price: '32,200',
+      originalPrice: '37,200',
       baggage: airlines[3].baggage,
       wifi: airlines[3].wifi,
       meal: airlines[3].meal,
@@ -1089,6 +1100,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '40,000',
+      originalPrice: '45,000',
       baggage: airlines[4].baggage,
       wifi: airlines[4].wifi,
       meal: airlines[4].meal,
@@ -1107,6 +1119,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '2h in London',
       price: '38,500',
+      originalPrice: '43,500',
       baggage: airlines[5].baggage,
       wifi: airlines[5].wifi,
       meal: airlines[5].meal,
@@ -1125,6 +1138,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '42,000',
+      originalPrice: '47,000',
       baggage: airlines[6].baggage,
       wifi: airlines[6].wifi,
       meal: airlines[6].meal,
@@ -1143,6 +1157,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '41,500',
+      originalPrice: '46,500',
       baggage: airlines[7].baggage,
       wifi: airlines[7].wifi,
       meal: airlines[7].meal,
@@ -1161,6 +1176,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: 'non-stop',
       layover: null,
       price: '43,000',
+      originalPrice: '48,000',
       baggage: airlines[8].baggage,
       wifi: airlines[8].wifi,
       meal: airlines[8].meal,
@@ -1179,6 +1195,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       stops: '1 stop',
       layover: '2h in Paris',
       price: '39,800',
+      originalPrice: '44,800',
       baggage: airlines[9].baggage,
       wifi: airlines[9].wifi,
       meal: airlines[9].meal,
@@ -1854,7 +1871,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px]",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
@@ -1874,11 +1891,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                             <Tooltip>
                                               <TooltipTrigger asChild>
                                                 {layoverTag.isShort || layoverTag.isLong ? (
-                                                  <div className="cursor-help ml-2">
+                                                  <div className="cursor-help ml-1">
                                                     {layoverTag.tag}
                                                   </div>
                                                 ) : (
-                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-2", layoverTag.color)}>
+                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-1", layoverTag.color)}>
                                                     {layoverTag.tag}
                                                   </span>
                                                 )}
@@ -1927,9 +1944,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                         </div>
                                       </div>
                                       <div className="text-right flex flex-col items-end justify-between h-full">
-                                        <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        <div className="flex items-center gap-2 justify-end">
+                                          {/* Original price with strikethrough */}
+                                          {option.originalPrice && (
+                                            <div className="text-xs text-gray-500 line-through">
+                                              ₹{option.originalPrice}
+                                            </div>
+                                          )}
+                                          {/* Current price */}
+                                          <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        </div>
                                         <span
-                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer mt-1"
                                           role="button"
                                           tabIndex={0}
                                           onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
@@ -1981,7 +2007,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[70px]",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px]",
                                       option._key === selectedInboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualInboundSelect(option)}
@@ -2001,11 +2027,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                             <Tooltip>
                                               <TooltipTrigger asChild>
                                                 {layoverTag.isShort || layoverTag.isLong ? (
-                                                  <div className="cursor-help ml-2">
+                                                  <div className="cursor-help ml-1">
                                                     {layoverTag.tag}
                                                   </div>
                                                 ) : (
-                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-2", layoverTag.color)}>
+                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-1", layoverTag.color)}>
                                                     {layoverTag.tag}
                                                   </span>
                                                 )}
@@ -2054,9 +2080,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                         </div>
                                       </div>
                                       <div className="text-right flex flex-col items-end justify-between h-full">
-                                        <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        <div className="flex items-center gap-2 justify-end">
+                                          {/* Original price with strikethrough */}
+                                          {option.originalPrice && (
+                                            <div className="text-xs text-gray-500 line-through">
+                                              ₹{option.originalPrice}
+                                            </div>
+                                          )}
+                                          {/* Current price */}
+                                          <div className="text-base font-bold text-black">₹{option.price}</div>
+                                        </div>
                                         <span
-                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer mt-1"
                                           role="button"
                                           tabIndex={0}
                                           onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
