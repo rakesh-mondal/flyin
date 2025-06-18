@@ -449,6 +449,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Emirates',
       logo: 'https://airhex.com/images/airline-logos/emirates.png',
       price: '65,909',
+      // Special return offer - Emirates gets this
+      hasSpecialReturn: true,
+      returnDiscount: 15, // 15% discount
+      specialReturnPrice: '56,023',
+      badgeText: 'Limited Time',
       baggage: '30kg checked, 7kg cabin',
       wifi: true,
       meal: 'Halal, Vegetarian, Vegan',
@@ -459,6 +464,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Etihad Airways',
       logo: 'https://airhex.com/images/airline-logos/etihad-airways.png',
       price: '47,000',
+      // Second special offer - Etihad gets this
+      hasSpecialReturn: true,
+      returnDiscount: 20,
+      specialReturnPrice: '37,600',
+      badgeText: 'Best Deal',
       baggage: '23kg checked, 7kg cabin',
       wifi: true,
       meal: 'Halal, Vegetarian',
@@ -469,6 +479,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Qatar Airways',
       logo: 'https://airhex.com/images/airline-logos/qatar-airways.png',
       price: '46,000',
+      hasSpecialReturn: false,
       baggage: '30kg checked, 7kg cabin',
       wifi: true,
       meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
@@ -479,6 +490,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Turkish Airlines',
       logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
       price: '44,000',
+      hasSpecialReturn: false,
       baggage: '30kg checked, 8kg cabin',
       wifi: true,
       meal: 'Halal, Vegetarian, Vegan',
@@ -489,6 +501,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Lufthansa',
       logo: 'https://airhex.com/images/airline-logos/lufthansa.png',
       price: '61,000',
+      hasSpecialReturn: false,
       baggage: '23kg checked, 8kg cabin',
       wifi: true,
       meal: 'Vegetarian, Vegan, Gluten-Free',
@@ -499,6 +512,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Air India',
       logo: 'https://airhex.com/images/airline-logos/air-india.png',
       price: '59,035',
+      hasSpecialReturn: false,
       baggage: '25kg checked, 7kg cabin',
       wifi: false,
       meal: 'Vegetarian, Vegan',
@@ -509,6 +523,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Singapore Airlines',
       logo: 'https://airhex.com/images/airline-logos/singapore-airlines.png',
       price: '58,500',
+      hasSpecialReturn: false,
       baggage: '30kg checked, 7kg cabin',
       wifi: true,
       meal: 'Halal, Vegetarian, Vegan, Gluten-Free',
@@ -519,6 +534,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'British Airways',
       logo: 'https://airhex.com/images/airline-logos/british-airways.png',
       price: '62,000',
+      hasSpecialReturn: false,
       baggage: '23kg checked, 8kg cabin',
       wifi: true,
       meal: 'Vegetarian, Vegan, Gluten-Free',
@@ -529,6 +545,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'Air France',
       logo: 'https://airhex.com/images/airline-logos/air-france.png',
       price: '60,500',
+      hasSpecialReturn: false,
       baggage: '23kg checked, 8kg cabin',
       wifi: true,
       meal: 'Vegetarian, Vegan, Gluten-Free',
@@ -539,6 +556,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       name: 'KLM',
       logo: 'https://airhex.com/images/airline-logos/klm.png',
       price: '59,800',
+      hasSpecialReturn: false,
       baggage: '23kg checked, 8kg cabin',
       wifi: true,
       meal: 'Vegetarian, Vegan, Gluten-Free',
@@ -1869,10 +1887,22 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                               />
                               <div className="text-left">
                                 <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
-                                <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                                <div className="flex items-center gap-1 mt-0.5">
+                                  {airline.hasSpecialReturn ? (
+                                    <>
+                                      <div className="text-xs text-gray-500">₹{airline.specialReturnPrice}</div>
+                                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                        Return Deal %
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <div className="text-xs text-gray-500">₹{airline.price}</div>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                            {selectedQuickFilters.includes(airline.id) && (
+                            
+                            {selectedQuickFilters.includes(airline.id) && !airline.hasSpecialReturn && (
                               <span className="h-4 w-4 text-blue-600 flex-shrink-0">✓</span>
                             )}
                           </button>

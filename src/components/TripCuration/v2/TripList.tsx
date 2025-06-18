@@ -180,10 +180,22 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
                 </Tooltip>
               </TooltipProvider>
               <div className="text-left">
-                <div className="text-xs text-gray-500 mt-0.5">₹{airline.price}</div>
+                <div className="flex items-center gap-1 mt-0.5">
+                  {airline.hasSpecialReturn ? (
+                    <>
+                      <div className="text-xs text-gray-500">₹{airline.specialReturnPrice}</div>
+                                             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-yellow-100 text-yellow-700 border border-yellow-300">
+                         Return Deal %
+                       </span>
+                    </>
+                  ) : (
+                    <div className="text-xs text-gray-500">₹{airline.price}</div>
+                  )}
+                </div>
               </div>
             </div>
-            {selectedAirlines.includes(airline.id) && (
+            
+            {selectedAirlines.includes(airline.id) && !airline.hasSpecialReturn && (
               <Check className="h-4 w-4 text-primary flex-shrink-0" />
             )}
           </button>
@@ -365,6 +377,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       iata: 'EK',
       logo: 'https://www.emirates.com/etc/designs/ecom/creative/emirate-logo-circle.svg',
       price: '65,909',
+      // Special return offer - Emirates gets this
+      hasSpecialReturn: true,
+      returnDiscount: 15,
+      specialReturnPrice: '56,023',
+      badgeText: 'Limited Time',
       country: 'United Arab Emirates',
       alliance: 'None',
       rating: '4.3/5',
@@ -381,6 +398,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       iata: 'AI',
       logo: 'https://airindia.com/image/AI_CircleLogo.png',
       price: '59,035',
+      hasSpecialReturn: false,
       country: 'India',
       alliance: 'Star Alliance',
       rating: '3.8/5',
@@ -397,6 +415,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       iata: 'EY',
       logo: 'https://www.etihad.com/content/dam/eag/etihadairways/etihadcom/Global/logos/etihad-airways-logo-flag.svg',
       price: '45,717',
+      // Second special offer - Etihad gets this
+      hasSpecialReturn: true,
+      returnDiscount: 20,
+      specialReturnPrice: '36,574',
+      badgeText: 'Best Deal',
       country: 'United Arab Emirates',
       alliance: 'None',
       rating: '4.2/5',
@@ -413,6 +436,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       iata: 'LH',
       logo: 'https://www.lufthansa.com/content/dam/lh/images/local_images/lcn_assets/lufthansa-logo.svg',
       price: '72,500',
+      hasSpecialReturn: false,
       country: 'Germany',
       alliance: 'Star Alliance',
       rating: '4.1/5',
