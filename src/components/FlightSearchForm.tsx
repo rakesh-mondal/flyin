@@ -200,7 +200,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     value={origin}
                     onChange={setOrigin}
                     onSelect={setSelectedOriginCity}
-                    placeholder="City or Airport"
+                    placeholder="Country, city or airport"
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
                   {origin && (
@@ -227,7 +227,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     value={destination}
                     onChange={setDestination}
                     onSelect={setSelectedDestinationCity}
-                    placeholder="City or Airport"
+                    placeholder="Country, city or airport"
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
                   {destination && (
