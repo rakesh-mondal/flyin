@@ -331,6 +331,16 @@ function extractAirportCode(layover: string | null | undefined): string | null {
   return match ? match[1] : null;
 }
 
+// Custom Sort Icon Component
+const SortIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <desc>Sort Streamline Icon: https://streamlinehq.com</desc>
+    <path d="M22 7 2 7" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5"></path>
+    <path d="M19 12 5 12" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5"></path>
+    <path d="M16 17H8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5"></path>
+  </svg>
+);
+
 // Sorting Options Dropdown Component
 const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: string, onSortByChange: (value: string) => void }) => {
   const sortOptions = [
@@ -344,12 +354,19 @@ const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: s
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button 
-          className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
-          aria-label="More sorting options"
-        >
-          <ArrowUpDown className="h-4 w-4 text-gray-500" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
+              aria-label="More sorting options"
+            >
+              <SortIcon className="h-4 w-4 text-gray-500" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent className="bg-black text-white border-black">
+            <p className="text-xs">Sort options</p>
+          </TooltipContent>
+        </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wide">
