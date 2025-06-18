@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { format, addDays, isAfter, isBefore, startOfDay, parseISO } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar as CalendarComponent } from './ui/calendar';
+import { PriceCalendar } from './ui/PriceCalendar';
 import {
   Select,
   SelectContent,
@@ -277,7 +278,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   {isRoundTrip ? (
-                    <CalendarComponent
+                    <PriceCalendar
                       mode="range"
                       selected={{ from: departureDate, to: returnDate }}
                       onSelect={(date) => {
@@ -286,15 +287,21 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                           setReturnDate(date.to);
                         }
                       }}
+                      onDateSelect={(date, price) => {
+                        console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
+                      }}
                       disabled={(date) => isBefore(date, startOfDay(new Date()))}
                       numberOfMonths={2}
                     />
                   ) : (
-                    <CalendarComponent
+                    <PriceCalendar
                       mode="single"
                       selected={departureDate}
                       onSelect={(date) => {
                         setDepartureDate(date as Date);
+                      }}
+                      onDateSelect={(date, price) => {
+                        console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
                       }}
                       disabled={(date) => isBefore(date, startOfDay(new Date()))}
                       numberOfMonths={1}

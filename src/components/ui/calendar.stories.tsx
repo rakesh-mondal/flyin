@@ -64,7 +64,7 @@ export function DateRangeBooking() {
   );
 }
 
-// Calendar with flight price indicators
+// Calendar with flight price indicators (Legacy example - use PriceCalendar instead)
 export function FlightPriceCalendar() {
   // Sample price data for demonstration
   const priceData: Record<string, number> = {
@@ -88,8 +88,8 @@ export function FlightPriceCalendar() {
   
   return (
     <div className="flex flex-col items-center gap-4">
-      <h3 className="text-lg font-medium">Price Calendar: Delhi to Mumbai</h3>
-      <p className="text-sm text-gray-500">Find the best price for your flight</p>
+      <h3 className="text-lg font-medium">Legacy Price Calendar (use PriceCalendar component instead)</h3>
+      <p className="text-sm text-gray-500">This is the old implementation. Use the new PriceCalendar component for better functionality.</p>
       <Calendar
         mode="single"
         selected={selected}
