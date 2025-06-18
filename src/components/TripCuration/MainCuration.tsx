@@ -9,7 +9,7 @@ import { mockTrips } from './mockData';
 import { toast } from 'sonner';
 import { InsightProps } from './FlightInsights';
 import { Button } from '../ui/button';
-import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Ban, Luggage } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Ban, Luggage, MoreVertical, Clock, Plane, Building2 } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/lib/utils';
@@ -27,6 +27,7 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu';
 
 // Short Layover Icon Component
 const ShortLayoverIcon = () => (
@@ -329,6 +330,51 @@ function extractAirportCode(layover: string | null | undefined): string | null {
   const match = layover.match(/in ([A-Z]{3})/);
   return match ? match[1] : null;
 }
+
+// Sorting Options Dropdown Component
+const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: string, onSortByChange: (value: string) => void }) => {
+  const sortOptions = [
+    { value: 'price', label: 'Price', icon: <Percent className="h-4 w-4" /> },
+    { value: 'duration', label: 'Duration', icon: <Clock className="h-4 w-4" /> },
+    { value: 'departure', label: 'Departure Time', icon: <Plane className="h-4 w-4" /> },
+    { value: 'airline', label: 'Airline', icon: <Building2 className="h-4 w-4" /> },
+    { value: 'stops', label: 'Number of Stops', icon: <ArrowRightLeft className="h-4 w-4" /> },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button 
+          className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
+          aria-label="More sorting options"
+        >
+          <ArrowUpDown className="h-4 w-4 text-gray-500" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wide">
+          Sort by
+        </div>
+        <DropdownMenuSeparator />
+        {sortOptions.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => onSortByChange(option.value)}
+            className={`flex items-center gap-2 cursor-pointer ${
+              selectedSortBy === option.value ? 'bg-blue-50 text-blue-700' : ''
+            }`}
+          >
+            {option.icon}
+            <span>{option.label}</span>
+            {selectedSortBy === option.value && (
+              <span className="ml-auto text-blue-600">✓</span>
+            )}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 // 1. Add a helper to generate a unique key for a flight
 function getFlightKey(f) {
@@ -1480,6 +1526,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   // Add state for sorting
   const [outboundSort, setOutboundSort] = useState<'asc' | 'desc'>('asc');
   const [inboundSort, setInboundSort] = useState<'asc' | 'desc'>('asc');
+  
+  // Add state for sorting dropdown selections
+  const [outboundSortBy, setOutboundSortBy] = useState<string>('price');
+  const [inboundSortBy, setInboundSortBy] = useState<string>('price');
 
   function flightSortFn(a, b, sortOrder, selectedIdx, flights) {
     // Selected flight always on top
@@ -1839,22 +1889,28 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>New York → Dubai</span>
-                            <button
-                              onClick={() => setOutboundSort(outboundSort === 'asc' ? 'desc' : 'asc')}
-                              className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none ml-2"
-                              aria-label="Sort by price"
-                            >
-                              Price
-                              {outboundSort === 'asc' ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
-                                </svg>
-                              ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
-                                </svg>
-                              )}
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setOutboundSort(outboundSort === 'asc' ? 'desc' : 'asc')}
+                                className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none"
+                                aria-label="Sort by price"
+                              >
+                                Price
+                                {outboundSort === 'asc' ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                  </svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                                  </svg>
+                                )}
+                              </button>
+                              <SortingDropdown 
+                                selectedSortBy={outboundSortBy} 
+                                onSortByChange={setOutboundSortBy}
+                              />
+                            </div>
                           </div>
                           <hr className="my-1 border-gray-200" />
                           <DatesCard
@@ -1974,23 +2030,29 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         {/* Inbound List */}
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
-                                                                        <span>Dubai → New York</span>
-                            <button
-                              onClick={() => setInboundSort(inboundSort === 'asc' ? 'desc' : 'asc')}
-                              className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none ml-2"
-                              aria-label="Sort by price"
-                            >
-                              Price
-                              {inboundSort === 'asc' ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
-                                </svg>
-                              ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
-                                </svg>
-                              )}
-                            </button>
+                            <span>Dubai → New York</span>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setInboundSort(inboundSort === 'asc' ? 'desc' : 'asc')}
+                                className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none"
+                                aria-label="Sort by price"
+                              >
+                                Price
+                                {inboundSort === 'asc' ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                  </svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                                  </svg>
+                                )}
+                              </button>
+                              <SortingDropdown 
+                                selectedSortBy={inboundSortBy} 
+                                onSortByChange={setInboundSortBy}
+                              />
+                            </div>
                           </div>
                           <hr className="my-1 border-gray-200" />
                           <DatesCard
