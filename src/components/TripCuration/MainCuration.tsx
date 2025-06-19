@@ -341,28 +341,59 @@ const SortIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Sorting Options Dropdown Component
-const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: string, onSortByChange: (value: string) => void }) => {
+// Unified Sorting Options Dropdown Component
+const UnifiedSortingDropdown = ({ 
+  selectedSort, 
+  onSortChange 
+}: { 
+  selectedSort: string, 
+  onSortChange: (value: string) => void 
+}) => {
   const sortOptions = [
-    { value: 'price', label: 'Price', icon: <Percent className="h-4 w-4" /> },
-    { value: 'duration', label: 'Duration', icon: <Clock className="h-4 w-4" /> },
-    { value: 'departure', label: 'Departure Time', icon: <Plane className="h-4 w-4" /> },
-    { value: 'airline', label: 'Airline', icon: <Building2 className="h-4 w-4" /> },
-    { value: 'stops', label: 'Number of Stops', icon: <ArrowRightLeft className="h-4 w-4" /> },
+    { value: 'price-lowest', label: 'Price - lowest first', icon: <Percent className="h-4 w-4" /> },
+    { value: 'price-highest', label: 'Price - highest first', icon: <Percent className="h-4 w-4" /> },
+    { value: 'depart-earliest', label: 'Depart - earliest first', icon: <Plane className="h-4 w-4" /> },
+    { value: 'depart-latest', label: 'Depart - latest first', icon: <Plane className="h-4 w-4" /> },
+    { value: 'duration-shortest', label: 'Duration - shortest first', icon: <Clock className="h-4 w-4" /> },
+    { value: 'duration-longest', label: 'Duration - longest first', icon: <Clock className="h-4 w-4" /> },
+    { value: 'airline-az', label: 'Airline - A to Z', icon: <Building2 className="h-4 w-4" /> },
+    { value: 'stops-fewest', label: 'Stops - fewest first', icon: <ArrowRightLeft className="h-4 w-4" /> },
   ];
+
+  const getCurrentSortLabel = () => {
+    switch (selectedSort) {
+      case 'price-lowest':
+        return 'Price ↑';
+      case 'price-highest':
+        return 'Price ↓';
+      case 'depart-earliest':
+        return 'Depart ↑';
+      case 'depart-latest':
+        return 'Depart ↓';
+      case 'duration-shortest':
+        return 'Duration ↑';
+      case 'duration-longest':
+        return 'Duration ↓';
+      case 'airline-az':
+        return 'Airline ↑';
+      case 'stops-fewest':
+        return 'Stops ↑';
+      default:
+        return 'Price ↑';
+    }
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button 
-          className="flex items-center justify-center p-1 rounded-md hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none hover:bg-gray-50 px-2 py-1 rounded-md transition-colors"
           aria-label="Sort options"
-          title="Sort options"
         >
-          <SortIcon className="h-4 w-4 text-gray-500" />
+          {getCurrentSortLabel()}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-56">
         <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wide">
           Sort by
         </div>
@@ -370,14 +401,14 @@ const SortingDropdown = ({ selectedSortBy, onSortByChange }: { selectedSortBy: s
         {sortOptions.map((option) => (
           <DropdownMenuItem
             key={option.value}
-            onClick={() => onSortByChange(option.value)}
+            onClick={() => onSortChange(option.value)}
             className={`flex items-center gap-2 cursor-pointer ${
-              selectedSortBy === option.value ? 'bg-blue-50 text-blue-700' : ''
+              selectedSort === option.value ? 'bg-blue-50 text-blue-700' : ''
             }`}
           >
             {option.icon}
             <span>{option.label}</span>
-            {selectedSortBy === option.value && (
+            {selectedSort === option.value && (
               <span className="ml-auto text-blue-600">✓</span>
             )}
           </DropdownMenuItem>
@@ -1552,34 +1583,82 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
   };
 
-  // Add state for sorting
-  const [outboundSort, setOutboundSort] = useState<'asc' | 'desc'>('asc');
-  const [inboundSort, setInboundSort] = useState<'asc' | 'desc'>('asc');
-  
-  // Add state for sorting dropdown selections
-  const [outboundSortBy, setOutboundSortBy] = useState<string>('price');
-  const [inboundSortBy, setInboundSortBy] = useState<string>('price');
+  // Add state for unified sorting
+  const [outboundSortBy, setOutboundSortBy] = useState<string>('price-lowest');
+  const [inboundSortBy, setInboundSortBy] = useState<string>('price-lowest');
 
-  function flightSortFn(a, b, sortOrder, selectedIdx, flights) {
-    // Selected flight always on top
-    const selectedFlight = flights[selectedIdx];
-    if (a === selectedFlight && b !== selectedFlight) return -1;
-    if (b === selectedFlight && a !== selectedFlight) return 1;
-    // Then selected airlines
-    const airlineIdA = airlines.find(al => al.name === a.airlineName)?.id || '';
-    const airlineIdB = airlines.find(al => al.name === b.airlineName)?.id || '';
-    const aSelected = selectedQuickFilters.includes(airlineIdA);
-    const bSelected = selectedQuickFilters.includes(airlineIdB);
-    if (aSelected && !bSelected) return -1;
-    if (!aSelected && bSelected) return 1;
-    // Then by price
-    const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
-    const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
-    return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+  function applySorting(flights, sortBy, selectedIdx) {
+    const sortedFlights = [...flights];
+    
+    // Always keep selected flight on top if it exists
+    const selectedFlight = selectedIdx >= 0 ? flights[selectedIdx] : null;
+    
+    sortedFlights.sort((a, b) => {
+      // Selected flight always on top
+      if (selectedFlight && a === selectedFlight && b !== selectedFlight) return -1;
+      if (selectedFlight && b === selectedFlight && a !== selectedFlight) return 1;
+      
+      // Then selected airlines
+      const airlineIdA = airlines.find(al => al.name === a.airlineName)?.id || '';
+      const airlineIdB = airlines.find(al => al.name === b.airlineName)?.id || '';
+      const aSelected = selectedQuickFilters.includes(airlineIdA);
+      const bSelected = selectedQuickFilters.includes(airlineIdB);
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+      
+      // Apply the selected sorting
+      switch (sortBy) {
+        case 'price-lowest':
+          const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceA - priceB;
+        
+        case 'price-highest':
+          const priceAHigh = parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceBHigh = parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceBHigh - priceAHigh;
+        
+        case 'depart-earliest':
+          const timeA = a.departureTime.replace(':', '');
+          const timeB = b.departureTime.replace(':', '');
+          return timeA.localeCompare(timeB);
+        
+        case 'depart-latest':
+          const timeALate = a.departureTime.replace(':', '');
+          const timeBLate = b.departureTime.replace(':', '');
+          return timeBLate.localeCompare(timeALate);
+        
+        case 'duration-shortest':
+          const durationA = parseDuration(a.duration);
+          const durationB = parseDuration(b.duration);
+          return durationA - durationB;
+        
+        case 'duration-longest':
+          const durationALong = parseDuration(a.duration);
+          const durationBLong = parseDuration(b.duration);
+          return durationBLong - durationALong;
+        
+        case 'airline-az':
+          return a.airlineName.localeCompare(b.airlineName);
+        
+        case 'stops-fewest':
+          const stopsA = a.stops === 'non-stop' ? 0 : parseInt(a.stops.charAt(0)) || 0;
+          const stopsB = b.stops === 'non-stop' ? 0 : parseInt(b.stops.charAt(0)) || 0;
+          return stopsA - stopsB;
+        
+        default:
+          return 0;
+      }
+    });
+    
+    return sortedFlights;
   }
-  // Use filtered lists directly
-  const sortedOutboundFlights = filteredOutboundFlights;
-  const sortedInboundFlights = filteredInboundFlights;
+  
+  // Apply sorting to flight lists
+  const selectedOutboundIdx = filteredOutboundFlights.findIndex(f => f._key === selectedOutboundKey);
+  const selectedInboundIdx = filteredInboundFlights.findIndex(f => f._key === selectedInboundKey);
+  const sortedOutboundFlights = applySorting(filteredOutboundFlights, outboundSortBy, selectedOutboundIdx);
+  const sortedInboundFlights = applySorting(filteredInboundFlights, inboundSortBy, selectedInboundIdx);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerFlight, setDrawerFlight] = useState<any>(null);
@@ -1930,28 +2009,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>New York → Dubai</span>
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => setOutboundSort(outboundSort === 'asc' ? 'desc' : 'asc')}
-                                className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none"
-                                aria-label="Sort by price"
-                              >
-                                Price
-                                {outboundSort === 'asc' ? (
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
-                                  </svg>
-                                ) : (
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
-                                  </svg>
-                                )}
-                              </button>
-                              <SortingDropdown 
-                                selectedSortBy={outboundSortBy} 
-                                onSortByChange={setOutboundSortBy}
-                              />
-                            </div>
+                            <UnifiedSortingDropdown 
+                              selectedSort={outboundSortBy} 
+                              onSortChange={setOutboundSortBy}
+                            />
                           </div>
                           <hr className="my-1 border-gray-200" />
                           <DatesCard
@@ -2072,28 +2133,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>Dubai → New York</span>
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => setInboundSort(inboundSort === 'asc' ? 'desc' : 'asc')}
-                                className="flex items-center gap-1 text-[#194E91] font-semibold text-sm focus:outline-none"
-                                aria-label="Sort by price"
-                              >
-                                Price
-                                {inboundSort === 'asc' ? (
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
-                                  </svg>
-                                ) : (
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 text-[#194E91] ml-1">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
-                                  </svg>
-                                )}
-                              </button>
-                              <SortingDropdown 
-                                selectedSortBy={inboundSortBy} 
-                                onSortByChange={setInboundSortBy}
-                              />
-                            </div>
+                            <UnifiedSortingDropdown 
+                              selectedSort={inboundSortBy} 
+                              onSortChange={setInboundSortBy}
+                            />
                           </div>
                           <hr className="my-1 border-gray-200" />
                           <DatesCard
