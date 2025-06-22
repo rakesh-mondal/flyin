@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Skeleton } from '../../ui/skeleton';
 import { mockTrips } from '../mockData';
-import { cn } from '@/lib/utils';
+import { cn, formatDate, formatNumber } from '@/lib/utils';
 import { Button } from '../../ui/button';
 import { Sliders, Info, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FlightListCard from './FlightListCard';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/translations';
 
 // --- Copy of mockFlights and enrichFlightData from v1 ---
 const mockFlights = [
@@ -129,7 +131,7 @@ const LoadingSkeleton = () => (
 );
 
 // New component for Quick Price Filters
-const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
+const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect, isArabic, t }) => {
   return (
     <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-3">
       <h3 className="text-sm font-semibold text-gray-800 mb-2.5">Quick Filters</h3>
@@ -183,13 +185,13 @@ const QuickPriceFilters = ({ airlines, selectedAirlines, onAirlineSelect }) => {
                 <div className="flex items-center gap-1 mt-0.5">
                   {airline.hasSpecialReturn ? (
                     <>
-                      <div className="text-xs text-gray-500">₹{airline.specialReturnPrice}</div>
+                      <div className="text-xs text-gray-500">₹{formatNumber(airline.specialReturnPrice, isArabic)}</div>
                                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-yellow-100 text-yellow-700 border border-yellow-300">
-                         Return Deal %
+                         {t('returnDeal')}
                        </span>
                     </>
                   ) : (
-                    <div className="text-xs text-gray-500">₹{airline.price}</div>
+                    <div className="text-xs text-gray-500">₹{formatNumber(airline.price, isArabic)}</div>
                   )}
                 </div>
               </div>
@@ -226,17 +228,6 @@ const PriceRangeFilters = ({ ranges, selectedRange, onChange }) => {
     </div>
   );
 };
-
-// Mock dates data
-const mockDates = [
-  { date: 'Sun, 11 May', price: 6774 },
-  { date: 'Mon, 12 May', price: 5264 },
-  { date: 'Tue, 13 May', price: 6089 },
-  { date: 'Wed, 14 May', price: 6946 },
-  { date: 'Thu, 15 May', price: 7890 },
-  { date: 'Fri, 16 May', price: 8120 },
-  { date: 'Sat, 17 May', price: 7450 },
-];
 
 // Improved DatesCard component
 function DatesCard({ dates, selectedIdx, onSelect }) {
@@ -361,6 +352,10 @@ const SortOptions = ({ sortOption, onSortChange }) => {
 };
 
 const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const isArabic = language === 'ar';
+  
   const [expanded, setExpanded] = useState(false);
   const [selectedFilterTab, setSelectedFilterTab] = useState('all');
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
@@ -368,6 +363,17 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
   const [sortOption, setSortOption] = useState('recommended');
   const [selectedDateIdx, setSelectedDateIdx] = useState(2); // Default to middle date
   const [showCouponValue, setShowCouponValue] = useState(false);
+  
+  // Mock dates data with translation
+  const mockDates = [
+    { date: formatDate('Sun, 11 May', isArabic, t), price: 6774 },
+    { date: formatDate('Mon, 12 May', isArabic, t), price: 5264 },
+    { date: formatDate('Tue, 13 May', isArabic, t), price: 6089 },
+    { date: formatDate('Wed, 14 May', isArabic, t), price: 6946 },
+    { date: formatDate('Thu, 15 May', isArabic, t), price: 7890 },
+    { date: formatDate('Fri, 16 May', isArabic, t), price: 8120 },
+    { date: formatDate('Sat, 17 May', isArabic, t), price: 7450 },
+  ];
   
   // Mock data for the airline quick filter
   const mockAirlines = [
@@ -496,7 +502,9 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
       <QuickPriceFilters 
         airlines={mockAirlines} 
         selectedAirlines={selectedAirlines} 
-        onAirlineSelect={handleQuickFilterSelect} 
+        onAirlineSelect={handleQuickFilterSelect}
+        isArabic={isArabic}
+        t={t}
       />
       
       {/* Price range filters */}
@@ -528,6 +536,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
           <div key={flight.id} className="relative">
             <FlightListCard
               outboundFlight={{
+                id: `outbound-${flight.id}`,
                 airlineLogo: flight.airlineLogo,
                 airlineName: flight.airline,
                 departureTime: flight.departureTime,
@@ -535,10 +544,11 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                 departureCode: flight.departureCode,
                 arrivalCode: flight.arrivalCode,
                 duration: flight.duration,
-                stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                stops: flight.stops === 0 ? t('nonStop') : `${flight.stops} stop`,
                 date: "Wed, 15 May"
               }}
               returnFlight={{
+                id: `return-${flight.id}`,
                 airlineLogo: flight.airlineLogo,
                 airlineName: flight.airline,
                 departureTime: "08:20",
@@ -546,7 +556,7 @@ const TripList = ({ trips, loading, onViewTrip, selectedTrip }: TripListProps) =
                 departureCode: flight.arrivalCode,
                 arrivalCode: flight.departureCode,
                 duration: flight.duration,
-                stops: flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`,
+                stops: flight.stops === 0 ? t('nonStop') : `${flight.stops} stop`,
                 date: "Thu, 22 May"
               }}
               price={flight.price.toString()}

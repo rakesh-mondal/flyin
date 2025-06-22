@@ -73,7 +73,7 @@ interface FlightListCardProps {
   showOptions?: boolean;
 }
 
-const FlightLegRow = ({ option, isArabic, translateAirline }: { option: FlightLegOption; isArabic: boolean; translateAirline: (name: string) => string }) => {
+const FlightLegRow = ({ option, isArabic, translateAirline, translateAirportCode, t }: { option: FlightLegOption; isArabic: boolean; translateAirline: (name: string) => string; translateAirportCode: (code: string) => string; t: (key: string) => string }) => {
   
   return (
   <div className="flex items-center gap-3 py-1">
@@ -81,11 +81,11 @@ const FlightLegRow = ({ option, isArabic, translateAirline }: { option: FlightLe
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2">
         <span className="text-base font-bold text-black">{formatNumber(option.departureTime, isArabic)}–{formatNumber(option.arrivalTime, isArabic)}</span>
-        <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
+        <span className="text-gray-500 text-xs">{translateAirportCode(option.departureCode)}–{translateAirportCode(option.arrivalCode)}</span>
       </div>
       <div className="flex items-center gap-2 text-xs text-gray-500">
         <span>{translateAirline(option.airlineName)}</span>
-        <span>· {option.stops}</span>
+        <span>· {option.stops === 'non-stop' ? t('nonStop') : option.stops}</span>
         {option.layover && <span>· {formatNumber(option.layover, isArabic)}</span>}
       </div>
     </div>
@@ -121,10 +121,26 @@ const FlightListCard = ({
       'Vistara': t('vistara'),
       'Qatar Airways': t('qatarAirways'),
       'Lufthansa': t('lufthansa'),
-      'Singapore Airlines': t('singaporeAirlines')
+      'Singapore Airlines': t('singaporeAirlines'),
+      'British Airways': t('britishAirways')
     };
     return airlineTranslations[airlineName] || airlineName;
   };
+
+  // Helper function to translate airport codes
+  const translateAirportCode = (code: string) => {
+    if (!isArabic) return code;
+    const airportTranslations = {
+      'JFK': t('jfkAirport'),
+      'LHR': t('lhrAirport'),
+      'CDG': t('cdgAirport'),
+      'BOM': t('bomAirport'),
+      'DXB': t('dxbAirport'),
+      'FRA': t('fraAirport')
+    };
+    return airportTranslations[code] || code;
+  };
+
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
   const [glow, setGlow] = useState(false);
@@ -226,16 +242,16 @@ const FlightListCard = ({
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
               <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedOutbound.departureTime, isArabic)}</span>
-              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{translateAirportCode(selectedOutbound.departureCode)}</span>
             </div>
             <div className="flex flex-col items-center min-w-[64px] mx-1">
               <span className="text-[13px] font-semibold text-gray-400 leading-none">{formatNumber(selectedOutbound.duration, isArabic)}</span>
               <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-              <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
+              <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops === 'non-stop' ? t('nonStop') : selectedOutbound.stops}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
               <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedOutbound.arrivalTime, isArabic)}</span>
-              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{translateAirportCode(selectedOutbound.arrivalCode)}</span>
             </div>
           </div>
         </div>
@@ -261,16 +277,16 @@ const FlightListCard = ({
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
               <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedReturn.departureTime, isArabic)}</span>
-              <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.departureCode}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{translateAirportCode(selectedReturn.departureCode)}</span>
             </div>
             <div className="flex flex-col items-center min-w-[64px] mx-1">
               <span className="text-[13px] font-semibold text-gray-400 leading-none">{formatNumber(selectedReturn.duration, isArabic)}</span>
               <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-              <span className="text-xs text-gray-400 leading-none">{selectedReturn.stops}</span>
+              <span className="text-xs text-gray-400 leading-none">{selectedReturn.stops === 'non-stop' ? t('nonStop') : selectedReturn.stops}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
               <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedReturn.arrivalTime, isArabic)}</span>
-              <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.arrivalCode}</span>
+              <span className="text-[11px] text-gray-500 leading-none">{translateAirportCode(selectedReturn.arrivalCode)}</span>
             </div>
           </div>
         </div>
@@ -281,10 +297,10 @@ const FlightListCard = ({
               <span>{currency}</span>
               <SlidingNumber value={parseInt(price.toString().replace(/[^0-9]/g, '')) || 0} useArabicNumerals={isArabic} />
             </div>
-            <div className="text-xs text-gray-700 mt-1">Get ₹{formatNumber('600', isArabic)} off with FLY</div>
+            <div className="text-xs text-gray-700 mt-1">{t('getOffWithFly').replace('{amount}', formatNumber('600', isArabic))}</div>
           </div>
           <div className="flex items-center">
-            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>Book now</Button>
+            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>{t('bookNow')}</Button>
           </div>
         </div>
       </div>
@@ -295,7 +311,7 @@ const FlightListCard = ({
               {/* Departure column */}
               <div>
                 <div className="mb-2 text-xs font-semibold text-gray-700">
-                  {outboundOptions[0].departureCode} → {outboundOptions[0].arrivalCode} · {outboundOptions[0].date}
+                  {translateAirportCode(outboundOptions[0].departureCode)} → {translateAirportCode(outboundOptions[0].arrivalCode)} · {outboundOptions[0].date}
                 </div>
                 <div className="flex flex-col gap-2">
                   {outboundOptions.map((opt, idx) => (
@@ -308,29 +324,29 @@ const FlightListCard = ({
                       )}
                       onClick={() => handleSelectOutbound(idx)}
                     >
-                      <FlightLegRow option={opt} isArabic={isArabic} translateAirline={translateAirline} />
+                      <FlightLegRow option={opt} isArabic={isArabic} translateAirline={translateAirline} translateAirportCode={translateAirportCode} t={t} />
                       {/* Info Row inside each outbound option */}
                       <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
                         <div className="flex items-center gap-4 text-gray-700 text-xs">
                           {/* Visa */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
-                            <span>Visa req.</span>
+                            <span>{t('visaReq')}</span>
                           </span>
                           {/* Prayer room */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 0a7 7 0 017 7v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a7 7 0 017-7z" /></svg>
-                            <span>Prayer rm.</span>
+                            <span>{t('prayerRm')}</span>
                           </span>
                           {/* Wi-Fi */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
-                            <span>Wi-Fi</span>
+                            <span>{t('wifi')}</span>
                           </span>
                           {/* Baggage */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                            <span>Baggage</span>
+                            <span>{t('baggage')}</span>
                           </span>
                         </div>
                         <button
@@ -338,7 +354,7 @@ const FlightListCard = ({
                           type="button"
                           onClick={e => { e.stopPropagation(); handleOpenDetail(opt); }}
                         >
-                          More info <span aria-hidden="true">→</span>
+                          {t('moreInfo')} <span aria-hidden="true">→</span>
                         </button>
                       </div>
                     </button>
@@ -348,7 +364,7 @@ const FlightListCard = ({
               {/* Return column */}
               <div>
                 <div className="mb-2 text-xs font-semibold text-gray-700">
-                  {returnOptions[0].departureCode} → {returnOptions[0].arrivalCode} · {returnOptions[0].date}
+                  {translateAirportCode(returnOptions[0].departureCode)} → {translateAirportCode(returnOptions[0].arrivalCode)} · {returnOptions[0].date}
                 </div>
                 <div className="flex flex-col gap-2">
                   {returnOptions.map((opt, idx) => (
@@ -361,29 +377,29 @@ const FlightListCard = ({
                       )}
                       onClick={() => handleSelectReturn(idx)}
                     >
-                      <FlightLegRow option={opt} isArabic={isArabic} translateAirline={translateAirline} />
+                      <FlightLegRow option={opt} isArabic={isArabic} translateAirline={translateAirline} translateAirportCode={translateAirportCode} t={t} />
                       {/* Info Row inside each return option */}
                       <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
                         <div className="flex items-center gap-4 text-gray-700 text-xs">
                           {/* Visa */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7M9 11h6M9 15h6" /></svg>
-                            <span>Visa req.</span>
+                            <span>{t('visaReq')}</span>
                           </span>
                           {/* Prayer room */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 0a7 7 0 017 7v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a7 7 0 017-7z" /></svg>
-                            <span>Prayer rm.</span>
+                            <span>{t('prayerRm')}</span>
                           </span>
                           {/* Wi-Fi */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.53 16.11a6 6 0 016.94 0M5.07 12.66a10 10 0 0113.86 0M1.64 9.21a14 14 0 0120.72 0M12 20h.01" /></svg>
-                            <span>Wi-Fi</span>
+                            <span>{t('wifi')}</span>
                           </span>
                           {/* Baggage */}
                           <span className="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V8a2 2 0 00-2-2m-6 0V4a3 3 0 013-3h2a3 3 0 013 3v2" /></svg>
-                            <span>Baggage</span>
+                            <span>{t('baggage')}</span>
                           </span>
                         </div>
                         <button
@@ -391,7 +407,7 @@ const FlightListCard = ({
                           type="button"
                           onClick={e => { e.stopPropagation(); handleOpenDetail(opt); }}
                         >
-                          More info <span aria-hidden="true">→</span>
+                          {t('moreInfo')} <span aria-hidden="true">→</span>
                         </button>
                       </div>
                     </button>
@@ -402,7 +418,7 @@ const FlightListCard = ({
           </div>
           {/* Flight details link in gray bar at bottom */}
           <div className="bg-gray-50 px-4 pt-10 pb-2 w-full text-right">
-            <button className="text-primary text-sm font-medium hover:underline hover:text-[#194E91]" onClick={onDetails}>Flight details</button>
+            <button className="text-primary text-sm font-medium hover:underline hover:text-[#194E91]" onClick={onDetails}>{t('flightDetails')}</button>
           </div>
           {/* Flight details drawer */}
           {drawerOpen && drawerFlight && (
@@ -420,7 +436,7 @@ const FlightListCard = ({
                   flight={{
                     airline: drawerFlight.airline || drawerFlight.airlineName,
                     flightNumber: drawerFlight.flightNumber || "N/A",
-                    class: drawerFlight.class || "Economy",
+                    class: drawerFlight.class || t('economy'),
                     departureTime: drawerFlight.departureTime,
                     departureCode: drawerFlight.departureCode,
                     departureCity: drawerFlight.departureCity || drawerFlight.departureCode,
@@ -428,7 +444,7 @@ const FlightListCard = ({
                     arrivalCode: drawerFlight.arrivalCode,
                     arrivalCity: drawerFlight.arrivalCity || drawerFlight.arrivalCode,
                     duration: drawerFlight.duration,
-                    stopType: drawerFlight.stopType || drawerFlight.stops || "non-stop",
+                    stopType: drawerFlight.stopType || drawerFlight.stops || t('nonStop'),
                     aircraft: {
                       type: drawerFlight.aircraft?.type || "Boeing 777-300ER",
                       seatConfiguration: drawerFlight.aircraft?.seatConfiguration || "3-4-3",

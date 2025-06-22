@@ -54,10 +54,54 @@ export function toArabicNumerals(text: string | number): string {
 /**
  * Formats numbers with proper locale-specific numerals
  */
-export function formatNumber(
-  number: number | string,
-  isArabic: boolean = false
-): string {
-  const numStr = String(number);
-  return isArabic ? toArabicNumerals(numStr) : numStr;
+export function formatNumber(value: string | number, isArabic: boolean): string {
+  if (!isArabic) return value.toString();
+  
+  const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return value.toString().replace(/[0-9]/g, (digit) => arabicNumbers[parseInt(digit)]);
+}
+
+// Date formatting utility for Arabic translation
+export function formatDate(englishDate: string, isArabic: boolean, t: (key: string) => string): string {
+  if (!isArabic) return englishDate;
+  
+  // Parse English date format like "Wed, 14 May"
+  const parts = englishDate.split(', ');
+  if (parts.length !== 2) return englishDate;
+  
+  const [dayName, dateMonth] = parts;
+  const [day, month] = dateMonth.split(' ');
+  
+  // Translate day name
+  const dayTranslations: { [key: string]: string } = {
+    'Mon': t('mon'),
+    'Tue': t('tue'), 
+    'Wed': t('wed'),
+    'Thu': t('thu'),
+    'Fri': t('fri'),
+    'Sat': t('sat'),
+    'Sun': t('sun')
+  };
+  
+  // Translate month name
+  const monthTranslations: { [key: string]: string } = {
+    'Jan': t('january'),
+    'Feb': t('february'),
+    'Mar': t('march'),
+    'Apr': t('april'),
+    'May': t('may'),
+    'Jun': t('june'),
+    'Jul': t('july'),
+    'Aug': t('august'),
+    'Sep': t('september'),
+    'Oct': t('october'),
+    'Nov': t('november'),
+    'Dec': t('december')
+  };
+  
+  const translatedDay = dayTranslations[dayName] || dayName;
+  const translatedMonth = monthTranslations[month] || month;
+  const arabicDay = formatNumber(day, true);
+  
+  return `${translatedDay}، ${arabicDay} ${translatedMonth}`;
 }

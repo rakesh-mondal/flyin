@@ -226,6 +226,86 @@ export const translations = {
     dubaiEtihadBusStation: 'Dubai Etihad Bus Station',
     dubaiEmiratesBusStation: 'Dubai Emirates Bus Station',
     dxbInternational: 'DXB International',
+    dxbAirport: 'DXB',
+    
+    // City names
+    dubai: 'Dubai',
+    newYork: 'New York',
+    
+    // Sorting options
+    sortBy: 'Sort by',
+    priceLowestFirst: 'Price - lowest first',
+    priceHighestFirst: 'Price - highest first',
+    departEarliestFirst: 'Depart - earliest first',
+    departLatestFirst: 'Depart - latest first',
+    durationShortestFirst: 'Duration - shortest first',
+    durationLongestFirst: 'Duration - longest first',
+    airlineAtoZ: 'Airline - A to Z',
+    stopsFewestFirst: 'Stops - fewest first',
+    
+    // Short dropdown labels
+    priceUp: 'Price ↑',
+    priceDown: 'Price ↓',
+    departUp: 'Depart ↑',
+    departDown: 'Depart ↓',
+    durationUp: 'Duration ↑',
+    durationDown: 'Duration ↓',
+    airlineUp: 'Airline ↑',
+    stopsUp: 'Stops ↑',
+    
+    // Tooltip text
+    noCheckInBaggage: 'No check in baggage',
+    shortLayoverWarning: 'Short Layover Warning',
+    longLayover: 'Long Layover',
+    layover: 'Layover',
+    lessThanTwoHours: 'Less than 2 hours - may be risky for connections',
+    moreThanFourHours: 'More than 4 hours - plenty of time for connections',
+    
+    // Quick filter cards
+    returnDeal: 'Return Deal %',
+    scrollLeft: 'Scroll left',
+    scrollRight: 'Scroll right',
+    
+    // Flight list card
+    getOffWithFly: 'Get ₹{amount} off with FLY',
+    visaReq: 'Visa req.',
+    prayerRm: 'Prayer rm.',
+    moreInfo: 'More info',
+    flightDetails: 'Flight details',
+    nonStop: 'non-stop',
+    
+    // Selected trip detail
+    backToFlightOptions: 'Back to Flight Options',
+    outboundFlight: 'Outbound Flight',
+    returnFlight: 'Return Flight',
+    priceSummary: 'Price Summary',
+    baseFare: 'Base fare',
+    taxesAndFees: 'Taxes & fees',
+    totalPerPerson: 'Total per person',
+    proceedToBook: 'Proceed to Book',
+    termsAndConditions: 'By proceeding, you agree to our terms and conditions',
+    
+    // Booking page
+    fareSummary: 'Fare summary',
+    traveller: 'traveller',
+    addOns: 'Add-ons',
+    seatSelection: 'Seat selection',
+
+    // Airport codes
+    jfkAirport: 'JFK',
+    lhrAirport: 'LHR',
+    cdgAirport: 'CDG',
+    bomAirport: 'BOM',
+    fraAirport: 'FRA',
+
+    // Cities
+    london: 'London',
+    paris: 'Paris',
+    mumbai: 'Mumbai',
+
+    // Airlines (missing ones)
+    swiss: 'Swiss',
+    austrianAirlines: 'Austrian Airlines',
     
     // Common
     loading: 'Loading...',
@@ -240,7 +320,39 @@ export const translations = {
     continue: 'Continue',
     back: 'Back',
     next: 'Next',
-    close: 'Close'
+    close: 'Close',
+    
+    // Days of the week
+    monday: 'Monday',
+    tuesday: 'Tuesday', 
+    wednesday: 'Wednesday',
+    thursday: 'Thursday',
+    friday: 'Friday',
+    saturday: 'Saturday',
+    sunday: 'Sunday',
+    
+    // Days abbreviated
+    mon: 'Mon',
+    tue: 'Tue',
+    wed: 'Wed',
+    thu: 'Thu',
+    fri: 'Fri',
+    sat: 'Sat',
+    sun: 'Sun',
+    
+    // Months
+    january: 'January',
+    february: 'February',
+    march: 'March',
+    april: 'April',
+    may: 'May',
+    june: 'June',
+    july: 'July',
+    august: 'August',
+    september: 'September',
+    october: 'October',
+    november: 'November',
+    december: 'December'
   },
   ar: {
     // Navigation  
@@ -472,9 +584,71 @@ export const translations = {
     dubaiEtihadBusStation: 'محطة حافلات الاتحاد دبي',
     dubaiEmiratesBusStation: 'محطة حافلات الإمارات دبي', 
     dxbInternational: 'مطار دبي الدولي DXB',
+    dxbAirport: 'دبي',
     
     // City names
     dubai: 'دبي',
+    newYork: 'نيويورك',
+    
+    // Sorting options
+    sortBy: 'ترتيب حسب',
+    priceLowestFirst: 'السعر - الأقل أولاً',
+    priceHighestFirst: 'السعر - الأعلى أولاً',
+    departEarliestFirst: 'المغادرة - الأبكر أولاً',
+    departLatestFirst: 'المغادرة - الأحدث أولاً',
+    durationShortestFirst: 'المدة - الأقصر أولاً',
+    durationLongestFirst: 'المدة - الأطول أولاً',
+    airlineAtoZ: 'شركة الطيران - أ إلى ي',
+    stopsFewestFirst: 'التوقفات - الأقل أولاً',
+    
+    // Short dropdown labels
+    priceUp: 'السعر ↑',
+    priceDown: 'السعر ↓',
+    departUp: 'المغادرة ↑',
+    departDown: 'المغادرة ↓',
+    durationUp: 'المدة ↑',
+    durationDown: 'المدة ↓',
+    airlineUp: 'الطيران ↑',
+    stopsUp: 'التوقفات ↑',
+    
+    // Tooltip text
+    noCheckInBaggage: 'لا توجد حقائب مسجلة',
+    shortLayoverWarning: 'تحذير توقف قصير',
+    longLayover: 'توقف طويل',
+    layover: 'التوقف',
+    lessThanTwoHours: 'أقل من ساعتين - قد يكون محفوفاً بالمخاطر للاتصالات',
+    moreThanFourHours: 'أكثر من 4 ساعات - وقت كافٍ للاتصالات',
+    
+    // Quick filter cards
+    returnDeal: 'عرض العودة %',
+    scrollLeft: 'التمرير لليسار',
+    scrollRight: 'التمرير لليمين',
+    
+    // Flight list card
+    getOffWithFly: 'احصل على خصم ₹{amount} مع FLY',
+    visaReq: 'تأشيرة مطلوبة',
+    prayerRm: 'غرفة صلاة',
+    moreInfo: 'مزيد من المعلومات',
+    flightDetails: 'تفاصيل الرحلة',
+    nonStop: 'مباشر',
+    
+    // Selected trip detail
+    backToFlightOptions: 'العودة إلى خيارات الرحلة',
+    outboundFlight: 'رحلة الذهاب',
+    returnFlight: 'رحلة العودة',
+    priceSummary: 'ملخص السعر',
+    baseFare: 'سعر الأساس',
+    taxesAndFees: 'الضرائب والرسوم',
+    totalPerPerson: 'المجموع للشخص الواحد',
+    proceedToBook: 'المتابعة للحجز',
+    termsAndConditions: 'بالمتابعة، أنت توافق على الشروط والأحكام',
+    
+    // Booking page
+    fareSummary: 'ملخص التكلفة',
+    traveller: 'مسافر',
+    addOns: 'الإضافات',
+    seatSelection: 'اختيار المقعد',
+    
     mumbai: 'مومباي',
     delhi: 'دلهي',
     riyadh: 'الرياض',
@@ -491,6 +665,21 @@ export const translations = {
     pune: 'بونا',
     ahmedabad: 'أحمد آباد',
     
+    // Airport codes
+    jfkAirport: 'جون كينيدي',
+    lhrAirport: 'هيثرو',
+    cdgAirport: 'شارل ديغول',
+    bomAirport: 'مومباي',
+    fraAirport: 'فرانكفورت',
+
+    // Cities
+    london: 'لندن',
+    paris: 'باريس',
+
+    // Airlines (missing ones)
+    swiss: 'سويس',
+    austrianAirlines: 'الخطوط الجوية النمساوية',
+    
     // Common
     loading: 'جاري التحميل...',
     error: 'خطأ',
@@ -504,11 +693,42 @@ export const translations = {
     selected: 'مختار',
     share: 'مشاركة',
     update: 'تحديث',
-    moreInfo: 'مزيد من المعلومات',
     continue: 'متابعة',
     back: 'رجوع',
     next: 'التالي',
-    close: 'إغلاق'
+    close: 'إغلاق',
+    
+    // Days of the week
+    monday: 'الاثنين',
+    tuesday: 'الثلاثاء', 
+    wednesday: 'الأربعاء',
+    thursday: 'الخميس',
+    friday: 'الجمعة',
+    saturday: 'السبت',
+    sunday: 'الأحد',
+    
+    // Days abbreviated
+    mon: 'إثنين',
+    tue: 'ثلاثاء',
+    wed: 'أربعاء',
+    thu: 'خميس',
+    fri: 'جمعة',
+    sat: 'سبت',
+    sun: 'أحد',
+    
+    // Months
+    january: 'يناير',
+    february: 'فبراير',
+    march: 'مارس',
+    april: 'أبريل',
+    may: 'مايو',
+    june: 'يونيو',
+    july: 'يوليو',
+    august: 'أغسطس',
+    september: 'سبتمبر',
+    october: 'أكتوبر',
+    november: 'نوفمبر',
+    december: 'ديسمبر'
   }
 };
 

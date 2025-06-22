@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Ban, Luggage, MoreVertical, Clock, Plane, Building2 } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import { cn, formatNumber } from '@/lib/utils';
+import { cn, formatNumber, formatDate } from '@/lib/utils';
 import FlightOptionsSelector from './FlightOptionsSelector';
 import HorizontalFilters from './HorizontalFilters';
 import FareSelectionModal from './FareSelectionModal';
@@ -154,7 +154,7 @@ const SearchSummary = ({
           <div className="px-4 sm:px-6 py-2 sm:py-3">
             <div className="flex items-center">
               <span className="text-sm truncate">
-                {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
+                {formatDate(departureDate) || t('departure')} — {formatDate(returnDate) || t('return')}
               </span>
             </div>
           </div>
@@ -190,22 +190,20 @@ const mockDates = Array.from({ length: 14 }, (_, i) => ({
   price: Math.floor(5000 + Math.random() * 4000),
 }));
 
-function DatesCard({ dates, selectedIdx, onSelect }) {
+function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
   const { language } = useLanguage();
   const isArabic = language === 'ar';
   const minPrice = Math.min(...dates.map(d => d.price));
-  let indices = [];
-  if (dates.length === 0) {
-    indices = [];
-  } else if (selectedIdx === 0) {
-    indices = [0, 0, 1 < dates.length ? 1 : 0];
-  } else if (selectedIdx === dates.length - 1) {
-    indices = [dates.length - 2 >= 0 ? dates.length - 2 : dates.length - 1, dates.length - 1, dates.length - 1];
-  } else {
-    indices = [selectedIdx - 1, selectedIdx, selectedIdx + 1];
-  }
+  
+  // Calculate the indices for the 3 dates to show
+  const indices = [
+    Math.max(0, selectedIdx - 1),
+    selectedIdx,
+    Math.min(dates.length - 1, selectedIdx + 1)
+  ];
+
   return (
-    <div className="flex items-center w-full py-1 mb-2">
+    <div className="flex items-center justify-between w-full py-2 mb-1 overflow-hidden">
       <button
         className="p-1 text-gray-400 hover:text-black"
         disabled={selectedIdx === 0}
@@ -217,15 +215,32 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
       <div className="flex-1 flex justify-between gap-0 overflow-x-hidden">
         {indices.map((idx, i) => (
           <div
-            key={`${dates[idx]?.date}-${idx}`}
+            key={`${keyPrefix}date-${idx}-${i}-${dates[idx]?.price}`}
             className={
               'flex flex-col items-center cursor-pointer ' +
               (i === 1 ? 'font-bold text-black' : 'text-gray-500')
             }
             onClick={() => onSelect(idx)}
-            style={{ fontSize: '12px', lineHeight: '16px', width: 70, minWidth: 70, maxWidth: 70 }}
+            style={{ 
+              fontSize: '12px', 
+              lineHeight: '16px', 
+              width: isArabic ? 90 : 70, 
+              minWidth: isArabic ? 90 : 70, 
+              maxWidth: isArabic ? 90 : 70 
+            }}
           >
-            <div className="mb-0.5" style={{ fontSize: '11px', fontWeight: 500 }}>{dates[idx]?.date}</div>
+            <div 
+              className="mb-0.5 text-center" 
+              style={{ 
+                fontSize: '11px', 
+                fontWeight: 500,
+                whiteSpace: isArabic ? 'nowrap' : 'normal',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {dates[idx]?.date}
+            </div>
             <div className={
               'font-semibold ' +
               (dates[idx]?.price === minPrice ? 'text-green-600' : '')
@@ -356,37 +371,40 @@ const UnifiedSortingDropdown = ({
   selectedSort: string, 
   onSortChange: (value: string) => void 
 }) => {
+  const { t } = useTranslation();
+  const { isRTL } = useLanguage();
+  
   const sortOptions = [
-    { value: 'price-lowest', label: 'Price - lowest first', icon: <Percent className="h-4 w-4" /> },
-    { value: 'price-highest', label: 'Price - highest first', icon: <Percent className="h-4 w-4" /> },
-    { value: 'depart-earliest', label: 'Depart - earliest first', icon: <Plane className="h-4 w-4" /> },
-    { value: 'depart-latest', label: 'Depart - latest first', icon: <Plane className="h-4 w-4" /> },
-    { value: 'duration-shortest', label: 'Duration - shortest first', icon: <Clock className="h-4 w-4" /> },
-    { value: 'duration-longest', label: 'Duration - longest first', icon: <Clock className="h-4 w-4" /> },
-    { value: 'airline-az', label: 'Airline - A to Z', icon: <Building2 className="h-4 w-4" /> },
-    { value: 'stops-fewest', label: 'Stops - fewest first', icon: <ArrowRightLeft className="h-4 w-4" /> },
+    { value: 'price-lowest', label: t('priceLowestFirst'), icon: <Percent className="h-4 w-4" /> },
+    { value: 'price-highest', label: t('priceHighestFirst'), icon: <Percent className="h-4 w-4" /> },
+    { value: 'depart-earliest', label: t('departEarliestFirst'), icon: <Plane className="h-4 w-4" /> },
+    { value: 'depart-latest', label: t('departLatestFirst'), icon: <Plane className="h-4 w-4" /> },
+    { value: 'duration-shortest', label: t('durationShortestFirst'), icon: <Clock className="h-4 w-4" /> },
+    { value: 'duration-longest', label: t('durationLongestFirst'), icon: <Clock className="h-4 w-4" /> },
+    { value: 'airline-az', label: t('airlineAtoZ'), icon: <Building2 className="h-4 w-4" /> },
+    { value: 'stops-fewest', label: t('stopsFewestFirst'), icon: <ArrowRightLeft className="h-4 w-4" /> },
   ];
 
   const getCurrentSortLabel = () => {
     switch (selectedSort) {
       case 'price-lowest':
-        return 'Price ↑';
+        return t('priceUp');
       case 'price-highest':
-        return 'Price ↓';
+        return t('priceDown');
       case 'depart-earliest':
-        return 'Depart ↑';
+        return t('departUp');
       case 'depart-latest':
-        return 'Depart ↓';
+        return t('departDown');
       case 'duration-shortest':
-        return 'Duration ↑';
+        return t('durationUp');
       case 'duration-longest':
-        return 'Duration ↓';
+        return t('durationDown');
       case 'airline-az':
-        return 'Airline ↑';
+        return t('airlineUp');
       case 'stops-fewest':
-        return 'Stops ↑';
+        return t('stopsUp');
       default:
-        return 'Price ↑';
+        return t('priceUp');
     }
   };
 
@@ -400,9 +418,9 @@ const UnifiedSortingDropdown = ({
           {getCurrentSortLabel()}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-56">
         <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wide">
-          Sort by
+          {t('sortBy')}
         </div>
         <DropdownMenuSeparator />
         {sortOptions.map((option) => (
@@ -416,7 +434,7 @@ const UnifiedSortingDropdown = ({
             {option.icon}
             <span>{option.label}</span>
             {selectedSort === option.value && (
-              <span className="ml-auto text-blue-600">✓</span>
+              <span className={cn("text-blue-600", isRTL ? "mr-auto" : "ml-auto")}>✓</span>
             )}
           </DropdownMenuItem>
         ))}
@@ -1459,6 +1477,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       'Emirates': t('emirates'),
       'Air India': t('airIndia'),
       'Etihad': t('etihad'),
+      'Etihad Airways': t('etihad'),
       'Vistara': t('vistara'),
       'Qatar Airways': t('qatarAirways'),
       'Lufthansa': t('lufthansa'),
@@ -1574,18 +1593,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [selectedOutboundDateIdx, setSelectedOutboundDateIdx] = useState(0);
   const [selectedInboundDateIdx, setSelectedInboundDateIdx] = useState(0);
   const outboundDates = [
-    { date: 'Wed, 7 May', price: 35000 },
-    { date: 'Thu, 8 May', price: 35500 },
-    { date: 'Fri, 9 May', price: 34000 },
-    { date: 'Sat, 10 May', price: 36000 },
-    { date: 'Sun, 11 May', price: 34500 },
+    { date: formatDate('Wed, 7 May', isArabic, t), price: 35000 },
+    { date: formatDate('Thu, 8 May', isArabic, t), price: 35500 },
+    { date: formatDate('Fri, 9 May', isArabic, t), price: 34000 },
+    { date: formatDate('Sat, 10 May', isArabic, t), price: 36000 },
+    { date: formatDate('Sun, 11 May', isArabic, t), price: 34500 },
   ];
   const inboundDates = [
-    { date: 'Wed, 14 May', price: 30000 },
-    { date: 'Thu, 15 May', price: 30500 },
-    { date: 'Fri, 16 May', price: 29900 },
-    { date: 'Sat, 17 May', price: 31000 },
-    { date: 'Sun, 18 May', price: 30200 },
+    { date: formatDate('Wed, 14 May', isArabic, t), price: 30000 },
+    { date: formatDate('Thu, 15 May', isArabic, t), price: 30500 },
+    { date: formatDate('Fri, 16 May', isArabic, t), price: 29900 },
+    { date: formatDate('Sat, 17 May', isArabic, t), price: 31000 },
+    { date: formatDate('Sun, 18 May', isArabic, t), price: 30200 },
   ];
 
   const airlineChipsScrollRef = useRef<HTMLDivElement>(null);
@@ -1980,7 +1999,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
                       style={{ minWidth: 28 }}
                       onClick={() => scrollAirlineChips('left')}
-                      aria-label="Scroll left"
+                      aria-label={t('scrollLeft')}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
@@ -1989,7 +2008,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-1 text-gray-400 hover:text-black"
                       style={{ minWidth: 28 }}
                       onClick={() => scrollAirlineChips('right')}
-                      aria-label="Scroll right"
+                      aria-label={t('scrollRight')}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </button>
@@ -2017,17 +2036,17 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 className="h-5 w-5 rounded bg-gray-100"
                               />
                               <div className="text-left">
-                                <div className="text-sm font-medium text-gray-900 leading-none">{airline.name}</div>
+                                <div className="text-sm font-medium text-gray-900 leading-none">{translateAirline(airline.name)}</div>
                                 <div className="flex items-center gap-1 mt-0.5">
                                   {airline.hasSpecialReturn ? (
                                     <>
-                                      <div className="text-xs text-gray-500">₹{airline.specialReturnPrice}</div>
+                                      <div className="text-xs text-gray-500">₹{formatNumber(airline.specialReturnPrice, isArabic)}</div>
                                       <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-yellow-100 text-yellow-700 border border-yellow-300">
-                                        Return Deal %
+                                        {t('returnDeal')}
                                       </span>
                                     </>
                                   ) : (
-                                    <div className="text-xs text-gray-500">₹{airline.price}</div>
+                                    <div className="text-xs text-gray-500">₹{formatNumber(airline.price, isArabic)}</div>
                                   )}
                                 </div>
                               </div>
@@ -2049,7 +2068,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         {/* Outbound List */}
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
-                            <span>New York → Dubai</span>
+                            <span>{t('newYork')} → {t('dubai')}</span>
                             <UnifiedSortingDropdown 
                               selectedSort={outboundSortBy} 
                               onSortChange={setOutboundSortBy}
@@ -2060,6 +2079,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             dates={outboundDates}
                             selectedIdx={selectedOutboundDateIdx}
                             onSelect={setSelectedOutboundDateIdx}
+                            keyPrefix="outbound-"
                           />
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => {
@@ -2082,7 +2102,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           <span className="text-base font-bold text-black">
                                             {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
                                             {option.stops === '1 stop' && (
-                                              <span className="ml-2 text-sm font-normal">{t('via')} DXB</span>
+                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
                                             )}
                                           </span>
                                           {/* Layover Tag - positioned next to time/via text */}
@@ -2090,11 +2110,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                             <Tooltip>
                                               <TooltipTrigger asChild>
                                                 {layoverTag.isShort || layoverTag.isLong ? (
-                                                  <div className="cursor-help ml-1">
+                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
                                                     {layoverTag.tag}
                                                   </div>
                                                 ) : (
-                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-1", layoverTag.color)}>
+                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
                                                     {layoverTag.tag}
                                                   </span>
                                                 )}
@@ -2102,41 +2122,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <TooltipContent className="bg-black text-white border-black">
                                                 {layoverTag.isShort ? (
                                                   <div className="text-xs">
-                                                    <p className="font-semibold">Short Layover Warning</p>
-                                                    <p>Layover: {option.layover}</p>
-                                                    <p className="text-yellow-200 mt-1">⚠️ Less than 2 hours - may be risky for connections</p>
+                                                    <p className="font-semibold">{t('shortLayoverWarning')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
                                                   </div>
                                                 ) : layoverTag.isLong ? (
                                                   <div className="text-xs">
-                                                    <p className="font-semibold">Long Layover</p>
-                                                    <p>Layover: {option.layover}</p>
-                                                    <p className="text-blue-200 mt-1">ℹ️ More than 4 hours - plenty of time for connections</p>
+                                                    <p className="font-semibold">{t('longLayover')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
                                                   </div>
                                                 ) : (
-                                                  <p className="text-xs">Layover: {option.layover}</p>
+                                                  <p className="text-xs">{t('layover')}: {option.layover}</p>
                                                 )}
                                               </TooltipContent>
                                             </Tooltip>
                                           )}
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                          <span>{translateAirline(option.airlineName)}</span>
-                                          <span>· {t(option.stops) || option.stops}</span>
+                                        <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
+                                          <span className="flex-shrink-0">{translateAirline(option.airlineName)}</span>
+                                          <span className="flex-shrink-0">· {t(option.stops) || option.stops}</span>
                                           {option.stops === 'non-stop' && (
-                                            <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                            <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
                                               <Luggage className="h-4 w-4 mr-0.5" />
                                               <Ban className="h-3 w-3 text-red-500 -ml-1" />
                                               <span
                                                 className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
                                                 style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
                                               >
-                                                No check in baggage
+                                                {t('noCheckInBaggage')}
                                               </span>
                                             </span>
                                           )}
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5 whitespace-nowrap">
+                                            <span className={cn(
+                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                              isRTL ? "mr-0.5" : "ml-0.5"
+                                            )}>
                                               {formatNumber(2, isArabic)} {t('seatsLeft')}
                                             </span>
                                           )}
@@ -2187,7 +2210,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         {/* Inbound List */}
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
-                            <span>Dubai → New York</span>
+                            <span>{t('dubai')} → {t('newYork')}</span>
                             <UnifiedSortingDropdown 
                               selectedSort={inboundSortBy} 
                               onSortChange={setInboundSortBy}
@@ -2198,6 +2221,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             dates={inboundDates}
                             selectedIdx={selectedInboundDateIdx}
                             onSelect={setSelectedInboundDateIdx}
+                            keyPrefix="inbound-"
                           />
                           <div className="flex flex-col gap-2">
                             {sortedInboundFlights.map((option, idx) => {
@@ -2220,7 +2244,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           <span className="text-base font-bold text-black">
                                             {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
                                             {option.stops === '1 stop' && (
-                                              <span className="ml-2 text-sm font-normal">{t('via')} DXB</span>
+                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
                                             )}
                                           </span>
                                           {/* Layover Tag - positioned next to time/via text */}
@@ -2228,11 +2252,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                             <Tooltip>
                                               <TooltipTrigger asChild>
                                                 {layoverTag.isShort || layoverTag.isLong ? (
-                                                  <div className="cursor-help ml-1">
+                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
                                                     {layoverTag.tag}
                                                   </div>
                                                 ) : (
-                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help ml-1", layoverTag.color)}>
+                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
                                                     {layoverTag.tag}
                                                   </span>
                                                 )}
@@ -2240,41 +2264,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <TooltipContent className="bg-black text-white border-black">
                                                 {layoverTag.isShort ? (
                                                   <div className="text-xs">
-                                                    <p className="font-semibold">Short Layover Warning</p>
-                                                    <p>Layover: {option.layover}</p>
-                                                    <p className="text-yellow-200 mt-1">⚠️ Less than 2 hours - may be risky for connections</p>
+                                                    <p className="font-semibold">{t('shortLayoverWarning')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
                                                   </div>
                                                 ) : layoverTag.isLong ? (
                                                   <div className="text-xs">
-                                                    <p className="font-semibold">Long Layover</p>
-                                                    <p>Layover: {option.layover}</p>
-                                                    <p className="text-blue-200 mt-1">ℹ️ More than 4 hours - plenty of time for connections</p>
+                                                    <p className="font-semibold">{t('longLayover')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
                                                   </div>
                                                 ) : (
-                                                  <p className="text-xs">Layover: {option.layover}</p>
+                                                  <p className="text-xs">{t('layover')}: {option.layover}</p>
                                                 )}
                                               </TooltipContent>
                                             </Tooltip>
                                           )}
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                          <span>{translateAirline(option.airlineName)}</span>
-                                          <span>· {t(option.stops) || option.stops}</span>
+                                        <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
+                                          <span className="flex-shrink-0">{translateAirline(option.airlineName)}</span>
+                                          <span className="flex-shrink-0">· {t(option.stops) || option.stops}</span>
                                           {option.stops === 'non-stop' && (
-                                            <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
+                                            <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
                                               <Luggage className="h-4 w-4 mr-0.5" />
                                               <Ban className="h-3 w-3 text-red-500 -ml-1" />
                                               <span
                                                 className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
                                                 style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
                                               >
-                                                No check in baggage
+                                                {t('noCheckInBaggage')}
                                               </span>
                                             </span>
                                           )}
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5 whitespace-nowrap">
+                                            <span className={cn(
+                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                              isRTL ? "mr-0.5" : "ml-0.5"
+                                            )}>
                                               {formatNumber(2, isArabic)} {t('seatsLeft')}
                                             </span>
                                           )}
