@@ -51,15 +51,27 @@ const TopHeader = ({
   const navClasses = `hidden lg:flex gap-6 text-sm font-medium text-[#1a2a3a] ${isRTL ? 'flex-row-reverse' : ''}`;
   const userControlsClasses = `flex items-center gap-4 text-sm font-medium text-[#1a2a3a] user-controls ${isRTL ? 'flex-row-reverse' : ''}`;
 
+  // Debug logging
+  console.log('TopHeader Debug:', { 
+    language, 
+    isRTL, 
+    containerClasses, 
+    mainFlexClasses,
+    documentDir: document.documentElement.dir 
+  });
+
   return (
-    <div className={containerClasses}>
-      <div className={mainFlexClasses}>
+    <div className={containerClasses} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
+      <div className={mainFlexClasses} style={{ 
+        flexDirection: isRTL ? 'row-reverse' : 'row',
+        justifyContent: 'space-between'
+      }}>
         {/* Logo and Navigation */}
-        <div className={logoNavClasses}>
+        <div className={logoNavClasses} style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
           <a href="/" className="hover:opacity-80 transition-opacity logo">
             <img src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" alt="Flyin.com" className="h-7" />
           </a>
-          <nav className={navClasses}>
+          <nav className={navClasses} style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
             <a href="#" className="hover:text-[#194E91] transition-colors">{t('flights')}</a>
             <a href="#" className="hover:text-[#194E91] transition-colors">{t('hotels')}</a>
             <a href="#" className="hover:text-[#194E91] transition-colors">{t('flightAndHotel')}</a>
@@ -69,7 +81,7 @@ const TopHeader = ({
         </div>
         
         {/* User Controls */}
-        <div className={userControlsClasses}>
+        <div className={userControlsClasses} style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
           {/* Deals */}
           <div className="relative flex items-center">
             <span className={isRTL ? 'ml-1' : 'mr-1'}>
