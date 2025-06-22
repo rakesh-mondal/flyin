@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Share } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { SlidingNumber } from '@/components/ui/sliding-number';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/translations';
 
 interface FlightResultCardProps {
   flight: {
@@ -90,6 +92,17 @@ const getLayoverTag = (layoverInfo?: string): { tag: string | React.ReactNode; c
 };
 
 export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const isArabic = language === 'ar';
+  
+  // Helper function to translate city names
+  const translateCity = (cityName: string) => {
+    if (!isArabic) return cityName;
+    const cityKey = cityName.toLowerCase().replace(/\s+/g, '');
+    const translatedCity = t(cityKey);
+    return translatedCity !== cityKey ? translatedCity : cityName;
+  };
   const [imgError, setImgError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [glow, setGlow] = useState(false);
@@ -144,7 +157,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                   onClick={toggleSave}
                 >
                   <Heart className={cn("h-4 w-4", isSaved ? "fill-red-500 text-red-500" : "")} />
-                  <span>Save</span>
+                  <span>{t('save')}</span>
                 </Button>
                 
                 <Button 
@@ -154,7 +167,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                   onClick={handleShare}
                 >
                   <Share className="h-4 w-4" />
-                  <span>Share</span>
+                  <span>{t('share')}</span>
                 </Button>
               </div>
               
@@ -163,7 +176,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <div className="text-xl font-bold">
-                      {flight.departureTime} – {flight.arrivalTime}
+                      {formatNumber(flight.departureTime, isArabic)} – {formatNumber(flight.arrivalTime, isArabic)}
                     </div>
                     {flight.tags && flight.tags.includes("Direct Flight") ? (
                       <Badge variant="outline" className="bg-purple-50 text-xs text-purple-600 border-none">
@@ -171,7 +184,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
-                        {flight.stops === 1 ? "1 stop" : `${flight.stops} stops`}
+                        {flight.stops === 1 ? `${formatNumber(1, isArabic)} stop` : `${formatNumber(flight.stops, isArabic)} stops`}
                       </Badge>
                     )}
                     {/* Layover Tag */}
@@ -211,12 +224,12 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-lg font-semibold">{flight.duration}</div>
+                  <div className="text-lg font-semibold">{formatNumber(flight.duration, isArabic)}</div>
                 </div>
                 
                 <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
                   <div>
-                    {flight.departureCode} {flight.departureCity} – {flight.arrivalCode} {flight.arrivalCity}
+                    {flight.departureCode} {translateCity(flight.departureCity)} – {flight.arrivalCode} {translateCity(flight.arrivalCity)}
                   </div>
                   {flight.airlineLogo && !imgError ? (
                     <img 
@@ -244,18 +257,18 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <div className="text-xl font-bold">
-                      19:50 – 19:20
+                      {formatNumber('19:50', isArabic)} – {formatNumber('19:20', isArabic)}
                     </div>
                     <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
-                      {flight.stops === 1 ? "1 stop" : `${flight.stops} stops`}
+                      {flight.stops === 1 ? `${formatNumber(1, isArabic)} stop` : `${formatNumber(flight.stops, isArabic)} stops`}
                     </Badge>
                   </div>
-                  <div className="text-lg font-semibold">19h 00m</div>
+                  <div className="text-lg font-semibold">{formatNumber('19', isArabic)}h {formatNumber('00', isArabic)}m</div>
                 </div>
                 
                 <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
                   <div>
-                    {flight.arrivalCode} {flight.arrivalCity} – {flight.departureCode} {flight.departureCity}
+                    {flight.arrivalCode} {translateCity(flight.arrivalCity)} – {flight.departureCode} {translateCity(flight.departureCity)}
                   </div>
                   {flight.airlineLogo && !imgError ? (
                     <img 
@@ -282,13 +295,13 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
               {/* Show original price if there's a discount */}
               {flight.originalPrice && flight.originalPrice > flight.price && (
                 <div className="text-sm text-gray-500 line-through mb-1">
-                  ₹{flight.originalPrice.toLocaleString()}
+                  ₹{formatNumber(flight.originalPrice.toLocaleString(), isArabic)}
                 </div>
               )}
               
               {/* Current price */}
               <div className="text-2xl font-bold">
-                <span>₹</span><SlidingNumber value={flight.price} />
+                <span>₹</span><SlidingNumber value={flight.price} useArabicNumerals={isArabic} />
               </div>
               <div className="mb-1 text-xs text-gray-500">Economy</div>
               <Button 
@@ -300,7 +313,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                     : "bg-black text-white"
                 )}
               >
-                {isSelected ? "Selected" : "Select"}
+                {isSelected ? t('selected') : t('select')}
               </Button>
             </div>
           </div>

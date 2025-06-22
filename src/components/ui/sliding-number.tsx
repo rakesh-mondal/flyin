@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toArabicNumerals } from '@/lib/utils';
 
 // Helper to split number into digits
 function getDigits(value: number) {
@@ -11,19 +12,22 @@ type SlidingNumberProps = {
   value: number;
   padStart?: boolean;
   decimalSeparator?: string;
+  useArabicNumerals?: boolean;
 };
 
 export function SlidingNumber({
   value,
   padStart = false,
   decimalSeparator = '.',
+  useArabicNumerals = false,
 }: SlidingNumberProps) {
   const absValue = Math.abs(value);
   const [integerPart, decimalPart] = absValue.toString().split('.');
   const integerValue = parseInt(integerPart, 10);
   const paddedInteger =
     padStart && integerValue < 10 ? `0${integerPart}` : integerPart;
-  const integerDigits = paddedInteger.split('');
+  const formattedInteger = useArabicNumerals ? toArabicNumerals(paddedInteger) : paddedInteger;
+  const integerDigits = formattedInteger.split('');
 
   // Store previous value to determine animation direction
   const prevValue = useRef<number>(value);
@@ -45,7 +49,7 @@ export function SlidingNumber({
       {decimalPart && (
         <>
           <span>{decimalSeparator}</span>
-          {decimalPart.split('').map((digit, idx) => (
+          {(useArabicNumerals ? toArabicNumerals(decimalPart) : decimalPart).split('').map((digit, idx) => (
             <Digit
               key={`decimal-${idx}`}
               digit={digit}

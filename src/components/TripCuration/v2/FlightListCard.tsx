@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Shield, BadgeCheck } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { getAirlineLogo } from '../../../utils/airlineLogos';
 import cashRegisterSound from '@/assets/cash-register.mp3'; // Place a short cash register sound in this path
 import { SlidingNumber } from '@/components/ui/sliding-number';
 import { FlightDetails } from '@/components/trip-detail/FlightDetails';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface FlightLegOption {
   id: string;
@@ -71,18 +72,18 @@ interface FlightListCardProps {
   showOptions?: boolean;
 }
 
-const FlightLegRow = ({ option }: { option: FlightLegOption }) => (
+const FlightLegRow = ({ option, isArabic }: { option: FlightLegOption; isArabic: boolean }) => (
   <div className="flex items-center gap-3 py-1">
     <img src={getAirlineLogo(option.airlineName)} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2">
-        <span className="text-base font-bold text-black">{option.departureTime}–{option.arrivalTime}</span>
+        <span className="text-base font-bold text-black">{formatNumber(option.departureTime, isArabic)}–{formatNumber(option.arrivalTime, isArabic)}</span>
         <span className="text-gray-500 text-xs">{option.departureCode}–{option.arrivalCode}</span>
       </div>
       <div className="flex items-center gap-2 text-xs text-gray-500">
         <span>{option.airlineName}</span>
         <span>· {option.stops}</span>
-        {option.layover && <span>· {option.layover}</span>}
+        {option.layover && <span>· {formatNumber(option.layover, isArabic)}</span>}
       </div>
     </div>
   </div>
@@ -102,6 +103,8 @@ const FlightListCard = ({
   onDetails,
   showOptions = true,
 }: FlightListCardProps) => {
+  const { language } = useLanguage();
+  const isArabic = language === 'ar';
   const [selectedOutboundIdx, setSelectedOutboundIdx] = useState(0);
   const [selectedReturnIdx, setSelectedReturnIdx] = useState(0);
   const [glow, setGlow] = useState(false);
@@ -202,16 +205,16 @@ const FlightListCard = ({
               <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
-              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
+              <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedOutbound.departureTime, isArabic)}</span>
               <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
             </div>
             <div className="flex flex-col items-center min-w-[64px] mx-1">
-              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
+              <span className="text-[13px] font-semibold text-gray-400 leading-none">{formatNumber(selectedOutbound.duration, isArabic)}</span>
               <hr className="w-full border-t border-gray-300 my-1 mx-0" />
               <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
-              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
+              <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedOutbound.arrivalTime, isArabic)}</span>
               <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
             </div>
           </div>
@@ -237,16 +240,16 @@ const FlightListCard = ({
               <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedReturn.airlineName}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
-              <span className="text-lg font-bold text-black leading-none">{selectedReturn.departureTime}</span>
+              <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedReturn.departureTime, isArabic)}</span>
               <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.departureCode}</span>
             </div>
             <div className="flex flex-col items-center min-w-[64px] mx-1">
-              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedReturn.duration}</span>
+              <span className="text-[13px] font-semibold text-gray-400 leading-none">{formatNumber(selectedReturn.duration, isArabic)}</span>
               <hr className="w-full border-t border-gray-300 my-1 mx-0" />
               <span className="text-xs text-gray-400 leading-none">{selectedReturn.stops}</span>
             </div>
             <div className="flex flex-col items-center min-w-[48px]">
-              <span className="text-lg font-bold text-black leading-none">{selectedReturn.arrivalTime}</span>
+              <span className="text-lg font-bold text-black leading-none">{formatNumber(selectedReturn.arrivalTime, isArabic)}</span>
               <span className="text-[11px] text-gray-500 leading-none">{selectedReturn.arrivalCode}</span>
             </div>
           </div>
@@ -256,9 +259,9 @@ const FlightListCard = ({
           <div className="flex flex-col justify-center items-end">
             <div className="text-xl font-bold text-black flex items-center gap-1">
               <span>{currency}</span>
-              <SlidingNumber value={parseInt(price.toString().replace(/[^0-9]/g, '')) || 0} />
+              <SlidingNumber value={parseInt(price.toString().replace(/[^0-9]/g, '')) || 0} useArabicNumerals={isArabic} />
             </div>
-            <div className="text-xs text-gray-700 mt-1">Get ₹600 off with FLY</div>
+            <div className="text-xs text-gray-700 mt-1">Get ₹{formatNumber('600', isArabic)} off with FLY</div>
           </div>
           <div className="flex items-center">
             <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={onBook}>Book now</Button>
@@ -285,7 +288,7 @@ const FlightListCard = ({
                       )}
                       onClick={() => handleSelectOutbound(idx)}
                     >
-                      <FlightLegRow option={opt} />
+                      <FlightLegRow option={opt} isArabic={isArabic} />
                       {/* Info Row inside each outbound option */}
                       <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
                         <div className="flex items-center gap-4 text-gray-700 text-xs">
@@ -338,7 +341,7 @@ const FlightListCard = ({
                       )}
                       onClick={() => handleSelectReturn(idx)}
                     >
-                      <FlightLegRow option={opt} />
+                      <FlightLegRow option={opt} isArabic={isArabic} />
                       {/* Info Row inside each return option */}
                       <div className="flex items-center justify-between mt-2 px-1 py-1 border-t border-gray-100 bg-gray-50">
                         <div className="flex items-center gap-4 text-gray-700 text-xs">

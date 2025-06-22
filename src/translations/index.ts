@@ -428,6 +428,24 @@ export const translations = {
     dubaiEmiratesBusStation: 'محطة حافلات الإمارات دبي', 
     dxbInternational: 'مطار دبي الدولي DXB',
     
+    // City names
+    dubai: 'دبي',
+    mumbai: 'مومباي',
+    delhi: 'دلهي',
+    riyadh: 'الرياض',
+    jeddah: 'جدة',
+    cairo: 'القاهرة',
+    istanbul: 'إسطنبول',
+    doha: 'الدوحة',
+    abuDhabi: 'أبو ظبي',
+    sharjah: 'الشارقة',
+    bangalore: 'بنغالور',
+    hyderabad: 'حيدراباد',
+    chennai: 'تشيناي',
+    kolkata: 'كولكاتا',
+    pune: 'بونا',
+    ahmedabad: 'أحمد آباد',
+    
     // Common
     loading: 'جاري التحميل...',
     error: 'خطأ',
@@ -438,6 +456,8 @@ export const translations = {
     edit: 'تعديل',
     delete: 'حذف',
     select: 'اختر',
+    selected: 'مختار',
+    share: 'مشاركة',
     continue: 'متابعة',
     back: 'رجوع',
     next: 'التالي',
