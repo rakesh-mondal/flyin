@@ -61,93 +61,7 @@ const TopHeader = ({
           <>
             {/* User Controls - Left side in RTL */}
             <div className="flex items-center gap-4 text-sm font-medium text-[#1a2a3a] user-controls">
-              {/* Deals */}
-              <div className="relative flex items-center">
-                <span className={isRTL ? "mr-1" : "ml-1"}>
-                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                    <path d="M4 7V6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" stroke="#1a2a3a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <rect width="20" height="13" x="2" y="7" rx="2" stroke="#1a2a3a" strokeWidth="1.5"/>
-                    <circle cx="17" cy="12" r="1" fill="#1a2a3a"/>
-                  </svg>
-                </span>
-                <span className="hidden sm:inline">{t('deals')}</span>
-                <span className={`absolute -top-2 bg-red-500 text-white text-xs rounded-full px-1.5 ${isRTL ? "-right-3" : "-left-3"}`}>7</span>
-              </div>
-              
-              {/* Language Selector */}
-              <div className="relative group language-selector">
-                <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
-                  <span className="text-base">{selectedLanguage.flag}</span>
-                  <span className="hidden md:inline">{selectedLanguage.name}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-                
-                {/* Language Dropdown */}
-                <div className={`absolute top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu ${isRTL ? "right-0" : "left-0"}`}>
-                  <div className="py-2">
-                    {languages.map((language) => (
-                      <button
-                        key={language.code}
-                        onClick={() => handleLanguageChange(language.code)}
-                        className={`block w-full px-4 py-2 text-sm hover:bg-gray-50 ${
-                          selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                        } ${isRTL ? "text-right" : "text-left"}`}
-                      >
-                        <span className={isRTL ? "ml-2" : "mr-2"}>{language.flag}</span>
-                        {language.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Currency Selector */}
-              <div className="relative group">
-                <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
-                  <span className="text-base">{selectedCurrency.flag}</span>
-                  <span>{selectedCurrency.code}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-                
-                {/* Currency Dropdown */}
-                <div className={`absolute top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu ${isRTL ? "right-0" : "left-0"}`}>
-                  <div className="py-2">
-                    {currencies.map((currency) => (
-                      <button
-                        key={currency.code}
-                        onClick={() => setSelectedCurrency(currency)}
-                        className={`block w-full px-4 py-2 text-sm hover:bg-gray-50 ${
-                          selectedCurrency.code === currency.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                        } ${isRTL ? "text-right" : "text-left"}`}
-                      >
-                        <span className={isRTL ? "ml-2" : "mr-2"}>{currency.flag}</span>
-                        <span className="font-medium">{currency.code}</span>
-                        <span className={`text-gray-500 ${isRTL ? "mr-2" : "ml-2"}`}>({currency.symbol}) {currency.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* WhatsApp Contact */}
-              <a 
-                href="tel:+966112246333" 
-                className="hidden lg:flex items-center gap-1 hover:text-[#194E91] transition-colors"
-              >
-                <svg className="h-4 w-4 text-green-500" viewBox="0 0 32 32" fill="currentColor">
-                  <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.236 6.393L4 29l7.828-2.205C13.416 27.417 14.686 27.7 16 27.7c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22.7c-1.18 0-2.337-.206-3.433-.611l-.244-.09-4.65 1.308 1.242-4.47-.159-.23C7.13 19.02 6.3 17.06 6.3 15c0-5.374 4.326-9.7 9.7-9.7s9.7 4.326 9.7 9.7-4.326 9.7-9.7 9.7z"/>
-                </svg>
-                <span className="hidden xl:inline">+966112246333</span>
-              </a>
-              
-              {/* Awards */}
-              <img 
-                src="/images/awards-header.png" 
-                alt="Middle East's Leading Online Travel Agency Awards" 
-                className="h-6 hidden lg:block" 
-              />
-              
-              {/* User Section */}
+              {/* User Section - FIRST in RTL (leftmost) */}
               {isSignedIn ? (
                 <div className="relative group">
                   <button className="flex items-center gap-2 hover:text-[#194E91] transition-colors">
@@ -182,6 +96,92 @@ const TopHeader = ({
                   {t('signIn')}
                 </button>
               )}
+
+              {/* Awards */}
+              <img 
+                src="/images/awards-header.png" 
+                alt="Middle East's Leading Online Travel Agency Awards" 
+                className="h-6 hidden lg:block" 
+              />
+              
+              {/* WhatsApp Contact */}
+              <a 
+                href="tel:+966112246333" 
+                className="hidden lg:flex items-center gap-1 hover:text-[#194E91] transition-colors"
+              >
+                <svg className="h-4 w-4 text-green-500" viewBox="0 0 32 32" fill="currentColor">
+                  <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.236 6.393L4 29l7.828-2.205C13.416 27.417 14.686 27.7 16 27.7c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22.7c-1.18 0-2.337-.206-3.433-.611l-.244-.09-4.65 1.308 1.242-4.47-.159-.23C7.13 19.02 6.3 17.06 6.3 15c0-5.374 4.326-9.7 9.7-9.7s9.7 4.326 9.7 9.7-4.326 9.7-9.7 9.7z"/>
+                </svg>
+                <span className="hidden xl:inline">+966112246333</span>
+              </a>
+              
+              {/* Currency Selector */}
+              <div className="relative group">
+                <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
+                  <span className="text-base">{selectedCurrency.flag}</span>
+                  <span>{selectedCurrency.code}</span>
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+                
+                {/* Currency Dropdown */}
+                <div className={`absolute top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu ${isRTL ? "right-0" : "left-0"}`}>
+                  <div className="py-2">
+                    {currencies.map((currency) => (
+                      <button
+                        key={currency.code}
+                        onClick={() => setSelectedCurrency(currency)}
+                        className={`block w-full px-4 py-2 text-sm hover:bg-gray-50 ${
+                          selectedCurrency.code === currency.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                        } ${isRTL ? "text-right" : "text-left"}`}
+                      >
+                        <span className={isRTL ? "ml-2" : "mr-2"}>{currency.flag}</span>
+                        <span className="font-medium">{currency.code}</span>
+                        <span className={`text-gray-500 ${isRTL ? "mr-2" : "ml-2"}`}>({currency.symbol}) {currency.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Language Selector */}
+              <div className="relative group language-selector">
+                <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
+                  <span className="text-base">{selectedLanguage.flag}</span>
+                  <span className="hidden md:inline">{selectedLanguage.name}</span>
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+                
+                {/* Language Dropdown */}
+                <div className={`absolute top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu ${isRTL ? "right-0" : "left-0"}`}>
+                  <div className="py-2">
+                    {languages.map((language) => (
+                      <button
+                        key={language.code}
+                        onClick={() => handleLanguageChange(language.code)}
+                        className={`block w-full px-4 py-2 text-sm hover:bg-gray-50 ${
+                          selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                        } ${isRTL ? "text-right" : "text-left"}`}
+                      >
+                        <span className={isRTL ? "ml-2" : "mr-2"}>{language.flag}</span>
+                        {language.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Deals - LAST in RTL (rightmost) */}
+              <div className="relative flex items-center">
+                <span className={isRTL ? "mr-1" : "ml-1"}>
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+                    <path d="M4 7V6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" stroke="#1a2a3a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <rect width="20" height="13" x="2" y="7" rx="2" stroke="#1a2a3a" strokeWidth="1.5"/>
+                    <circle cx="17" cy="12" r="1" fill="#1a2a3a"/>
+                  </svg>
+                </span>
+                <span className="hidden sm:inline">{t('deals')}</span>
+                <span className={`absolute -top-2 bg-red-500 text-white text-xs rounded-full px-1.5 ${isRTL ? "-right-3" : "-left-3"}`}>7</span>
+              </div>
             </div>
 
             {/* Logo and Navigation - Right side in RTL */}
