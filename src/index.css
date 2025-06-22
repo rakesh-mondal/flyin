@@ -242,15 +242,13 @@
 
 /* RTL: Logo and navigation section spacing */
 [dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > a.logo {
-  order: 2 !important;
   margin-left: 2rem !important;
   margin-right: 0 !important;
 }
 
 [dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > nav {
-  order: 1 !important;
   margin-left: 0 !important;
-  margin-right: 0 !important;
+  margin-right: 2rem !important;
 }
 
 /* RTL: Button elements in user controls */
@@ -289,27 +287,19 @@
   width: 100% !important;
 }
 
-/* RTL: Force logo container to right with absolute positioning if needed */
+/* RTL: Simple flex-based approach - no absolute positioning */
 [dir="rtl"] .top-header-nav {
-  position: relative !important;
+  flex-direction: row-reverse !important;
 }
 
 [dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
-  position: absolute !important;
-  right: 1.5rem !important;
-  left: auto !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  flex-direction: row !important;
-  justify-content: flex-end !important;
+  flex-direction: row-reverse !important;
+  justify-content: flex-start !important;
 }
 
 [dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
-  position: absolute !important;
-  left: 1.5rem !important;
-  right: auto !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
 }
 
 /* RTL: User controls spacing */
@@ -496,21 +486,9 @@ main, #root, .app {
   flex-direction: row-reverse !important;
 }
 
-/* RTL: More aggressive targeting - target the actual div structure */
-[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav {
+/* RTL: Clean and simple targeting */
+[dir="rtl"] .top-header-nav.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between {
   flex-direction: row-reverse !important;
-}
-
-[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav > div:nth-child(1) {
-  order: 2 !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav > div:nth-child(2) {
-  order: 1 !important;
-  margin-right: auto !important;
-  margin-left: 0 !important;
 }
 
 /* RTL: Make sure logo container takes up right space */
