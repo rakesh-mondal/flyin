@@ -183,6 +183,13 @@ export const translations = {
     only: 'Only',
     price: 'Price',
     airports: 'Airports',
+    returnFlightArrivesAtDeparture: 'Return flight arrives at departure',
+    arrivingIn: 'Arriving in',
+    stopoverDuration: 'Stopover Duration',
+    totalDuration: 'Total Duration',
+    aircrafts: 'Aircrafts',
+    largeAircraft: 'Large aircraft',
+    midsizeAircraft: 'Midsize aircraft',
     
     // Common
     loading: 'Loading...',
@@ -381,6 +388,13 @@ export const translations = {
     only: 'فقط',
     price: 'السعر',
     airports: 'المطارات',
+    returnFlightArrivesAtDeparture: 'رحلة العودة تصل في نقطة المغادرة',
+    arrivingIn: 'الوصول في',
+    stopoverDuration: 'مدة التوقف',
+    totalDuration: 'إجمالي المدة',
+    aircrafts: 'الطائرات',
+    largeAircraft: 'طائرة كبيرة',
+    midsizeAircraft: 'طائرة متوسطة',
     
     // Common
     loading: 'جاري التحميل...',

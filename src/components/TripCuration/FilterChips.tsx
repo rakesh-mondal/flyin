@@ -556,11 +556,11 @@ const FilterChips = ({
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               />
-              <span className="text-sm text-gray-700">Return flight arrives at departure</span>
+              <span className="text-sm text-gray-700">{t('returnFlightArrivesAtDeparture')}</span>
             </label>
             
             <div>
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">Arriving in Dubai</h4>
+              <h4 className="text-sm font-semibold text-gray-900 mb-3">{t('arrivingIn')} Dubai</h4>
               <div className="space-y-2">
                 <label className="flex items-center w-full cursor-pointer group">
                   <div className="flex items-center flex-1">
@@ -636,7 +636,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Duration</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('duration')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -646,14 +646,14 @@ const FilterChips = ({
               toast.success("Duration filter reset");
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-700">Stopover Duration</span>
+                <span className="text-sm text-gray-700">{t('stopoverDuration')}</span>
                 <span className="text-xs font-medium" style={{ color: '#194E91' }}>
                   {formatDuration(stopoverDuration.min)} - {formatDuration(stopoverDuration.max)}
                 </span>
@@ -699,7 +699,7 @@ const FilterChips = ({
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-700">Total Duration</span>
+                <span className="text-sm text-gray-700">{t('totalDuration')}</span>
                 <span className="text-xs font-medium" style={{ color: '#194E91' }}>
                   &lt; {formatDuration(totalDuration)}
                 </span>
@@ -736,7 +736,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Aircrafts</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('aircrafts')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -744,7 +744,7 @@ const FilterChips = ({
               toast.success("Aircrafts filter reset");
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
@@ -756,7 +756,7 @@ const FilterChips = ({
                   className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <div className="ml-2 flex items-center justify-between flex-1">
-                  <span className="text-sm text-gray-700">Large aircraft</span>
+                  <span className="text-sm text-gray-700">{t('largeAircraft')}</span>
                   <span className="text-xs text-gray-500">₹ 24,853</span>
                 </div>
               </div>
@@ -769,7 +769,7 @@ const FilterChips = ({
                   className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <div className="ml-2 flex items-center justify-between flex-1">
-                  <span className="text-sm text-gray-700">Midsize aircraft</span>
+                  <span className="text-sm text-gray-700">{t('midsizeAircraft')}</span>
                   <span className="text-xs text-gray-500">₹ 22,921</span>
                 </div>
               </div>
