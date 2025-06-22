@@ -49,6 +49,11 @@ export const translations = {
     business: 'Business',
     first: 'First',
     
+    // Flight Options
+    cheapest: 'Cheapest',
+    best: 'Best',
+    quickest: 'Quickest',
+    
     // Footer
     support: 'Support',
     discover: 'Discover',
@@ -174,6 +179,11 @@ export const translations = {
     premiumEconomy: 'الدرجة الاقتصادية المميزة',
     business: 'درجة رجال الأعمال',
     first: 'الدرجة الأولى',
+    
+    // Flight Options
+    cheapest: 'الأرخص',
+    best: 'الأفضل',
+    quickest: 'الأسرع',
     
     // Footer
     support: 'الدعم',

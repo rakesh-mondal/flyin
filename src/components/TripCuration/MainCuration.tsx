@@ -29,6 +29,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/translations';
 
 // Short Layover Icon Component
 const ShortLayoverIcon = () => (
@@ -436,6 +437,7 @@ function getFlightKey(f) {
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
   const { isRTL } = useLanguage();
+  const { t } = useTranslation();
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1811,7 +1813,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       onClick={() => setSelectedPriceCategory('cheapest')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-xs text-gray-500">Cheapest</div>
+                          <div className="text-xs text-gray-500">{t('cheapest')}</div>
                           <div className="text-[10px] text-gray-500">{cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--'}</div>
                         </div>
                         <div className="font-bold text-base">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
@@ -1824,7 +1826,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       onClick={() => setSelectedPriceCategory('best')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-xs font-medium">Best</div>
+                          <div className="text-xs font-medium">{t('best')}</div>
                           <div className="text-[10px] text-gray-500">{bestPair ? formatDuration(bestPair.totalDuration) : '--'}</div>
                         </div>
                         <div className="font-bold text-base">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
@@ -1836,7 +1838,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       onClick={() => setSelectedPriceCategory('quickest')}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <div className="text-xs text-gray-500">Quickest</div>
+                          <div className="text-xs text-gray-500">{t('quickest')}</div>
                           <div className="text-[10px] text-gray-500">{quickestPair ? formatDuration(quickestPair.totalDuration) : '--'}</div>
                         </div>
                         <div className="font-bold text-base">{quickestPair ? formatPrice(quickestPair.totalPrice) : '--'}</div>
@@ -1925,7 +1927,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             </div>
                           </div>
                           <div className="flex items-center">
-                            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>Book now</Button>
+                            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>{t('bookNow')}</Button>
                           </div>
                         </div>
                       </div>
