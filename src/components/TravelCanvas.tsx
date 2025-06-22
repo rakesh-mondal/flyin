@@ -225,7 +225,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
                   title={t(suggestion.titleKey)}
                   image={suggestion.image}
                   type={suggestion.type}
-                  departure={`From ${suggestion.departure}`}
+                  departure={`${t('from')} ${suggestion.departure}`}
                   onClick={() => onSearch(t(suggestion.titleKey))}
                 />
               ))}
