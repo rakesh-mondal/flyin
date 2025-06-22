@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sun, Moon, CloudSun, CloudMoon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/translations';
 
 interface TimeOption {
   icon: React.ElementType;
@@ -15,12 +16,7 @@ interface FlightTimingsProps {
   onReturnTimeChange?: (time: string) => void;
 }
 
-const timeOptions: TimeOption[] = [
-  { icon: CloudSun, label: 'Before 6 AM', value: 'before-6am' },
-  { icon: Sun, label: '6 AM - 12 PM', value: '6am-12pm' },
-  { icon: CloudSun, label: '12 PM - 6 PM', value: '12pm-6pm' },
-  { icon: Moon, label: 'After 6 PM', value: 'after-6pm' },
-];
+// Move timeOptions inside component to access translations
 
 // Add color mapping for icons
 const iconColorMap: Record<string, string> = {
@@ -36,8 +32,16 @@ export default function FlightTimings({
   onDepartureTimeChange,
   onReturnTimeChange
 }: FlightTimingsProps) {
+  const { t } = useTranslation();
   const [selectedDeparture, setSelectedDeparture] = React.useState<string | null>(null);
   const [selectedReturn, setSelectedReturn] = React.useState<string | null>(null);
+
+  const timeOptions: TimeOption[] = [
+    { icon: CloudSun, label: t('before6am'), value: 'before-6am' },
+    { icon: Sun, label: t('am12pm'), value: '6am-12pm' },
+    { icon: CloudSun, label: t('pm6pm'), value: '12pm-6pm' },
+    { icon: Moon, label: t('after6pm'), value: 'after-6pm' },
+  ];
 
   const handleDepartureSelect = (value: string) => {
     setSelectedDeparture(selectedDeparture === value ? null : value);
@@ -71,7 +75,7 @@ export default function FlightTimings({
   return (
     <div className="space-y-3">
       <div>
-        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">Departing flight <span className="font-normal text-gray-400">({departureRoute})</span></p>
+        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">{t('departingFlight')} <span className="font-normal text-gray-400">({departureRoute})</span></p>
         <div className="grid grid-cols-2 gap-2">
           {timeOptions.map((option) => (
             <TimeButton
@@ -84,7 +88,7 @@ export default function FlightTimings({
         </div>
       </div>
       <div>
-        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">Returning flight <span className="font-normal text-gray-400">({returnRoute})</span></p>
+        <p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide">{t('returningFlight')} <span className="font-normal text-gray-400">({returnRoute})</span></p>
         <div className="grid grid-cols-2 gap-2">
           {timeOptions.map((option) => (
             <TimeButton

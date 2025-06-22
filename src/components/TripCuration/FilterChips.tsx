@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import FlightTimings from './FlightTimings';
 import PriceAlertsModal from './PriceAlertsModal';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/translations';
 import './FilterChips.css';
 
 interface FilterChipsProps {
@@ -31,6 +32,7 @@ const FilterChips = ({
   selectedStops = [],
   onStopsChange = () => {},
 }: FilterChipsProps) => {
+  const { t } = useTranslation();
   const [isPriceAlertsModalOpen, setIsPriceAlertsModalOpen] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: 4873, max: 62000 });
   const [stopoverDuration, setStopoverDuration] = useState({ min: 30, max: 1290 });
@@ -73,7 +75,7 @@ const FilterChips = ({
           }}
         >
           <Bell className="h-4 w-4 text-gray-600" />
-          <span className="text-sm font-semibold text-gray-900">Get Price Alerts</span>
+          <span className="text-sm font-semibold text-gray-900">{t('getPriceAlerts')}</span>
         </button>
       </div>
 
@@ -82,9 +84,9 @@ const FilterChips = ({
         <div className="flex items-center justify-between">
           <div className="text-base">
             <span className="font-semibold text-gray-900">1577</span>
-            <span className="text-gray-500"> of </span>
+            <span className="text-gray-500"> {t('of')} </span>
             <span className="font-semibold text-gray-900">2000</span>
-            <span className="text-gray-500"> flights</span>
+            <span className="text-gray-500"> {t('flightsCount')}</span>
           </div>
         </div>
       </div>
@@ -93,7 +95,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Recommended</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('recommended')}</h3>
           </div>
         </div>
         <div className="px-4 pb-3">
@@ -104,7 +106,7 @@ const FilterChips = ({
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               />
               <Plane className="h-4 w-4 text-gray-500 mr-2" />
-              <span className="text-sm text-gray-700">Nonstop</span>
+              <span className="text-sm text-gray-700">{t('nonstop')}</span>
             </label>
             
             <label className="flex items-center cursor-pointer group">
@@ -113,7 +115,7 @@ const FilterChips = ({
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               />
               <Luggage className="h-4 w-4 text-gray-500 mr-2" />
-              <span className="text-sm text-gray-700">Checked baggage included</span>
+              <span className="text-sm text-gray-700">{t('checkedBaggageIncluded')}</span>
             </label>
             
             <label className="flex items-center cursor-pointer group">
@@ -122,7 +124,7 @@ const FilterChips = ({
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               />
               <Tag className="h-4 w-4 text-gray-500 mr-2" />
-              <span className="text-sm text-gray-700">Hide budget airlines</span>
+              <span className="text-sm text-gray-700">{t('hideBudgetAirlines')}</span>
             </label>
           </div>
         </div>
@@ -132,7 +134,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Stops</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('stops')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -141,7 +143,7 @@ const FilterChips = ({
               toast.success("Stops filter reset");
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
@@ -155,7 +157,7 @@ const FilterChips = ({
               )}
               onClick={() => handleStopSelect('non-stop')}
             >
-              <span className="text-sm font-medium">Direct</span>
+              <span className="text-sm font-medium">{t('direct')}</span>
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
@@ -170,7 +172,7 @@ const FilterChips = ({
               )}
               onClick={() => handleStopSelect('1-stop')}
             >
-              <span className="text-sm font-medium">1 stop</span>
+              <span className="text-sm font-medium">1 {t('stop')}</span>
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
@@ -185,7 +187,7 @@ const FilterChips = ({
               )}
               onClick={() => handleStopSelect('2-more')}
             >
-              <span className="text-sm font-medium">2+ stops</span>
+              <span className="text-sm font-medium">2+ {t('stops')}</span>
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
@@ -199,7 +201,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Flight Timings</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('flightTimings')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -208,7 +210,7 @@ const FilterChips = ({
               if (typeof onReturnTimeChange === 'function') onReturnTimeChange('');
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
@@ -225,7 +227,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Airlines</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('airlines')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -234,7 +236,7 @@ const FilterChips = ({
               toast.success("Airlines filter reset");
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
@@ -253,7 +255,7 @@ const FilterChips = ({
                     }
                   }}
                 />
-                <span className="ml-2 text-sm text-gray-700">Show multi-airline itineraries</span>
+                <span className="ml-2 text-sm text-gray-700">{t('showMultiAirlineItineraries')}</span>
               </div>
             </label>
 
@@ -281,7 +283,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Emirates
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹52,000</span>
@@ -312,7 +314,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Air India
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹48,500</span>
@@ -343,7 +345,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Etihad
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹45,200</span>
@@ -374,7 +376,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Vistara
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹39,800</span>
@@ -405,7 +407,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Qatar Airways
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹55,000</span>
@@ -436,7 +438,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Lufthansa
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹61,000</span>
@@ -467,7 +469,7 @@ const FilterChips = ({
                       />
                       <span className="text-sm text-gray-700 relative">
                         Singapore Airlines
-                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Only</span>
+                        <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
                     <span className="text-xs text-gray-500">₹58,500</span>
@@ -483,7 +485,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">Price</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('price')}</h3>
             <div className="text-xs font-medium" style={{ color: '#194E91' }}>
               ₹{priceRange.min.toLocaleString()} - ₹{priceRange.max.toLocaleString()}
             </div>
@@ -536,7 +538,7 @@ const FilterChips = ({
       <div className="border-b border-gray-200">
         <div className="w-full px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-sm font-semibold text-gray-900">Airports</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('airports')}</h3>
           </div>
           <button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -544,7 +546,7 @@ const FilterChips = ({
               toast.success("Airports filter reset");
             }}
           >
-            Reset
+            {t('reset')}
           </button>
         </div>
         <div className="px-4 pb-3">
