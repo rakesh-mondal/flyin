@@ -72,6 +72,32 @@ export const translations = {
     // Contact information
     customerServicePhone: '+966112246333',
     
+    // Promotional banners
+    useCodeADCB: 'Use code ADCB and get up to AED 350 off flights & hotels',
+    useCodeAHB: 'Use code AHB and get up to 20% off flights & hotels',
+    useCodeVIP: 'Use code VIP and get up to AED 300 off on bookings',
+    
+    // Flight search results
+    noFlightsFound: 'No flights found matching your filters.',
+    findingDestinations: 'Finding the perfect Middle Eastern destinations for you...',
+    checkingAvailability: 'Checking availability for your dates...',
+    curatingExperiences: 'Curating personalized experiences...',
+    findingBestValue: 'Finding the best value options...',
+    
+    // AI Messages
+    dubaiMessage: "Dubai offers a perfect blend of modernity and tradition. I've curated these experiences with luxury accommodations and unique cultural activities.",
+    istanbulMessage: "Istanbul is where East meets West. These journeys highlight the rich history and vibrant culture of this fascinating city at the crossroads of civilizations.",
+    cairoMessage: "Explore the wonders of ancient Egypt with these carefully selected trips to Cairo. Experience the pyramids and the rich cultural heritage of this historic destination.",
+    dohaMessage: "Discover the modern marvels and traditional charm of Doha. These journeys offer luxury accommodations and unique cultural experiences in Qatar's capital.",
+    beachMessage: "The Middle East has some stunning beaches. I've selected some options with beautiful shorelines along the Arabian Gulf and Red Sea.",
+    cultureMessage: "The Middle East is rich in cultural experiences. These journeys focus on historical sites, local traditions, and authentic cultural immersion.",
+    defaultMessage: "Based on your interest in \"{searchQuery}\", I've curated these Middle Eastern journeys that I think you'll love.",
+    
+    // Toast messages
+    messageReceived: 'Message received!',
+    adjustRecommendations: "I'll adjust your recommendations accordingly.",
+    refinedOptions: "I've refined the options based on your preferences.",
+    
     // Footer
     support: 'Support',
     discover: 'Discover',
@@ -219,6 +245,32 @@ export const translations = {
     
     // Contact information
     customerServicePhone: '+٩٦٦١١٢٢٤٦٣٣٣',
+    
+    // Promotional banners
+    useCodeADCB: 'استخدم رمز ADCB واحصل على خصم 350 على رحلات وفنادق',
+    useCodeAHB: 'استخدم رمز AHB واحصل على خصم 20% على رحلات وفنادق',
+    useCodeVIP: 'استخدم رمز VIP واحصل على خصم 300 على الحجوزات',
+    
+    // Flight search results
+    noFlightsFound: 'لم يتم العثور على رحلات تطابق مع معاييرك.',
+    findingDestinations: 'جاري البحث عن الوجهات المثالية للشرق الأوسط لك...',
+    checkingAvailability: 'جاري التحقق من توفر المواعيد...',
+    curatingExperiences: 'جاري إنشاء تجارب شخصية...',
+    findingBestValue: 'جاري البحث عن خيارات القيمة الأفضل...',
+    
+    // AI Messages
+    dubaiMessage: "دبي توفر مزيجًا مثاليًا بين الحداثة والتقاليد. قمت بتصفيف هذه التجارب مع إقامات خاصة وأنشطة ثقافية عريقة عريقة.",
+    istanbulMessage: "إسطنبول هو حيث تلتقي الشرق مع الغرب. هذه الرحلات تليح التاريخ والثقافة الرائعة لهذه المدينة المثيرة في معبر المدنيين.",
+    cairoMessage: "استكشف عجائز المصر القديمة مع هذه الرحلات المحددة إلى القاهرة. استكشف الهرم والتراث الثقافي الغني لهذه الوجهة التاريخية.",
+    dohaMessage: "اكتشف المعالم الحديثة والثقافة التقليدية لدوحة. هذه الرحلات توفر إقامات خاصة وتجارب ثقافية عريقة في عاصمة قطر.",
+    beachMessage: "تحتوي الشرق الأوسط على بعض الشواطئ المذهلة. قمت باختيار بعض الخيارات مع جوانب الشاطئ الجميلة مع الخليج العربي والبحر الأحمر.",
+    cultureMessage: "الشرق الأوسط غني بتجارب الثقافة. هذه الرحلات تركز على المواقع التاريخية، التقاليد المحلية، والتغطير الثقافي الصحيح.",
+    defaultMessage: "بناءً على اهتمامك بـ \"{searchQuery}\"، قمت بتصفيف هذه الرحلات الشرقية الأوسطية التي أعتقد أنك ستحبها.",
+    
+    // Toast messages
+    messageReceived: 'تم التلقي الرسالة!',
+    adjustRecommendations: "سأقوم بتعديل التوصيات الخاصة بك على الاطلاع.",
+    refinedOptions: "لقد قمت بتحديث الخيارات بناءً على تفضيلاتك.",
     
     // Footer
     support: 'الدعم',

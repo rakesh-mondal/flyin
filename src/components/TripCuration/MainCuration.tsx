@@ -739,10 +739,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }
 
     const thinkingMessages = [
-      "Finding the perfect Middle Eastern destinations for you...",
-      "Checking availability for your dates...",
-      "Curating personalized experiences...",
-      "Finding the best value options..."
+      t('findingDestinations'),
+      t('checkingAvailability'),
+      t('curatingExperiences'),
+      t('findingBestValue')
     ];
 
     let currentIndex = 0;
@@ -765,19 +765,19 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       
       // Set AI response based on search query
       if (searchQuery.toLowerCase().includes('dubai')) {
-        setMessage("Dubai offers a perfect blend of modernity and tradition. I've curated these experiences with luxury accommodations and unique cultural activities.");
+        setMessage(t('dubaiMessage'));
       } else if (searchQuery.toLowerCase().includes('istanbul') || searchQuery.toLowerCase().includes('turkey')) {
-        setMessage("Istanbul is where East meets West. These journeys highlight the rich history and vibrant culture of this fascinating city at the crossroads of civilizations.");
+        setMessage(t('istanbulMessage'));
       } else if (searchQuery.toLowerCase().includes('cairo') || searchQuery.toLowerCase().includes('egypt')) {
-        setMessage("Explore the wonders of ancient Egypt with these carefully selected trips to Cairo. Experience the pyramids and the rich cultural heritage of this historic destination.");
+        setMessage(t('cairoMessage'));
       } else if (searchQuery.toLowerCase().includes('doha') || searchQuery.toLowerCase().includes('qatar')) {
-        setMessage("Discover the modern marvels and traditional charm of Doha. These journeys offer luxury accommodations and unique cultural experiences in Qatar's capital.");
+        setMessage(t('dohaMessage'));
       } else if (searchQuery.toLowerCase().includes('beach')) {
-        setMessage("The Middle East has some stunning beaches. I've selected some options with beautiful shorelines along the Arabian Gulf and Red Sea.");
+        setMessage(t('beachMessage'));
       } else if (searchQuery.toLowerCase().includes('culture')) {
-        setMessage("The Middle East is rich in cultural experiences. These journeys focus on historical sites, local traditions, and authentic cultural immersion.");
+        setMessage(t('cultureMessage'));
       } else {
-        setMessage(`Based on your interest in "${searchQuery}", I've curated these Middle Eastern journeys that I think you'll love.`);
+        setMessage(t('defaultMessage').replace('{searchQuery}', searchQuery));
       }
     }, 4000);
 
@@ -790,10 +790,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const handleSubmitMessage = () => {
     if (!userMessage.trim()) return;
     
-    toast.success("Message received!", {
-      description: "I'll adjust your recommendations accordingly.",
+    toast.success(t('messageReceived'), {
+      description: t('adjustRecommendations'),
     });
-    setMessage(prev => `${prev} I've refined the options based on your preferences.`);
+    setMessage(prev => `${prev} ${t('refinedOptions')}`);
     setUserMessage('');
   };
 
@@ -1765,7 +1765,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
               {/* Only v2 modular cards, no v1/v2 toggle */}
               {(!hasOutbound || !hasInbound) ? (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden p-8 text-center text-gray-500 text-lg font-semibold">
-                  No flights found matching your filters.
+                  {t('noFlightsFound')}
                 </div>
               ) : (
                 <>
@@ -1777,8 +1777,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
                       <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
-                        Use code ADCB and get up to<br />
-                        AED 350 off flights & hotels
+                        {t('useCodeADCB')}
                       </div>
                     </div>
                     {/* Card 2 */}
@@ -1787,7 +1786,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
                       <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
-                        Use code AHB and get up to 20% off flights & hotels
+                        {t('useCodeAHB')}
                       </div>
                     </div>
                     {/* Card 3 */}
@@ -1796,8 +1795,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                         <Percent className="h-5 w-5" style={{ color: '#11a670' }} strokeWidth={2} />
                       </div>
                       <div className="text-sm font-semibold leading-snug" style={{ color: '#11a670', fontSize: '12px' }}>
-                        Use code VIP and get up to AED<br />
-                        300 off on bookings
+                        {t('useCodeVIP')}
                       </div>
                     </div>
                   </div>
