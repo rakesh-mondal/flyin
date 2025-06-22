@@ -4,6 +4,7 @@ import FlightSearchForm from './FlightSearchForm';
 import AnimatedStar from './AnimatedStar';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '../translations';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
@@ -13,6 +14,7 @@ interface DualModeSearchProps {
 
 export default function DualModeSearch({ children, onSearch, className }: DualModeSearchProps) {
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   
   return (
     <div className={cn("w-full", className)}>
@@ -40,9 +42,11 @@ export default function DualModeSearch({ children, onSearch, className }: DualMo
             value="ai" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
-            {t('tryFlyinAI')}
-            <span className="ml-1.5">
-              <AnimatedStar />
+            <span className={cn("flex items-center", isRTL ? "flex-row-reverse" : "")}>
+              {t('tryFlyinAI')}
+              <span className={isRTL ? "mr-1.5" : "ml-1.5"}>
+                <AnimatedStar />
+              </span>
             </span>
           </TabsTrigger>
         </TabsList>

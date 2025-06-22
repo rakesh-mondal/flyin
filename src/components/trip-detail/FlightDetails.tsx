@@ -3,6 +3,7 @@ import { X, ArrowRight, Coffee, Clock, Sofa, Baby, Footprints, Timer, MoveRight,
 import { cn } from '@/lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface FlightDetailsProps {
   flight?: {
@@ -62,6 +63,7 @@ interface FlightDetailsProps {
 
 export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
   const [activeTab, setActiveTab] = useState<'trip' | 'facility'>('trip');
+  const { isRTL } = useLanguage();
   
   // Default data if flight is not provided
   const defaultFlight = {
@@ -220,7 +222,7 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
   return (
     <div className="w-full h-full bg-white rounded-lg overflow-auto flex flex-col">
       {/* Tabs */}
-      <div className="flex border-b">
+      <div className={cn("flex border-b", isRTL && "flex-row-reverse")}>
         <button 
           className={cn(
             "px-4 py-3 text-base font-medium flex-1 text-center", 
@@ -245,7 +247,10 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
         </button>
         <button 
           onClick={onClose}
-          className="p-3 text-gray-600 hover:text-gray-800"
+          className={cn(
+            "p-3 text-gray-600 hover:text-gray-800",
+            isRTL ? "order-first" : ""
+          )}
           aria-label="Close"
         >
           <X className="h-5 w-5" />

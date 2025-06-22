@@ -154,10 +154,10 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
       {/* Trip Type Radio Buttons */}
-      <div className="flex items-center gap-6">
-        <label className="flex items-center gap-2 cursor-pointer">
+      <div className={`flex items-center gap-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <label className={`flex items-center gap-2 cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
           <input
             type="radio"
             name="tripType"
@@ -169,7 +169,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           <span className="text-sm font-medium text-gray-900">{t('oneWay')}</span>
         </label>
         
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className={`flex items-center gap-2 cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
           <input
             type="radio"
             name="tripType"
@@ -181,7 +181,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           <span className="text-sm font-medium text-gray-900">{t('roundTrip')}</span>
         </label>
         
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className={`flex items-center gap-2 cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
           <input
             type="radio"
             name="tripType"
@@ -196,262 +196,529 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
       {/* Search Form */}
       <div className="rounded-3xl bg-white border border-border shadow-sm">
-        <form onSubmit={handleSubmit} className="flex w-full flex-col lg:flex-row" style={{ overflow: 'visible' }}>
-          {/* Location Fields Group */}
-          <div className="relative flex flex-1 lg:flex-[2] flex-col sm:flex-row" style={{ overflow: 'visible' }}>
-            {/* Origin input */}
-            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
-              <div className="px-5 py-3">
-                <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
-                  {t('from')}
-                </label>
-                <div className="relative">
-                  <Autocomplete
-                    value={origin}
-                    onChange={setOrigin}
-                    onSelect={setSelectedOriginCity}
-                    placeholder={t('countryOrAirport')}
-                    className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
-                  />
-                  {origin && (
-                    <button
-                      type="button"
-                      onClick={clearOrigin}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+        <form onSubmit={handleSubmit} className={`flex w-full flex-col lg:flex-row ${isRTL ? 'lg:flex-row-reverse' : ''}`} style={{ overflow: 'visible' }}>
+          
+          {/* Conditional rendering for RTL vs LTR layout */}
+          {isRTL ? (
+            <>
+              {/* RTL Layout: Search button first, then form fields reversed */}
+              
+              {/* Search button */}
+              <div className="flex items-center justify-center p-3 order-1">
+                <Button 
+                  type="submit" 
+                  className="h-12 w-12 rounded-full bg-primary p-0 hover:bg-primary-hover text-primary-foreground group"
+                >
+                  <Search className="h-5 w-5 group-hover:text-primary transition-colors" />
+                </Button>
+              </div>
+
+              {/* Passengers & Class */}
+              <div className="relative flex-1 border-b lg:border-b-0 lg:border-l border-border order-2">
+                <div className="px-5 py-3">
+                  <label className="block text-xs font-medium text-gray-500 text-right">
+                    {t('who')}
+                  </label>
+                  <Popover open={isPassengerOpen} onOpenChange={setIsPassengerOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-between py-1.5 text-base outline-none flex-row-reverse"
+                      >
+                        <Users className="h-4 w-4 text-gray-500" />
+                        <span>{formatPassengerText()}</span>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-4" align="end">
+                      <div className="space-y-4" style={{ direction: 'rtl' }}>
+                        {/* Adults */}
+                        <div className="flex items-center justify-between flex-row-reverse">
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('adults', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.adults >= 9}
+                            >
+                              +
+                            </button>
+                            <span className="w-6 text-center">{passengers.adults}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('adults', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.adults <= 1}
+                            >
+                              -
+                            </button>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{t('adults')}</p>
+                            <p className="text-sm text-gray-500">{t('age12Plus')}</p>
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex items-center justify-between flex-row-reverse">
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('children', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.children >= 9}
+                            >
+                              +
+                            </button>
+                            <span className="w-6 text-center">{passengers.children}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('children', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.children <= 0}
+                            >
+                              -
+                            </button>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{t('children')}</p>
+                            <p className="text-sm text-gray-500">{t('age2to11')}</p>
+                          </div>
+                        </div>
+
+                        {/* Infants */}
+                        <div className="flex items-center justify-between flex-row-reverse">
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('infants', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.infants >= 9}
+                            >
+                              +
+                            </button>
+                            <span className="w-6 text-center">{passengers.infants}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('infants', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.infants <= 0}
+                            >
+                              -
+                            </button>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{t('infants')}</p>
+                            <p className="text-sm text-gray-500">{t('under2')}</p>
+                          </div>
+                        </div>
+
+                        {/* Cabin Class */}
+                        <div className="pt-4 border-t">
+                          <p className="font-medium mb-2 text-right">{t('cabinClass')}</p>
+                          <Select value={cabinClass} onValueChange={setCabinClass}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select cabin class" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {cabinClasses.map((cabin) => (
+                                <SelectItem key={cabin.id} value={cabin.id}>
+                                  {cabin.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
-            </div>
 
-            {/* Destination input */}
-            <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
-              <div className="px-5 py-3">
-                <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
-                  {t('to')}
-                </label>
-                <div className="relative">
-                  <Autocomplete
-                    value={destination}
-                    onChange={setDestination}
-                    onSelect={setSelectedDestinationCity}
-                    placeholder={t('countryOrAirport')}
-                    className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
-                  />
-                  {destination && (
-                    <button
-                      type="button"
-                      onClick={clearDestination}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+              {/* Dates */}
+              <div className="relative flex-1 border-b lg:border-b-0 lg:border-l border-border order-3">
+                <div className="px-5 py-3">
+                  <label className="block text-xs font-medium text-gray-500 text-right">
+                    {t('dates')}
+                  </label>
+                  <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className={cn(
+                          "w-full flex items-center justify-between py-1.5 text-base outline-none flex-row-reverse",
+                          !departureDate && "text-gray-400"
+                        )}
+                      >
+                        <Calendar className="h-4 w-4 text-gray-500" />
+                        <span>
+                          {departureDate ? format(departureDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('departure')} — {returnDate ? format(returnDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('return')}
+                        </span>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                      {isRoundTrip ? (
+                        <PriceCalendar
+                          mode="range"
+                          selected={{ from: departureDate, to: returnDate }}
+                          onSelect={(date) => {
+                            if ('from' in date) {
+                              setDepartureDate(date.from);
+                              setReturnDate(date.to);
+                            }
+                          }}
+                          onDateSelect={(date, price) => {
+                            console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
+                          }}
+                          disabled={(date) => isBefore(date, startOfDay(new Date()))}
+                          numberOfMonths={2}
+                        />
+                      ) : (
+                        <PriceCalendar
+                          mode="single"
+                          selected={departureDate}
+                          onSelect={(date) => {
+                            setDepartureDate(date as Date);
+                          }}
+                          onDateSelect={(date, price) => {
+                            console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
+                          }}
+                          disabled={(date) => isBefore(date, startOfDay(new Date()))}
+                          numberOfMonths={1}
+                        />
+                      )}
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
-            </div>
 
-            {/* Swap button */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <button
-                type="button"
-                onClick={handleSwapLocations}
-                className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
-              >
-                <ArrowRightLeft className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Dates */}
-          <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
-            <div className="px-5 py-3">
-              <label className="block text-xs font-medium text-gray-500">
-                {t('dates')}
-              </label>
-              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className={cn(
-                      "w-full flex items-center justify-between py-1.5 text-base outline-none",
-                      !departureDate && "text-gray-400"
-                    )}
-                  >
-                    <span>
-                      {departureDate ? format(departureDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('departure')} — {returnDate ? format(returnDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('return')}
-                    </span>
-                    <Calendar className="h-4 w-4 text-gray-500" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  {isRoundTrip ? (
-                    <PriceCalendar
-                      mode="range"
-                      selected={{ from: departureDate, to: returnDate }}
-                      onSelect={(date) => {
-                        if ('from' in date) {
-                          setDepartureDate(date.from);
-                          setReturnDate(date.to);
-                        }
-                      }}
-                      onDateSelect={(date, price) => {
-                        console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
-                      }}
-                      disabled={(date) => isBefore(date, startOfDay(new Date()))}
-                      numberOfMonths={2}
-                    />
-                  ) : (
-                    <PriceCalendar
-                      mode="single"
-                      selected={departureDate}
-                      onSelect={(date) => {
-                        setDepartureDate(date as Date);
-                      }}
-                      onDateSelect={(date, price) => {
-                        console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
-                      }}
-                      disabled={(date) => isBefore(date, startOfDay(new Date()))}
-                      numberOfMonths={1}
-                    />
-                  )}
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
-          {/* Passengers & Class */}
-          <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
-            <div className="px-5 py-3">
-              <label className="block text-xs font-medium text-gray-500">
-                {t('who')}
-              </label>
-              <Popover open={isPassengerOpen} onOpenChange={setIsPassengerOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-between py-1.5 text-base outline-none"
-                  >
-                    <span>{formatPassengerText()}</span>
-                    <Users className="h-4 w-4 text-gray-500" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80 p-4" align="start">
-                  <div className="space-y-4">
-                    {/* Adults */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{t('adults')}</p>
-                        <p className="text-sm text-gray-500">{t('age12Plus')}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
+              {/* Location Fields Group - RTL: To field first, then From field */}
+              <div className="relative flex flex-1 lg:flex-[2] flex-col sm:flex-row-reverse order-4" style={{ overflow: 'visible' }}>
+                {/* To/Destination input - First in RTL */}
+                <div className="relative flex-1 border-b sm:border-b-0 sm:border-l border-border" style={{ overflow: 'visible' }}>
+                  <div className="px-5 py-3">
+                    <label htmlFor="destination" className="block text-xs font-medium text-gray-500 text-right">
+                      {t('to')}
+                    </label>
+                    <div className="relative">
+                      <Autocomplete
+                        value={destination}
+                        onChange={setDestination}
+                        onSelect={setSelectedDestinationCity}
+                        placeholder={t('countryOrAirport')}
+                        className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400 text-right"
+                      />
+                      {destination && (
                         <button
                           type="button"
-                          onClick={() => updatePassengerCount('adults', 'decrement')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.adults <= 1}
+                          onClick={clearDestination}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
                         >
-                          -
+                          <X className="h-4 w-4" />
                         </button>
-                        <span className="w-6 text-center">{passengers.adults}</span>
-                        <button
-                          type="button"
-                          onClick={() => updatePassengerCount('adults', 'increment')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.adults >= 9}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Children */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{t('children')}</p>
-                        <p className="text-sm text-gray-500">{t('age2to11')}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => updatePassengerCount('children', 'decrement')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.children <= 0}
-                        >
-                          -
-                        </button>
-                        <span className="w-6 text-center">{passengers.children}</span>
-                        <button
-                          type="button"
-                          onClick={() => updatePassengerCount('children', 'increment')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.children >= 9}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Infants */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{t('infants')}</p>
-                        <p className="text-sm text-gray-500">{t('under2')}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => updatePassengerCount('infants', 'decrement')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.infants <= 0}
-                        >
-                          -
-                        </button>
-                        <span className="w-6 text-center">{passengers.infants}</span>
-                        <button
-                          type="button"
-                          onClick={() => updatePassengerCount('infants', 'increment')}
-                          className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                          disabled={passengers.infants >= 9}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Cabin Class */}
-                    <div className="pt-4 border-t">
-                      <p className="font-medium mb-2">{t('cabinClass')}</p>
-                      <Select value={cabinClass} onValueChange={setCabinClass}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select cabin class" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {cabinClasses.map((cabin) => (
-                            <SelectItem key={cabin.id} value={cabin.id}>
-                              {cabin.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      )}
                     </div>
                   </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
+                </div>
 
-          {/* Search button */}
-          <div className="flex items-center justify-center p-3">
-            <Button 
-              type="submit" 
-              className="h-12 w-12 rounded-full bg-primary p-0 hover:bg-primary-hover text-primary-foreground group"
-            >
-              <Search className="h-5 w-5 group-hover:text-primary transition-colors" />
-            </Button>
-          </div>
+                {/* From/Origin input - Second in RTL */}
+                <div className="relative flex-1 border-b sm:border-b-0 sm:border-l border-border" style={{ overflow: 'visible' }}>
+                  <div className="px-5 py-3">
+                    <label htmlFor="origin" className="block text-xs font-medium text-gray-500 text-right">
+                      {t('from')}
+                    </label>
+                    <div className="relative">
+                      <Autocomplete
+                        value={origin}
+                        onChange={setOrigin}
+                        onSelect={setSelectedOriginCity}
+                        placeholder={t('countryOrAirport')}
+                        className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400 text-right"
+                      />
+                      {origin && (
+                        <button
+                          type="button"
+                          onClick={clearOrigin}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Swap button */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <button
+                    type="button"
+                    onClick={handleSwapLocations}
+                    className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
+                  >
+                    <ArrowUpDown className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* LTR Layout: Original order */}
+              {/* Location Fields Group */}
+              <div className="relative flex flex-1 lg:flex-[2] flex-col sm:flex-row" style={{ overflow: 'visible' }}>
+                {/* Origin input */}
+                <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
+                  <div className="px-5 py-3">
+                    <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
+                      {t('from')}
+                    </label>
+                    <div className="relative">
+                      <Autocomplete
+                        value={origin}
+                        onChange={setOrigin}
+                        onSelect={setSelectedOriginCity}
+                        placeholder={t('countryOrAirport')}
+                        className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
+                      />
+                      {origin && (
+                        <button
+                          type="button"
+                          onClick={clearOrigin}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Destination input */}
+                <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
+                  <div className="px-5 py-3">
+                    <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
+                      {t('to')}
+                    </label>
+                    <div className="relative">
+                      <Autocomplete
+                        value={destination}
+                        onChange={setDestination}
+                        onSelect={setSelectedDestinationCity}
+                        placeholder={t('countryOrAirport')}
+                        className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
+                      />
+                      {destination && (
+                        <button
+                          type="button"
+                          onClick={clearDestination}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 z-10"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Swap button */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <button
+                    type="button"
+                    onClick={handleSwapLocations}
+                    className="rounded-full bg-white border border-gray-200 text-gray-600 p-2 shadow-sm hover:bg-gray-50"
+                  >
+                    <ArrowRightLeft className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Dates */}
+              <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
+                <div className="px-5 py-3">
+                  <label className="block text-xs font-medium text-gray-500">
+                    {t('dates')}
+                  </label>
+                  <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className={cn(
+                          "w-full flex items-center justify-between py-1.5 text-base outline-none",
+                          !departureDate && "text-gray-400"
+                        )}
+                      >
+                        <span>
+                          {departureDate ? format(departureDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('departure')} — {returnDate ? format(returnDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('return')}
+                        </span>
+                        <Calendar className="h-4 w-4 text-gray-500" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      {isRoundTrip ? (
+                        <PriceCalendar
+                          mode="range"
+                          selected={{ from: departureDate, to: returnDate }}
+                          onSelect={(date) => {
+                            if ('from' in date) {
+                              setDepartureDate(date.from);
+                              setReturnDate(date.to);
+                            }
+                          }}
+                          onDateSelect={(date, price) => {
+                            console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
+                          }}
+                          disabled={(date) => isBefore(date, startOfDay(new Date()))}
+                          numberOfMonths={2}
+                        />
+                      ) : (
+                        <PriceCalendar
+                          mode="single"
+                          selected={departureDate}
+                          onSelect={(date) => {
+                            setDepartureDate(date as Date);
+                          }}
+                          onDateSelect={(date, price) => {
+                            console.log('Selected date:', format(date, 'MMM dd, yyyy'), 'Price:', price);
+                          }}
+                          disabled={(date) => isBefore(date, startOfDay(new Date()))}
+                          numberOfMonths={1}
+                        />
+                      )}
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              {/* Passengers & Class */}
+              <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
+                <div className="px-5 py-3">
+                  <label className="block text-xs font-medium text-gray-500">
+                    {t('who')}
+                  </label>
+                  <Popover open={isPassengerOpen} onOpenChange={setIsPassengerOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-between py-1.5 text-base outline-none"
+                      >
+                        <span>{formatPassengerText()}</span>
+                        <Users className="h-4 w-4 text-gray-500" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-4" align="start">
+                      <div className="space-y-4">
+                        {/* Adults */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{t('adults')}</p>
+                            <p className="text-sm text-gray-500">{t('age12Plus')}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('adults', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.adults <= 1}
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{passengers.adults}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('adults', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.adults >= 9}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{t('children')}</p>
+                            <p className="text-sm text-gray-500">{t('age2to11')}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('children', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.children <= 0}
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{passengers.children}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('children', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.children >= 9}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Infants */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{t('infants')}</p>
+                            <p className="text-sm text-gray-500">{t('under2')}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('infants', 'decrement')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.infants <= 0}
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center">{passengers.infants}</span>
+                            <button
+                              type="button"
+                              onClick={() => updatePassengerCount('infants', 'increment')}
+                              className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              disabled={passengers.infants >= 9}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Cabin Class */}
+                        <div className="pt-4 border-t">
+                          <p className="font-medium mb-2">{t('cabinClass')}</p>
+                          <Select value={cabinClass} onValueChange={setCabinClass}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select cabin class" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {cabinClasses.map((cabin) => (
+                                <SelectItem key={cabin.id} value={cabin.id}>
+                                  {cabin.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              {/* Search button */}
+              <div className="flex items-center justify-center p-3">
+                <Button 
+                  type="submit" 
+                  className="h-12 w-12 rounded-full bg-primary p-0 hover:bg-primary-hover text-primary-foreground group"
+                >
+                  <Search className="h-5 w-5 group-hover:text-primary transition-colors" />
+                </Button>
+              </div>
+            </>
+          )}
         </form>
       </div>
     </div>

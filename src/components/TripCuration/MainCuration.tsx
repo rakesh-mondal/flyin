@@ -28,6 +28,7 @@ import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu';
+import { useLanguage } from '@/hooks/useLanguage';
 
 // Short Layover Icon Component
 const ShortLayoverIcon = () => (
@@ -434,6 +435,7 @@ function getFlightKey(f) {
 }
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
+  const { isRTL } = useLanguage();
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1800,10 +1802,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
                   {/* Tabs Card: Cheapest/Best/Quickest */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="flex">
+                    <div className={cn("flex", isRTL && "flex-row-reverse")}>
                       <div className={cn(
                         "flex-1 border-r border-gray-200 p-3 text-center relative cursor-pointer",
-                        selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600"
+                        selectedPriceCategory === 'cheapest' && "bg-blue-50 border-b-2 border-b-blue-600",
+                        isRTL && "border-r-0 border-l border-gray-200"
                       )}
                       onClick={() => setSelectedPriceCategory('cheapest')}
                       >
@@ -1815,7 +1818,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       </div>
                       <div className={cn(
                         "flex-1 border-r border-gray-200 p-3 text-center relative cursor-pointer",
-                        selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600"
+                        selectedPriceCategory === 'best' && "bg-blue-50 border-b-2 border-b-blue-600",
+                        isRTL && "border-r-0 border-l border-gray-200"
                       )}
                       onClick={() => setSelectedPriceCategory('best')}
                       >

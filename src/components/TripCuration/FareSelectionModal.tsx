@@ -3,6 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Check, X as Cross, Luggage, Calendar, Armchair, Utensils } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const FEATURES = [
   { key: 'freeCancellation', label: 'Free cancellation' },
@@ -145,6 +147,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
   };
   
   const [activeTab, setActiveTab] = useState('outbound');
+  const { isRTL } = useLanguage();
   
   // Provide mock data for outbound and return if missing (for prototype)
   const mockOutbound = {
@@ -196,10 +199,10 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
             <DialogTitle className="text-2xl font-bold">Select your fare</DialogTitle>
           </DialogHeader>
           {/* Flight summary tabs (always show both for prototype) */}
-          <div className="flex gap-x-8 mt-2 mb-2">
+          <div className={cn("flex gap-x-8 mt-2 mb-2", isRTL && "flex-row-reverse")}>
             {/* Outbound Tab */}
             <button
-              className={`flex flex-row items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'outbound' ? 'border-blue-600' : 'border-transparent'}`}
+              className={`flex items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'outbound' ? 'border-blue-600' : 'border-transparent'} ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
               onClick={() => setActiveTab('outbound')}
               type="button"
             >
@@ -215,7 +218,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                 <span className="text-[12px] font-medium text-black mt-1">{outbound.airlineName || 'Airline'}</span>
               </div>
               {/* Right: Details */}
-              <div className="flex flex-col items-start justify-center ml-4">
+              <div className={cn("flex flex-col justify-center", isRTL ? "mr-4 items-end" : "ml-4 items-start")}>
                 <span className="flex items-baseline gap-2">
                   <span className="text-[14px] font-bold text-black">{outbound.departureTime || '—'} - {outbound.arrivalTime || '—'}</span>
                   <span className="text-[12px] font-bold text-gray-500">({outbound.stops || 'Non-stop'})</span>
@@ -225,7 +228,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
             </button>
             {/* Return Tab (always show, use mock if missing) */}
             <button
-              className={`flex flex-row items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'return' ? 'border-blue-600' : 'border-transparent'}`}
+              className={`flex items-center min-h-[56px] px-2 pb-2 border-b-2 ${activeTab === 'return' ? 'border-blue-600' : 'border-transparent'} ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
               onClick={() => setActiveTab('return')}
               type="button"
             >
@@ -241,7 +244,7 @@ const FareSelectionModal = ({ open, trip, onClose, onFareSelected }) => {
                 <span className="text-[12px] font-medium text-black mt-1">{inbound.airlineName || 'Airline'}</span>
               </div>
               {/* Right: Details */}
-              <div className="flex flex-col items-start justify-center ml-4">
+              <div className={cn("flex flex-col justify-center", isRTL ? "mr-4 items-end" : "ml-4 items-start")}>
                 <span className="flex items-baseline gap-2">
                   <span className="text-[14px] font-bold text-black">{inbound.departureTime || '—'} - {inbound.arrivalTime || '—'}</span>
                   <span className="text-[12px] font-bold text-gray-500">({inbound.stops || 'Non-stop'})</span>

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { useLanguage } from "@/hooks/useLanguage"
 
 import { cn } from "@/lib/utils"
 
@@ -10,16 +11,21 @@ const Tabs = TabsPrimitive.Root
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center rounded-lg bg-muted p-0.5 text-muted-foreground/70",
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const { isRTL } = useLanguage();
+  
+  return (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn(
+        "inline-flex items-center justify-center rounded-lg bg-muted p-0.5 text-muted-foreground/70",
+        isRTL && "flex-row-reverse",
+        className
+      )}
+      {...props}
+    />
+  );
+})
 TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsTrigger = React.forwardRef<
