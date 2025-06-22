@@ -149,7 +149,9 @@
   color: #0894FF !important;
 }
 
-/* RTL Support - More selective to avoid breaking layouts */
+/* ===== RTL SUPPORT - SIMPLIFIED AND CLEAN ===== */
+
+/* Basic RTL directional classes */
 .rtl {
   direction: rtl;
 }
@@ -158,7 +160,7 @@
   direction: ltr;
 }
 
-/* RTL Text alignment - only for specific elements */
+/* RTL Text alignment for content elements */
 [dir="rtl"] p,
 [dir="rtl"] span,
 [dir="rtl"] h1,
@@ -170,528 +172,27 @@
   text-align: right;
 }
 
-/* RTL Navigation - only apply to navigation elements */
-[dir="rtl"] nav .flex {
+/* RTL Header Layout - Main container */
+[dir="rtl"] .top-header-nav > div {
   flex-direction: row-reverse;
 }
 
-/* RTL Header fixes - More aggressive approach */
-[dir="rtl"] .top-header-nav {
-  flex-direction: row-reverse !important;
-  justify-content: space-between !important;
-}
-
-/* RTL: Logo and nav section should be on the right */
-[dir="rtl"] .top-header-nav > div:first-child {
-  order: 2 !important;
-  justify-content: flex-end !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-}
-
-/* RTL: User controls section should be on the left */
-[dir="rtl"] .top-header-nav > div:last-child {
-  order: 1 !important;
-  justify-content: flex-start !important;
-  margin-right: auto !important;
-  margin-left: 0 !important;
-}
-
-/* RTL: Navigation links spacing and direction */
-[dir="rtl"] .top-header-nav nav {
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: More specific targeting for content inside sections */
-/* Logo and navigation section - content should be RTL */
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
-  flex-direction: row-reverse !important;
-}
-
-/* User controls section - content should be RTL */  
-[dir="rtl"] .top-header-nav .user-controls.flex.items-center.gap-4 {
-  flex-direction: row-reverse !important;
-}
-
-/* Navigation items within the nav element */
-[dir="rtl"] .top-header-nav nav.hidden.lg\\:flex.gap-6 {
-  flex-direction: row-reverse !important;
-}
-
-/* Individual user control elements */
-[dir="rtl"] .top-header-nav .user-controls > .relative,
-[dir="rtl"] .top-header-nav .user-controls > .relative.group,
-[dir="rtl"] .top-header-nav .user-controls > a,
-[dir="rtl"] .top-header-nav .user-controls > button,
-[dir="rtl"] .top-header-nav .user-controls > img {
-  margin-left: 1rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav .user-controls > *:first-child {
-  margin-left: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav nav a {
-  margin-left: 1.5rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav nav a:first-child {
-  margin-left: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav nav a:last-child {
-  margin-left: 1.5rem !important;
-}
-
-/* RTL: Logo and navigation section spacing */
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > a.logo {
-  margin-left: 2rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > nav {
-  margin-left: 0 !important;
-  margin-right: 2rem !important;
-}
-
-/* RTL: Button elements in user controls */
-[dir="rtl"] .top-header-nav .user-controls button.flex.items-center.gap-1,
-[dir="rtl"] .top-header-nav .user-controls button.flex.items-center.gap-2 {
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: Adjust gaps for reversed direction */
-[dir="rtl"] .top-header-nav .flex.items-center.gap-1 > * {
-  margin-left: 0.25rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav .flex.items-center.gap-2 > * {
-  margin-left: 0.5rem !important;
-  margin-right: 0 !important;
-}
-
-/* RTL: Logo positioning - Direct targeting */
-[dir="rtl"] .top-header-nav .logo {
-  margin-right: 0 !important;
-  margin-left: 2rem !important;
-}
-
-/* RTL: Direct logo link targeting */
-[dir="rtl"] .top-header-nav a.hover\\:opacity-80.transition-opacity.logo {
-  margin-right: 0 !important;
-  margin-left: 2rem !important;
-}
-
-/* RTL: Alternative approach - use text-align on parent */
-[dir="rtl"] .top-header-nav > div:first-child {
-  text-align: right !important;
-  justify-content: flex-end !important;
-  width: 100% !important;
-}
-
-/* RTL: Simple flex-based approach - no absolute positioning */
-[dir="rtl"] .top-header-nav {
-  flex-direction: row-reverse !important;
-}
-
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
-  flex-direction: row-reverse !important;
-  justify-content: flex-start !important;
-}
-
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
-  flex-direction: row-reverse !important;
-  justify-content: flex-end !important;
-}
-
-/* RTL: User controls spacing */
-[dir="rtl"] .top-header-nav .user-controls {
-  flex-direction: row-reverse !important;
-}
-
-[dir="rtl"] .top-header-nav .user-controls > * {
-  margin-left: 0.5rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav .user-controls > *:first-child {
-  margin-left: 0 !important;
-}
-
-/* RTL: Language selector positioning */
-[dir="rtl"] .language-selector {
-  margin-left: 0 !important;
-  margin-right: 1rem !important;
-}
-
-/* RTL: Dropdown positioning - should open from left in RTL */
-[dir="rtl"] .dropdown-menu {
-  right: auto !important;
-  left: 0 !important;
-}
-
-/* RTL: Dropdown content alignment */
-[dir="rtl"] .dropdown-menu button,
-[dir="rtl"] .dropdown-menu a {
-  text-align: right !important;
-  flex-direction: row-reverse !important;
-}
-
-[dir="rtl"] .dropdown-menu button span:first-child,
-[dir="rtl"] .dropdown-menu a span:first-child {
-  margin-right: 0 !important;
-  margin-left: 8px !important;
-}
-
-/* RTL: Button content inside user controls */
-[dir="rtl"] .top-header-nav .user-controls button span,
-[dir="rtl"] .top-header-nav .user-controls a span {
-  margin-left: 0.5rem !important;
-  margin-right: 0 !important;
-}
-
-[dir="rtl"] .top-header-nav .user-controls button span:first-child,
-[dir="rtl"] .top-header-nav .user-controls a span:first-child {
-  margin-left: 0 !important;
-}
-
-/* RTL: SVG icons in buttons */
-[dir="rtl"] .top-header-nav .user-controls svg {
-  margin-left: 0.25rem !important;
-  margin-right: 0 !important;
-}
-
-/* Fix dropdown clipping issues */
-.top-header-nav {
-  overflow: visible !important;
-}
-
-.top-header-nav .user-controls {
-  overflow: visible !important;
-}
-
-.top-header-nav .relative.group {
-  overflow: visible !important;
-}
-
-/* Ensure dropdowns appear above all content */
-.dropdown-menu {
-  z-index: 9999 !important;
-  position: absolute !important;
-}
-
-/* Fix for header container clipping */
-.top-header-nav,
-.top-header-nav > *,
-.top-header-nav .flex,
-.top-header-nav .relative {
-  overflow: visible !important;
-}
-
-/* Ensure body and html don't clip dropdowns */
-body, html {
-  overflow-x: auto !important;
-}
-
-/* Specific dropdown visibility fixes */
-.language-selector .dropdown-menu,
-.relative.group .dropdown-menu {
-  position: absolute !important;
-  z-index: 9999 !important;
-  top: 100% !important;
-  margin-top: 8px !important;
-  white-space: nowrap !important;
-  min-width: max-content !important;
-}
-
-/* Ensure parent containers don't clip */
-.top-header-nav .language-selector,
-.top-header-nav .relative.group {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-/* Fix for any potential layout containers */
-main, #root, .app {
-  overflow: visible !important;
-}
-
-/* Additional fixes for dropdown clipping - more targeted approach */
-.top-header-nav,
-.top-header-nav *,
-.top-header-nav .relative,
-.top-header-nav .group {
-  overflow: visible !important;
-}
-
-/* Ensure the viewport doesn't clip dropdowns */
-.top-header-nav .dropdown-menu {
-  max-height: 300px !important;
-  overflow-y: auto !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-  border: 1px solid #e5e7eb !important;
-  background: white !important;
-}
-
-/* Force dropdowns to be on top */
-.top-header-nav .group:hover .dropdown-menu {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) !important;
-}
-
-/* Ensure proper stacking context */
-.top-header-nav {
-  position: relative !important;
-  z-index: 50 !important;
-}
-
-/* RTL: Force proper alignment */
-[dir="rtl"] .top-header-nav .flex.items-center.gap-8 {
-  flex-direction: row-reverse !important;
-  justify-content: flex-end !important;
-}
-
-[dir="rtl"] .top-header-nav .flex.items-center.gap-4 {
-  flex-direction: row-reverse !important;
-  justify-content: flex-start !important;
-}
-
-/* RTL: Specific targeting for main header container */
-[dir="rtl"] .top-header-nav.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between {
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: Logo and navigation container - FORCE to right */
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
-  order: 2 !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-  justify-self: flex-end !important;
-  align-self: flex-end !important;
-}
-
-/* RTL: User controls container - FORCE to left */
-[dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
-  order: 1 !important;
-  margin-right: auto !important;
-  margin-left: 0 !important;
-  justify-self: flex-start !important;
-  align-self: flex-start !important;
-}
-
-/* RTL: Force the entire header to use space-between with reverse */
-[dir="rtl"] .top-header-nav {
-  display: flex !important;
-  justify-content: space-between !important;
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: Clean and simple targeting */
-[dir="rtl"] .top-header-nav.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between {
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: Make sure logo container takes up right space */
-[dir="rtl"] .top-header-nav > div:first-child {
-  flex: 0 0 auto !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-}
-
-/* RTL: Make sure user controls take up left space */
-[dir="rtl"] .top-header-nav > div:last-child {
-  flex: 0 0 auto !important;
-  margin-right: auto !important;
-  margin-left: 0 !important;
-}
-
-/* RTL: Navigation items reverse order */
-[dir="rtl"] .top-header-nav nav.hidden.lg\\:flex.gap-6 {
-  flex-direction: row-reverse !important;
-}
-
-/* RTL: Better mobile menu positioning */
-[dir="rtl"] .top-header-nav button.lg\\:hidden {
-  order: 0 !important;
-  margin-right: auto !important;
-  margin-left: 1rem !important;
-}
-
-/* RTL Footer fixes - More specific targeting */
-[dir="rtl"] .footer-content {
-  direction: rtl;
-}
-
-[dir="rtl"] .footer-links {
-  text-align: right;
-}
-
-[dir="rtl"] .footer-links button {
-  text-align: right;
-}
-
-[dir="rtl"] .footer-currency {
-  flex-direction: row-reverse;
-}
-
-/* RTL: General text alignment */
-[dir="rtl"] .content-text {
-  text-align: right;
-  direction: rtl;
-}
-
-/* RTL: Dropdown menus positioning */
-[dir="rtl"] .dropdown-menu {
-  right: auto;
-  left: 0;
-}
-
-/* RTL: Header specific flex fixes - more targeted */
-[dir="rtl"] .top-header-nav .flex.items-center.gap-1 {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .top-header-nav .flex.items-center.gap-2 {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .top-header-nav .flex.items-center.gap-4 {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .top-header-nav .flex.items-center.gap-8 {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .top-header-nav nav a:first-child {
-  margin-left: 0;
-}
-
-/* RTL: Logo and nav container */
-[dir="rtl"] .top-header-nav > div:first-child {
-  flex-direction: row-reverse;
-}
-
-/* RTL Form elements */
-[dir="rtl"] input,
-[dir="rtl"] select,
-[dir="rtl"] textarea {
-  text-align: right;
-}
-
-/* RTL Dropdowns and modals positioning */
-[dir="rtl"] .absolute.right-0 {
-  right: auto;
-  left: 0;
-}
-
-[dir="rtl"] .absolute.left-0 {
-  left: auto;
-  right: 0;
-}
-
-/* RTL specific spacing utilities */
-[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 1;
-  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 1;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 1;
-  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-/* RTL margins and padding reversals */
-[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
-[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
-[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
-[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
-
-[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
-[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
-[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
-[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
-
-/* RTL positioning */
-[dir="rtl"] .left-0 { left: auto; right: 0; }
-[dir="rtl"] .right-0 { right: auto; left: 0; }
-
-/* Arabic font support */
-[lang="ar"] {
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-  font-weight: 400;
-}
-
-/* Preserve main layout structure in RTL - Override RTL for main containers */
-[dir="rtl"] .min-h-screen,
-[dir="rtl"] .flex-col,
-[dir="rtl"] .flex-1,
-[dir="rtl"] .relative {
-  direction: ltr !important;
-}
-
-/* Only apply RTL to specific navigation and content areas */
-[dir="rtl"] .top-header-nav {
-  direction: rtl;
-}
-
-[dir="rtl"] .top-header-nav .flex {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .search-form {
-  direction: rtl;
-}
-
-/* Fix navigation spacing in RTL */
-[dir="rtl"] .top-header-nav nav {
-  direction: rtl;
-}
-
-/* Keep main page layout intact */
-[dir="rtl"] .min-h-screen > * {
-  direction: ltr;
-}
-
-/* Only apply RTL to text content, not layout */
-[dir="rtl"] .top-header-nav,
-[dir="rtl"] .search-form,
-[dir="rtl"] .content-text {
-  direction: rtl;
-}
-
-/* RTL Header specific fixes */
-.rtl-header {
-  direction: rtl;
-}
-
-.ltr-header {
-  direction: ltr;
-}
-
-/* Better RTL support for the header */
-[dir="rtl"] .top-header-nav {
-  direction: rtl !important;
-}
-
+/* RTL - All flex containers in header */
 [dir="rtl"] .top-header-nav .flex.items-center {
-  direction: rtl !important;
+  flex-direction: row-reverse;
 }
 
-/* Fix dropdown positioning in RTL */
+/* RTL Navigation */
+[dir="rtl"] nav {
+  flex-direction: row-reverse;
+}
+
+/* RTL User Controls */
+[dir="rtl"] .user-controls {
+  flex-direction: row-reverse;
+}
+
+/* RTL Dropdown positioning - Simple and effective */
 [dir="rtl"] .dropdown-menu {
   left: 0 !important;
   right: auto !important;
@@ -702,44 +203,14 @@ main, #root, .app {
   left: auto !important;
 }
 
-/* RTL specific header order fixes */
-.rtl-header > div:first-child {
-  order: 2 !important;
-}
-
-.rtl-header > div:last-child {
-  order: 1 !important;
-}
-
-.rtl-header .user-controls {
-  flex-direction: row-reverse !important;
-}
-
-.rtl-header nav {
-  flex-direction: row-reverse !important;
-}
-
-/* Mobile button positioning fix for RTL */
-[dir="rtl"] .top-header-nav button.lg\:hidden {
-  order: 0 !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-}
-
-/* Ensure proper text alignment in RTL dropdowns */
+/* RTL Dropdown content alignment */
 [dir="rtl"] .dropdown-menu button,
 [dir="rtl"] .dropdown-menu a {
   text-align: right !important;
-  direction: rtl !important;
+  flex-direction: row-reverse !important;
 }
 
-[dir="ltr"] .dropdown-menu button,
-[dir="ltr"] .dropdown-menu a {
-  text-align: left !important;
-  direction: ltr !important;
-}
-
-/* Fix flag and text spacing in RTL */
+/* RTL spacing for dropdown flags/icons */
 [dir="rtl"] .dropdown-menu span:first-child {
   margin-left: 0.5rem !important;
   margin-right: 0 !important;
@@ -750,20 +221,84 @@ main, #root, .app {
   margin-left: 0 !important;
 }
 
-/* Ensure proper header height and alignment */
+/* ===== END RTL SUPPORT ===== */
+
+/* General Layout Styles */
 .top-header-nav {
   min-height: 56px;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  overflow: visible !important;
 }
 
-/* Fix for overlapping elements in RTL */
-[dir="rtl"] .top-header-nav > div {
-  flex-shrink: 0;
+.top-header-nav .user-controls {
+  overflow: visible;
 }
 
-/* Better mobile responsiveness for RTL */
+.top-header-nav .relative.group {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 50;
+}
+
+.top-header-nav,
+.top-header-nav * {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.language-selector .dropdown-menu,
+.currency-selector .dropdown-menu {
+  min-width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  background: white;
+}
+
+.top-header-nav .language-selector,
+.top-header-nav .currency-selector {
+  position: relative;
+  display: inline-block;
+}
+
+main, #root, .app {
+  position: relative;
+  overflow-x: visible;
+}
+
+.top-header-nav,
+.top-header-nav .relative,
+.top-header-nav .relative.group {
+  overflow: visible !important;
+}
+
+.top-header-nav .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.5rem;
+  z-index: 9999;
+}
+
+.top-header-nav .group:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: all 0.2s ease-out;
+}
+
+.top-header-nav {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Mobile responsiveness */
 @media (max-width: 1024px) {
   [dir="rtl"] .top-header-nav .hidden.lg\:flex,
   [dir="rtl"] .top-header-nav .hidden.lg\:block {
