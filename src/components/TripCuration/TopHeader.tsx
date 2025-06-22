@@ -45,13 +45,13 @@ const TopHeader = ({
   };
 
   return (
-    <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14 top-header-nav">
-      {/* Left: Logo and nav */}
-      <div className="flex items-center gap-8">
+    <div className={`w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14 top-header-nav ${isRTL ? 'rtl-header' : 'ltr-header'}`}>
+      {/* Logo and nav section */}
+      <div className={`flex items-center ${isRTL ? 'gap-8 order-2' : 'gap-8 order-1'}`}>
         <a href="/" className="hover:opacity-80 transition-opacity logo">
           <img src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" alt="Flyin.com" className="h-7" />
         </a>
-        <nav className="hidden lg:flex gap-6 text-sm font-medium text-[#1a2a3a]">
+        <nav className={`hidden lg:flex gap-6 text-sm font-medium text-[#1a2a3a] ${isRTL ? 'flex-row-reverse' : ''}`}>
           <a href="#" className="hover:text-[#194E91] transition-colors">{t('flights')}</a>
           <a href="#" className="hover:text-[#194E91] transition-colors">{t('hotels')}</a>
           <a href="#" className="hover:text-[#194E91] transition-colors">{t('flightAndHotel')}</a>
@@ -61,10 +61,10 @@ const TopHeader = ({
       </div>
       
       {/* Right: Deals, My Bookings, Language, Currency, Contact, Awards, User Section */}
-      <div className="flex items-center gap-4 text-sm font-medium text-[#1a2a3a] user-controls">
+      <div className={`flex items-center gap-4 text-sm font-medium text-[#1a2a3a] user-controls ${isRTL ? 'order-1 flex-row-reverse' : 'order-2'}`}>
         {/* Deals */}
         <div className="relative flex items-center">
-          <span className="mr-1">
+          <span className={`${isRTL ? 'ml-1' : 'mr-1'}`}>
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
               <path d="M4 7V6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" stroke="#1a2a3a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <rect width="20" height="13" x="2" y="7" rx="2" stroke="#1a2a3a" strokeWidth="1.5"/>
@@ -72,7 +72,7 @@ const TopHeader = ({
             </svg>
           </span>
           <span className="hidden sm:inline">{t('deals')}</span>
-          <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5">7</span>
+          <span className={`absolute -top-2 ${isRTL ? '-left-3' : '-right-3'} bg-red-500 text-white text-xs rounded-full px-1.5`}>7</span>
         </div>
         
         {/* Language Selector */}
@@ -84,17 +84,17 @@ const TopHeader = ({
           </button>
           
           {/* Language Dropdown */}
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
+          <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu`}>
             <div className="py-2">
               {languages.map((language) => (
                 <button
                   key={language.code}
                   onClick={() => handleLanguageChange(language.code)}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                  className={`block w-full ${isRTL ? 'text-right' : 'text-left'} px-4 py-2 text-sm hover:bg-gray-50 ${
                     selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                   }`}
                 >
-                  <span className="mr-2">{language.flag}</span>
+                  <span className={`${isRTL ? 'ml-2' : 'mr-2'}`}>{language.flag}</span>
                   {language.name}
                 </button>
               ))}
@@ -111,19 +111,19 @@ const TopHeader = ({
           </button>
           
           {/* Currency Dropdown */}
-          <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
+          <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu`}>
             <div className="py-2">
               {currencies.map((currency) => (
                 <button
                   key={currency.code}
                   onClick={() => setSelectedCurrency(currency)}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                  className={`block w-full ${isRTL ? 'text-right' : 'text-left'} px-4 py-2 text-sm hover:bg-gray-50 ${
                     selectedCurrency.code === currency.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                   }`}
                 >
-                  <span className="mr-2">{currency.flag}</span>
+                  <span className={`${isRTL ? 'ml-2' : 'mr-2'}`}>{currency.flag}</span>
                   <span className="font-medium">{currency.code}</span>
-                  <span className="text-gray-500 ml-2">({currency.symbol}) {currency.name}</span>
+                  <span className={`text-gray-500 ${isRTL ? 'mr-2' : 'ml-2'}`}>({currency.symbol}) {currency.name}</span>
                 </button>
               ))}
             </div>
@@ -160,15 +160,15 @@ const TopHeader = ({
             </button>
             
             {/* User Dropdown Menu */}
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
+            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu`}>
               <div className="py-2">
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Profile</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">{t('myBookings')}</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
+                <a href="#" className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${isRTL ? 'text-right' : 'text-left'}`}>My Profile</a>
+                <a href="#" className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${isRTL ? 'text-right' : 'text-left'}`}>{t('myBookings')}</a>
+                <a href="#" className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${isRTL ? 'text-right' : 'text-left'}`}>Settings</a>
                 <hr className="my-1" />
                 <button 
                   onClick={onSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  className={`block w-full ${isRTL ? 'text-right' : 'text-left'} px-4 py-2 text-sm text-red-600 hover:bg-red-50`}
                 >
                   {t('signOut')}
                 </button>
