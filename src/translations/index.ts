@@ -54,6 +54,21 @@ export const translations = {
     best: 'Best',
     quickest: 'Quickest',
     
+    // Destinations
+    culturalDubai: 'Cultural Dubai',
+    magicalIstanbul: 'Magical Istanbul',
+    ancientCairo: 'Ancient Cairo',
+    magicalDoha: 'Magical Doha',
+    
+    // Flight amenities and services
+    visaRequired: 'Visa req.',
+    prayerRoom: 'Prayer rm.',
+    wifi: 'Wi-Fi',
+    baggage: 'Baggage',
+    wifiAvailable: 'Wi-fi available',
+    freeWifi: 'Free Wi-fi',
+    extraBaggage: 'Extra Baggage',
+    
     // Footer
     support: 'Support',
     discover: 'Discover',
@@ -108,7 +123,6 @@ export const translations = {
     stops: 'stops',
     stop: 'stop',
     duration: 'Duration',
-    baggage: 'Baggage',
     meal: 'Meal',
     entertainment: 'Entertainment',
     
@@ -185,6 +199,21 @@ export const translations = {
     best: 'الأفضل',
     quickest: 'الأسرع',
     
+    // Destinations
+    culturalDubai: 'دبي الثقافي',
+    magicalIstanbul: 'إسطنبول السحري',
+    ancientCairo: 'القاهرة القديمة',
+    magicalDoha: 'دوحة السحرية',
+    
+    // Flight amenities and services
+    visaRequired: 'رخصة ضرورية',
+    prayerRoom: 'غرفة صلاة',
+    wifi: 'واي فاي',
+    baggage: 'الأمتعة',
+    wifiAvailable: 'واي فاي متاح',
+    freeWifi: 'واي فاي مجاني',
+    extraBaggage: 'أمتعة إضافية',
+    
     // Footer
     support: 'الدعم',
     discover: 'اكتشف',
@@ -239,7 +268,6 @@ export const translations = {
     stops: 'توقفات',
     stop: 'توقف',
     duration: 'المدة',
-    baggage: 'الأمتعة',
     meal: 'الوجبة',
     entertainment: 'الترفيه',
     

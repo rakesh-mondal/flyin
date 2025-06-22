@@ -40,10 +40,10 @@ const SearchButton = () => {
 };
 
 const flightSuggestions = [
-  { id: 1, title: 'Cultural Dubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
-  { id: 2, title: 'Magical Istanbul', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'For You', departure: 'LGA' },
-  { id: 3, title: 'Ancient Cairo', image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Popular', departure: 'JFK' },
-  { id: 4, title: 'Magical Doha', image: 'https://images.unsplash.com/photos/a-kdjff86zE?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'EWR' },
+  { id: 1, titleKey: 'culturalDubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'JFK' },
+  { id: 2, titleKey: 'magicalIstanbul', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'For You', departure: 'LGA' },
+  { id: 3, titleKey: 'ancientCairo', image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Popular', departure: 'JFK' },
+  { id: 4, titleKey: 'magicalDoha', image: 'https://images.unsplash.com/photos/a-kdjff86zE?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80', type: 'Trending', departure: 'EWR' },
 ];
 
 // Search intent examples for rotating placeholder
@@ -222,11 +222,11 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
               {flightSuggestions.map(suggestion => (
                 <SuggestionCard 
                   key={suggestion.id}
-                  title={suggestion.title}
+                  title={t(suggestion.titleKey)}
                   image={suggestion.image}
                   type={suggestion.type}
                   departure={`From ${suggestion.departure}`}
-                  onClick={() => onSearch(suggestion.title)}
+                  onClick={() => onSearch(t(suggestion.titleKey))}
                 />
               ))}
             </div>
