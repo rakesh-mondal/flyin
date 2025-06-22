@@ -103,6 +103,21 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
     const translatedCity = t(cityKey);
     return translatedCity !== cityKey ? translatedCity : cityName;
   };
+  
+  // Helper function to translate airline names
+  const translateAirline = (airlineName: string) => {
+    if (!isArabic) return airlineName;
+    const airlineTranslations = {
+      'Emirates': t('emirates'),
+      'Air India': t('airIndia'),
+      'Etihad': t('etihad'),
+      'Vistara': t('vistara'),
+      'Qatar Airways': t('qatarAirways'),
+      'Lufthansa': t('lufthansa'),
+      'Singapore Airlines': t('singaporeAirlines')
+    };
+    return airlineTranslations[airlineName] || airlineName;
+  };
   const [imgError, setImgError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [glow, setGlow] = useState(false);
@@ -240,7 +255,7 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                     />
                   ) : (
                     <span className="font-medium">
-                      {flight.airline}
+                      {translateAirline(flight.airline)}
                     </span>
                   )}
                 </div>
@@ -279,14 +294,14 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
                     />
                   ) : (
                     <span className="font-medium">
-                      {flight.airline}
+                      {translateAirline(flight.airline)}
                     </span>
                   )}
                 </div>
               </div>
               
               <div className="mt-4 text-xs text-gray-500">
-                {flight.airline}
+                {translateAirline(flight.airline)}
               </div>
             </div>
             

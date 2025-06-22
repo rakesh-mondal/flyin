@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 import { ArrowRightLeft, ArrowUpDown, X, MessageCircle, MessageSquare, Percent, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Ban, Luggage, MoreVertical, Clock, Plane, Building2 } from 'lucide-react';
 import '@/styles/animations.css';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import FlightOptionsSelector from './FlightOptionsSelector';
 import HorizontalFilters from './HorizontalFilters';
 import FareSelectionModal from './FareSelectionModal';
@@ -85,6 +85,9 @@ const SearchSummary = ({
   onSwap: () => void;
   onUpdate: () => void;
 }) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const isArabic = language === 'ar';
   const formatDate = (date?: Date) => {
     if (!date) return "";
     return new Intl.DateTimeFormat('en-US', { 
@@ -161,7 +164,7 @@ const SearchSummary = ({
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
             <div className="flex items-center">
-              <span className="text-sm truncate">{passengers} adult, {cabinClass}</span>
+              <span className="text-sm truncate">{formatNumber(passengers, isArabic)} {t('adult')}, {t(cabinClass.toLowerCase())}</span>
             </div>
           </div>
         </div>
@@ -172,7 +175,7 @@ const SearchSummary = ({
             onClick={onUpdate}
             className="w-full sm:w-auto h-9 px-4 bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] rounded-full text-sm"
           >
-            Update
+            {t('update')}
           </Button>
         </div>
       </div>
@@ -188,6 +191,8 @@ const mockDates = Array.from({ length: 14 }, (_, i) => ({
 }));
 
 function DatesCard({ dates, selectedIdx, onSelect }) {
+  const { language } = useLanguage();
+  const isArabic = language === 'ar';
   const minPrice = Math.min(...dates.map(d => d.price));
   let indices = [];
   if (dates.length === 0) {
@@ -225,7 +230,7 @@ function DatesCard({ dates, selectedIdx, onSelect }) {
               'font-semibold ' +
               (dates[idx]?.price === minPrice ? 'text-green-600' : '')
             } style={{ fontSize: '12px' }}>
-              ₹{dates[idx]?.price?.toLocaleString()}
+              ₹{formatNumber(dates[idx]?.price || 0, isArabic)}
             </div>
             {i === 1 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
           </div>
@@ -436,8 +441,9 @@ function getFlightKey(f) {
 }
 
 export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSearch = false }: TripCurationProps) {
-  const { isRTL } = useLanguage();
+  const { isRTL, language } = useLanguage();
   const { t } = useTranslation();
+  const isArabic = language === 'ar';
   console.log('MainCuration rendering with searchQuery:', searchQuery);
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1440,11 +1446,42 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   }, [totalPrice]);
 
   // Tab label helpers
-  const formatPrice = (price) => `₹${price.toLocaleString()}`;
+  const formatPrice = (price) => `₹${formatNumber(price, isArabic)}`;
+  const formatTime = (time) => formatNumber(time, isArabic);
   const formatDuration = (mins) => {
     const h = Math.floor(mins / 60);
     const m = mins % 60;
-    return `${h}h ${m.toString().padStart(2, '0')}m`;
+    return `${formatNumber(h, isArabic)}h ${formatNumber(m.toString().padStart(2, '0'), isArabic)}m`;
+  };
+  
+  const translateAirline = (airlineName) => {
+    const airlineTranslations = {
+      'Emirates': t('emirates'),
+      'Air India': t('airIndia'),
+      'Etihad': t('etihad'),
+      'Vistara': t('vistara'),
+      'Qatar Airways': t('qatarAirways'),
+      'Lufthansa': t('lufthansa'),
+      'Singapore Airlines': t('singaporeAirlines'),
+      'British Airways': t('britishAirways'),
+      'Air France': t('airFrance'),
+      'KLM': t('klm'),
+      'Turkish Airlines': t('turkishAirlines'),
+      'Saudi Arabian Airlines': t('saudiArabian'),
+      'EgyptAir': t('egyptAir'),
+      'Royal Jordanian': t('royalJordanian'),
+      'Middle East Airlines': t('middleEastAirlines'),
+      'Oman Air': t('omanAir'),
+      'Kuwait Airways': t('kuwaitAirways'),
+      'Bahrain Air': t('bahrainAir'),
+      'flydubai': t('flyDubai'),
+      'Air Arabia Group': t('airArabiaGroup'),
+      'Jazeera Airways': t('jazeera'),
+      'Nas Air': t('nasAir'),
+      'flynas': t('flynas'),
+      'Pegasus Airlines': t('pegasusAirlines')
+    };
+    return airlineTranslations[airlineName] || airlineName;
   };
 
   // When tab changes, update selectedOutboundKey/selectedInboundKey to match best pair
@@ -2043,9 +2080,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           <span className="text-base font-bold text-black">
-                                            {option.departureTime}–{option.arrivalTime}
+                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
                                             {option.stops === '1 stop' && (
-                                              <span className="ml-2 text-sm font-normal">via DXB</span>
+                                              <span className="ml-2 text-sm font-normal">{t('via')} DXB</span>
                                             )}
                                           </span>
                                           {/* Layover Tag - positioned next to time/via text */}
@@ -2083,8 +2120,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                         </div>
                                         <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                          <span>{option.airlineName}</span>
-                                          <span>· {option.stops}</span>
+                                          <span>{translateAirline(option.airlineName)}</span>
+                                          <span>· {t(option.stops) || option.stops}</span>
                                           {option.stops === 'non-stop' && (
                                             <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
                                               <Luggage className="h-4 w-4 mr-0.5" />
@@ -2099,32 +2136,46 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                              2 seats left
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5 whitespace-nowrap">
+                                              {formatNumber(2, isArabic)} {t('seatsLeft')}
                                             </span>
                                           )}
                                         </div>
                                       </div>
-                                      <div className="text-right flex flex-col items-end justify-between h-full">
-                                        <div className="flex items-center gap-2 justify-end">
-                                          {/* Original price with strikethrough */}
-                                          {option.originalPrice && (
-                                            <div className="text-xs text-gray-500 line-through">
-                                              ₹{option.originalPrice}
-                                            </div>
-                                          )}
-                                          {/* Current price */}
-                                          <div className="text-base font-bold text-black">₹{option.price}</div>
+                                      <div className={cn(
+                                        "flex flex-col justify-between h-full",
+                                        isArabic ? "text-left items-start" : "text-right items-end"
+                                      )}>
+                                        <div className={cn(
+                                          "flex flex-col gap-1",
+                                          isArabic ? "items-start" : "items-end"
+                                        )}>
+                                          <div className={cn(
+                                            "flex items-center gap-2",
+                                            isArabic ? "justify-start" : "justify-end"
+                                          )}>
+                                            {/* Original price with strikethrough */}
+                                            {option.originalPrice && (
+                                              <div className="text-xs text-gray-500 line-through">
+                                                ₹{formatNumber(option.originalPrice, isArabic)}
+                                              </div>
+                                            )}
+                                            {/* Current price */}
+                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                          </div>
+                                          <span
+                                            className={cn(
+                                              "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                              isArabic ? "flex-row-reverse" : ""
+                                            )}
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                          >
+                                            {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                          </span>
                                         </div>
-                                        <span
-                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer mt-1"
-                                          role="button"
-                                          tabIndex={0}
-                                          onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                        >
-                                          More info <span aria-hidden="true">→</span>
-                                        </span>
                                       </div>
                                     </div>
                                   </button>
@@ -2167,9 +2218,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           <span className="text-base font-bold text-black">
-                                            {option.departureTime}–{option.arrivalTime}
+                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
                                             {option.stops === '1 stop' && (
-                                              <span className="ml-2 text-sm font-normal">via DXB</span>
+                                              <span className="ml-2 text-sm font-normal">{t('via')} DXB</span>
                                             )}
                                           </span>
                                           {/* Layover Tag - positioned next to time/via text */}
@@ -2207,8 +2258,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                         </div>
                                         <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                                          <span>{option.airlineName}</span>
-                                          <span>· {option.stops}</span>
+                                          <span>{translateAirline(option.airlineName)}</span>
+                                          <span>· {t(option.stops) || option.stops}</span>
                                           {option.stops === 'non-stop' && (
                                             <span className="flex items-center ml-1 text-xs text-gray-500 relative group" style={{ cursor: 'pointer' }}>
                                               <Luggage className="h-4 w-4 mr-0.5" />
@@ -2223,32 +2274,46 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5">
-                                              2 seats left
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 ml-0.5 whitespace-nowrap">
+                                              {formatNumber(2, isArabic)} {t('seatsLeft')}
                                             </span>
                                           )}
                                         </div>
                                       </div>
-                                      <div className="text-right flex flex-col items-end justify-between h-full">
-                                        <div className="flex items-center gap-2 justify-end">
-                                          {/* Original price with strikethrough */}
-                                          {option.originalPrice && (
-                                            <div className="text-xs text-gray-500 line-through">
-                                              ₹{option.originalPrice}
-                                            </div>
-                                          )}
-                                          {/* Current price */}
-                                          <div className="text-base font-bold text-black">₹{option.price}</div>
+                                      <div className={cn(
+                                        "flex flex-col justify-between h-full",
+                                        isArabic ? "text-left items-start" : "text-right items-end"
+                                      )}>
+                                        <div className={cn(
+                                          "flex flex-col gap-1",
+                                          isArabic ? "items-start" : "items-end"
+                                        )}>
+                                          <div className={cn(
+                                            "flex items-center gap-2",
+                                            isArabic ? "justify-start" : "justify-end"
+                                          )}>
+                                            {/* Original price with strikethrough */}
+                                            {option.originalPrice && (
+                                              <div className="text-xs text-gray-500 line-through">
+                                                ₹{formatNumber(option.originalPrice, isArabic)}
+                                              </div>
+                                            )}
+                                            {/* Current price */}
+                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                          </div>
+                                          <span
+                                            className={cn(
+                                              "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                              isArabic ? "flex-row-reverse" : ""
+                                            )}
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                          >
+                                            {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                          </span>
                                         </div>
-                                        <span
-                                          className="text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer mt-1"
-                                          role="button"
-                                          tabIndex={0}
-                                          onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                        >
-                                          More info <span aria-hidden="true">→</span>
-                                        </span>
                                       </div>
                                     </div>
                                   </button>

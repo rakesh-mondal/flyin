@@ -1,6 +1,9 @@
 import React from 'react';
 import { ArrowRightLeft, ArrowUpDown, X } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/translations';
+import { formatNumber } from '@/lib/utils';
 
 interface SearchHeaderProps {
   origin?: string;
@@ -23,6 +26,10 @@ const SearchHeader = ({
   onSwap,
   onUpdate
 }: SearchHeaderProps) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const isArabic = language === 'ar';
+  
   const formatDate = (date?: Date) => {
     if (!date) return "--/--";
     return new Intl.DateTimeFormat('en-US', {
@@ -94,7 +101,7 @@ const SearchHeader = ({
         <div className="flex-1 border-b sm:border-b-0 sm:border-r border-gray-200">
           <div className="px-4 sm:px-6 py-2 sm:py-3">
             <div className="flex items-center">
-              <span className="text-sm truncate">{passengers} adult, {cabinClass}</span>
+              <span className="text-sm truncate">{formatNumber(passengers, isArabic)} {t('adult')}, {t(cabinClass.toLowerCase())}</span>
             </div>
           </div>
         </div>
@@ -104,7 +111,7 @@ const SearchHeader = ({
             onClick={onUpdate}
             className="w-full sm:w-auto h-9 px-4 bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] rounded-lg text-sm"
           >
-            Update
+            {t('update')}
           </Button>
         </div>
       </div>
