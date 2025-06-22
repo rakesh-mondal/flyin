@@ -197,6 +197,36 @@
   flex-direction: row-reverse !important;
 }
 
+/* RTL: More specific targeting for content inside sections */
+/* Logo and navigation section - content should be RTL */
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
+  flex-direction: row-reverse !important;
+}
+
+/* User controls section - content should be RTL */  
+[dir="rtl"] .top-header-nav .user-controls.flex.items-center.gap-4 {
+  flex-direction: row-reverse !important;
+}
+
+/* Navigation items within the nav element */
+[dir="rtl"] .top-header-nav nav.hidden.lg\\:flex.gap-6 {
+  flex-direction: row-reverse !important;
+}
+
+/* Individual user control elements */
+[dir="rtl"] .top-header-nav .user-controls > .relative,
+[dir="rtl"] .top-header-nav .user-controls > .relative.group,
+[dir="rtl"] .top-header-nav .user-controls > a,
+[dir="rtl"] .top-header-nav .user-controls > button,
+[dir="rtl"] .top-header-nav .user-controls > img {
+  margin-left: 1rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav .user-controls > *:first-child {
+  margin-left: 0 !important;
+}
+
 [dir="rtl"] .top-header-nav nav a {
   margin-left: 1.5rem !important;
   margin-right: 0 !important;
@@ -208,6 +238,36 @@
 
 [dir="rtl"] .top-header-nav nav a:last-child {
   margin-left: 1.5rem !important;
+}
+
+/* RTL: Logo and navigation section spacing */
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > a.logo {
+  order: 2 !important;
+  margin-left: 2rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 > nav {
+  order: 1 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* RTL: Button elements in user controls */
+[dir="rtl"] .top-header-nav .user-controls button.flex.items-center.gap-1,
+[dir="rtl"] .top-header-nav .user-controls button.flex.items-center.gap-2 {
+  flex-direction: row-reverse !important;
+}
+
+/* RTL: Adjust gaps for reversed direction */
+[dir="rtl"] .top-header-nav .flex.items-center.gap-1 > * {
+  margin-left: 0.25rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav .flex.items-center.gap-2 > * {
+  margin-left: 0.5rem !important;
+  margin-right: 0 !important;
 }
 
 /* RTL: Logo positioning - Direct targeting */
@@ -240,6 +300,8 @@
   left: auto !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
 }
 
 [dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
@@ -287,6 +349,24 @@
 [dir="rtl"] .dropdown-menu a span:first-child {
   margin-right: 0 !important;
   margin-left: 8px !important;
+}
+
+/* RTL: Button content inside user controls */
+[dir="rtl"] .top-header-nav .user-controls button span,
+[dir="rtl"] .top-header-nav .user-controls a span {
+  margin-left: 0.5rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav .user-controls button span:first-child,
+[dir="rtl"] .top-header-nav .user-controls a span:first-child {
+  margin-left: 0 !important;
+}
+
+/* RTL: SVG icons in buttons */
+[dir="rtl"] .top-header-nav .user-controls svg {
+  margin-left: 0.25rem !important;
+  margin-right: 0 !important;
 }
 
 /* Fix dropdown clipping issues */

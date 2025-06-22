@@ -154,7 +154,7 @@ const TopHeader = ({
             <button className="flex items-center gap-2 hover:text-[#194E91] transition-colors">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">
-                {language === 'ar' ? `${userName} ${t('hello')}` : `${t('hello')} ${userName}`}
+                {language === 'ar' ? `مرحباً ${userName}` : `${t('hello')} ${userName}`}
               </span>
               <ChevronDown className="h-3 w-3" />
             </button>
