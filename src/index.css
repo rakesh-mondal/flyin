@@ -172,24 +172,37 @@
   text-align: right;
 }
 
-/* RTL Header Layout - Main container */
+/* RTL Header Layout - More specific and forceful */
+[dir="rtl"] .top-header-nav {
+  direction: rtl !important;
+}
+
 [dir="rtl"] .top-header-nav > div {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse !important;
 }
 
-/* RTL - All flex containers in header */
 [dir="rtl"] .top-header-nav .flex.items-center {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse !important;
 }
 
-/* RTL Navigation */
-[dir="rtl"] nav {
-  flex-direction: row-reverse;
+/* RTL Navigation - Force reverse order */
+[dir="rtl"] .top-header-nav nav {
+  flex-direction: row-reverse !important;
 }
 
-/* RTL User Controls */
-[dir="rtl"] .user-controls {
-  flex-direction: row-reverse;
+/* RTL User Controls - Force reverse order */
+[dir="rtl"] .top-header-nav .user-controls {
+  flex-direction: row-reverse !important;
+}
+
+/* Additional RTL specificity for the main header container */
+[dir="rtl"] .top-header-nav > div.h-full.flex.items-center.justify-between {
+  flex-direction: row-reverse !important;
+}
+
+/* Override Tailwind's default justify-between for RTL */
+[dir="rtl"] .justify-between {
+  flex-direction: row-reverse !important;
 }
 
 /* RTL Dropdown positioning - Simple and effective */
