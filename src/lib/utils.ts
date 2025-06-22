@@ -42,3 +42,22 @@ export function formatPrice(
     currency,
   }).format(amount);
 }
+
+/**
+ * Converts Western numerals (0-9) to Arabic-Indic numerals (٠-٩)
+ */
+export function toArabicNumerals(text: string | number): string {
+  const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return String(text).replace(/[0-9]/g, (digit) => arabicNumerals[parseInt(digit)]);
+}
+
+/**
+ * Formats numbers with proper locale-specific numerals
+ */
+export function formatNumber(
+  number: number | string,
+  isArabic: boolean = false
+): string {
+  const numStr = String(number);
+  return isArabic ? toArabicNumerals(numStr) : numStr;
+}

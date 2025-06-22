@@ -5,8 +5,9 @@ import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import FlightTimings from './FlightTimings';
 import PriceAlertsModal from './PriceAlertsModal';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { useTranslation } from '@/translations';
+import { useLanguage } from '@/hooks/useLanguage';
 import './FilterChips.css';
 
 interface FilterChipsProps {
@@ -33,6 +34,8 @@ const FilterChips = ({
   onStopsChange = () => {},
 }: FilterChipsProps) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
+  const isArabic = language === 'ar';
   const [isPriceAlertsModalOpen, setIsPriceAlertsModalOpen] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: 4873, max: 62000 });
   const [stopoverDuration, setStopoverDuration] = useState({ min: 30, max: 1290 });
@@ -61,7 +64,9 @@ const FilterChips = ({
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+    const hoursStr = formatNumber(hours, isArabic);
+    const minsStr = formatNumber(mins, isArabic);
+    return `${hoursStr}h ${minsStr}m`;
   };
 
   return (
@@ -83,9 +88,9 @@ const FilterChips = ({
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="text-base">
-            <span className="font-semibold text-gray-900">1577</span>
+            <span className="font-semibold text-gray-900">{formatNumber(1577, isArabic)}</span>
             <span className="text-gray-500"> {t('of')} </span>
-            <span className="font-semibold text-gray-900">2000</span>
+            <span className="font-semibold text-gray-900">{formatNumber(2000, isArabic)}</span>
             <span className="text-gray-500"> {t('flightsCount')}</span>
           </div>
         </div>
@@ -161,7 +166,7 @@ const FilterChips = ({
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
-              )}>₹26,909</span>
+                              )}>₹{formatNumber('26,909', isArabic)}</span>
             </button>
             <button 
               className={cn(
@@ -176,7 +181,7 @@ const FilterChips = ({
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
-              )}>₹27,464</span>
+                              )}>₹{formatNumber('27,464', isArabic)}</span>
             </button>
             <button 
               className={cn(
@@ -191,7 +196,7 @@ const FilterChips = ({
               <span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
-              )}>₹39,393</span>
+                              )}>₹{formatNumber('39,393', isArabic)}</span>
             </button>
           </div>
         </div>
@@ -286,7 +291,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹52,000</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('52,000', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -317,7 +322,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹48,500</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('48,500', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -348,7 +353,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹45,200</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('45,200', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -379,7 +384,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹39,800</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('39,800', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -410,7 +415,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹55,000</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('55,000', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -441,7 +446,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹61,000</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('61,000', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -472,7 +477,7 @@ const FilterChips = ({
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">₹58,500</span>
+                                            <span className="text-xs text-gray-500">₹{formatNumber('58,500', isArabic)}</span>
                   </div>
                 </div>
               </label>
@@ -527,8 +532,8 @@ const FilterChips = ({
               />
             </div>
             <div className="flex justify-between text-sm text-gray-500">
-              <span>₹ 4,873</span>
-              <span>₹ 62,000</span>
+                              <span>₹ {formatNumber('4,873', isArabic)}</span>
+                <span>₹ {formatNumber('62,000', isArabic)}</span>
             </div>
           </div>
         </div>
@@ -570,7 +575,7 @@ const FilterChips = ({
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
                       <span className="text-sm text-gray-700">{t('shjSharjahInternational')}</span>
-                      <span className="text-xs text-gray-500">₹ 25,013</span>
+                      <span className="text-xs text-gray-500">₹ {formatNumber('25,013', isArabic)}</span>
                     </div>
                   </div>
                 </label>
@@ -583,7 +588,7 @@ const FilterChips = ({
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
                       <span className="text-sm text-gray-700">{t('auhZayedInternational')}</span>
-                      <span className="text-xs text-gray-500">₹ 22,921</span>
+                      <span className="text-xs text-gray-500">₹ {formatNumber('22,921', isArabic)}</span>
                     </div>
                   </div>
                 </label>
@@ -596,7 +601,7 @@ const FilterChips = ({
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
                       <span className="text-sm text-gray-700">{t('dubaiEtihadBusStation')}</span>
-                      <span className="text-xs text-gray-500">₹ 34,921</span>
+                      <span className="text-xs text-gray-500">₹ {formatNumber('34,921', isArabic)}</span>
                     </div>
                   </div>
                 </label>
@@ -609,7 +614,7 @@ const FilterChips = ({
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
                       <span className="text-sm text-gray-700">{t('dubaiEmiratesBusStation')}</span>
-                      <span className="text-xs text-gray-500">₹ 38,425</span>
+                      <span className="text-xs text-gray-500">₹ {formatNumber('38,425', isArabic)}</span>
                     </div>
                   </div>
                 </label>
@@ -622,7 +627,7 @@ const FilterChips = ({
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
                       <span className="text-sm text-gray-700">{t('dxbInternational')}</span>
-                      <span className="text-xs text-gray-500">₹ 42,153</span>
+                      <span className="text-xs text-gray-500">₹ {formatNumber('42,153', isArabic)}</span>
                     </div>
                   </div>
                 </label>
@@ -692,8 +697,8 @@ const FilterChips = ({
                 />
               </div>
               <div className="flex justify-between text-sm text-gray-500 mt-1">
-                <span>0h 30m</span>
-                <span>21h 30m</span>
+                <span>{formatNumber('0', isArabic)}h {formatNumber('30', isArabic)}m</span>
+                <span>{formatNumber('21', isArabic)}h {formatNumber('30', isArabic)}m</span>
               </div>
             </div>
 
@@ -724,8 +729,8 @@ const FilterChips = ({
                 />
               </div>
               <div className="flex justify-between text-sm text-gray-500 mt-1">
-                <span>3h 0m</span>
-                <span>27h 30m</span>
+                <span>{formatNumber('3', isArabic)}h {formatNumber('0', isArabic)}m</span>
+                <span>{formatNumber('27', isArabic)}h {formatNumber('30', isArabic)}m</span>
               </div>
             </div>
           </div>
@@ -757,7 +762,7 @@ const FilterChips = ({
                 />
                 <div className="ml-2 flex items-center justify-between flex-1">
                   <span className="text-sm text-gray-700">{t('largeAircraft')}</span>
-                  <span className="text-xs text-gray-500">₹ 24,853</span>
+                  <span className="text-xs text-gray-500">₹ {formatNumber('24,853', isArabic)}</span>
                 </div>
               </div>
             </label>
@@ -770,7 +775,7 @@ const FilterChips = ({
                 />
                 <div className="ml-2 flex items-center justify-between flex-1">
                   <span className="text-sm text-gray-700">{t('midsizeAircraft')}</span>
-                  <span className="text-xs text-gray-500">₹ 22,921</span>
+                  <span className="text-xs text-gray-500">₹ {formatNumber('22,921', isArabic)}</span>
                 </div>
               </div>
             </label>
