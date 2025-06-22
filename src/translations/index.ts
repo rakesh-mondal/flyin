@@ -69,6 +69,9 @@ export const translations = {
     freeWifi: 'Free Wi-fi',
     extraBaggage: 'Extra Baggage',
     
+    // Contact information
+    customerServicePhone: '+966112246333',
+    
     // Footer
     support: 'Support',
     discover: 'Discover',
@@ -213,6 +216,9 @@ export const translations = {
     wifiAvailable: 'واي فاي متاح',
     freeWifi: 'واي فاي مجاني',
     extraBaggage: 'أمتعة إضافية',
+    
+    // Contact information
+    customerServicePhone: '+966112246333',
     
     // Footer
     support: 'الدعم',

@@ -106,13 +106,13 @@ const TopHeader = ({
               
               {/* WhatsApp Contact */}
               <a 
-                href="tel:+966112246333" 
+                href={`tel:${t('customerServicePhone')}`}
                 className="hidden lg:flex items-center gap-1 hover:text-[#194E91] transition-colors"
               >
                 <svg className="h-4 w-4 text-green-500" viewBox="0 0 32 32" fill="currentColor">
                   <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.236 6.393L4 29l7.828-2.205C13.416 27.417 14.686 27.7 16 27.7c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22.7c-1.18 0-2.337-.206-3.433-.611l-.244-.09-4.65 1.308 1.242-4.47-.159-.23C7.13 19.02 6.3 17.06 6.3 15c0-5.374 4.326-9.7 9.7-9.7s9.7 4.326 9.7 9.7-4.326 9.7-9.7 9.7z"/>
                 </svg>
-                <span className="hidden xl:inline">+966112246333</span>
+                <span className="hidden xl:inline">{t('customerServicePhone')}</span>
               </a>
               
               {/* Currency Selector */}
@@ -288,13 +288,13 @@ const TopHeader = ({
               
               {/* WhatsApp Contact */}
               <a 
-                href="tel:+966112246333" 
+                href={`tel:${t('customerServicePhone')}`}
                 className="hidden lg:flex items-center gap-1 hover:text-[#194E91] transition-colors"
               >
                 <svg className="h-4 w-4 text-green-500" viewBox="0 0 32 32" fill="currentColor">
                   <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.236 6.393L4 29l7.828-2.205C13.416 27.417 14.686 27.7 16 27.7c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22.7c-1.18 0-2.337-.206-3.433-.611l-.244-.09-4.65 1.308 1.242-4.47-.159-.23C7.13 19.02 6.3 17.06 6.3 15c0-5.374 4.326-9.7 9.7-9.7s9.7 4.326 9.7 9.7-4.326 9.7-9.7 9.7z"/>
                 </svg>
-                <span className="hidden xl:inline">+966112246333</span>
+                <span className="hidden xl:inline">{t('customerServicePhone')}</span>
               </a>
               
               {/* Awards */}
