@@ -218,7 +218,7 @@ export const translations = {
     extraBaggage: 'أمتعة إضافية',
     
     // Contact information
-    customerServicePhone: '+966112246333',
+    customerServicePhone: '+٩٦٦١١٢٢٤٦٣٣٣',
     
     // Footer
     support: 'الدعم',
