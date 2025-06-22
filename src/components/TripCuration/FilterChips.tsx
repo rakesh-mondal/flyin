@@ -282,7 +282,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Emirates
+                        {t('emirates')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -313,7 +313,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Air India
+                        {t('airIndia')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -344,7 +344,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Etihad
+                        {t('etihad')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -375,7 +375,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Vistara
+                        {t('vistara')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -406,7 +406,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Qatar Airways
+                        {t('qatarAirways')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -437,7 +437,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Lufthansa
+                        {t('lufthansa')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -468,7 +468,7 @@ const FilterChips = ({
                         className="h-4 w-6 object-contain"
                       />
                       <span className="text-sm text-gray-700 relative">
-                        Singapore Airlines
+                        {t('singaporeAirlines')}
                         <span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t('only')}</span>
                       </span>
                     </div>
@@ -569,7 +569,7 @@ const FilterChips = ({
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
-                      <span className="text-sm text-gray-700">SHJ Sharjah International</span>
+                      <span className="text-sm text-gray-700">{t('shjSharjahInternational')}</span>
                       <span className="text-xs text-gray-500">₹ 25,013</span>
                     </div>
                   </div>
@@ -582,7 +582,7 @@ const FilterChips = ({
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
-                      <span className="text-sm text-gray-700">AUH Zayed International</span>
+                      <span className="text-sm text-gray-700">{t('auhZayedInternational')}</span>
                       <span className="text-xs text-gray-500">₹ 22,921</span>
                     </div>
                   </div>
@@ -595,7 +595,7 @@ const FilterChips = ({
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
-                      <span className="text-sm text-gray-700">Dubai Etihad Bus Station</span>
+                      <span className="text-sm text-gray-700">{t('dubaiEtihadBusStation')}</span>
                       <span className="text-xs text-gray-500">₹ 34,921</span>
                     </div>
                   </div>
@@ -608,7 +608,7 @@ const FilterChips = ({
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
-                      <span className="text-sm text-gray-700">Dubai Emirates Bus Station</span>
+                      <span className="text-sm text-gray-700">{t('dubaiEmiratesBusStation')}</span>
                       <span className="text-xs text-gray-500">₹ 38,425</span>
                     </div>
                   </div>
@@ -621,7 +621,7 @@ const FilterChips = ({
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <div className="ml-2 flex items-center justify-between flex-1">
-                      <span className="text-sm text-gray-700">DXB International</span>
+                      <span className="text-sm text-gray-700">{t('dxbInternational')}</span>
                       <span className="text-xs text-gray-500">₹ 42,153</span>
                     </div>
                   </div>

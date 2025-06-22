@@ -191,6 +191,22 @@ export const translations = {
     largeAircraft: 'Large aircraft',
     midsizeAircraft: 'Midsize aircraft',
     
+    // Airlines
+    emirates: 'Emirates',
+    airIndia: 'Air India', 
+    etihad: 'Etihad',
+    vistara: 'Vistara',
+    qatarAirways: 'Qatar Airways',
+    lufthansa: 'Lufthansa',
+    singaporeAirlines: 'Singapore Airlines',
+    
+    // Airports and Locations
+    shjSharjahInternational: 'SHJ Sharjah International',
+    auhZayedInternational: 'AUH Zayed International', 
+    dubaiEtihadBusStation: 'Dubai Etihad Bus Station',
+    dubaiEmiratesBusStation: 'Dubai Emirates Bus Station',
+    dxbInternational: 'DXB International',
+    
     // Common
     loading: 'Loading...',
     error: 'Error',
@@ -395,6 +411,22 @@ export const translations = {
     aircrafts: 'الطائرات',
     largeAircraft: 'طائرة كبيرة',
     midsizeAircraft: 'طائرة متوسطة',
+    
+    // Airlines
+    emirates: 'طيران الإمارات',
+    airIndia: 'طيران الهند',
+    etihad: 'الاتحاد للطيران',
+    vistara: 'فيستارا',
+    qatarAirways: 'الخطوط الجوية القطرية',
+    lufthansa: 'لوفتهانزا',
+    singaporeAirlines: 'خطوط سنغافورة الجوية',
+    
+    // Airports and Locations
+    shjSharjahInternational: 'مطار الشارقة الدولي SHJ',
+    auhZayedInternational: 'مطار زايد الدولي AUH',
+    dubaiEtihadBusStation: 'محطة حافلات الاتحاد دبي',
+    dubaiEmiratesBusStation: 'محطة حافلات الإمارات دبي', 
+    dxbInternational: 'مطار دبي الدولي DXB',
     
     // Common
     loading: 'جاري التحميل...',
