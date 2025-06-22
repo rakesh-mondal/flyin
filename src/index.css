@@ -94,19 +94,12 @@
   }
 
   [lang="ar"] *, [dir="rtl"] * {
+    font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-
-  /* Arabic font support */
-  [lang="ar"], [dir="rtl"] {
-    font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
-    font-feature-settings: 'liga' 1, 'kern' 1;
-  }
-
-  [lang="ar"] *, [dir="rtl"] * {
-    font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
   }
 
   /* Custom toast color scheme for light mode only */
