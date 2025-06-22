@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, User, ChevronDown } from 'lucide-react';
+import { useLanguage } from '../../hooks/useLanguage';
+import { useTranslation } from '../../translations';
 
 interface TopHeaderProps {
   isSignedIn?: boolean;
@@ -32,27 +34,34 @@ const TopHeader = ({
   onSignIn, 
   onSignOut 
 }: TopHeaderProps) => {
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+  const { language, changeLanguage, isRTL, currentLanguage } = useLanguage();
+  const { t } = useTranslation();
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[1]); // Default to SAR
+  
+  const selectedLanguage = languages.find(lang => lang.code === language) || languages[0];
+
+  const handleLanguageChange = (langCode: string) => {
+    changeLanguage(langCode as 'en' | 'ar');
+  };
 
   return (
-    <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14">
+    <div className="w-full bg-white border-b border-gray-200 flex items-center justify-between px-6 h-14 top-header-nav">
       {/* Left: Logo and nav */}
       <div className="flex items-center gap-8">
-        <a href="/" className="hover:opacity-80 transition-opacity">
+        <a href="/" className="hover:opacity-80 transition-opacity logo">
           <img src="/lovable-uploads/b3b14138-007e-4f04-b265-b44f5f351a9b.png" alt="Flyin.com" className="h-7" />
         </a>
         <nav className="hidden lg:flex gap-6 text-sm font-medium text-[#1a2a3a]">
-          <a href="#" className="hover:text-[#194E91] transition-colors">Flights</a>
-          <a href="#" className="hover:text-[#194E91] transition-colors">Hotels</a>
-          <a href="#" className="hover:text-[#194E91] transition-colors">Flight + Hotel</a>
-          <a href="#" className="hover:text-[#194E91] transition-colors">Staycations</a>
-          <a href="#" className="hover:text-[#194E91] transition-colors">Activities</a>
+          <a href="#" className="hover:text-[#194E91] transition-colors">{t('flights')}</a>
+          <a href="#" className="hover:text-[#194E91] transition-colors">{t('hotels')}</a>
+          <a href="#" className="hover:text-[#194E91] transition-colors">{t('flightAndHotel')}</a>
+          <a href="#" className="hover:text-[#194E91] transition-colors">{t('staycations')}</a>
+          <a href="#" className="hover:text-[#194E91] transition-colors">{t('activities')}</a>
         </nav>
       </div>
       
       {/* Right: Deals, My Bookings, Language, Currency, Contact, Awards, User Section */}
-      <div className="flex items-center gap-4 text-sm font-medium text-[#1a2a3a]">
+      <div className="flex items-center gap-4 text-sm font-medium text-[#1a2a3a] user-controls">
         {/* Deals */}
         <div className="relative flex items-center">
           <span className="mr-1">
@@ -62,12 +71,12 @@ const TopHeader = ({
               <circle cx="17" cy="12" r="1" fill="#1a2a3a"/>
             </svg>
           </span>
-          <span className="hidden sm:inline">Deals</span>
+          <span className="hidden sm:inline">{t('deals')}</span>
           <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5">7</span>
         </div>
         
         {/* Language Selector */}
-        <div className="relative group">
+        <div className="relative group language-selector">
           <button className="flex items-center gap-1 hover:text-[#194E91] transition-colors">
             <span className="text-base">{selectedLanguage.flag}</span>
             <span className="hidden md:inline">{selectedLanguage.name}</span>
@@ -75,12 +84,12 @@ const TopHeader = ({
           </button>
           
           {/* Language Dropdown */}
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
             <div className="py-2">
               {languages.map((language) => (
                 <button
                   key={language.code}
-                  onClick={() => setSelectedLanguage(language)}
+                  onClick={() => handleLanguageChange(language.code)}
                   className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
                     selectedLanguage.code === language.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                   }`}
@@ -102,7 +111,7 @@ const TopHeader = ({
           </button>
           
           {/* Currency Dropdown */}
-          <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
             <div className="py-2">
               {currencies.map((currency) => (
                 <button
@@ -144,22 +153,24 @@ const TopHeader = ({
           <div className="relative group">
             <button className="flex items-center gap-2 hover:text-[#194E91] transition-colors">
               <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Hello {userName}</span>
+              <span className="hidden sm:inline">
+                {language === 'ar' ? `${userName} ${t('hello')}` : `${t('hello')} ${userName}`}
+              </span>
               <ChevronDown className="h-3 w-3" />
             </button>
             
             {/* User Dropdown Menu */}
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-menu">
               <div className="py-2">
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Profile</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Bookings</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">{t('myBookings')}</a>
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
                 <hr className="my-1" />
                 <button 
                   onClick={onSignOut}
                   className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 >
-                  Sign Out
+                  {t('signOut')}
                 </button>
               </div>
             </div>
@@ -169,7 +180,7 @@ const TopHeader = ({
             onClick={onSignIn}
             className="hover:text-[#194E91] transition-colors"
           >
-            Sign In
+            {t('signIn')}
           </button>
         )}
       </div>

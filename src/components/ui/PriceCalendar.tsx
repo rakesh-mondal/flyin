@@ -2,6 +2,8 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { format, addDays, eachDayOfInterval } from "date-fns";
+import { ar } from "date-fns/locale";
+import { useLanguage } from "../../hooks/useLanguage";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -59,6 +61,7 @@ function PriceCalendar({
   onDateSelect,
   ...props
 }: PriceCalendarProps) {
+  const { language } = useLanguage();
   const [mockPriceData] = React.useState(() => {
     const data = generateMockPriceData();
     console.log('Generated price data sample:', Object.entries(data).slice(0, 5));
@@ -76,6 +79,7 @@ function PriceCalendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-2", className)}
+      locale={language === 'ar' ? ar : undefined}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-3 sm:space-x-3 sm:space-y-0",
         month: "space-y-3",

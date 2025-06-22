@@ -5,6 +5,7 @@ import { Search, X, ArrowRightLeft, ArrowUpDown, Calendar, Users } from 'lucide-
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { format, addDays, isAfter, isBefore, startOfDay, parseISO } from 'date-fns';
+import { ar } from 'date-fns/locale';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar as CalendarComponent } from './ui/calendar';
 import { PriceCalendar } from './ui/PriceCalendar';
@@ -17,6 +18,8 @@ import {
 } from './ui/select';
 import { Autocomplete } from './ui/Autocomplete';
 import { City } from '../data/cities';
+import { useLanguage } from '../hooks/useLanguage';
+import { useTranslation } from '../translations';
 
 interface FlightSearchFormProps {
   onSearch: (query: string) => void;
@@ -38,6 +41,8 @@ const cabinClasses = [
 ];
 
 export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
+  const { isRTL, language } = useLanguage();
+  const { t } = useTranslation();
   const [tripType, setTripType] = useState<TripType>('round-trip');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
@@ -132,15 +137,20 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
   const formatPassengerText = () => {
     const parts = [];
     if (passengers.adults > 0) {
-      parts.push(`${passengers.adults} ${passengers.adults === 1 ? 'Adult' : 'Adults'}`);
+      parts.push(`${passengers.adults} ${passengers.adults === 1 ? t('adult') : t('adults')}`);
     }
     if (passengers.children > 0) {
-      parts.push(`${passengers.children} ${passengers.children === 1 ? 'Child' : 'Children'}`);
+      parts.push(`${passengers.children} ${passengers.children === 1 ? t('child') : t('children')}`);
     }
     if (passengers.infants > 0) {
-      parts.push(`${passengers.infants} ${passengers.infants === 1 ? 'Infant' : 'Infants'}`);
+      parts.push(`${passengers.infants} ${passengers.infants === 1 ? t('infant') : t('infants')}`);
     }
-    return parts.join(', ') + `, ${cabinClasses.find(c => c.id === cabinClass)?.name}`;
+    const cabinClassName = cabinClasses.find(c => c.id === cabinClass)?.name;
+    const translatedCabinClass = cabinClassName === 'Economy' ? t('economy') : 
+                                cabinClassName === 'Premium Economy' ? t('premiumEconomy') :
+                                cabinClassName === 'Business' ? t('business') :
+                                cabinClassName === 'First' ? t('first') : cabinClassName;
+    return parts.join(', ') + `, ${translatedCabinClass}`;
   };
 
   return (
@@ -156,7 +166,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             onChange={(e) => setTripType(e.target.value as TripType)}
             className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
           />
-          <span className="text-sm font-medium text-gray-900">One way</span>
+          <span className="text-sm font-medium text-gray-900">{t('oneWay')}</span>
         </label>
         
         <label className="flex items-center gap-2 cursor-pointer">
@@ -168,7 +178,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             onChange={(e) => setTripType(e.target.value as TripType)}
             className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
           />
-          <span className="text-sm font-medium text-gray-900">Round trip</span>
+          <span className="text-sm font-medium text-gray-900">{t('roundTrip')}</span>
         </label>
         
         <label className="flex items-center gap-2 cursor-pointer">
@@ -180,7 +190,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             onChange={(e) => setTripType(e.target.value as TripType)}
             className="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2"
           />
-          <span className="text-sm font-medium text-gray-900">Multi-city</span>
+          <span className="text-sm font-medium text-gray-900">{t('multiCity')}</span>
         </label>
       </div>
 
@@ -193,14 +203,14 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
               <div className="px-5 py-3">
                 <label htmlFor="origin" className="block text-xs font-medium text-gray-500">
-                  From
+                  {t('from')}
                 </label>
                 <div className="relative">
                   <Autocomplete
                     value={origin}
                     onChange={setOrigin}
                     onSelect={setSelectedOriginCity}
-                    placeholder="Country, city or airport"
+                    placeholder={t('countryOrAirport')}
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
                   {origin && (
@@ -220,14 +230,14 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
             <div className="relative flex-1 border-b sm:border-b-0 sm:border-r border-border" style={{ overflow: 'visible' }}>
               <div className="px-5 py-3">
                 <label htmlFor="destination" className="block text-xs font-medium text-gray-500">
-                  To
+                  {t('to')}
                 </label>
                 <div className="relative">
                   <Autocomplete
                     value={destination}
                     onChange={setDestination}
                     onSelect={setSelectedDestinationCity}
-                    placeholder="Country, city or airport"
+                    placeholder={t('countryOrAirport')}
                     className="w-full border-none bg-transparent py-1.5 text-base outline-none placeholder:text-gray-400"
                   />
                   {destination && (
@@ -259,7 +269,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
             <div className="px-5 py-3">
               <label className="block text-xs font-medium text-gray-500">
-                Dates
+                {t('dates')}
               </label>
               <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                 <PopoverTrigger asChild>
@@ -271,7 +281,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     )}
                   >
                     <span>
-                      {departureDate ? format(departureDate, 'MMM dd') : 'Departure'} — {returnDate ? format(returnDate, 'MMM dd') : 'Return'}
+                      {departureDate ? format(departureDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('departure')} — {returnDate ? format(returnDate, 'MMM dd', { locale: language === 'ar' ? ar : undefined }) : t('return')}
                     </span>
                     <Calendar className="h-4 w-4 text-gray-500" />
                   </button>
@@ -316,7 +326,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           <div className="relative flex-1 border-b lg:border-b-0 lg:border-r border-border">
             <div className="px-5 py-3">
               <label className="block text-xs font-medium text-gray-500">
-                Who
+                {t('who')}
               </label>
               <Popover open={isPassengerOpen} onOpenChange={setIsPassengerOpen}>
                 <PopoverTrigger asChild>
@@ -333,8 +343,8 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     {/* Adults */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">Adults</p>
-                        <p className="text-sm text-gray-500">Age 12+</p>
+                        <p className="font-medium">{t('adults')}</p>
+                        <p className="text-sm text-gray-500">{t('age12Plus')}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -360,8 +370,8 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     {/* Children */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">Children</p>
-                        <p className="text-sm text-gray-500">Age 2-11</p>
+                        <p className="font-medium">{t('children')}</p>
+                        <p className="text-sm text-gray-500">{t('age2to11')}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -387,8 +397,8 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
                     {/* Infants */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">Infants</p>
-                        <p className="text-sm text-gray-500">Under 2</p>
+                        <p className="font-medium">{t('infants')}</p>
+                        <p className="text-sm text-gray-500">{t('under2')}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
@@ -413,7 +423,7 @@ export default function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
                     {/* Cabin Class */}
                     <div className="pt-4 border-t">
-                      <p className="font-medium mb-2">Cabin Class</p>
+                      <p className="font-medium mb-2">{t('cabinClass')}</p>
                       <Select value={cabinClass} onValueChange={setCabinClass}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select cabin class" />

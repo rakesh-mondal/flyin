@@ -3,6 +3,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FlightSearchForm from './FlightSearchForm';
 import AnimatedStar from './AnimatedStar';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '../translations';
 
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
@@ -11,6 +12,8 @@ interface DualModeSearchProps {
 }
 
 export default function DualModeSearch({ children, onSearch, className }: DualModeSearchProps) {
+  const { t } = useTranslation();
+  
   return (
     <div className={cn("w-full", className)}>
       <Tabs defaultValue="flights" className="w-full">
@@ -19,25 +22,25 @@ export default function DualModeSearch({ children, onSearch, className }: DualMo
             value="flights" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
-            Flights
+            {t('flights')}
           </TabsTrigger>
           <TabsTrigger 
             value="hotels" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
-            Hotels
+            {t('hotels')}
           </TabsTrigger>
           <TabsTrigger 
             value="rentals" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
-            Rentals
+{t('rentals')}
           </TabsTrigger>
           <TabsTrigger 
             value="ai" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           >
-            Try Flyin AI
+            {t('tryFlyinAI')}
             <span className="ml-1.5">
               <AnimatedStar />
             </span>

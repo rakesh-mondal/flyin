@@ -6,6 +6,8 @@ import SuggestionCard from './SuggestionCard';
 import { cn } from '@/lib/utils';
 import { GlowEffect } from './ui/glow-effect';
 import DualModeSearch from './DualModeSearch';
+import { useLanguage } from '../hooks/useLanguage';
+import { useTranslation } from '../translations';
 
 // Custom SearchButton component with state management
 const SearchButton = () => {
@@ -53,6 +55,8 @@ const searchIntents = [
 ];
 
 export default function TravelCanvas({ onSearch }: { onSearch: (query: string) => void }) {
+  const { isRTL } = useLanguage();
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -107,7 +111,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
     <form 
       onSubmit={handleSubmit} 
       className={cn(
-        "w-full transition-all duration-300",
+        "w-full transition-all duration-300 search-form",
         isSearchFocused ? "scale-105" : ""
       )}
     >
@@ -194,11 +198,11 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
       {/* Main content */}
       <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-gray-900 pb-6">
         {/* Personalized greeting */}
-        <h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center">
-          Hello Rakesh,
+        <h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center content-text">
+          {t('userGreeting').replace('{name}', 'Rakesh')}
         </h1>
-        <p className="mb-6 sm:mb-8 text-center text-base sm:text-lg md:text-xl font-light opacity-90">
-          Where's your next flight taking you?
+        <p className="mb-6 sm:mb-8 text-center text-base sm:text-lg md:text-xl font-light opacity-90 content-text">
+          {t('whereIsYourNextFlight')} {t('takingYou')}
         </p>
 
         {/* Dual-mode Search Component */}
@@ -208,7 +212,7 @@ export default function TravelCanvas({ onSearch }: { onSearch: (query: string) =
 
         {/* Flight Suggestions */}
         <div className="mt-8 sm:mt-12 w-full max-w-5xl overflow-hidden px-0 sm:px-4">
-          <h2 className="mb-4 text-lg sm:text-xl font-medium text-gray-900 px-4 sm:px-0">Discover Middle Eastern Experiences</h2>
+          <h2 className="mb-4 text-lg sm:text-xl font-medium text-gray-900 px-4 sm:px-0 content-text">{t('discoverMiddleEastern')}</h2>
           <div className="relative w-full">
             {/* Left gradient fade */}
             <div className="absolute left-0 top-0 z-10 h-full w-8 sm:w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>

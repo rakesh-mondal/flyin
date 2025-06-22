@@ -12,6 +12,7 @@ import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import PaymentConfirmation from './pages/PaymentConfirmation';
 import Curation from './pages/Curation';
+import LanguageDemo from './pages/LanguageDemo';
 
 function App() {
   // Create a client instance inside the component to avoid hooks being called at the module level
@@ -31,6 +32,7 @@ function App() {
             <Route path="/payment" element={<Payment />} />
             <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
             <Route path="/sliding-number-demo" element={<SlidingNumberDemo />} />
+            <Route path="/language-demo" element={<LanguageDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

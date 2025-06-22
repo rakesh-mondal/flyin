@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { PlaneTakeoff, Image as ImageIcon } from 'lucide-react';
+import { useTranslation } from '../translations';
 
 interface SuggestionCardProps {
   title: string;
@@ -12,8 +13,23 @@ interface SuggestionCardProps {
 }
 
 export default function SuggestionCard({ title, image, type, price, departure, onClick }: SuggestionCardProps) {
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [imageError, setImageError] = React.useState(false);
+
+  // Function to translate the type
+  const getTranslatedType = (type: string) => {
+    switch (type) {
+      case 'Trending':
+        return t('trending');
+      case 'For You':
+        return t('forYou');
+      case 'Popular':
+        return t('popular');
+      default:
+        return type;
+    }
+  };
 
   // Use a proper image element to detect load/error events
   React.useEffect(() => {
@@ -54,7 +70,7 @@ export default function SuggestionCard({ title, image, type, price, departure, o
       {type && (
         <div className="absolute right-2 sm:right-3 top-2 sm:top-3 z-10">
           <span className="rounded-full bg-black/60 px-2 sm:px-2.5 py-0.5 sm:py-1 text-xs font-medium text-white backdrop-blur-sm">
-            {type}
+            {getTranslatedType(type)}
           </span>
         </div>
       )}

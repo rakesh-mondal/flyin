@@ -1,68 +1,70 @@
 import React from 'react';
 import { Button } from './ui/button';
+import { useTranslation } from '../translations';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   const footerSections = [
     {
-      title: 'Support',
+      title: t('support'),
       links: [
-        'Coronavirus (COVID-19) FAQs',
-        'Manage your trips',
-        'Contact Customer Service',
-        'Safety resource centre'
+        t('covidFaqs'),
+        t('manageTrips'),
+        t('contactCustomerService'),
+        t('safetyResourceCentre')
       ]
     },
     {
-      title: 'Discover',
+      title: t('discover'),
       links: [
-        'Genius loyalty programme',
-        'Seasonal and holiday deals',
-        'Travel articles',
-        'Flyin.com for Business',
-        'Traveller Review Awards',
-        'Car hire',
-        'Flight finder',
-        'Restaurant reservations',
-        'Flyin.com for Travel Agents'
+        t('geniusLoyalty'),
+        t('seasonalDeals'),
+        t('travelArticles'),
+        t('flyinBusiness'),
+        t('travellerReviewAwards'),
+        t('carHire'),
+        t('flightFinder'),
+        t('restaurantReservations'),
+        t('flyinTravelAgents')
       ]
     },
     {
-      title: 'Terms and settings',
+      title: t('termsAndSettings'),
       links: [
-        'Privacy & cookies',
-        'Terms and conditions',
-        'Grievance officer',
-        'Modern Slavery Statement',
-        'Human Rights Statement'
+        t('privacyCookies'),
+        t('termsConditions'),
+        t('grievanceOfficer'),
+        t('modernSlaveryStatement'),
+        t('humanRightsStatement')
       ]
     },
     {
-      title: 'Partners',
+      title: t('partners'),
       links: [
-        'Extranet login',
-        'Partner help',
-        'List your property',
-        'Become an affiliate'
+        t('extranetLogin'),
+        t('partnerHelp'),
+        t('listProperty'),
+        t('becomeAffiliate')
       ]
     },
     {
-      title: 'About',
+      title: t('about'),
       links: [
-        'About Flyin.com',
-        'How we work',
-        'Sustainability',
-        'Press centre',
-        'Careers',
-        'Investor relations',
-        'Corporate contact'
+        t('aboutFlyin'),
+        t('howWeWork'),
+        t('sustainability'),
+        t('pressCentre'),
+        t('careers'),
+        t('investorRelations'),
+        t('corporateContact')
       ]
     }
   ];
 
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
+    <footer className="bg-white border-t border-gray-200 mt-auto footer-content">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main footer content */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-8">
@@ -71,7 +73,7 @@ const Footer = () => {
               <h3 className="font-semibold text-gray-900 text-sm uppercase tracking-wide">
                 {section.title}
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-3 footer-links">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <button className="text-sm text-gray-600 hover:text-primary transition-colors duration-200 text-left">
@@ -86,7 +88,7 @@ const Footer = () => {
 
         {/* Currency selector */}
         <div className="flex items-center justify-start mb-8">
-          <div className="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2 border border-gray-200">
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2 border border-gray-200 footer-currency">
             <div className="w-6 h-4 bg-gradient-to-b from-orange-500 via-white to-green-500 rounded-sm flex items-center justify-center">
               <div className="w-3 h-3 rounded-full bg-blue-600 flex items-center justify-center">
                 <div className="w-2 h-2 rounded-full bg-white flex items-center justify-center">
@@ -100,12 +102,12 @@ const Footer = () => {
 
         {/* Bottom section */}
         <div className="pt-8 border-t border-gray-200">
-          <div className="text-center">
+          <div className="text-center content-text">
             <p className="text-xs text-gray-600">
-              Flyin.com is part of Flyin Holdings Inc., the world leader in online travel and related services.
+              {t('flyinDescription')}
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Copyright © 1996–{currentYear} Flyin.com™. All rights reserved.
+              {t('copyright').replace('{year}', currentYear.toString())}
             </p>
           </div>
         </div>

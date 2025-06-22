@@ -143,3 +143,383 @@
 .search-button:hover svg {
   color: #0894FF !important;
 }
+
+/* RTL Support - More selective to avoid breaking layouts */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* RTL Text alignment - only for specific elements */
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  text-align: right;
+}
+
+/* RTL Navigation - only apply to navigation elements */
+[dir="rtl"] nav .flex {
+  flex-direction: row-reverse;
+}
+
+/* RTL Header fixes - More aggressive approach */
+[dir="rtl"] .top-header-nav {
+  flex-direction: row-reverse !important;
+  justify-content: space-between !important;
+}
+
+/* RTL: Logo and nav section should be on the right */
+[dir="rtl"] .top-header-nav > div:first-child {
+  order: 2 !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+/* RTL: User controls section should be on the left */
+[dir="rtl"] .top-header-nav > div:last-child {
+  order: 1 !important;
+  justify-content: flex-start !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* RTL: Navigation links spacing and direction */
+[dir="rtl"] .top-header-nav nav {
+  flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] .top-header-nav nav a {
+  margin-left: 1.5rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav nav a:first-child {
+  margin-left: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav nav a:last-child {
+  margin-left: 1.5rem !important;
+}
+
+/* RTL: Logo positioning - Direct targeting */
+[dir="rtl"] .top-header-nav .logo {
+  margin-right: 0 !important;
+  margin-left: 2rem !important;
+}
+
+/* RTL: Direct logo link targeting */
+[dir="rtl"] .top-header-nav a.hover\\:opacity-80.transition-opacity.logo {
+  margin-right: 0 !important;
+  margin-left: 2rem !important;
+}
+
+/* RTL: Alternative approach - use text-align on parent */
+[dir="rtl"] .top-header-nav > div:first-child {
+  text-align: right !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+}
+
+/* RTL: Force logo container to right with absolute positioning if needed */
+[dir="rtl"] .top-header-nav {
+  position: relative !important;
+}
+
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
+  position: absolute !important;
+  right: 1.5rem !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
+  position: absolute !important;
+  left: 1.5rem !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* RTL: User controls spacing */
+[dir="rtl"] .top-header-nav .user-controls {
+  flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] .top-header-nav .user-controls > * {
+  margin-left: 0.5rem !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .top-header-nav .user-controls > *:first-child {
+  margin-left: 0 !important;
+}
+
+/* RTL: Language selector positioning */
+[dir="rtl"] .language-selector {
+  margin-left: 0 !important;
+  margin-right: 1rem !important;
+}
+
+/* RTL: Dropdown positioning - should open from left in RTL */
+[dir="rtl"] .dropdown-menu {
+  right: auto !important;
+  left: 0 !important;
+}
+
+/* RTL: Dropdown content alignment */
+[dir="rtl"] .dropdown-menu button,
+[dir="rtl"] .dropdown-menu a {
+  text-align: right !important;
+  flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] .dropdown-menu button span:first-child,
+[dir="rtl"] .dropdown-menu a span:first-child {
+  margin-right: 0 !important;
+  margin-left: 8px !important;
+}
+
+/* RTL: Force proper alignment */
+[dir="rtl"] .top-header-nav .flex.items-center.gap-8 {
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
+}
+
+[dir="rtl"] .top-header-nav .flex.items-center.gap-4 {
+  flex-direction: row-reverse !important;
+  justify-content: flex-start !important;
+}
+
+/* RTL: Specific targeting for main header container */
+[dir="rtl"] .top-header-nav.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between {
+  flex-direction: row-reverse !important;
+}
+
+/* RTL: Logo and navigation container - FORCE to right */
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-8 {
+  order: 2 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  justify-self: flex-end !important;
+  align-self: flex-end !important;
+}
+
+/* RTL: User controls container - FORCE to left */
+[dir="rtl"] .top-header-nav > div.flex.items-center.gap-4 {
+  order: 1 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  justify-self: flex-start !important;
+  align-self: flex-start !important;
+}
+
+/* RTL: Force the entire header to use space-between with reverse */
+[dir="rtl"] .top-header-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  flex-direction: row-reverse !important;
+}
+
+/* RTL: More aggressive targeting - target the actual div structure */
+[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav {
+  flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav > div:nth-child(1) {
+  order: 2 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] div.w-full.bg-white.border-b.border-gray-200.flex.items-center.justify-between.px-6.h-14.top-header-nav > div:nth-child(2) {
+  order: 1 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* RTL: Make sure logo container takes up right space */
+[dir="rtl"] .top-header-nav > div:first-child {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+/* RTL: Make sure user controls take up left space */
+[dir="rtl"] .top-header-nav > div:last-child {
+  flex: 0 0 auto !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* RTL: Navigation items reverse order */
+[dir="rtl"] .top-header-nav nav.hidden.lg\\:flex.gap-6 {
+  flex-direction: row-reverse !important;
+}
+
+/* RTL: Better mobile menu positioning */
+[dir="rtl"] .top-header-nav button.lg\\:hidden {
+  order: 0 !important;
+  margin-right: auto !important;
+  margin-left: 1rem !important;
+}
+
+/* RTL Footer fixes - More specific targeting */
+[dir="rtl"] .footer-content {
+  direction: rtl;
+}
+
+[dir="rtl"] .footer-links {
+  text-align: right;
+}
+
+[dir="rtl"] .footer-links button {
+  text-align: right;
+}
+
+[dir="rtl"] .footer-currency {
+  flex-direction: row-reverse;
+}
+
+/* RTL: General text alignment */
+[dir="rtl"] .content-text {
+  text-align: right;
+  direction: rtl;
+}
+
+/* RTL: Dropdown menus positioning */
+[dir="rtl"] .dropdown-menu {
+  right: auto;
+  left: 0;
+}
+
+/* RTL: Header specific flex fixes - more targeted */
+[dir="rtl"] .top-header-nav .flex.items-center.gap-1 {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .top-header-nav .flex.items-center.gap-2 {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .top-header-nav .flex.items-center.gap-4 {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .top-header-nav .flex.items-center.gap-8 {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .top-header-nav nav a:first-child {
+  margin-left: 0;
+}
+
+/* RTL: Logo and nav container */
+[dir="rtl"] .top-header-nav > div:first-child {
+  flex-direction: row-reverse;
+}
+
+/* RTL Form elements */
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  text-align: right;
+}
+
+/* RTL Dropdowns and modals positioning */
+[dir="rtl"] .absolute.right-0 {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .absolute.left-0 {
+  left: auto;
+  right: 0;
+}
+
+/* RTL specific spacing utilities */
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+/* RTL margins and padding reversals */
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+
+[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
+[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+
+/* RTL positioning */
+[dir="rtl"] .left-0 { left: auto; right: 0; }
+[dir="rtl"] .right-0 { right: auto; left: 0; }
+
+/* Arabic font support */
+[lang="ar"] {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+  font-weight: 400;
+}
+
+/* Preserve main layout structure in RTL - Override RTL for main containers */
+[dir="rtl"] .min-h-screen,
+[dir="rtl"] .flex-col,
+[dir="rtl"] .flex-1,
+[dir="rtl"] .relative {
+  direction: ltr !important;
+}
+
+/* Only apply RTL to specific navigation and content areas */
+[dir="rtl"] .top-header-nav {
+  direction: rtl;
+}
+
+[dir="rtl"] .top-header-nav .flex {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .search-form {
+  direction: rtl;
+}
+
+/* Fix navigation spacing in RTL */
+[dir="rtl"] .top-header-nav nav {
+  direction: rtl;
+}
+
+/* Keep main page layout intact */
+[dir="rtl"] .min-h-screen > * {
+  direction: ltr;
+}
+
+/* Only apply RTL to text content, not layout */
+[dir="rtl"] .top-header-nav,
+[dir="rtl"] .search-form,
+[dir="rtl"] .content-text {
+  direction: rtl;
+}
