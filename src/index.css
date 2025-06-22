@@ -289,6 +289,92 @@
   margin-left: 8px !important;
 }
 
+/* Fix dropdown clipping issues */
+.top-header-nav {
+  overflow: visible !important;
+}
+
+.top-header-nav .user-controls {
+  overflow: visible !important;
+}
+
+.top-header-nav .relative.group {
+  overflow: visible !important;
+}
+
+/* Ensure dropdowns appear above all content */
+.dropdown-menu {
+  z-index: 9999 !important;
+  position: absolute !important;
+}
+
+/* Fix for header container clipping */
+.top-header-nav,
+.top-header-nav > *,
+.top-header-nav .flex,
+.top-header-nav .relative {
+  overflow: visible !important;
+}
+
+/* Ensure body and html don't clip dropdowns */
+body, html {
+  overflow-x: auto !important;
+}
+
+/* Specific dropdown visibility fixes */
+.language-selector .dropdown-menu,
+.relative.group .dropdown-menu {
+  position: absolute !important;
+  z-index: 9999 !important;
+  top: 100% !important;
+  margin-top: 8px !important;
+  white-space: nowrap !important;
+  min-width: max-content !important;
+}
+
+/* Ensure parent containers don't clip */
+.top-header-nav .language-selector,
+.top-header-nav .relative.group {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Fix for any potential layout containers */
+main, #root, .app {
+  overflow: visible !important;
+}
+
+/* Additional fixes for dropdown clipping - more targeted approach */
+.top-header-nav,
+.top-header-nav *,
+.top-header-nav .relative,
+.top-header-nav .group {
+  overflow: visible !important;
+}
+
+/* Ensure the viewport doesn't clip dropdowns */
+.top-header-nav .dropdown-menu {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e5e7eb !important;
+  background: white !important;
+}
+
+/* Force dropdowns to be on top */
+.top-header-nav .group:hover .dropdown-menu {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Ensure proper stacking context */
+.top-header-nav {
+  position: relative !important;
+  z-index: 50 !important;
+}
+
 /* RTL: Force proper alignment */
 [dir="rtl"] .top-header-nav .flex.items-center.gap-8 {
   flex-direction: row-reverse !important;
