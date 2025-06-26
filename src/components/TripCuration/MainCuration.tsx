@@ -474,16 +474,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [searchParams, setSearchParams] = useState({
     origin: '',
     destination: '',
-    departureDate: undefined as Date | undefined,
-    returnDate: undefined as Date | undefined,
-    passengers: {
-      adults: 1,
-      children: 0,
-      infants: 0
-    },
-    cabinClass: 'economy',
+    departureDate: new Date(),
+    returnDate: new Date(),
+    passengers: { adults: 1, children: 0, infants: 0 },
+    cabinClass: 'Economy',
     isRoundTrip: true
   });
+
+  // Add one-way detection
+  const isOneWay = !searchParams.isRoundTrip;
 
   // Additional state variables
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
@@ -1421,8 +1420,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     return hours * 60 + minutes;
   }
 
-  // Compute all possible outbound/inbound pairs
-  const allPairs = filteredOutboundFlights.flatMap((out, oi) =>
+  // Compute all possible outbound/inbound pairs (only for round-trip)
+  const allPairs = isOneWay ? [] : filteredOutboundFlights.flatMap((out, oi) =>
     filteredInboundFlights.map((inn, ii) => ({
       out, inn, oi, ii,
       totalPrice: (parseInt(out.price.replace(/[^\d]/g, '') || '0', 10) + parseInt(inn.price.replace(/[^\d]/g, '') || '0', 10)),
@@ -1430,9 +1429,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     }))
   );
 
-  // Find best pairs for each category
+  // Find best pairs for each category (only for round-trip)
   let cheapestPair = null, quickestPair = null, bestPair = null;
-  if (allPairs.length > 0) {
+  if (!isOneWay && allPairs.length > 0) {
     // Cheapest: lowest total price
     cheapestPair = allPairs.reduce((a, b) => a.totalPrice < b.totalPrice ? a : b);
     // Quickest: lowest total duration
@@ -1442,14 +1441,35 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     bestPair = sortedByDuration.reduce((a, b) => a.totalPrice < b.totalPrice ? a : b);
   }
 
+  // For one-way, compute similar categories from outbound flights only
+  let cheapestOutbound = null, quickestOutbound = null, bestOutbound = null;
+  if (isOneWay && filteredOutboundFlights.length > 0) {
+    // Cheapest: lowest price
+    cheapestOutbound = filteredOutboundFlights.reduce((a, b) => 
+      parseInt(a.price.replace(/[^\d]/g, '') || '0', 10) < parseInt(b.price.replace(/[^\d]/g, '') || '0', 10) ? a : b
+    );
+    // Quickest: shortest duration
+    quickestOutbound = filteredOutboundFlights.reduce((a, b) => 
+      parseDuration(a.duration) < parseDuration(b.duration) ? a : b
+    );
+    // Best: cheapest among the 3 quickest flights
+    const sortedByDuration = [...filteredOutboundFlights].sort((a, b) => 
+      parseDuration(a.duration) - parseDuration(b.duration)
+    ).slice(0, 3);
+    bestOutbound = sortedByDuration.reduce((a, b) => 
+      parseInt(a.price.replace(/[^\d]/g, '') || '0', 10) < parseInt(b.price.replace(/[^\d]/g, '') || '0', 10) ? a : b
+    );
+  }
+
   // Compute selected outbound/inbound flights and total price (from filtered lists)
   const hasOutbound = filteredOutboundFlights.length > 0;
-  const hasInbound = filteredInboundFlights.length > 0;
+  const hasInbound = isOneWay ? true : filteredInboundFlights.length > 0; // For one-way, consider inbound as "available"
   const selectedOutbound = hasOutbound ? (filteredOutboundFlights.find(f => f._key === selectedOutboundKey) || filteredOutboundFlights[0]) : null;
-  const selectedInbound = hasInbound ? (filteredInboundFlights.find(f => f._key === selectedInboundKey) || filteredInboundFlights[0]) : null;
-  const totalPrice =
-    (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0', 10) +
-     parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0', 10)).toLocaleString();
+  const selectedInbound = isOneWay ? null : (filteredInboundFlights.length > 0 ? (filteredInboundFlights.find(f => f._key === selectedInboundKey) || filteredInboundFlights[0]) : null);
+  const totalPrice = isOneWay 
+    ? (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0', 10)).toLocaleString()
+    : (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0', 10) +
+       parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0', 10)).toLocaleString();
 
   // Add glow effect state for Summary Row Card (must be after totalPrice is defined)
   const [glow, setGlow] = useState(false);
@@ -1762,6 +1782,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           returnDate={searchParams.returnDate}
           passengers={searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants}
           cabinClass={searchParams.cabinClass}
+          isOneWay={isOneWay}
           onSwap={handleSwapLocations}
           onUpdate={handleUpdateSearch}
         />
@@ -1856,7 +1877,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                     </div>
                   </div>
 
-                  {/* Tabs Card: Cheapest/Best/Quickest */}
+                  {/* Flight Options Cards: Cheapest/Best/Quickest - show for both one-way and round-trip */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className={cn("flex", isRTL && "flex-row-reverse")}>
                       <div className={cn(
@@ -1868,9 +1889,19 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-xs text-gray-500">{t('cheapest')}</div>
-                          <div className="text-[10px] text-gray-500">{cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--'}</div>
+                          <div className="text-[10px] text-gray-500">
+                            {isOneWay 
+                              ? (cheapestOutbound ? formatDuration(parseDuration(cheapestOutbound.duration)) : '--')
+                              : (cheapestPair ? formatDuration(cheapestPair.totalDuration) : '--')
+                            }
+                          </div>
                         </div>
-                        <div className="font-bold text-base">{cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">
+                          {isOneWay 
+                            ? (cheapestOutbound ? formatPrice(parseInt(cheapestOutbound.price.replace(/[^0-9]/g, '') || '0')) : '--')
+                            : (cheapestPair ? formatPrice(cheapestPair.totalPrice) : '--')
+                          }
+                        </div>
                       </div>
                       <div className={cn(
                         "flex-1 border-r border-gray-200 p-3 text-center relative cursor-pointer",
@@ -1881,9 +1912,19 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-xs font-medium">{t('best')}</div>
-                          <div className="text-[10px] text-gray-500">{bestPair ? formatDuration(bestPair.totalDuration) : '--'}</div>
+                          <div className="text-[10px] text-gray-500">
+                            {isOneWay 
+                              ? (bestOutbound ? formatDuration(parseDuration(bestOutbound.duration)) : '--')
+                              : (bestPair ? formatDuration(bestPair.totalDuration) : '--')
+                            }
+                          </div>
                         </div>
-                        <div className="font-bold text-base">{bestPair ? formatPrice(bestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">
+                          {isOneWay 
+                            ? (bestOutbound ? formatPrice(parseInt(bestOutbound.price.replace(/[^0-9]/g, '') || '0')) : '--')
+                            : (bestPair ? formatPrice(bestPair.totalPrice) : '--')
+                          }
+                        </div>
                       </div>
                       <div className={cn(
                         "flex-1 p-3 text-center relative cursor-pointer",
@@ -1893,15 +1934,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-xs text-gray-500">{t('quickest')}</div>
-                          <div className="text-[10px] text-gray-500">{quickestPair ? formatDuration(quickestPair.totalDuration) : '--'}</div>
+                          <div className="text-[10px] text-gray-500">
+                            {isOneWay 
+                              ? (quickestOutbound ? formatDuration(parseDuration(quickestOutbound.duration)) : '--')
+                              : (quickestPair ? formatDuration(quickestPair.totalDuration) : '--')
+                            }
+                          </div>
                         </div>
-                        <div className="font-bold text-base">{quickestPair ? formatPrice(quickestPair.totalPrice) : '--'}</div>
+                        <div className="font-bold text-base">
+                          {isOneWay 
+                            ? (quickestOutbound ? formatPrice(parseInt(quickestOutbound.price.replace(/[^0-9]/g, '') || '0')) : '--')
+                            : (quickestPair ? formatPrice(quickestPair.totalPrice) : '--')
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Summary Row Card */}
-                  {selectedOutbound && selectedInbound && (
+                  {/* Summary Row Card - only show for round-trip */}
+                  {!isOneWay && selectedOutbound && selectedInbound && (
                     <div className={cn(
                       "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-4 transition-all duration-700 sticky top-2 z-30 mb-2"
                     )} style={{ position: 'relative', padding: '2px' }}>
@@ -1915,74 +1966,84 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           className="absolute inset-0 z-0 rounded-2xl pointer-events-none opacity-90"
                         />
                       )}
-                      <div className="flex flex-row items-center px-4 py-4 gap-0 relative z-10 bg-white rounded-xl">
-                        {/* Outbound */}
-                        <div className="flex flex-col items-center flex-1 min-w-0">
-                          <div className="flex flex-row items-center w-full justify-center gap-3">
-                            <div className="flex flex-col items-center min-w-[56px]">
-                              <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedOutbound.airlineName}</span>
+                      <div className="flex items-center justify-between relative z-10 bg-white rounded-xl p-4">
+                        {/* Left Side - Airline Logo and Name */}
+                        <div className="flex flex-col items-center gap-1">
+                          <img src={selectedOutbound.airlineLogo} alt={selectedOutbound.airlineName} className="h-8 w-8 object-contain" />
+                          <div className="text-xs text-gray-600">{translateAirline(selectedOutbound.airlineName)}</div>
+                        </div>
+                        
+                        {/* Center - Flight Details */}
+                        <div className="flex items-center gap-6 flex-1 justify-center">
+                                                    {/* Outbound Flight */}
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-black">{formatTime(selectedOutbound.departureTime)}</div>
+                              <div className="text-xs text-gray-500">{selectedOutbound.departureCode}</div>
                             </div>
-                            <div className="flex flex-col items-center min-w-[48px]">
-                              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.departureTime}</span>
-                              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.departureCode}</span>
+                            <div className="text-center">
+                              <div className="text-xs text-gray-500">{formatDuration(parseDuration(selectedOutbound.duration))}</div>
+                              <div className="w-8 h-px bg-gray-300 mx-auto my-1"></div>
+                              <div className="text-xs text-gray-500">{t(selectedOutbound.stops) || selectedOutbound.stops}</div>
                             </div>
-                            <div className="flex flex-col items-center min-w-[64px] mx-1">
-                              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedOutbound.duration}</span>
-                              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                              <span className="text-xs text-gray-400 leading-none">{selectedOutbound.stops}</span>
+                            <div className="text-left">
+                              <div className="text-lg font-bold text-black">{formatTime(selectedOutbound.arrivalTime)}</div>
+                              <div className="text-xs text-gray-500">{selectedOutbound.arrivalCode}</div>
                             </div>
-                            <div className="flex flex-col items-center min-w-[48px]">
-                              <span className="text-lg font-bold text-black leading-none">{selectedOutbound.arrivalTime}</span>
-                              <span className="text-[11px] text-gray-500 leading-none">{selectedOutbound.arrivalCode}</span>
+                          </div>
+                          
+                          {/* Vertical Divider */}
+                          <div className="h-12 w-px bg-gray-300"></div>
+                          
+                          {/* Center Airline Logo and Name */}
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                              <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-6 w-6 object-contain" />
+                            </div>
+                            <div className="text-xs text-gray-600">{translateAirline(selectedInbound.airlineName)}</div>
+                          </div>
+                          
+                          {/* Inbound Flight */}
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-black">{formatTime(selectedInbound.departureTime)}</div>
+                              <div className="text-xs text-gray-500">{selectedInbound.departureCode}</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-xs text-gray-500">{formatDuration(parseDuration(selectedInbound.duration))}</div>
+                              <div className="w-8 h-px bg-gray-300 mx-auto my-1"></div>
+                              <div className="text-xs text-gray-500">{t(selectedInbound.stops) || selectedInbound.stops}</div>
+                            </div>
+                            <div className="text-left">
+                              <div className="text-lg font-bold text-black">{formatTime(selectedInbound.arrivalTime)}</div>
+                              <div className="text-xs text-gray-500">{selectedInbound.arrivalCode}</div>
                             </div>
                           </div>
                         </div>
-                        {/* Divider */}
-                        <div className="w-px h-16 bg-gray-200 mx-1" />
-                        {/* Inbound */}
-                        <div className="flex flex-col items-center flex-1 min-w-0">
-                          <div className="flex flex-row items-center w-full justify-center gap-3">
-                            <div className="flex flex-col items-center min-w-[56px]">
-                              <img src={selectedInbound.airlineLogo} alt={selectedInbound.airlineName} className="h-7 w-7 rounded bg-[#f8f8f8] mb-0.5" />
-                              <span className="text-[10px] text-gray-500 leading-none mt-0.5">{selectedInbound.airlineName}</span>
+                        
+                        {/* Right Side - Price and Book Button */}
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            {/* Strikethrough original price */}
+                            <div className="text-sm text-gray-400 line-through">
+                              ₹{formatNumber(Math.round((parseInt(selectedOutbound.price.replace(/[^0-9]/g, '') || '0') + parseInt(selectedInbound.price.replace(/[^0-9]/g, '') || '0')) * 1.12), isArabic)}
                             </div>
-                            <div className="flex flex-col items-center min-w-[48px]">
-                              <span className="text-lg font-bold text-black leading-none">{selectedInbound.departureTime}</span>
-                              <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.departureCode}</span>
-                            </div>
-                            <div className="flex flex-col items-center min-w-[64px] mx-1">
-                              <span className="text-[13px] font-semibold text-gray-400 leading-none">{selectedInbound.duration}</span>
-                              <hr className="w-full border-t border-gray-300 my-1 mx-0" />
-                              <span className="text-xs text-gray-400 leading-none">{selectedInbound.stops}</span>
-                            </div>
-                            <div className="flex flex-col items-center min-w-[48px]">
-                              <span className="text-lg font-bold text-black leading-none">{selectedInbound.arrivalTime}</span>
-                              <span className="text-[11px] text-gray-500 leading-none">{selectedInbound.arrivalCode}</span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* Price & Action */}
-                        <div className="flex flex-row justify-center min-w-[280px] pl-4 gap-4">
-                          <div className="flex flex-col justify-center items-end">
-                            {/* Show original price if there's a discount */}
-                            {(selectedOutbound && selectedInbound) && (
-                              <div className="text-sm text-gray-500 line-through">
-                                ₹{(parseInt((selectedOutbound?.originalPrice || (parseInt(selectedOutbound?.price?.replace(/[^0-9]/g, '') || '0') + 5000).toString())?.replace(/[^0-9]/g, '') || '0') + 
-                                   parseInt((selectedInbound?.originalPrice || (parseInt(selectedInbound?.price?.replace(/[^0-9]/g, '') || '0') + 5000).toString())?.replace(/[^0-9]/g, '') || '0')).toLocaleString()}
-                              </div>
-                            )}
-                            {/* Current price */}
+                            {/* Final price */}
                             <div className="text-xl font-bold text-black">
-                              <span className="whitespace-nowrap flex items-center gap-1 font-sans tabular-nums">
-                                <span>₹</span>
-                                <SlidingNumber value={parseInt(totalPrice.replace(/[^0-9]/g, '')) || 0} />
-                              </span>
+                              ₹ {formatNumber((parseInt(selectedOutbound.price.replace(/[^0-9]/g, '') || '0') + parseInt(selectedInbound.price.replace(/[^0-9]/g, '') || '0')), isArabic)}
                             </div>
                           </div>
-                          <div className="flex items-center">
-                            <Button className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]" onClick={() => handleTripSelect({ outbound: selectedOutbound, inbound: selectedInbound, totalPrice })}>{t('bookNow')}</Button>
-                          </div>
+                          <Button 
+                            className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white font-semibold rounded-lg px-6 py-3 transition-colors duration-200"
+                            onClick={() => handleTripSelect({ 
+                              outbound: selectedOutbound, 
+                              inbound: selectedInbound, 
+                              totalPrice: (parseInt(selectedOutbound.price.replace(/[^0-9]/g, '') || '0') + parseInt(selectedInbound.price.replace(/[^0-9]/g, '') || '0')),
+                              isOneWay: false 
+                            })}
+                          >
+                            Book Now
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -2064,7 +2125,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                   {/* Outbound & Inbound Flight Lists Card */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="pt-2 pr-4 pb-4 pl-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className={cn("grid gap-6", isOneWay ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
                         {/* Outbound List */}
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
@@ -2090,115 +2151,167 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px]",
+                                      "rounded-md border px-4 py-3 text-left transition-all h-[80px] w-full",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
                                   >
-                                    <div className="flex items-center gap-3 py-1">
-                                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
-                                      <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                          <span className="text-base font-bold text-black">
-                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
-                                            {option.stops === '1 stop' && (
-                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
-                                            )}
-                                          </span>
-                                          {/* Layover Tag - positioned next to time/via text */}
-                                          {layoverTag && (
-                                            <Tooltip>
-                                              <TooltipTrigger asChild>
-                                                {layoverTag.isShort || layoverTag.isLong ? (
-                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
-                                                    {layoverTag.tag}
-                                                  </div>
-                                                ) : (
-                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
-                                                    {layoverTag.tag}
-                                                  </span>
-                                                )}
-                                              </TooltipTrigger>
-                                              <TooltipContent className="bg-black text-white border-black">
-                                                {layoverTag.isShort ? (
-                                                  <div className="text-xs">
-                                                    <p className="font-semibold">{t('shortLayoverWarning')}</p>
-                                                    <p>{t('layover')}: {option.layover}</p>
-                                                    <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
-                                                  </div>
-                                                ) : layoverTag.isLong ? (
-                                                  <div className="text-xs">
-                                                    <p className="font-semibold">{t('longLayover')}</p>
-                                                    <p>{t('layover')}: {option.layover}</p>
-                                                    <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
-                                                  </div>
-                                                ) : (
-                                                  <p className="text-xs">{t('layover')}: {option.layover}</p>
-                                                )}
-                                              </TooltipContent>
-                                            </Tooltip>
-                                          )}
+                                    <div className="flex items-center justify-between w-full">
+                                      <div className="flex items-center gap-4 flex-1 min-w-0">
+                                        {/* Airline logo and name in vertical layout */}
+                                        <div className="flex flex-col items-center gap-1 flex-shrink-0 mr-2 min-w-[100px]">
+                                          <img src={option.airlineLogo} alt={option.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
+                                          <div className="text-xs text-gray-600 text-center whitespace-nowrap">{translateAirline(option.airlineName)}</div>
                                         </div>
-                                        <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
-                                          <span className="flex-shrink-0">{translateAirline(option.airlineName)}</span>
-                                          <span className="flex-shrink-0">· {t(option.stops) || option.stops}</span>
-                                          {option.stops === 'non-stop' && (
-                                            <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
-                                              <Luggage className="h-4 w-4 mr-0.5" />
-                                              <Ban className="h-3 w-3 text-red-500 -ml-1" />
-                                              <span
-                                                className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
-                                                style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
-                                              >
-                                                {t('noCheckInBaggage')}
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="text-lg font-bold text-black">
+                                              {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
+                                              {option.stops === '1 stop' && (
+                                                <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
+                                              )}
+                                            </span>
+                                            {/* Layover Tag - positioned next to time/via text */}
+                                            {layoverTag && (
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  {layoverTag.isShort || layoverTag.isLong ? (
+                                                    <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
+                                                      {layoverTag.tag}
+                                                    </div>
+                                                  ) : (
+                                                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
+                                                      {layoverTag.tag}
+                                                    </span>
+                                                  )}
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-black text-white border-black">
+                                                  {layoverTag.isShort ? (
+                                                    <div className="text-xs">
+                                                      <p className="font-semibold">{t('shortLayoverWarning')}</p>
+                                                      <p>{t('layover')}: {option.layover}</p>
+                                                      <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
+                                                    </div>
+                                                  ) : layoverTag.isLong ? (
+                                                    <div className="text-xs">
+                                                      <p className="font-semibold">{t('longLayover')}</p>
+                                                      <p>{t('layover')}: {option.layover}</p>
+                                                      <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
+                                                    </div>
+                                                  ) : (
+                                                    <p className="text-xs">{t('layover')}: {option.layover}</p>
+                                                  )}
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            )}
+                                          </div>
+                                          <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
+                                            <span className="flex-shrink-0">{t(option.stops) || option.stops}</span>
+                                            {option.stops === 'non-stop' && (
+                                              <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
+                                                <Luggage className="h-4 w-4 mr-0.5" />
+                                                <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                                <span
+                                                  className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                                  style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                                >
+                                                  {t('noCheckInBaggage')}
+                                                </span>
                                               </span>
-                                            </span>
-                                          )}
-                                          {/* Show 'e seats left' tag randomly for non-non-stop flights */}
-                                          {showSeatsLeft && (
-                                            <span className={cn(
-                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
-                                              isRTL ? "mr-0.5" : "ml-0.5"
-                                            )}>
-                                              {formatNumber(2, isArabic)} {t('seatsLeft')}
-                                            </span>
-                                          )}
+                                            )}
+                                            {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                            {showSeatsLeft && (
+                                              <span className={cn(
+                                                "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                                isRTL ? "mr-0.5" : "ml-0.5"
+                                              )}>
+                                                {formatNumber(2, isArabic)} {t('seatsLeft')}
+                                              </span>
+                                            )}
+                                          </div>
                                         </div>
                                       </div>
                                       <div className={cn(
-                                        "flex flex-col justify-between h-full",
+                                        "flex flex-col justify-center gap-1 ml-4 flex-shrink-0",
                                         isArabic ? "text-left items-start" : "text-right items-end"
                                       )}>
-                                        <div className={cn(
-                                          "flex flex-col gap-1",
-                                          isArabic ? "items-start" : "items-end"
-                                        )}>
+                                        {isOneWay ? (
+                                          /* Price and Book Now button on same line for one-way, with More Info below */
                                           <div className={cn(
-                                            "flex items-center gap-2",
-                                            isArabic ? "justify-start" : "justify-end"
+                                            "flex flex-col gap-1",
+                                            isArabic ? "items-start" : "items-end"
                                           )}>
-                                            {/* Original price with strikethrough */}
-                                            {option.originalPrice && (
-                                              <div className="text-xs text-gray-500 line-through">
-                                                ₹{formatNumber(option.originalPrice, isArabic)}
+                                            <div className={cn(
+                                              "flex items-center gap-3",
+                                              isArabic ? "justify-start" : "justify-end"
+                                            )}>
+                                              <div className="flex items-baseline gap-2">
+                                                {/* Original price with strikethrough beside main price */}
+                                                {option.originalPrice && (
+                                                  <div className="text-xs text-gray-500 line-through">
+                                                    ₹{formatNumber(option.originalPrice, isArabic)}
+                                                  </div>
+                                                )}
+                                                {/* Current price */}
+                                                <div className="text-lg font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
                                               </div>
-                                            )}
-                                            {/* Current price */}
-                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                              <Button 
+                                                className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]"
+                                                onClick={e => { 
+                                                  e.stopPropagation(); 
+                                                  handleTripSelect({ 
+                                                    outbound: option, 
+                                                    totalPrice: option.price, 
+                                                    isOneWay: true 
+                                                  }); 
+                                                }}
+                                              >
+                                                {t('bookNow')}
+                                              </Button>
+                                            </div>
+                                            {/* More Info link below the price and button */}
+                                            <span
+                                              className={cn(
+                                                "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                isArabic ? "flex-row-reverse" : ""
+                                              )}
+                                              role="button"
+                                              tabIndex={0}
+                                              onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                            >
+                                              {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                            </span>
                                           </div>
-                                          <span
-                                            className={cn(
-                                              "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
-                                              isArabic ? "flex-row-reverse" : ""
-                                            )}
-                                            role="button"
-                                            tabIndex={0}
-                                            onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                          >
-                                            {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
-                                          </span>
-                                        </div>
+                                        ) : (
+                                          <>
+                                            <div className={cn(
+                                              "flex items-center gap-2",
+                                              isArabic ? "justify-start" : "justify-end"
+                                            )}>
+                                              {/* Original price with strikethrough */}
+                                              {option.originalPrice && (
+                                                <div className="text-xs text-gray-500 line-through">
+                                                  ₹{formatNumber(option.originalPrice, isArabic)}
+                                                </div>
+                                              )}
+                                              {/* Current price */}
+                                              <div className="text-lg font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                            </div>
+                                            <span
+                                              className={cn(
+                                                "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                isArabic ? "flex-row-reverse" : ""
+                                              )}
+                                              role="button"
+                                              tabIndex={0}
+                                              onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                            >
+                                              {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                            </span>
+                                          </>
+                                        )}
                                       </div>
                                     </div>
                                   </button>
@@ -2207,7 +2320,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             })}
                           </div>
                         </div>
-                        {/* Inbound List */}
+                        {/* Inbound List - only show for round-trip */}
+                        {!isOneWay && (
                         <div>
                           <div className="mb-2 text-sm font-semibold text-gray-700 py-2 flex items-center justify-between">
                             <span>{t('dubai')} → {t('newYork')}</span>
@@ -2237,8 +2351,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     )}
                                     onClick={() => handleManualInboundSelect(option)}
                                   >
-                                    <div className="flex items-center gap-3 py-1">
-                                      <img src={option.airlineLogo} alt={option.airlineName} className="h-5 w-8 object-contain bg-white border rounded" />
+                                    <div className="flex items-center gap-2 py-1">
+                                                                              <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           <span className="text-base font-bold text-black">
@@ -2349,6 +2463,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             })}
                           </div>
                         </div>
+                        )}
                       </div>
                     </div>
                   </div>

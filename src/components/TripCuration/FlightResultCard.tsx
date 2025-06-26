@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Heart, Share } from 'lucide-react';
+import { Heart, Share, ArrowRight } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { cn, formatNumber } from '@/lib/utils';
@@ -136,6 +136,12 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
     setImgError(true);
   };
 
+  const handleFlightDetails = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Handle flight details click
+    console.log('Flight details clicked');
+  };
+
   const toggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsSaved(!isSaved);
@@ -148,192 +154,130 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
 
   const layoverTag = getLayoverTag(flight.layoverInfo);
 
-  return (
-    <TooltipProvider>
-      <div className="space-y-2">
-        <Card 
-          onClick={onClick}
-          className={cn(
-            "overflow-visible border border-gray-200 cursor-pointer transition-all duration-500",
-            isSelected ? "ring-2 ring-black shadow-sm" : "",
-            glow ? "ring-4 ring-yellow-400/80 shadow-yellow-300 shadow-2xl scale-105 z-10" : ""
-          )}
-        >
-          {/* Flight information section */}
-          <div className="flex flex-col md:flex-row">
-            {/* Left column for flights */}
-            <div className="flex-grow p-4">
-              {/* Save and Share buttons */}
-              <div className="mb-4 flex items-center space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex items-center gap-1.5 rounded-full"
-                  onClick={toggleSave}
-                >
-                  <Heart className={cn("h-4 w-4", isSaved ? "fill-red-500 text-red-500" : "")} />
-                  <span>{t('save')}</span>
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex items-center gap-1.5 rounded-full"
-                  onClick={handleShare}
-                >
-                  <Share className="h-4 w-4" />
-                  <span>{t('share')}</span>
-                </Button>
-              </div>
-              
-              {/* Outbound flight */}
-              <div className="border-b border-gray-200 pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-xl font-bold">
-                      {formatNumber(flight.departureTime, isArabic)} – {formatNumber(flight.arrivalTime, isArabic)}
-                    </div>
-                    {flight.tags && flight.tags.includes("Direct Flight") ? (
-                      <Badge variant="outline" className="bg-purple-50 text-xs text-purple-600 border-none">
-                        Direct
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
-                        {flight.stops === 1 ? `${formatNumber(1, isArabic)} stop` : `${formatNumber(flight.stops, isArabic)} stops`}
-                      </Badge>
-                    )}
-                    {/* Layover Tag */}
-                    {layoverTag && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          {layoverTag.isShort || layoverTag.isLong ? (
-                            <div className="cursor-help">
-                              {layoverTag.tag}
-                            </div>
-                          ) : (
-                            <Badge 
-                              variant="outline" 
-                              className={cn("text-[8px] border cursor-help px-1.5 py-0.5", layoverTag.color)}
-                            >
-                              {layoverTag.tag}
-                            </Badge>
-                          )}
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-white border-black">
-                          {layoverTag.isShort ? (
-                            <div className="text-xs">
-                              <p className="font-semibold">Short Layover Warning</p>
-                              <p>Layover: {flight.layoverInfo}</p>
-                              <p className="text-yellow-200 mt-1">⚠️ Less than 2 hours - may be risky for connections</p>
-                            </div>
-                          ) : layoverTag.isLong ? (
-                            <div className="text-xs">
-                              <p className="font-semibold">Long Layover</p>
-                              <p>Layover: {flight.layoverInfo}</p>
-                              <p className="text-blue-200 mt-1">ℹ️ Extended layover - time to explore the airport or city</p>
-                            </div>
-                          ) : (
-                            <p className="text-xs">Layover: {flight.layoverInfo}</p>
-                          )}
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                  <div className="text-lg font-semibold">{formatNumber(flight.duration, isArabic)}</div>
-                </div>
-                
-                <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
-                  <div>
-                    {flight.departureCode} {translateCity(flight.departureCity)} – {flight.arrivalCode} {translateCity(flight.arrivalCity)}
-                  </div>
-                  {flight.airlineLogo && !imgError ? (
-                    <img 
-                      src={flight.airlineLogo} 
-                      alt={flight.airline} 
-                      className="h-6 w-auto"
-                      onError={handleImgError}
-                    />
-                  ) : (
-                    <span className="font-medium">
-                      {translateAirline(flight.airline)}
-                    </span>
-                  )}
-                </div>
+  // Helper function to get via information (layover airport)
+  const getViaInfo = () => {
+    if (flight.layoverInfo) {
+      // Extract airport code from layover info like "6h 55m in Dubai" -> "DXB"
+      const airportMatch = flight.layoverInfo.match(/in\s+(\w+)/i);
+      if (airportMatch) {
+        const city = airportMatch[1];
+        // Common airport code mappings
+        const airportCodes = {
+          'Dubai': 'DXB',
+          'Doha': 'DOH',
+          'Abu Dhabi': 'AUH',
+          'Colombo': 'CMB',
+          'Istanbul': 'IST',
+          'London': 'LHR',
+          'Frankfurt': 'FRA'
+        };
+        return airportCodes[city] || city.slice(0, 3).toUpperCase();
+      }
+    }
+    return null;
+  };
 
-                {flight.layoverInfo && (
-                  <div className="mt-2 text-sm text-gray-500">
-                    {flight.layoverInfo}
-                  </div>
-                )}
-              </div>
-              
-              {/* Return flight */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-xl font-bold">
-                      {formatNumber('19:50', isArabic)} – {formatNumber('19:20', isArabic)}
-                    </div>
-                    <Badge variant="outline" className="bg-blue-50 text-xs text-blue-600 border-none">
-                      {flight.stops === 1 ? `${formatNumber(1, isArabic)} stop` : `${formatNumber(flight.stops, isArabic)} stops`}
-                    </Badge>
-                  </div>
-                  <div className="text-lg font-semibold">{formatNumber('19', isArabic)}h {formatNumber('00', isArabic)}m</div>
-                </div>
-                
-                <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
-                  <div>
-                    {flight.arrivalCode} {translateCity(flight.arrivalCity)} – {flight.departureCode} {translateCity(flight.departureCity)}
-                  </div>
-                  {flight.airlineLogo && !imgError ? (
-                    <img 
-                      src={flight.airlineLogo} 
-                      alt={flight.airline} 
-                      className="h-6 w-auto"
-                      onError={handleImgError}
-                    />
-                  ) : (
-                    <span className="font-medium">
-                      {translateAirline(flight.airline)}
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="mt-4 text-xs text-gray-500">
-                {translateAirline(flight.airline)}
-              </div>
-            </div>
-            
-            {/* Right column for price and action */}
-            <div className="bg-gray-50 p-4 flex flex-col items-center justify-center border-l border-gray-200 min-w-[180px]">
-              {/* Show original price if there's a discount */}
-              {flight.originalPrice && flight.originalPrice > flight.price && (
-                <div className="text-sm text-gray-500 line-through mb-1">
-                  ₹{formatNumber(flight.originalPrice.toLocaleString(), isArabic)}
+  const viaInfo = getViaInfo();
+
+  return (
+    <Card 
+      onClick={onClick}
+      className={cn(
+        "border border-gray-200 cursor-pointer transition-all duration-500 bg-white hover:shadow-md",
+        isSelected ? "ring-2 ring-blue-500 shadow-sm" : "",
+        glow ? "ring-4 ring-yellow-400/80 shadow-yellow-300 shadow-2xl scale-105 z-10" : ""
+      )}
+    >
+      <div className="p-4">
+        <div className="flex items-start justify-between">
+          {/* Left side - Logo and flight info */}
+          <div className="flex items-start space-x-3 flex-1">
+            {/* Airline logo */}
+            <div className="flex-shrink-0">
+              {flight.airlineLogo && !imgError ? (
+                <img 
+                  src={flight.airlineLogo} 
+                  alt={flight.airline} 
+                  className="h-8 w-auto"
+                  onError={handleImgError}
+                />
+              ) : (
+                <div className="h-8 w-8 bg-gray-100 rounded flex items-center justify-center">
+                  <span className="text-xs font-medium text-gray-600">
+                    {flight.airlineCode || flight.airline.substring(0, 2).toUpperCase()}
+                  </span>
                 </div>
               )}
-              
-              {/* Current price */}
-              <div className="text-2xl font-bold">
-                <span>₹</span><SlidingNumber value={flight.price} useArabicNumerals={isArabic} />
-              </div>
-              <div className="mb-1 text-xs text-gray-500">Economy</div>
-              <Button 
-                onClick={onClick}
-                className={cn(
-                  "w-full rounded-md text-sm font-medium py-2 mt-2",
-                  isSelected 
-                    ? "bg-gray-200 text-gray-800" 
-                    : "bg-black text-white"
+            </div>
+
+            {/* Flight details */}
+            <div className="flex-1">
+              {/* Flight times with via info */}
+              <div className="flex items-center space-x-2 mb-1">
+                <div className="text-xl font-semibold text-gray-900">
+                  {formatNumber(flight.departureTime, isArabic)}–{formatNumber(flight.arrivalTime, isArabic)}
+                </div>
+                {viaInfo && (
+                  <div className="text-sm text-gray-600 font-medium">
+                    via {viaInfo}
+                  </div>
                 )}
-              >
-                {isSelected ? t('selected') : t('select')}
-              </Button>
+              </div>
+
+              {/* Airline name and flight details */}
+              <div className="text-sm text-gray-600 space-y-0.5">
+                <div>{translateAirline(flight.airline)}</div>
+                <div className="flex items-center space-x-1">
+                  {/* Stops info */}
+                  <span>
+                    {flight.stops === 0 ? 'Direct' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+                  </span>
+                  <span>•</span>
+                  <span>{formatNumber(flight.duration, isArabic)}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </Card>
+
+                     {/* Right side - Price and actions */}
+           <div className="flex flex-col items-end space-y-2 ml-4">
+             {/* Price and Book Now button on same line */}
+             <div className="flex items-center space-x-4">
+               <div className="text-right">
+                 <div className="text-2xl font-bold text-gray-900">
+                   ₹<SlidingNumber value={flight.price} useArabicNumerals={isArabic} />
+                 </div>
+               </div>
+               
+               <Button 
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   onClick();
+                 }}
+                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+               >
+                 Book Now
+               </Button>
+             </div>
+
+             {/* Promotional text */}
+             <div className="text-sm text-green-600 font-medium text-right">
+               Get ₹600 off with FLY
+             </div>
+           </div>
+        </div>
+
+        {/* Flight details link */}
+        <div className="flex justify-end mt-3">
+          <button
+            onClick={handleFlightDetails}
+            className="text-blue-600 text-sm font-medium hover:text-blue-700 flex items-center space-x-1"
+          >
+            <span>Flight details</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
-    </TooltipProvider>
+    </Card>
   );
 }

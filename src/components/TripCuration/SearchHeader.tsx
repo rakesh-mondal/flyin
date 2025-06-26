@@ -12,6 +12,7 @@ interface SearchHeaderProps {
   returnDate?: Date;
   passengers?: number;
   cabinClass?: string;
+  isOneWay?: boolean;
   onSwap: () => void;
   onUpdate: () => void;
 }
@@ -23,6 +24,7 @@ const SearchHeader = ({
   returnDate,
   passengers = 1,
   cabinClass = "Economy",
+  isOneWay = false,
   onSwap,
   onUpdate
 }: SearchHeaderProps) => {
@@ -92,7 +94,10 @@ const SearchHeader = ({
           <div className="px-4 sm:px-6 py-2 sm:py-3">
             <div className="flex items-center">
               <span className="text-sm truncate">
-                {formatDate(departureDate) || 'Departure'} — {formatDate(returnDate) || 'Return'}
+                {isOneWay 
+                  ? (formatDate(departureDate) || 'Departure')
+                  : `${formatDate(departureDate) || 'Departure'} — ${formatDate(returnDate) || 'Return'}`
+                }
               </span>
             </div>
           </div>
