@@ -195,11 +195,13 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
   const isArabic = language === 'ar';
   const minPrice = Math.min(...dates.map(d => d.price));
   
-  // Calculate the indices for the 3 dates to show
+  // Calculate the indices for the 5 dates to show
   const indices = [
+    Math.max(0, selectedIdx - 2),
     Math.max(0, selectedIdx - 1),
     selectedIdx,
-    Math.min(dates.length - 1, selectedIdx + 1)
+    Math.min(dates.length - 1, selectedIdx + 1),
+    Math.min(dates.length - 1, selectedIdx + 2)
   ];
 
   return (
@@ -218,15 +220,15 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
             key={`${keyPrefix}date-${idx}-${i}-${dates[idx]?.price}`}
             className={
               'flex flex-col items-center cursor-pointer ' +
-              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
+              (i === 2 ? 'font-bold text-black' : 'text-gray-500')
             }
             onClick={() => onSelect(idx)}
             style={{ 
               fontSize: '12px', 
               lineHeight: '16px', 
-              width: isArabic ? 90 : 70, 
-              minWidth: isArabic ? 90 : 70, 
-              maxWidth: isArabic ? 90 : 70 
+              width: isArabic ? 70 : 60, 
+              minWidth: isArabic ? 70 : 60, 
+              maxWidth: isArabic ? 70 : 60 
             }}
           >
             <div 
@@ -247,7 +249,7 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
             } style={{ fontSize: '12px' }}>
               ₹{formatNumber(dates[idx]?.price || 0, isArabic)}
             </div>
-            {i === 1 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
+            {i === 2 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
           </div>
         ))}
       </div>
