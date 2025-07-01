@@ -2315,11 +2315,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                             </div>
                                           </>
                                         ) : (
-                                          <div className="flex items-center gap-3">
-                                            {/* Price Section - Left Side */}
+                                          <div className={cn("flex flex-col gap-1", isArabic ? "items-start" : "items-end")}>
+                                            {/* Price Section - Side by Side for Round Trip */}
                                             <div className={cn(
-                                              "text-right",
-                                              isArabic ? "text-left" : "text-right"
+                                              "flex items-center gap-2",
+                                              isArabic ? "flex-row-reverse" : ""
                                             )}>
                                               {/* Original price with strikethrough */}
                                               {option.originalPrice && (
@@ -2331,7 +2331,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
                                             </div>
 
-                                            {/* More Info Section - Right Side */}
+                                            {/* More Info Section - Below Price */}
                                             <div className="flex-shrink-0">
                                               <span
                                                 className={cn(
@@ -2458,11 +2458,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                         </div>
                                       </div>
-                                      <div className="flex items-center gap-3">
-                                        {/* Price Section - Left Side */}
+                                      <div className={cn("flex flex-col gap-1", isArabic ? "items-start" : "items-end")}>
+                                        {/* Price Section - Side by Side for Round Trip */}
                                         <div className={cn(
-                                          "text-right",
-                                          isArabic ? "text-left" : "text-right"
+                                          "flex items-center gap-2",
+                                          isArabic ? "flex-row-reverse" : ""
                                         )}>
                                           {/* Original price with strikethrough */}
                                           {option.originalPrice && (
@@ -2474,7 +2474,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
                                         </div>
 
-                                        {/* More Info Section - Right Side */}
+                                        {/* More Info Section - Below Price */}
                                         <div className="flex-shrink-0">
                                           <span
                                             className={cn(
