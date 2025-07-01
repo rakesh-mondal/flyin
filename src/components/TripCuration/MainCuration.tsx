@@ -2191,16 +2191,40 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
                                   >
-                                    <div className="flex items-start gap-2 py-1">
+                                    <div className="flex items-center gap-2 py-1">
                                       <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                          <span className="text-base font-bold text-black">
-                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
+                                          {/* Time and Airport Codes Section */}
+                                          <div className="flex items-center gap-2">
+                                            <div className="flex flex-col items-start">
+                                              <span className="text-base font-bold text-black">
+                                                {formatTime(option.departureTime)}
+                                              </span>
+                                              {isOneWay && (
+                                                <div className="text-xs text-gray-500 font-medium">
+                                                  {option.departureCode}
+                                                </div>
+                                              )}
+                                            </div>
+                                            <span className="text-base font-bold text-black mx-1">→</span>
+                                            <div className="flex flex-col items-start">
+                                              <span className="text-base font-bold text-black">
+                                                {formatTime(option.arrivalTime)}
+                                              </span>
+                                              {isOneWay && (
+                                                <div className="text-xs text-gray-500 font-medium">
+                                                  {option.arrivalCode}
+                                                </div>
+                                              )}
+                                            </div>
+                                            {/* Via text and layover icons inline with times */}
                                             {option.stops === '1 stop' && (
-                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
+                                              <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
+                                                {t('via')} {t('dxbAirport')}
+                                              </span>
                                             )}
-                                          </span>
+                                          </div>
                                           {/* Layover Tag - positioned next to time/via text */}
                                           {layoverTag && (
                                             <Tooltip>
@@ -2388,16 +2412,40 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     )}
                                     onClick={() => handleManualInboundSelect(option)}
                                   >
-                                    <div className="flex items-start gap-2 py-1">
+                                    <div className="flex items-center gap-2 py-1">
                                                                               <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                          <span className="text-base font-bold text-black">
-                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
+                                          {/* Time and Airport Codes Section */}
+                                          <div className="flex items-center gap-2">
+                                            <div className="flex flex-col items-start">
+                                              <span className="text-base font-bold text-black">
+                                                {formatTime(option.departureTime)}
+                                              </span>
+                                              {isOneWay && (
+                                                <div className="text-xs text-gray-500 font-medium">
+                                                  {option.departureCode}
+                                                </div>
+                                              )}
+                                            </div>
+                                            <span className="text-base font-bold text-black mx-1">→</span>
+                                            <div className="flex flex-col items-start">
+                                              <span className="text-base font-bold text-black">
+                                                {formatTime(option.arrivalTime)}
+                                              </span>
+                                              {isOneWay && (
+                                                <div className="text-xs text-gray-500 font-medium">
+                                                  {option.arrivalCode}
+                                                </div>
+                                              )}
+                                            </div>
+                                            {/* Via text and layover icons inline with times */}
                                             {option.stops === '1 stop' && (
-                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
+                                              <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
+                                                {t('via')} {t('dxbAirport')}
+                                              </span>
                                             )}
-                                          </span>
+                                          </div>
                                           {/* Layover Tag - positioned next to time/via text */}
                                           {layoverTag && (
                                             <Tooltip>
