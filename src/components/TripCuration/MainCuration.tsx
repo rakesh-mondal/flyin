@@ -190,17 +190,47 @@ const mockDates = Array.from({ length: 14 }, (_, i) => ({
   price: Math.floor(5000 + Math.random() * 4000),
 }));
 
-function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
+function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '', maxDates = 3 }) {
   const { language } = useLanguage();
   const isArabic = language === 'ar';
   const minPrice = Math.min(...dates.map(d => d.price));
   
-  // Calculate the indices for the 3 dates to show
-  const indices = [
-    Math.max(0, selectedIdx - 1),
-    selectedIdx,
-    Math.min(dates.length - 1, selectedIdx + 1)
-  ];
+  // Calculate the indices for the dates to show based on maxDates
+  const indices = [];
+  const halfRange = Math.floor(maxDates / 2);
+  
+  if (maxDates === 3) {
+    // Original logic for 3 dates
+    indices.push(
+      Math.max(0, selectedIdx - 1),
+      selectedIdx,
+      Math.min(dates.length - 1, selectedIdx + 1)
+    );
+  } else if (maxDates === 5) {
+    // Logic for 5 dates: 2 before, current, 2 after
+    for (let i = selectedIdx - halfRange; i <= selectedIdx + halfRange; i++) {
+      if (i >= 0 && i < dates.length) {
+        indices.push(i);
+      }
+    }
+    // Ensure we always have 5 dates if possible
+    while (indices.length < maxDates && indices.length < dates.length) {
+      if (indices[0] > 0) {
+        indices.unshift(indices[0] - 1);
+      } else if (indices[indices.length - 1] < dates.length - 1) {
+        indices.push(indices[indices.length - 1] + 1);
+      } else {
+        break;
+      }
+    }
+  } else {
+    // Generic logic for other maxDates values
+    for (let i = selectedIdx - halfRange; i <= selectedIdx + halfRange; i++) {
+      if (i >= 0 && i < dates.length) {
+        indices.push(i);
+      }
+    }
+  }
 
   return (
     <div className="flex items-center justify-between w-full py-2 mb-1 overflow-hidden">
@@ -213,43 +243,47 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
         <ChevronLeft className="h-4 w-4" />
       </button>
       <div className="flex-1 flex justify-between gap-0 overflow-x-hidden">
-        {indices.map((idx, i) => (
-          <div
-            key={`${keyPrefix}date-${idx}-${i}-${dates[idx]?.price}`}
-            className={
-              'flex flex-col items-center cursor-pointer ' +
-              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
-            }
-            onClick={() => onSelect(idx)}
-            style={{ 
-              fontSize: '12px', 
-              lineHeight: '16px', 
-              width: isArabic ? 70 : 60, 
-              minWidth: isArabic ? 70 : 60, 
-              maxWidth: isArabic ? 70 : 60 
-            }}
-          >
-            <div 
-              className="mb-0.5 text-center" 
+        {indices.map((idx, i) => {
+          // Find the index of the selected date in the indices array
+          const isSelectedDate = idx === selectedIdx;
+          return (
+            <div
+              key={`${keyPrefix}date-${idx}-${i}-${dates[idx]?.price}`}
+              className={
+                'flex flex-col items-center cursor-pointer ' +
+                (isSelectedDate ? 'font-bold text-black' : 'text-gray-500')
+              }
+              onClick={() => onSelect(idx)}
               style={{ 
-                fontSize: '11px', 
-                fontWeight: 500,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
+                fontSize: '12px', 
+                lineHeight: '16px', 
+                width: isArabic ? (maxDates === 5 ? 56 : 70) : (maxDates === 5 ? 48 : 60), 
+                minWidth: isArabic ? (maxDates === 5 ? 56 : 70) : (maxDates === 5 ? 48 : 60), 
+                maxWidth: isArabic ? (maxDates === 5 ? 56 : 70) : (maxDates === 5 ? 48 : 60) 
               }}
             >
-              {dates[idx]?.date}
+              <div 
+                className="mb-0.5 text-center" 
+                style={{ 
+                  fontSize: maxDates === 5 ? '10px' : '11px', 
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {dates[idx]?.date}
+              </div>
+              <div className={
+                'font-semibold ' +
+                (dates[idx]?.price === minPrice ? 'text-green-600' : '')
+              } style={{ fontSize: maxDates === 5 ? '11px' : '12px' }}>
+                ₹{formatNumber(dates[idx]?.price || 0, isArabic)}
+              </div>
+              {isSelectedDate && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
             </div>
-            <div className={
-              'font-semibold ' +
-              (dates[idx]?.price === minPrice ? 'text-green-600' : '')
-            } style={{ fontSize: '12px' }}>
-              ₹{formatNumber(dates[idx]?.price || 0, isArabic)}
-            </div>
-            {i === 1 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
-          </div>
-        ))}
+          );
+        })}
       </div>
       <button
         className="p-1 text-gray-400 hover:text-black"
@@ -2141,6 +2175,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             selectedIdx={selectedOutboundDateIdx}
                             onSelect={setSelectedOutboundDateIdx}
                             keyPrefix="outbound-"
+                            maxDates={isOneWay ? 5 : 3}
                           />
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => {
@@ -2156,7 +2191,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
                                   >
-                                    <div className="flex items-center gap-2 py-1">
+                                    <div className="flex items-start gap-2 py-1">
                                       <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -2226,40 +2261,93 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                         </div>
                                       </div>
-                                      <div className={cn(
-                                        "flex flex-col justify-between h-full",
-                                        isArabic ? "text-left items-start" : "text-right items-end"
-                                      )}>
-                                        <div className={cn(
-                                          "flex flex-col gap-1",
-                                          isArabic ? "items-start" : "items-end"
-                                        )}>
-                                          <div className={cn(
-                                            "flex items-center gap-2",
-                                            isArabic ? "justify-start" : "justify-end"
-                                          )}>
-                                            {/* Original price with strikethrough */}
-                                            {option.originalPrice && (
-                                              <div className="text-xs text-gray-500 line-through">
-                                                ₹{formatNumber(option.originalPrice, isArabic)}
+                                      <div className="flex flex-col gap-1">
+                                        {isOneWay ? (
+                                          <>
+                                            {/* First Row: Price and Book Now Button */}
+                                            <div className="flex items-center justify-between gap-3">
+                                              {/* Price Section */}
+                                              <div className={cn(
+                                                "text-right",
+                                                isArabic ? "text-left" : "text-right"
+                                              )}>
+                                                {/* Original price with strikethrough */}
+                                                {option.originalPrice && (
+                                                  <div className="text-xs text-gray-500 line-through">
+                                                    ₹{formatNumber(option.originalPrice, isArabic)}
+                                                  </div>
+                                                )}
+                                                {/* Current price */}
+                                                <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
                                               </div>
-                                            )}
-                                            {/* Current price */}
-                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+
+                                              {/* Book Now Button */}
+                                              <Button 
+                                                className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white font-semibold rounded-lg px-4 py-1 text-xs transition-colors duration-200 flex-shrink-0"
+                                                onClick={(e) => { 
+                                                  e.stopPropagation(); 
+                                                  handleTripSelect({ 
+                                                    outbound: option, 
+                                                    inbound: null, 
+                                                    totalPrice: parseInt(option.price.replace(/[^0-9]/g, '') || '0', 10),
+                                                    isOneWay: true 
+                                                  });
+                                                }}
+                                              >
+                                                {t('bookNow')}
+                                              </Button>
+                                            </div>
+                                            
+                                            {/* Second Row: More Info Link */}
+                                            <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
+                                              <span
+                                                className={cn(
+                                                  "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                  isArabic ? "flex-row-reverse" : ""
+                                                )}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                              >
+                                                {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                              </span>
+                                            </div>
+                                          </>
+                                        ) : (
+                                          <div className="flex items-center gap-3">
+                                            {/* Price Section - Left Side */}
+                                            <div className={cn(
+                                              "text-right",
+                                              isArabic ? "text-left" : "text-right"
+                                            )}>
+                                              {/* Original price with strikethrough */}
+                                              {option.originalPrice && (
+                                                <div className="text-xs text-gray-500 line-through">
+                                                  ₹{formatNumber(option.originalPrice, isArabic)}
+                                                </div>
+                                              )}
+                                              {/* Current price */}
+                                              <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                            </div>
+
+                                            {/* More Info Section - Right Side */}
+                                            <div className="flex-shrink-0">
+                                              <span
+                                                className={cn(
+                                                  "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                  isArabic ? "flex-row-reverse" : ""
+                                                )}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                              >
+                                                {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                              </span>
+                                            </div>
                                           </div>
-                                          <span
-                                            className={cn(
-                                              "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
-                                              isArabic ? "flex-row-reverse" : ""
-                                            )}
-                                            role="button"
-                                            tabIndex={0}
-                                            onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                          >
-                                            {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
-                                          </span>
-                                        </div>
+                                        )}
                                       </div>
                                     </div>
                                   </button>
@@ -2284,6 +2372,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             selectedIdx={selectedInboundDateIdx}
                             onSelect={setSelectedInboundDateIdx}
                             keyPrefix="inbound-"
+                            maxDates={3}
                           />
                           <div className="flex flex-col gap-2">
                             {sortedInboundFlights.map((option, idx) => {
@@ -2299,7 +2388,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     )}
                                     onClick={() => handleManualInboundSelect(option)}
                                   >
-                                    <div className="flex items-center gap-2 py-1">
+                                    <div className="flex items-start gap-2 py-1">
                                                                               <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -2369,27 +2458,24 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           )}
                                         </div>
                                       </div>
-                                      <div className={cn(
-                                        "flex flex-col justify-between h-full",
-                                        isArabic ? "text-left items-start" : "text-right items-end"
-                                      )}>
+                                      <div className="flex items-center gap-3">
+                                        {/* Price Section - Left Side */}
                                         <div className={cn(
-                                          "flex flex-col gap-1",
-                                          isArabic ? "items-start" : "items-end"
+                                          "text-right",
+                                          isArabic ? "text-left" : "text-right"
                                         )}>
-                                          <div className={cn(
-                                            "flex items-center gap-2",
-                                            isArabic ? "justify-start" : "justify-end"
-                                          )}>
-                                            {/* Original price with strikethrough */}
-                                            {option.originalPrice && (
-                                              <div className="text-xs text-gray-500 line-through">
-                                                ₹{formatNumber(option.originalPrice, isArabic)}
-                                              </div>
-                                            )}
-                                            {/* Current price */}
-                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
-                                          </div>
+                                          {/* Original price with strikethrough */}
+                                          {option.originalPrice && (
+                                            <div className="text-xs text-gray-500 line-through">
+                                              ₹{formatNumber(option.originalPrice, isArabic)}
+                                            </div>
+                                          )}
+                                          {/* Current price */}
+                                          <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                        </div>
+
+                                        {/* More Info Section - Right Side */}
+                                        <div className="flex-shrink-0">
                                           <span
                                             className={cn(
                                               "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
