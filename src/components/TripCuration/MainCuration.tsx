@@ -195,13 +195,11 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
   const isArabic = language === 'ar';
   const minPrice = Math.min(...dates.map(d => d.price));
   
-  // Calculate the indices for the 5 dates to show
+  // Calculate the indices for the 3 dates to show
   const indices = [
-    Math.max(0, selectedIdx - 2),
     Math.max(0, selectedIdx - 1),
     selectedIdx,
-    Math.min(dates.length - 1, selectedIdx + 1),
-    Math.min(dates.length - 1, selectedIdx + 2)
+    Math.min(dates.length - 1, selectedIdx + 1)
   ];
 
   return (
@@ -220,7 +218,7 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
             key={`${keyPrefix}date-${idx}-${i}-${dates[idx]?.price}`}
             className={
               'flex flex-col items-center cursor-pointer ' +
-              (i === 2 ? 'font-bold text-black' : 'text-gray-500')
+              (i === 1 ? 'font-bold text-black' : 'text-gray-500')
             }
             onClick={() => onSelect(idx)}
             style={{ 
@@ -236,7 +234,7 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
               style={{ 
                 fontSize: '11px', 
                 fontWeight: 500,
-                whiteSpace: isArabic ? 'nowrap' : 'normal',
+                whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
               }}
@@ -249,7 +247,7 @@ function DatesCard({ dates, selectedIdx, onSelect, keyPrefix = '' }) {
             } style={{ fontSize: '12px' }}>
               ₹{formatNumber(dates[idx]?.price || 0, isArabic)}
             </div>
-            {i === 2 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
+            {i === 1 && <div className="mt-0.5 h-0.5 w-10 rounded-full mx-auto" style={{ background: '#194E91' }} />}
           </div>
         ))}
       </div>
@@ -2153,167 +2151,115 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-4 py-3 text-left transition-all h-[80px] w-full",
+                                      "rounded-md border px-3 py-2 text-left transition-all h-[80px] w-full",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
                                   >
-                                    <div className="flex items-center justify-between w-full">
-                                      <div className="flex items-center gap-4 flex-1 min-w-0">
-                                        {/* Airline logo and name in vertical layout */}
-                                        <div className="flex flex-col items-center gap-1 flex-shrink-0 mr-2 min-w-[100px]">
-                                          <img src={option.airlineLogo} alt={option.airlineName} className="h-8 w-8 object-contain bg-white border rounded" />
-                                          <div className="text-xs text-gray-600 text-center whitespace-nowrap">{translateAirline(option.airlineName)}</div>
+                                    <div className="flex items-center gap-2 py-1">
+                                      <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-base font-bold text-black">
+                                            {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
+                                            {option.stops === '1 stop' && (
+                                              <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
+                                            )}
+                                          </span>
+                                          {/* Layover Tag - positioned next to time/via text */}
+                                          {layoverTag && (
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                {layoverTag.isShort || layoverTag.isLong ? (
+                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
+                                                    {layoverTag.tag}
+                                                  </div>
+                                                ) : (
+                                                  <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
+                                                    {layoverTag.tag}
+                                                  </span>
+                                                )}
+                                              </TooltipTrigger>
+                                              <TooltipContent className="bg-black text-white border-black">
+                                                {layoverTag.isShort ? (
+                                                  <div className="text-xs">
+                                                    <p className="font-semibold">{t('shortLayoverWarning')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
+                                                  </div>
+                                                ) : layoverTag.isLong ? (
+                                                  <div className="text-xs">
+                                                    <p className="font-semibold">{t('longLayover')}</p>
+                                                    <p>{t('layover')}: {option.layover}</p>
+                                                    <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
+                                                  </div>
+                                                ) : (
+                                                  <p className="text-xs">{t('layover')}: {option.layover}</p>
+                                                )}
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          )}
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                          <div className="flex items-center gap-2 flex-wrap">
-                                            <span className="text-lg font-bold text-black">
-                                              {formatTime(option.departureTime)}–{formatTime(option.arrivalTime)}
-                                              {option.stops === '1 stop' && (
-                                                <span className={cn("text-sm font-normal", isRTL ? "mr-2" : "ml-2")}>{t('via')} {t('dxbAirport')}</span>
-                                              )}
+                                        <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
+                                          <span className="flex-shrink-0">{translateAirline(option.airlineName)}</span>
+                                          <span className="flex-shrink-0">· {t(option.stops) || option.stops}</span>
+                                          {option.stops === 'non-stop' && (
+                                            <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
+                                              <Luggage className="h-4 w-4 mr-0.5" />
+                                              <Ban className="h-3 w-3 text-red-500 -ml-1" />
+                                              <span
+                                                className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                                style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
+                                              >
+                                                {t('noCheckInBaggage')}
+                                              </span>
                                             </span>
-                                            {/* Layover Tag - positioned next to time/via text */}
-                                            {layoverTag && (
-                                              <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                  {layoverTag.isShort || layoverTag.isLong ? (
-                                                    <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
-                                                      {layoverTag.tag}
-                                                    </div>
-                                                  ) : (
-                                                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium border cursor-help", isRTL ? "mr-1" : "ml-1", layoverTag.color)}>
-                                                      {layoverTag.tag}
-                                                    </span>
-                                                  )}
-                                                </TooltipTrigger>
-                                                <TooltipContent className="bg-black text-white border-black">
-                                                  {layoverTag.isShort ? (
-                                                    <div className="text-xs">
-                                                      <p className="font-semibold">{t('shortLayoverWarning')}</p>
-                                                      <p>{t('layover')}: {option.layover}</p>
-                                                      <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
-                                                    </div>
-                                                  ) : layoverTag.isLong ? (
-                                                    <div className="text-xs">
-                                                      <p className="font-semibold">{t('longLayover')}</p>
-                                                      <p>{t('layover')}: {option.layover}</p>
-                                                      <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
-                                                    </div>
-                                                  ) : (
-                                                    <p className="text-xs">{t('layover')}: {option.layover}</p>
-                                                  )}
-                                                </TooltipContent>
-                                              </Tooltip>
-                                            )}
-                                          </div>
-                                          <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
-                                            <span className="flex-shrink-0">{t(option.stops) || option.stops}</span>
-                                            {option.stops === 'non-stop' && (
-                                              <span className={cn("flex items-center text-xs text-gray-500 relative group flex-shrink-0", isRTL ? "mr-1" : "ml-1")} style={{ cursor: 'pointer' }}>
-                                                <Luggage className="h-4 w-4 mr-0.5" />
-                                                <Ban className="h-3 w-3 text-red-500 -ml-1" />
-                                                <span
-                                                  className="pointer-events-none absolute z-50 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
-                                                  style={{ left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }}
-                                                >
-                                                  {t('noCheckInBaggage')}
-                                                </span>
-                                              </span>
-                                            )}
-                                            {/* Show 'e seats left' tag randomly for non-non-stop flights */}
-                                            {showSeatsLeft && (
-                                              <span className={cn(
-                                                "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
-                                                isRTL ? "mr-0.5" : "ml-0.5"
-                                              )}>
-                                                {formatNumber(2, isArabic)} {t('seatsLeft')}
-                                              </span>
-                                            )}
-                                          </div>
+                                          )}
+                                          {/* Show 'e seats left' tag randomly for non-non-stop flights */}
+                                          {showSeatsLeft && (
+                                            <span className={cn(
+                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                              isRTL ? "mr-0.5" : "ml-0.5"
+                                            )}>
+                                              {formatNumber(2, isArabic)} {t('seatsLeft')}
+                                            </span>
+                                          )}
                                         </div>
                                       </div>
                                       <div className={cn(
-                                        "flex flex-col justify-center gap-1 ml-4 flex-shrink-0",
+                                        "flex flex-col justify-between h-full",
                                         isArabic ? "text-left items-start" : "text-right items-end"
                                       )}>
-                                        {isOneWay ? (
-                                          /* Price and Book Now button on same line for one-way, with More Info below */
+                                        <div className={cn(
+                                          "flex flex-col gap-1",
+                                          isArabic ? "items-start" : "items-end"
+                                        )}>
                                           <div className={cn(
-                                            "flex flex-col gap-1",
-                                            isArabic ? "items-start" : "items-end"
+                                            "flex items-center gap-2",
+                                            isArabic ? "justify-start" : "justify-end"
                                           )}>
-                                            <div className={cn(
-                                              "flex items-center gap-3",
-                                              isArabic ? "justify-start" : "justify-end"
-                                            )}>
-                                              <div className="flex items-baseline gap-2">
-                                                {/* Original price with strikethrough beside main price */}
-                                                {option.originalPrice && (
-                                                  <div className="text-xs text-gray-500 line-through">
-                                                    ₹{formatNumber(option.originalPrice, isArabic)}
-                                                  </div>
-                                                )}
-                                                {/* Current price */}
-                                                <div className="text-lg font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
+                                            {/* Original price with strikethrough */}
+                                            {option.originalPrice && (
+                                              <div className="text-xs text-gray-500 line-through">
+                                                ₹{formatNumber(option.originalPrice, isArabic)}
                                               </div>
-                                              <Button 
-                                                className="bg-primary hover:bg-primary-hover text-primary-foreground hover:text-[#194E91] font-semibold rounded-lg px-5 py-2 text-sm min-w-[110px]"
-                                                onClick={e => { 
-                                                  e.stopPropagation(); 
-                                                  handleTripSelect({ 
-                                                    outbound: option, 
-                                                    totalPrice: option.price, 
-                                                    isOneWay: true 
-                                                  }); 
-                                                }}
-                                              >
-                                                {t('bookNow')}
-                                              </Button>
-                                            </div>
-                                            {/* More Info link below the price and button */}
-                                            <span
-                                              className={cn(
-                                                "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
-                                                isArabic ? "flex-row-reverse" : ""
-                                              )}
-                                              role="button"
-                                              tabIndex={0}
-                                              onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                            >
-                                              {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
-                                            </span>
+                                            )}
+                                            {/* Current price */}
+                                            <div className="text-base font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
                                           </div>
-                                        ) : (
-                                          <>
-                                            <div className={cn(
-                                              "flex items-center gap-2",
-                                              isArabic ? "justify-start" : "justify-end"
-                                            )}>
-                                              {/* Original price with strikethrough */}
-                                              {option.originalPrice && (
-                                                <div className="text-xs text-gray-500 line-through">
-                                                  ₹{formatNumber(option.originalPrice, isArabic)}
-                                                </div>
-                                              )}
-                                              {/* Current price */}
-                                              <div className="text-lg font-bold text-black">₹{formatNumber(option.price, isArabic)}</div>
-                                            </div>
-                                            <span
-                                              className={cn(
-                                                "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
-                                                isArabic ? "flex-row-reverse" : ""
-                                              )}
-                                              role="button"
-                                              tabIndex={0}
-                                              onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
-                                              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
-                                            >
-                                              {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
-                                            </span>
-                                          </>
-                                        )}
+                                          <span
+                                            className={cn(
+                                              "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                              isArabic ? "flex-row-reverse" : ""
+                                            )}
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={e => { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); setDrawerFlight(option); setDrawerOpen(true); } }}
+                                          >
+                                            {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                          </span>
+                                        </div>
                                       </div>
                                     </div>
                                   </button>
@@ -2485,7 +2431,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       />
       {/* Drawer for More info */}
       {drawerOpen && drawerFlight && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={() => setDrawerOpen(false)}>
+        <div className="fixed inset-0 z-[10000] flex justify-end bg-black/40" onClick={() => setDrawerOpen(false)}>
           <div
             className="bg-white shadow-lg h-full w-[570px] flex flex-col animate-slide-in-right relative overflow-auto"
             style={{
