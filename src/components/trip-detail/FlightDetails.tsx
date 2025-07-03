@@ -62,7 +62,7 @@ interface FlightDetailsProps {
 }
 
 export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
-  const [activeTab, setActiveTab] = useState<'trip' | 'facility'>('trip');
+  const [activeTab, setActiveTab] = useState<'trip' | 'fare-rules' | 'facility'>('trip');
   const { isRTL } = useLanguage();
   
   // Default data if flight is not provided
@@ -233,6 +233,17 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
           onClick={() => setActiveTab('trip')}
         >
           Flight Details
+        </button>
+        <button 
+          className={cn(
+            "px-4 py-3 text-base font-medium flex-1 text-center", 
+            activeTab === 'fare-rules' 
+              ? "text-blue-600 border-b-2 border-blue-600" 
+              : "text-gray-800 hover:text-blue-600"
+          )}
+          onClick={() => setActiveTab('fare-rules')}
+        >
+          Fare rules
         </button>
         <button 
           className={cn(
@@ -476,6 +487,105 @@ export function FlightDetails({ flight, onClose }: FlightDetailsProps) {
                   {index !== data.segments.length - 1 && <div className="mb-6" />}
                 </div>
               ))}
+            </div>
+
+            {/* Special Offers */}
+            <div className="mt-6">
+              <h3 className="text-[16px] font-bold mb-3">Special Offers for you</h3>
+              
+              <div className="relative">
+                <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
+                  <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 min-w-[180px] max-w-[200px] flex-shrink-0">
+                    <div className="text-amber-600 uppercase font-bold text-xs mb-1">TRAVEL UPDATE</div>
+                    <p className="text-gray-800 text-xs">
+                      Due to evolving air travel conditions, please stay informed about the latest updates.
+                    </p>
+                    <button className="mt-2 bg-amber-500 text-white px-3 py-1 rounded-md text-xs font-medium">
+                      Know More
+                    </button>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-indigo-50 border border-indigo-200 flex-col min-w-[180px] max-w-[200px] flex-shrink-0">
+                    <div className="font-medium text-xs mb-1">Domestic Fares starting at <span className="font-bold">₹1,199</span></div>
+                    <div className="font-medium text-xs">& Int'l Fares starting at <span className="font-bold">₹4,599</span></div>
+                    <div className="mt-2 p-1 bg-white rounded w-fit">
+                      <span className="text-indigo-600 font-bold text-xs">IndiGo</span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 min-w-[180px] max-w-[200px] flex-shrink-0">
+                    <div className="text-blue-600 uppercase font-bold text-xs mb-1">FLIGHT PROTECTION</div>
+                    <p className="text-gray-800 text-xs">
+                      Add flight protection for only ₹299 per traveler.
+                    </p>
+                    <button className="mt-2 bg-blue-500 text-white px-3 py-1 rounded-md text-xs font-medium">
+                      Add Protection
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : activeTab === 'fare-rules' ? (
+          // Fare rules tab content
+          <>
+            {/* Header */}
+            <div className="mb-4">
+              <h2 className="text-[18px] font-bold flex items-center">
+                {data.departureCity} <span className="mx-2">→</span> {data.arrivalCity}
+              </h2>
+              <div className="text-gray-600 mt-1 text-[14px] font-medium flex flex-wrap gap-2">
+                {data.duration} <span className="mx-1">•</span> {data.stopType} <span className="mx-1">•</span> {data.date} <span className="mx-1">•</span> {data.class}
+              </div>
+            </div>
+
+            {/* Base fare section */}
+            <div className="mb-6">
+              <h3 className="text-[16px] font-bold mb-3">Base fare (Price per traveler)</h3>
+              
+              <div className="rounded-lg border border-gray-200 shadow-sm bg-white overflow-hidden">
+                <div className="grid grid-cols-3 gap-0">
+                  {/* Header */}
+                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-700"></span>
+                  </div>
+                  <div className="px-4 py-3 bg-gray-50 border-b border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-700">Airline fee</span>
+                  </div>
+                  <div className="px-4 py-3 bg-gray-50 border-b border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-700">Flyin fee</span>
+                  </div>
+                  
+                  {/* Cancellation row */}
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-900">Cancellation</span>
+                  </div>
+                  <div className="px-4 py-3 border-b border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-900">₹0</span>
+                  </div>
+                  <div className="px-4 py-3 border-b border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-900">₹800</span>
+                  </div>
+                  
+                  {/* Date Change row */}
+                  <div className="px-4 py-3">
+                    <span className="text-[14px] font-medium text-gray-900">Date Change</span>
+                  </div>
+                  <div className="px-4 py-3 border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-900">₹10,800</span>
+                  </div>
+                  <div className="px-4 py-3 border-l border-gray-200">
+                    <span className="text-[14px] font-medium text-gray-900">₹800</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Disclaimer */}
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                <p className="text-[12px] text-gray-600 leading-relaxed">
+                  Cancellation/Flight change charges are indicative. Flyin will stop accepting cancellation/change requests 4-72 hours before departure of the flight, depending on the airline
+                </p>
+              </div>
             </div>
 
             {/* Special Offers */}
