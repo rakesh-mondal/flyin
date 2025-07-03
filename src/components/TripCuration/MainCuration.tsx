@@ -2608,8 +2608,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               </Button>
                                             </div>
                                             
-                                            {/* Second Row: More Info Link */}
-                                            <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
+                                            {/* Second Row: More Info Link and More fare options available */}
+                                            <div className={cn("flex items-center", isArabic ? "justify-start" : "justify-between")}>
+                                              {/* More Info Link */}
                                               <span
                                                 className={cn(
                                                   "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
@@ -2622,14 +2623,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               >
                                                 {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
                                               </span>
-                                            </div>
-                                            
-                                            {/* Third Row: More fare options available - Qatar Airways only */}
-                                            {isQatarFlightForMoreOptions(option) && (
-                                              <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
+                                              
+                                              {/* More fare options available - Qatar Airways only */}
+                                              {isQatarFlightForMoreOptions(option) && (
                                                 <span
                                                   className={cn(
-                                                    "text-blue-600 text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                    "text-blue-600 text-xs font-medium hover:underline cursor-pointer",
                                                     isArabic ? "flex-row-reverse" : ""
                                                   )}
                                                   role="button"
@@ -2645,10 +2644,15 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                     } 
                                                   }}
                                                 >
-                                                  More fare options available <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                                  More fare options available
                                                 </span>
-                                              </div>
-                                            )}
+                                              )}
+                                              
+                                              {/* Empty div to maintain spacing when Qatar Airways fare options not shown */}
+                                              {!isQatarFlightForMoreOptions(option) && <div></div>}
+                                            </div>
+                                            
+                                            {/* Remove the separate third row for More fare options available */}
                                           </>
                                         ) : (
                                           <div className={cn("flex flex-col gap-1", isArabic ? "items-start" : "items-end")}>
