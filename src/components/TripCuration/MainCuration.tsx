@@ -2739,14 +2739,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       <Dialog open={airportWarningOpen} onOpenChange={setAirportWarningOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
+            <DialogTitle>
               Airport Notice
             </DialogTitle>
             <DialogDescription className="space-y-3 pt-2">
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <p className="text-sm text-orange-800 font-medium">
-                  ⚠️ This flight uses a different airport than your original search.
+                <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-orange-600" />
+                  This flight uses a different airport than your original search.
                 </p>
               </div>
               
