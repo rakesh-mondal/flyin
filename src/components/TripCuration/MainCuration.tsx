@@ -2373,8 +2373,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       </div>
                                     </TooltipTrigger>
                                     {shouldShowRedDot(option) && (
-                                      <TooltipContent>
-                                        <p>Mock data</p>
+                                      <TooltipContent className="bg-black text-white border-gray-600">
+                                        <p>Alternative nearby airports available</p>
+                                        <p className="text-xs text-gray-300 mt-1">
+                                          JFK area: LGA, EWR • DXB area: DWC, SHJ
+                                        </p>
                                       </TooltipContent>
                                     )}
                                   </Tooltip>
