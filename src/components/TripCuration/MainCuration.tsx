@@ -32,6 +32,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { AlertTriangle } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTranslation } from '@/translations';
+import { getCityByCode } from '@/data/cities';
 
 // Short Layover Icon Component
 const ShortLayoverIcon = () => (
@@ -508,13 +509,13 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   
   // Filter states
   const [searchParams, setSearchParams] = useState({
-    origin: '',
-    destination: '',
+    origin: 'JFK', // Default for demonstration
+    destination: 'DXB', // Default for demonstration
     departureDate: new Date(),
     returnDate: new Date(),
     passengers: { adults: 1, children: 0, infants: 0 },
     cabinClass: 'Economy',
-    isRoundTrip: true
+    isRoundTrip: false // Set to one-way by default to see different airport indicators
   });
 
   // Add one-way detection
@@ -696,6 +697,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
            option.departureTime === '22:30' && 
            option.arrivalTime === '09:00' &&
            option.stops === 'non-stop';
+  };
+
+  // Helper function to check if airport is different but nearby
+  const isDifferentAirport = (flightAirport: string, searchedAirport: string) => {
+    if (!searchedAirport || flightAirport === searchedAirport) return false;
+    
+    const flightCity = getCityByCode(flightAirport);
+    const searchedCity = getCityByCode(searchedAirport);
+    
+    // Debug logging
+    console.log('🔍 Red Dot Check:', { 
+      flightAirport, 
+      searchedAirport, 
+      flightCity: flightCity?.name, 
+      searchedCity: searchedCity?.name,
+      searchParams: { origin: searchParams.origin, destination: searchParams.destination }
+    });
+    
+    if (!flightCity || !searchedCity) {
+      console.log('❌ Missing city data for', { flightAirport, searchedAirport });
+      return false;
+    }
+    
+    // Check if they belong to the same parent city or are nearby airports
+    const result = (
+      flightCity.parentCity === searchedCity.parentCity ||
+      flightCity.parentCity === searchedCity.id ||
+      flightCity.id === searchedCity.parentCity ||
+      (flightCity.type === 'nearby' && flightCity.parentCity === searchedCity.parentCity)
+    );
+    console.log(result ? '🔴 RED DOT SHOULD SHOW!' : '✅ No red dot needed', { 
+      flightAirport, 
+      searchedAirport, 
+      result,
+      flightParent: flightCity.parentCity,
+      searchedParent: searchedCity.parentCity
+    });
+    return result;
   };
 
   // Handler for airport warning confirmation
@@ -1215,6 +1254,45 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       wifi: airlines[9].wifi,
       meal: airlines[9].meal,
       rating: airlines[9].rating,
+    },
+    // Flights with different airports for demonstration
+    {
+      airlineLogo: airlines[0].logo,
+      airlineName: airlines[0].name,
+      departureTime: '16:30',
+      arrivalTime: '04:15',
+      departureCode: 'LGA', // LaGuardia instead of JFK
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '13h 45m',
+      stops: '1 stop',
+      layover: '2h 30m in London',
+      price: '34,500',
+      originalPrice: '39,500',
+      baggage: airlines[0].baggage,
+      wifi: airlines[0].wifi,
+      meal: airlines[0].meal,
+      rating: airlines[0].rating,
+    },
+    {
+      airlineLogo: airlines[1].logo,
+      airlineName: airlines[1].name,
+      departureTime: '18:15',
+      arrivalTime: '06:45',
+      departureCode: 'EWR', // Newark instead of JFK
+      arrivalCode: 'DWC', // Al Maktoum instead of DXB
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '14h 30m',
+      stops: '1 stop',
+      layover: '3h in Abu Dhabi',
+      price: '36,900',
+      originalPrice: '41,900',
+      baggage: airlines[1].baggage,
+      wifi: airlines[1].wifi,
+      meal: airlines[1].meal,
+      rating: airlines[1].rating,
     }
   ];
   const baseInboundFlights = [
@@ -2259,24 +2337,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                     <span className="text-sm font-normal text-gray-600">
                                                       {t('via')} {t('dxbAirport')}
                                                     </span>
-                                                    {/* Airport warning indicator for Emirates flight mockup */}
-                                                    {isEmiratesFlightForWarning(option) && (
-                                                      <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                          <div className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-orange-50 text-orange-700 border border-orange-200 cursor-help">
-                                                            <AlertTriangle className="h-3 w-3 mr-0.5" />
-                                                            Different Airport
-                                                          </div>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent className="bg-black text-white border-black max-w-xs">
-                                                          <div className="text-xs">
-                                                            <p className="font-semibold text-orange-200">⚠️ Airport Notice</p>
-                                                            <p className="mt-1">This flight uses a different airport than your search.</p>
-                                                            <p className="mt-1 text-yellow-200">You may need to take a connecting bus or transport to reach your final destination.</p>
-                                                          </div>
-                                                        </TooltipContent>
-                                                      </Tooltip>
-                                                    )}
+
                                                   </div>
                                                 )}
                                                 {/* Layover icon aligned with times */}
@@ -2286,16 +2347,44 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                   </div>
                                                 )}
                                               </div>
-                                              {/* Second row: Airport codes */}
-                                              <div className="flex items-center gap-2">
-                                                <div className="text-xs text-gray-500 font-medium min-w-[2.5rem]">
-                                                  {option.departureCode}
-                                                </div>
-                                                <span className="text-xs text-transparent mx-1">→</span>
-                                                <div className="text-xs text-gray-500 font-medium min-w-[2.5rem]">
-                                                  {option.arrivalCode}
-                                                </div>
-                                              </div>
+                                                                            {/* Second row: Airport codes with subtle highlighting */}
+                              <div className="flex items-center gap-2">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="text-xs text-gray-500 font-medium min-w-[2.5rem] flex items-center gap-1">
+                                        {option.departureCode}
+                                        {isDifferentAirport(option.departureCode, searchParams.origin || "JFK") && (
+                                          <span className="w-3 h-3 bg-red-500 rounded-full border border-red-700"></span>
+                                        )}
+                                      </div>
+                                    </TooltipTrigger>
+                                    {isDifferentAirport(option.departureCode, searchParams.origin || "JFK") && (
+                                      <TooltipContent>
+                                        <p>Nearby airport</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <span className="text-xs text-transparent mx-1">→</span>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="text-xs text-gray-500 font-medium min-w-[2.5rem] flex items-center gap-1">
+                                        {option.arrivalCode}
+                                        {isDifferentAirport(option.arrivalCode, searchParams.destination || "DXB") && (
+                                          <span className="w-3 h-3 bg-red-500 rounded-full border border-red-700"></span>
+                                        )}
+                                      </div>
+                                    </TooltipTrigger>
+                                    {isDifferentAirport(option.arrivalCode, searchParams.destination || "DXB") && (
+                                      <TooltipContent>
+                                        <p>Nearby airport</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
                                             </div>
                                           ) : (
                                             // Round-trip layout: Keep original column structure
@@ -2522,22 +2611,50 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <span className="text-base font-bold text-black">
                                                 {formatTime(option.departureTime)}
                                               </span>
-                                              {isOneWay && (
-                                                <div className="text-xs text-gray-500 font-medium">
-                                                  {option.departureCode}
-                                                </div>
-                                              )}
+                                                                            {isOneWay && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                                        {option.departureCode}
+                                        {isDifferentAirport(option.departureCode, searchParams.destination) && (
+                                          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                                        )}
+                                      </div>
+                                    </TooltipTrigger>
+                                    {isDifferentAirport(option.departureCode, searchParams.destination) && (
+                                      <TooltipContent>
+                                        <p>Nearby airport</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
                                             </div>
                                             <span className="text-base font-bold text-black mx-1">→</span>
                                             <div className="flex flex-col items-start">
                                               <span className="text-base font-bold text-black">
                                                 {formatTime(option.arrivalTime)}
                                               </span>
-                                              {isOneWay && (
-                                                <div className="text-xs text-gray-500 font-medium">
-                                                  {option.arrivalCode}
-                                                </div>
-                                              )}
+                                                                            {isOneWay && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                                        {option.arrivalCode}
+                                        {isDifferentAirport(option.arrivalCode, searchParams.origin) && (
+                                          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                                        )}
+                                      </div>
+                                    </TooltipTrigger>
+                                    {isDifferentAirport(option.arrivalCode, searchParams.origin) && (
+                                      <TooltipContent>
+                                        <p>Nearby airport</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
                                             </div>
                                             {/* Via text and layover icons inline with times */}
                                             {option.stops === '1 stop' && (
