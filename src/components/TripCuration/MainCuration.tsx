@@ -552,6 +552,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [isFareModalOpen, setFareModalOpen] = useState(false);
   const [fareModalTrip, setFareModalTrip] = useState<any>(null);
 
+  // Add state for expanded fare options
+  const [expandedFareOptions, setExpandedFareOptions] = useState<string[]>([]);
+
   // Update airlines array to include baggage, wifi, meal, rating, etc.
   const airlines = [
     {
@@ -748,6 +751,71 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     // Remove red dots for different airports
     return false;
   };
+
+  // Helper function to identify Qatar Airways flight for more fare options
+  const isQatarFlightForMoreOptions = (option: any) => {
+    return option.airlineName === 'Qatar Airways' && 
+           option.departureTime === '19:00' && 
+           option.arrivalTime === '05:30';
+  };
+
+  // Helper function to get flight unique ID
+  const getFlightId = (option: any) => {
+    return `${option.airlineName}-${option.departureTime}-${option.arrivalTime}`;
+  };
+
+  // Helper function to toggle fare options expansion
+  const toggleFareOptions = (flightId: string) => {
+    setExpandedFareOptions(prev => 
+      prev.includes(flightId) 
+        ? prev.filter(id => id !== flightId)
+        : [...prev, flightId]
+    );
+  };
+
+  // Get alternative fare options for Qatar Airways flight
+  const getAlternativeFareOptions = () => [
+    {
+      airlineLogo: airlines[3].logo, // Turkish Airlines
+      airlineName: airlines[3].name,
+      departureTime: '19:15',
+      arrivalTime: '05:45',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '15h 30m',
+      stops: '1 stop',
+      layover: '2h 15m in Istanbul',
+      price: '33,800', // Same price as Qatar Airways
+      originalPrice: '38,900',
+      baggage: airlines[3].baggage,
+      wifi: airlines[3].wifi,
+      meal: airlines[3].meal,
+      rating: airlines[3].rating,
+      stock: '',
+    },
+    {
+      airlineLogo: airlines[4].logo, // Lufthansa
+      airlineName: airlines[4].name,
+      departureTime: '18:45',
+      arrivalTime: '05:15',
+      departureCode: 'JFK',
+      arrivalCode: 'DXB',
+      departureCity: 'New York',
+      arrivalCity: 'Dubai',
+      duration: '15h 30m',
+      stops: '1 stop',
+      layover: '3h in Frankfurt',
+      price: '33,800', // Same price as Qatar Airways
+      originalPrice: '38,900',
+      baggage: airlines[4].baggage,
+      wifi: airlines[4].wifi,
+      meal: airlines[4].meal,
+      rating: airlines[4].rating,
+      stock: '',
+    }
+  ];
 
   // Handler for airport warning confirmation
   const handleAirportWarningBooking = (flight: any) => {
@@ -2555,6 +2623,32 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                 {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
                                               </span>
                                             </div>
+                                            
+                                            {/* Third Row: More fare options available - Qatar Airways only */}
+                                            {isQatarFlightForMoreOptions(option) && (
+                                              <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
+                                                <span
+                                                  className={cn(
+                                                    "text-orange-600 text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                    isArabic ? "flex-row-reverse" : ""
+                                                  )}
+                                                  role="button"
+                                                  tabIndex={0}
+                                                  onClick={e => { 
+                                                    e.stopPropagation(); 
+                                                    toggleFareOptions(getFlightId(option)); 
+                                                  }}
+                                                  onKeyDown={e => { 
+                                                    if (e.key === 'Enter' || e.key === ' ') { 
+                                                      e.stopPropagation(); 
+                                                      toggleFareOptions(getFlightId(option)); 
+                                                    } 
+                                                  }}
+                                                >
+                                                  More fare options available <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+                                                </span>
+                                              </div>
+                                            )}
                                           </>
                                         ) : (
                                           <div className={cn("flex flex-col gap-1", isArabic ? "items-start" : "items-end")}>
@@ -2594,6 +2688,121 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     </div>
                                   </button>
                                 </TooltipProvider>
+                              );
+                            })}
+
+                            {/* Alternative Fare Options - Expandable Section for Qatar Airways */}
+                            {sortedOutboundFlights.map((option, idx) => {
+                              const flightId = getFlightId(option);
+                              const isExpanded = expandedFareOptions.includes(flightId);
+                              
+                              if (!isQatarFlightForMoreOptions(option) || !isExpanded) {
+                                return null;
+                              }
+                              
+                              return (
+                                <div key={`alt-${idx}`} className="ml-4 border-l-2 border-orange-200 pl-4 space-y-2">
+                                  <div className="text-xs font-medium text-orange-600 mb-2">
+                                    Alternative fare options (same price)
+                                  </div>
+                                  {getAlternativeFareOptions().map((altOption, altIdx) => {
+                                    const altLayoverTag = getLayoverTagType(altOption.layover);
+                                    return (
+                                      <TooltipProvider key={altIdx}>
+                                        <button
+                                          className={cn(
+                                            "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px] w-full",
+                                            "border-gray-200 bg-gray-50 text-gray-900 hover:bg-gray-100"
+                                          )}
+                                          onClick={() => {
+                                            handleTripSelect({ 
+                                              outbound: altOption, 
+                                              inbound: null, 
+                                              totalPrice: parseInt(altOption.price.replace(/[^0-9]/g, '') || '0', 10),
+                                              isOneWay: true 
+                                            });
+                                          }}
+                                        >
+                                          <div className="flex items-center gap-2 py-1">
+                                            <img src={altOption.airlineLogo} alt={altOption.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center gap-2 flex-wrap">
+                                                {/* Time and Airport Codes Section */}
+                                                <div className="flex items-center gap-2">
+                                                  <div className="flex flex-col items-start">
+                                                    <span className="text-base font-bold text-black">
+                                                      {formatTime(altOption.departureTime)}
+                                                    </span>
+                                                    <div className="text-xs text-gray-500 font-medium">
+                                                      {altOption.departureCode}
+                                                    </div>
+                                                  </div>
+                                                  <span className="text-base font-bold text-black mx-1">→</span>
+                                                  <div className="flex flex-col items-start">
+                                                    <span className="text-base font-bold text-black">
+                                                      {formatTime(altOption.arrivalTime)}
+                                                    </span>
+                                                    <div className="text-xs text-gray-500 font-medium">
+                                                      {altOption.arrivalCode}
+                                                    </div>
+                                                  </div>
+                                                  {altOption.stops === '1 stop' && (
+                                                    <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
+                                                      {t('via')} {altOption.layover?.includes('Istanbul') ? 'IST' : altOption.layover?.includes('Frankfurt') ? 'FRA' : 'DXB'}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                                {/* Layover Tag */}
+                                                {altLayoverTag && (
+                                                  <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                      <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
+                                                        {altLayoverTag.tag}
+                                                      </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-black text-white border-black">
+                                                      <p className="text-xs">{t('layover')}: {altOption.layover}</p>
+                                                    </TooltipContent>
+                                                  </Tooltip>
+                                                )}
+                                              </div>
+                                              <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
+                                                <span className="flex-shrink-0">{translateAirline(altOption.airlineName)}</span>
+                                                <span className="flex-shrink-0">· {t(altOption.stops) || altOption.stops}</span>
+                                              </div>
+                                            </div>
+                                            <div className="flex flex-col gap-1">
+                                              <div className="flex items-center justify-between gap-3">
+                                                <div className={cn("text-right", isArabic ? "text-left" : "text-right")}>
+                                                  {altOption.originalPrice && (
+                                                    <div className="text-xs text-gray-500 line-through">
+                                                      ₹{formatNumber(altOption.originalPrice, isArabic)}
+                                                    </div>
+                                                  )}
+                                                  <div className="text-base font-bold text-black">₹{formatNumber(altOption.price, isArabic)}</div>
+                                                </div>
+                                                <Button 
+                                                  className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white font-semibold rounded-lg px-4 py-1 text-xs transition-colors duration-200 flex-shrink-0"
+                                                  onClick={(e) => { 
+                                                    e.stopPropagation(); 
+                                                    handleTripSelect({ 
+                                                      outbound: altOption, 
+                                                      inbound: null, 
+                                                      totalPrice: parseInt(altOption.price.replace(/[^0-9]/g, '') || '0', 10),
+                                                      isOneWay: true 
+                                                    });
+                                                  }}
+                                                >
+                                                  {t('bookNow')}
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </button>
+                                      </TooltipProvider>
+                                    );
+                                  })}
+                                </div>
                               );
                             })}
                           </div>
