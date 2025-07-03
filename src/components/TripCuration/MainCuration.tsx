@@ -2355,9 +2355,30 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                 )}
                                                 {/* Layover icon aligned with times */}
                                                 {layoverTag && (layoverTag.isShort || layoverTag.isLong) && (
-                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
-                                                    {layoverTag.tag}
-                                                  </div>
+                                                  <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                      <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
+                                                        {layoverTag.tag}
+                                                      </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-black text-white border-black">
+                                                      {layoverTag.isShort ? (
+                                                        <div className="text-xs">
+                                                          <p className="font-semibold">{t('shortLayoverWarning')}</p>
+                                                          <p>{t('layover')}: {option.layover}</p>
+                                                          <p className="text-yellow-200 mt-1">⚠️ {t('lessThanTwoHours')}</p>
+                                                        </div>
+                                                      ) : layoverTag.isLong ? (
+                                                        <div className="text-xs">
+                                                          <p className="font-semibold">{t('longLayover')}</p>
+                                                          <p>{t('layover')}: {option.layover}</p>
+                                                          <p className="text-blue-200 mt-1">ℹ️ {t('moreThanFourHours')}</p>
+                                                        </div>
+                                                      ) : (
+                                                        <p className="text-xs">{t('layover')}: {option.layover}</p>
+                                                      )}
+                                                    </TooltipContent>
+                                                  </Tooltip>
                                                 )}
                                               </div>
                                                                             {/* Second row: Airport codes with subtle highlighting */}
