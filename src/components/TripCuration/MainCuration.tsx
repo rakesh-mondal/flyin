@@ -2390,7 +2390,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 text-left transition-all h-[80px] w-full",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px]",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
@@ -2629,7 +2629,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
                                                 <span
                                                   className={cn(
-                                                    "text-orange-600 text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
+                                                    "text-blue-600 text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
                                                     isArabic ? "flex-row-reverse" : ""
                                                   )}
                                                   role="button"
@@ -2701,8 +2701,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                               }
                               
                               return (
-                                <div key={`alt-${idx}`} className="ml-4 border-l-2 border-orange-200 pl-4 space-y-2">
-                                  <div className="text-xs font-medium text-orange-600 mb-2">
+                                <div key={`alt-${idx}`} className="ml-4 border-l-2 border-blue-200 pl-4 space-y-2">
+                                  <div className="text-xs font-medium text-blue-600 mb-2">
                                     Alternative fare options (same price)
                                   </div>
                                   {getAlternativeFareOptions().map((altOption, altIdx) => {
@@ -2711,8 +2711,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       <TooltipProvider key={altIdx}>
                                         <button
                                           className={cn(
-                                            "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px] w-full",
-                                            "border-gray-200 bg-gray-50 text-gray-900 hover:bg-gray-100"
+                                            "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px]",
+                                            option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                           )}
                                           onClick={() => {
                                             handleTripSelect({ 
@@ -2834,7 +2834,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[80px]",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px]",
                                       option._key === selectedInboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualInboundSelect(option)}
