@@ -737,6 +737,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     return result;
   };
 
+  // Helper function to check if flight should show red dot (different airport OR mock data)
+  const shouldShowRedDot = (option: any, flightAirport: string, searchedAirport: string) => {
+    // Show red dot for mock data flights
+    if (option.isMockData) {
+      console.log('🔴 MOCK DATA RED DOT!', { flight: option.airlineName, time: option.departureTime });
+      return true;
+    }
+    
+    // Show red dot for different airports
+    return isDifferentAirport(flightAirport, searchedAirport);
+  };
+
   // Handler for airport warning confirmation
   const handleAirportWarningBooking = (flight: any) => {
     setSelectedFlightForWarning(flight);
@@ -1079,6 +1091,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
       rating: airlines[0].rating,
       stock: '',
       onTimePerformance: '80% On time',
+      isMockData: true, // Mock data indicator
     },
     {
       airlineLogo: airlines[1].logo,
@@ -2354,14 +2367,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     <TooltipTrigger asChild>
                                       <div className="text-xs text-gray-500 font-medium min-w-[2.5rem] flex items-center gap-1">
                                         {option.departureCode}
-                                        {isDifferentAirport(option.departureCode, searchParams.origin || "JFK") && (
+                                        {shouldShowRedDot(option, option.departureCode, searchParams.origin || "JFK") && (
                                           <span className="w-3 h-3 bg-red-500 rounded-full border border-red-700"></span>
                                         )}
                                       </div>
                                     </TooltipTrigger>
-                                    {isDifferentAirport(option.departureCode, searchParams.origin || "JFK") && (
+                                    {shouldShowRedDot(option, option.departureCode, searchParams.origin || "JFK") && (
                                       <TooltipContent>
-                                        <p>Nearby airport</p>
+                                        <p>{option.isMockData ? 'Mock data' : 'Nearby airport'}</p>
                                       </TooltipContent>
                                     )}
                                   </Tooltip>
@@ -2372,14 +2385,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     <TooltipTrigger asChild>
                                       <div className="text-xs text-gray-500 font-medium min-w-[2.5rem] flex items-center gap-1">
                                         {option.arrivalCode}
-                                        {isDifferentAirport(option.arrivalCode, searchParams.destination || "DXB") && (
+                                        {shouldShowRedDot(option, option.arrivalCode, searchParams.destination || "DXB") && (
                                           <span className="w-3 h-3 bg-red-500 rounded-full border border-red-700"></span>
                                         )}
                                       </div>
                                     </TooltipTrigger>
-                                    {isDifferentAirport(option.arrivalCode, searchParams.destination || "DXB") && (
+                                    {shouldShowRedDot(option, option.arrivalCode, searchParams.destination || "DXB") && (
                                       <TooltipContent>
-                                        <p>Nearby airport</p>
+                                        <p>{option.isMockData ? 'Mock data' : 'Nearby airport'}</p>
                                       </TooltipContent>
                                     )}
                                   </Tooltip>
