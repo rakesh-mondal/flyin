@@ -28,6 +28,8 @@ import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
+import { AlertTriangle } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTranslation } from '@/translations';
 
@@ -530,6 +532,10 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [selectedPriceCategory, setSelectedPriceCategory] = useState<'cheapest' | 'best' | 'quickest'>('best');
   const [selectedQuickFilters, setSelectedQuickFilters] = useState<string[]>([]);
+  
+  // --- State for airport warning mockup ---
+  const [airportWarningOpen, setAirportWarningOpen] = useState(false);
+  const [selectedFlightForWarning, setSelectedFlightForWarning] = useState<any>(null);
 
   // Add state for stops and flight timings filters
   const [selectedStops, setSelectedStops] = useState<string[]>([]); // e.g., ['non-stop', '1-stop']
@@ -675,6 +681,27 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
     } else {
       setSelectedQuickFilters([...selectedQuickFilters, airlineId]);
     }
+  };
+
+  // Helper function to identify Emirates flight for airport warning mockup
+  const isEmiratesFlightForWarning = (option: any) => {
+    return option.airlineName === 'Emirates' && 
+           option.departureTime === '21:00' && 
+           option.arrivalTime === '07:05';
+  };
+
+  // Handler for airport warning confirmation
+  const handleAirportWarningBooking = (flight: any) => {
+    setSelectedFlightForWarning(flight);
+    setAirportWarningOpen(true);
+  };
+
+  // Handler for confirmed booking after airport warning
+  const handleConfirmedBooking = () => {
+    setAirportWarningOpen(false);
+    setSelectedFlightForWarning(null);
+    // Proceed with normal booking flow
+    toast.success('Booking confirmed! Proceeding to payment...');
   };
 
   // --- Mock summaryOption and roundTripOptions (replace with real data as needed) ---
@@ -2210,9 +2237,29 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                 </span>
                                                 {/* Via text aligned with times */}
                                                 {option.stops === '1 stop' && (
-                                                  <span className={cn("text-sm font-normal text-gray-600", isRTL ? "mr-2" : "ml-2")}>
-                                                    {t('via')} {t('dxbAirport')}
-                                                  </span>
+                                                  <div className={cn("flex items-center gap-1", isRTL ? "mr-2" : "ml-2")}>
+                                                    <span className="text-sm font-normal text-gray-600">
+                                                      {t('via')} {t('dxbAirport')}
+                                                    </span>
+                                                    {/* Airport warning indicator for Emirates flight mockup */}
+                                                    {isEmiratesFlightForWarning(option) && (
+                                                      <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                          <div className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-orange-50 text-orange-700 border border-orange-200 cursor-help">
+                                                            <AlertTriangle className="h-3 w-3 mr-0.5" />
+                                                            Different Airport
+                                                          </div>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent className="bg-black text-white border-black max-w-xs">
+                                                          <div className="text-xs">
+                                                            <p className="font-semibold text-orange-200">⚠️ Airport Notice</p>
+                                                            <p className="mt-1">This flight uses a different airport than your search.</p>
+                                                            <p className="mt-1 text-yellow-200">You may need to take a connecting bus or transport to reach your final destination.</p>
+                                                          </div>
+                                                        </TooltipContent>
+                                                      </Tooltip>
+                                                    )}
+                                                  </div>
                                                 )}
                                                 {/* Layover icon aligned with times */}
                                                 {layoverTag && (layoverTag.isShort || layoverTag.isLong) && (
@@ -2339,12 +2386,18 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                                 className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white font-semibold rounded-lg px-4 py-1 text-xs transition-colors duration-200 flex-shrink-0"
                                                 onClick={(e) => { 
                                                   e.stopPropagation(); 
-                                                  handleTripSelect({ 
-                                                    outbound: option, 
-                                                    inbound: null, 
-                                                    totalPrice: parseInt(option.price.replace(/[^0-9]/g, '') || '0', 10),
-                                                    isOneWay: true 
-                                                  });
+                                                  // Show airport warning dialog for Emirates flight mockup
+                                                  if (isEmiratesFlightForWarning(option)) {
+                                                    handleAirportWarningBooking(option);
+                                                  } else {
+                                                    // Normal booking flow for other flights
+                                                    handleTripSelect({ 
+                                                      outbound: option, 
+                                                      inbound: null, 
+                                                      totalPrice: parseInt(option.price.replace(/[^0-9]/g, '') || '0', 10),
+                                                      isOneWay: true 
+                                                    });
+                                                  }
                                                 }}
                                               >
                                                 {t('bookNow')}
@@ -2681,6 +2734,55 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
           </div>
         </div>
       )}
+
+      {/* Airport Warning Dialog for Emirates Flight Mockup */}
+      <Dialog open={airportWarningOpen} onOpenChange={setAirportWarningOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-orange-500" />
+              Airport Notice
+            </DialogTitle>
+            <DialogDescription className="space-y-3 pt-2">
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                <p className="text-sm text-orange-800 font-medium">
+                  ⚠️ This flight uses a different airport than your original search.
+                </p>
+              </div>
+              
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>
+                  <strong>Flight Details:</strong> Emirates {selectedFlightForWarning?.departureTime} → {selectedFlightForWarning?.arrivalTime}
+                </p>
+                <p>
+                  <strong>Airport:</strong> Via Dubai International (DXB)
+                </p>
+                <p>
+                  You may need to take a connecting bus, taxi, or other transport to reach your final destination in the city.
+                </p>
+                <p className="text-xs text-gray-500">
+                  Please check transportation options and additional costs before confirming your booking.
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-3 sm:gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setAirportWarningOpen(false)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmedBooking}
+              className="flex-1 bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white"
+            >
+              Continue Booking
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
