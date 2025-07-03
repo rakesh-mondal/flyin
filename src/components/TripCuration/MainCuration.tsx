@@ -2745,7 +2745,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
             <DialogDescription className="space-y-3 pt-2">
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                 <p className="text-sm text-orange-800 font-medium flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                  <AlertTriangle className="h-4 w-4 text-orange-600 flex-shrink-0 pt-0.5" />
                   This flight uses a different airport than your original search.
                 </p>
               </div>
