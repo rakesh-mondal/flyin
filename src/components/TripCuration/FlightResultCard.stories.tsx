@@ -23,6 +23,21 @@ export const Default: Story = {
   },
 };
 
+// Flight card with different airports highlighted
+export const DifferentAirports: Story = {
+  args: {
+    flight: {
+      ...sampleFlightDataWithLayovers[0],
+      departureCode: 'LGA', // Different from searched JFK
+      arrivalCode: 'DWC', // Different from searched DXB
+    },
+    onClick: () => console.log('Flight card clicked'),
+    isSelected: false,
+    searchedOrigin: 'JFK', // User searched for JFK but flight uses LGA
+    searchedDestination: 'DXB', // User searched for DXB but flight uses DWC
+  },
+};
+
 // Flight with long layover
 export const LongLayover: Story = {
   args: {
@@ -91,6 +106,57 @@ export const LayoverShowcase = {
             isSelected={false}
           />
         ))}
+      </div>
+    </div>
+  ),
+};
+
+// Airport highlighting showcase
+export const AirportHighlightShowcase = {
+  render: () => (
+    <div className="space-y-4 max-w-4xl">
+      <h3 className="text-lg font-semibold mb-4">Different Airport Indication Examples</h3>
+      <div className="space-y-4">
+        {/* Normal airports - no highlighting */}
+        <div className="text-sm text-gray-600 mb-2">✅ Exact match - no highlighting:</div>
+        <FlightResultCard
+          flight={{
+            ...sampleFlightDataWithLayovers[0],
+            departureCode: 'JFK',
+            arrivalCode: 'DXB',
+          }}
+          onClick={() => console.log('Normal flight clicked')}
+          isSelected={false}
+          searchedOrigin="JFK"
+          searchedDestination="DXB"
+        />
+        
+        {/* Different but nearby airports - red dots */}
+        <div className="text-sm text-gray-600 mb-2 mt-6">🔴 Nearby airports - red dots shown:</div>
+        <FlightResultCard
+          flight={{
+            ...sampleFlightDataWithLayovers[0],
+            departureCode: 'LGA', // LaGuardia instead of JFK
+            arrivalCode: 'DWC',   // Al Maktoum instead of DXB
+          }}
+          onClick={() => console.log('Different airports flight clicked')}
+          isSelected={false}
+          searchedOrigin="JFK"
+          searchedDestination="DXB"
+        />
+        
+        {/* Another example */}
+        <FlightResultCard
+          flight={{
+            ...sampleFlightDataWithLayovers[1],
+            departureCode: 'EWR', // Newark instead of JFK
+            arrivalCode: 'SHJ',   // Sharjah instead of DXB
+          }}
+          onClick={() => console.log('Another different airports flight clicked')}
+          isSelected={false}
+          searchedOrigin="JFK"
+          searchedDestination="DXB"
+        />
       </div>
     </div>
   ),

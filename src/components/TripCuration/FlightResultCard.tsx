@@ -8,6 +8,7 @@ import { SlidingNumber } from '@/components/ui/sliding-number';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTranslation } from '@/translations';
+import { getCityByCode } from '@/data/cities';
 
 interface FlightResultCardProps {
   flight: {
@@ -34,6 +35,8 @@ interface FlightResultCardProps {
   };
   onClick: () => void;
   isSelected?: boolean;
+  searchedOrigin?: string;
+  searchedDestination?: string;
 }
 
 // Short Layover Icon Component
@@ -91,10 +94,31 @@ const getLayoverTag = (layoverInfo?: string): { tag: string | React.ReactNode; c
   return null; // Normal layover (2-4 hours) - no tag
 };
 
-export default function FlightResultCard({ flight, onClick, isSelected = false }: FlightResultCardProps) {
+export default function FlightResultCard({ flight, onClick, isSelected = false, searchedOrigin, searchedDestination }: FlightResultCardProps) {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const isArabic = language === 'ar';
+  
+  // Helper function to check if airport is different but nearby
+  const isDifferentAirport = (flightAirport: string, searchedAirport: string) => {
+    if (!searchedAirport || flightAirport === searchedAirport) return false;
+    
+    const flightCity = getCityByCode(flightAirport);
+    const searchedCity = getCityByCode(searchedAirport);
+    
+    if (!flightCity || !searchedCity) return false;
+    
+    // Check if they belong to the same parent city or are nearby airports
+    return (
+      flightCity.parentCity === searchedCity.parentCity ||
+      flightCity.parentCity === searchedCity.id ||
+      flightCity.id === searchedCity.parentCity ||
+      (flightCity.type === 'nearby' && flightCity.parentCity === searchedCity.parentCity)
+    );
+  };
+
+  const isDepartureAirportDifferent = isDifferentAirport(flight.departureCode, searchedOrigin);
+  const isArrivalAirportDifferent = isDifferentAirport(flight.arrivalCode, searchedDestination);
   
   // Helper function to translate city names
   const translateCity = (cityName: string) => {
@@ -228,7 +252,46 @@ export default function FlightResultCard({ flight, onClick, isSelected = false }
               <div className="text-sm text-gray-600 space-y-0.5">
                 <div>{translateAirline(flight.airline)}</div>
                 <div className="flex items-center space-x-1">
-                  {/* Stops info */}
+                  {/* Airport codes with red dot highlighting */}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="font-medium relative flex items-center gap-1">
+                          {flight.departureCode}
+                          {isDepartureAirportDifferent && (
+                            <span className="w-2 h-2 bg-red-500 rounded-full border border-red-700"></span>
+                          )}
+                        </span>
+                      </TooltipTrigger>
+                      {isDepartureAirportDifferent && (
+                        <TooltipContent>
+                          <p>Nearby airport</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <span>→</span>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="font-medium relative flex items-center gap-1">
+                          {flight.arrivalCode}
+                          {isArrivalAirportDifferent && (
+                            <span className="w-2 h-2 bg-red-500 rounded-full border border-red-700"></span>
+                          )}
+                        </span>
+                      </TooltipTrigger>
+                      {isArrivalAirportDifferent && (
+                        <TooltipContent>
+                          <p>Nearby airport</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <span>•</span>
                   <span>
                     {flight.stops === 0 ? 'Direct' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
                   </span>

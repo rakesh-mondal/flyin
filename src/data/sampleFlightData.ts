@@ -179,4 +179,34 @@ export const similarFlightOptions = {
       airlineCode: "UL"
     }
   ]
-}; 
+};
+
+// Test flights for different airport indication with red dots
+export const sampleFlightWithDifferentAirports = {
+  id: 6,
+  airline: "Delta Airlines",
+  airlineCode: "DL",
+  airlineLogo: "delta",
+  departureCity: "New York",
+  departureCode: "LGA", // Different from searched JFK - should show red dot
+  departureTime: "18:30",
+  arrivalCity: "Dubai",
+  arrivalCode: "DWC", // Different from searched DXB - should show red dot
+  arrivalTime: "11:45",
+  duration: "13h 15m",
+  stops: 1,
+  price: 42500,
+  originalPrice: 48000,
+  baseFare: 37000,
+  taxes: 4500,
+  fees: 1000,
+  carbonFootprint: "520kg CO2",
+  tags: ["Different Airport"],
+  layoverInfo: "2h 30m in London"
+};
+
+// Add the different airport flight to the layovers array for testing
+export const sampleFlightDataWithLayoversAndDifferentAirports = [
+  ...sampleFlightDataWithLayovers,
+  sampleFlightWithDifferentAirports
+]; 
