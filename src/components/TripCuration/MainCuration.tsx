@@ -690,6 +690,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
            option.arrivalTime === '07:05';
   };
 
+  // Helper function to identify Etihad flight for seats left tag mockup
+  const isEtihadFlightForSeatsLeft = (option: any) => {
+    return option.airlineName === 'Etihad Airways' && 
+           option.departureTime === '22:30' && 
+           option.arrivalTime === '09:00' &&
+           option.stops === 'non-stop';
+  };
+
   // Handler for airport warning confirmation
   const handleAirportWarningBooking = (flight: any) => {
     setSelectedFlightForWarning(flight);
@@ -2216,8 +2224,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           />
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => {
-                              // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
-                              const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
+                              // Show 'e seats left' tag for demo (non-stop flights + specific Etihad flight)
+                              const showSeatsLeft = (option.showSeatsLeft && option.stops !== 'non-stop') || isEtihadFlightForSeatsLeft(option);
                               const layoverTag = getLayoverTagType(option.layover);
                               return (
                                 <TooltipProvider key={idx}>
@@ -2492,8 +2500,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           />
                           <div className="flex flex-col gap-2">
                             {sortedInboundFlights.map((option, idx) => {
-                              // Randomly decide to show 'e seats left' tag for demo (only if not non-stop)
-                              const showSeatsLeft = option.showSeatsLeft && option.stops !== 'non-stop';
+                              // Show 'e seats left' tag for demo (non-stop flights + specific Etihad flight)
+                              const showSeatsLeft = (option.showSeatsLeft && option.stops !== 'non-stop') || isEtihadFlightForSeatsLeft(option);
                               const layoverTag = getLayoverTagType(option.layover);
                               return (
                                 <TooltipProvider key={idx}>
