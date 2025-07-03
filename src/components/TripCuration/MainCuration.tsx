@@ -699,9 +699,19 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
   // Handler for confirmed booking after airport warning
   const handleConfirmedBooking = () => {
     setAirportWarningOpen(false);
+    
+    // Prepare trip data for fare selection modal
+    const tripData = {
+      outbound: selectedFlightForWarning,
+      inbound: null,
+      totalPrice: parseInt(selectedFlightForWarning?.price.replace(/[^0-9]/g, '') || '0', 10),
+      isOneWay: true
+    };
+    
+    // Open fare selection modal
+    setFareModalTrip(tripData);
+    setFareModalOpen(true);
     setSelectedFlightForWarning(null);
-    // Proceed with normal booking flow
-    toast.success('Booking confirmed! Proceeding to payment...');
   };
 
   // --- Mock summaryOption and roundTripOptions (replace with real data as needed) ---
