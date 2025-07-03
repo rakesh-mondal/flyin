@@ -2371,7 +2371,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
                                             <span className={cn(
-                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0 mb-px",
                                               isRTL ? "mr-0.5" : "ml-0.5"
                                             )}>
                                               {formatNumber(2, isArabic)} {t('seatsLeft')}
@@ -2598,7 +2598,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                           {/* Show 'e seats left' tag randomly for non-non-stop flights */}
                                           {showSeatsLeft && (
                                             <span className={cn(
-                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0",
+                                              "inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-medium bg-red-50 text-red-700 border border-red-100 whitespace-nowrap flex-shrink-0 mb-px",
                                               isRTL ? "mr-0.5" : "ml-0.5"
                                             )}>
                                               {formatNumber(2, isArabic)} {t('seatsLeft')}
