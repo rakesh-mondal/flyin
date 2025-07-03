@@ -2196,37 +2196,66 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           {/* Time and Airport Codes Section */}
-                                          <div className="flex items-center gap-2">
-                                            <div className="flex flex-col items-start">
-                                              <span className="text-base font-bold text-black">
-                                                {formatTime(option.departureTime)}
-                                              </span>
-                                              {isOneWay && (
-                                                <div className="text-xs text-gray-500 font-medium">
+                                          {isOneWay ? (
+                                            // One-way layout: Two rows for better alignment
+                                            <div className="flex flex-col gap-1">
+                                              {/* First row: Times and Via text aligned */}
+                                              <div className="flex items-center gap-2">
+                                                <span className="text-base font-bold text-black">
+                                                  {formatTime(option.departureTime)}
+                                                </span>
+                                                <span className="text-base font-bold text-black mx-1">→</span>
+                                                <span className="text-base font-bold text-black">
+                                                  {formatTime(option.arrivalTime)}
+                                                </span>
+                                                {/* Via text aligned with times */}
+                                                {option.stops === '1 stop' && (
+                                                  <span className={cn("text-sm font-normal text-gray-600", isRTL ? "mr-2" : "ml-2")}>
+                                                    {t('via')} {t('dxbAirport')}
+                                                  </span>
+                                                )}
+                                                {/* Layover icon aligned with times */}
+                                                {layoverTag && (layoverTag.isShort || layoverTag.isLong) && (
+                                                  <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
+                                                    {layoverTag.tag}
+                                                  </div>
+                                                )}
+                                              </div>
+                                              {/* Second row: Airport codes */}
+                                              <div className="flex items-center gap-2">
+                                                <div className="text-xs text-gray-500 font-medium min-w-[2.5rem]">
                                                   {option.departureCode}
                                                 </div>
-                                              )}
-                                            </div>
-                                            <span className="text-base font-bold text-black mx-1">→</span>
-                                            <div className="flex flex-col items-start">
-                                              <span className="text-base font-bold text-black">
-                                                {formatTime(option.arrivalTime)}
-                                              </span>
-                                              {isOneWay && (
-                                                <div className="text-xs text-gray-500 font-medium">
+                                                <span className="text-xs text-transparent mx-1">→</span>
+                                                <div className="text-xs text-gray-500 font-medium min-w-[2.5rem]">
                                                   {option.arrivalCode}
                                                 </div>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            // Round-trip layout: Keep original column structure
+                                            <div className="flex items-center gap-2">
+                                              <div className="flex flex-col items-start">
+                                                <span className="text-base font-bold text-black">
+                                                  {formatTime(option.departureTime)}
+                                                </span>
+                                              </div>
+                                              <span className="text-base font-bold text-black mx-1">→</span>
+                                              <div className="flex flex-col items-start">
+                                                <span className="text-base font-bold text-black">
+                                                  {formatTime(option.arrivalTime)}
+                                                </span>
+                                              </div>
+                                              {/* Via text and layover icons inline with times */}
+                                              {option.stops === '1 stop' && (
+                                                <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
+                                                  {t('via')} {t('dxbAirport')}
+                                                </span>
                                               )}
                                             </div>
-                                            {/* Via text and layover icons inline with times */}
-                                            {option.stops === '1 stop' && (
-                                              <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
-                                                {t('via')} {t('dxbAirport')}
-                                              </span>
-                                            )}
-                                          </div>
-                                          {/* Layover Tag - positioned next to time/via text */}
-                                          {layoverTag && (
+                                          )}
+                                          {/* Layover Tag - positioned next to time/via text for round-trip or remaining layover tags for one-way */}
+                                          {layoverTag && (!isOneWay || (!layoverTag.isShort && !layoverTag.isLong)) && (
                                             <Tooltip>
                                               <TooltipTrigger asChild>
                                                 {layoverTag.isShort || layoverTag.isLong ? (
