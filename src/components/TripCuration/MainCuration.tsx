@@ -754,9 +754,23 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   // Helper function to identify Qatar Airways flight for more fare options
   const isQatarFlightForMoreOptions = (option: any) => {
-    return option.airlineName === 'Qatar Airways' && 
+    const isQatar = option.airlineName === 'Qatar Airways' && 
            option.departureTime === '19:00' && 
            option.arrivalTime === '05:30';
+    
+    // Debug logging for Qatar Airways detection
+    if (option.airlineName === 'Qatar Airways') {
+      console.log('🔍 Qatar Airways flight found!', {
+        airlineName: option.airlineName,
+        departureTime: option.departureTime,
+        arrivalTime: option.arrivalTime,
+        isQatar,
+        expectedDeparture: '19:00',
+        expectedArrival: '05:30'
+      });
+    }
+    
+    return isQatar;
   };
 
   // Helper function to get flight unique ID
@@ -766,11 +780,14 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   // Helper function to toggle fare options expansion
   const toggleFareOptions = (flightId: string) => {
-    setExpandedFareOptions(prev => 
-      prev.includes(flightId) 
+    console.log('toggleFareOptions called with:', flightId);
+    setExpandedFareOptions(prev => {
+      const newState = prev.includes(flightId) 
         ? prev.filter(id => id !== flightId)
-        : [...prev, flightId]
-    );
+        : [...prev, flightId];
+      console.log('expandedFareOptions changing from:', prev, 'to:', newState);
+      return newState;
+    });
   };
 
   // Get alternative fare options for Qatar Airways flight
@@ -2383,6 +2400,13 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                           />
                           <div className="flex flex-col gap-2">
                             {sortedOutboundFlights.map((option, idx) => {
+                              // Debug logging for all flights
+                              console.log(`✈️ Flight ${idx}:`, {
+                                airline: option.airlineName,
+                                times: `${option.departureTime} → ${option.arrivalTime}`,
+                                isQatar: isQatarFlightForMoreOptions(option)
+                              });
+                              
                               // Show 'e seats left' tag for demo (non-stop flights + specific Etihad flight)
                               const showSeatsLeft = (option.showSeatsLeft && option.stops !== 'non-stop') || isEtihadFlightForSeatsLeft(option);
                               const layoverTag = getLayoverTagType(option.layover);
@@ -2390,12 +2414,13 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px]",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px] flex flex-col",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
                                   >
-                                    <div className="flex items-center gap-2 py-1">
+                                    {/* Main Content - Takes up available space */}
+                                    <div className="flex items-center gap-2 py-1 flex-1">
                                       <img src={option.airlineLogo} alt={option.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
@@ -2608,9 +2633,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               </Button>
                                             </div>
                                             
-                                            {/* Second Row: More Info Link and More fare options available */}
-                                            <div className={cn("flex items-center", isArabic ? "justify-start" : "justify-between")}>
-                                              {/* More Info Link */}
+                                            {/* Second Row: More Info Link */}
+                                            <div className={cn("flex", isArabic ? "justify-start" : "justify-end")}>
                                               <span
                                                 className={cn(
                                                   "text-primary text-xs font-medium hover:underline flex items-center gap-1 cursor-pointer",
@@ -2623,36 +2647,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               >
                                                 {t('moreInfo')} <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
                                               </span>
-                                              
-                                              {/* More fare options available - Qatar Airways only */}
-                                              {isQatarFlightForMoreOptions(option) && (
-                                                <span
-                                                  className={cn(
-                                                    "text-blue-600 text-xs font-medium hover:underline cursor-pointer",
-                                                    isArabic ? "flex-row-reverse" : ""
-                                                  )}
-                                                  role="button"
-                                                  tabIndex={0}
-                                                  onClick={e => { 
-                                                    e.stopPropagation(); 
-                                                    toggleFareOptions(getFlightId(option)); 
-                                                  }}
-                                                  onKeyDown={e => { 
-                                                    if (e.key === 'Enter' || e.key === ' ') { 
-                                                      e.stopPropagation(); 
-                                                      toggleFareOptions(getFlightId(option)); 
-                                                    } 
-                                                  }}
-                                                >
-                                                  More fare options available
-                                                </span>
-                                              )}
-                                              
-                                              {/* Empty div to maintain spacing when Qatar Airways fare options not shown */}
-                                              {!isQatarFlightForMoreOptions(option) && <div></div>}
                                             </div>
-                                            
-                                            {/* Remove the separate third row for More fare options available */}
                                           </>
                                         ) : (
                                           <div className={cn("flex flex-col gap-1", isArabic ? "items-start" : "items-end")}>
@@ -2690,6 +2685,34 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                         )}
                                       </div>
                                     </div>
+
+                                    {/* Bottom Row: More fare options available - Centered for Qatar Airways only */}
+                                    {isQatarFlightForMoreOptions(option) && (
+                                      <div className="flex justify-center pt-1 bg-gray-100 rounded-b-md -mx-3 -mb-2 px-3 pb-2">
+                                        <span
+                                          className={cn(
+                                            "text-blue-600 text-xs font-medium hover:underline cursor-pointer",
+                                            isArabic ? "flex-row-reverse" : ""
+                                          )}
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={e => { 
+                                            e.stopPropagation(); 
+                                            const flightId = getFlightId(option);
+                                            console.log('More fare options clicked!', { flightId, option: option.airlineName });
+                                            toggleFareOptions(flightId); 
+                                          }}
+                                          onKeyDown={e => { 
+                                            if (e.key === 'Enter' || e.key === ' ') { 
+                                              e.stopPropagation(); 
+                                              toggleFareOptions(getFlightId(option)); 
+                                            } 
+                                          }}
+                                        >
+                                          More fare options available
+                                        </span>
+                                      </div>
+                                    )}
                                   </button>
                                 </TooltipProvider>
                               );
@@ -2699,10 +2722,25 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                             {sortedOutboundFlights.map((option, idx) => {
                               const flightId = getFlightId(option);
                               const isExpanded = expandedFareOptions.includes(flightId);
+                              const isQatarFlight = isQatarFlightForMoreOptions(option);
                               
-                              if (!isQatarFlightForMoreOptions(option) || !isExpanded) {
+                              console.log('Checking expandable section:', { 
+                                airline: option.airlineName, 
+                                flightId, 
+                                isQatarFlight, 
+                                isExpanded, 
+                                expandedFareOptions 
+                              });
+                              
+                              if (!isQatarFlight || !isExpanded) {
                                 return null;
                               }
+                              
+                              console.log(`🚀 Rendering expandable section for Qatar Airways!`, {
+                                flightId,
+                                isExpanded,
+                                alternativeOptionsCount: getAlternativeFareOptions().length
+                              });
                               
                               return (
                                 <div key={`alt-${idx}`} className="ml-4 border-l-2 border-blue-200 pl-4 space-y-2">
@@ -2711,6 +2749,11 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                   </div>
                                   {getAlternativeFareOptions().map((altOption, altIdx) => {
                                     const altLayoverTag = getLayoverTagType(altOption.layover);
+                                    console.log(`🛫 Rendering alternative flight ${altIdx}:`, {
+                                      airline: altOption.airlineName,
+                                      times: `${altOption.departureTime} → ${altOption.arrivalTime}`,
+                                      price: altOption.price
+                                    });
                                     return (
                                       <TooltipProvider key={altIdx}>
                                         <button

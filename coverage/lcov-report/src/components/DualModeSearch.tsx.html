@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
@@ -134,11 +134,20 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,6 +157,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,6 +224,8 @@
 <span class="cstat-no" title="statement not covered" >import FlightSearchForm from './FlightSearchForm';</span>
 <span class="cstat-no" title="statement not covered" >import AnimatedStar from './AnimatedStar';</span>
 <span class="cstat-no" title="statement not covered" >import { cn } from '@/lib/utils';</span>
+<span class="cstat-no" title="statement not covered" >import { useTranslation } from '../translations';</span>
+<span class="cstat-no" title="statement not covered" >import { useLanguage } from '@/hooks/useLanguage';</span>
 &nbsp;
 interface DualModeSearchProps {
   children: React.ReactNode; // This will be the AI search component
@@ -218,6 +234,9 @@ interface DualModeSearchProps {
 }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function <span class="fstat-no" title="function not covered" >D</span>ualModeSearch(</span>{ children, onSearch, className }: DualModeSearchProps) {
+  const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
+  const { isRTL } = <span class="cstat-no" title="statement not covered" >useLanguage();</span>
+  
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div className={cn("w-full", className)}&gt;
       &lt;Tabs defaultValue="flights" className="w-full"&gt;
@@ -226,27 +245,29 @@ interface DualModeSearchProps {
             value="flights" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           &gt;
-            Flights
+            {t('flights')}
           &lt;/TabsTrigger&gt;
           &lt;TabsTrigger 
             value="hotels" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           &gt;
-            Hotels
+            {t('hotels')}
           &lt;/TabsTrigger&gt;
           &lt;TabsTrigger 
             value="rentals" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           &gt;
-            Rentals
+{t('rentals')}
           &lt;/TabsTrigger&gt;
           &lt;TabsTrigger 
             value="ai" 
             className="relative border-b-2 border-transparent px-4 pb-2 pt-2 text-sm font-medium text-gray-600 transition-all data-[state=active]:border-b-black data-[state=active]:font-semibold data-[state=active]:text-gray-900 data-[state=active]:shadow-none"
           &gt;
-            Try Flyin AI
-            &lt;span className="ml-1.5"&gt;
-              &lt;AnimatedStar /&gt;
+            &lt;span className={cn("flex items-center", isRTL ? "flex-row-reverse" : "")}&gt;
+              {t('tryFlyinAI')}
+              &lt;span className={isRTL ? "mr-1.5" : "ml-1.5"}&gt;
+                &lt;AnimatedStar /&gt;
+              &lt;/span&gt;
             &lt;/span&gt;
           &lt;/TabsTrigger&gt;
         &lt;/TabsList&gt;
@@ -283,7 +304,7 @@ interface DualModeSearchProps {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-17T02:52:25.441Z
+                at 2025-07-03T22:59:16.808Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

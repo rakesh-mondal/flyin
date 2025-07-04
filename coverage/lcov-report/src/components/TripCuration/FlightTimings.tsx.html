@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -163,23 +163,13 @@
 <a name='L98'></a><a href='#L98'>98</a>
 <a name='L99'></a><a href='#L99'>99</a>
 <a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,7 +178,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,8 +194,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -266,6 +274,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import React from 'react';</span>
 <span class="cstat-no" title="statement not covered" >import { Sun, Moon, CloudSun, CloudMoon } from 'lucide-react';</span>
 <span class="cstat-no" title="statement not covered" >import { cn } from '@/lib/utils';</span>
+<span class="cstat-no" title="statement not covered" >import { useTranslation } from '@/translations';</span>
 &nbsp;
 interface TimeOption {
   icon: React.ElementType;
@@ -280,12 +289,7 @@ interface FlightTimingsProps {
   onReturnTimeChange?: (time: string) =&gt; void;
 }
 &nbsp;
-const timeOptions: TimeOption[] = <span class="cstat-no" title="statement not covered" >[</span>
-  { icon: CloudSun, label: 'Before 6 AM', value: 'before-6am' },
-  { icon: Sun, label: '6 AM - 12 PM', value: '6am-12pm' },
-  { icon: CloudSun, label: '12 PM - 6 PM', value: '12pm-6pm' },
-  { icon: Moon, label: 'After 6 PM', value: 'after-6pm' },
-];
+// Move timeOptions inside component to access translations
 &nbsp;
 // Add color mapping for icons
 const iconColorMap: Record&lt;string, string&gt; = <span class="cstat-no" title="statement not covered" >{</span>
@@ -301,8 +305,16 @@ const iconColorMap: Record&lt;string, string&gt; = <span class="cstat-no" title=
   onDepartureTimeChange,
   onReturnTimeChange
 }: FlightTimingsProps) {
+  const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
   const [selectedDeparture, setSelectedDeparture] = <span class="cstat-no" title="statement not covered" >React.useState&lt;string | null&gt;(null);</span>
   const [selectedReturn, setSelectedReturn] = <span class="cstat-no" title="statement not covered" >React.useState&lt;string | null&gt;(null);</span>
+&nbsp;
+  const timeOptions: TimeOption[] = <span class="cstat-no" title="statement not covered" >[</span>
+    { icon: CloudSun, label: t('before6am'), value: 'before-6am' },
+    { icon: Sun, label: t('am12pm'), value: '6am-12pm' },
+    { icon: CloudSun, label: t('pm6pm'), value: '12pm-6pm' },
+    { icon: Moon, label: t('after6pm'), value: 'after-6pm' },
+  ];
 &nbsp;
   const handleDepartureSelect = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(v</span>alue: string) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setSelectedDeparture(selectedDeparture === value ? null : value);</span>
@@ -336,7 +348,7 @@ const iconColorMap: Record&lt;string, string&gt; = <span class="cstat-no" title=
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div className="space-y-3"&gt;
       &lt;div&gt;
-        &lt;p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide"&gt;Departing flight &lt;span className="font-normal text-gray-400"&gt;({departureRoute})&lt;/span&gt;&lt;/p&gt;
+        &lt;p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide"&gt;{t('departingFlight')} &lt;span className="font-normal text-gray-400"&gt;({departureRoute})&lt;/span&gt;&lt;/p&gt;
         &lt;div className="grid grid-cols-2 gap-2"&gt;
           {timeOptions.map(<span class="fstat-no" title="function not covered" >(o</span>ption) =&gt; (
 <span class="cstat-no" title="statement not covered" >            &lt;TimeButton</span>
@@ -349,7 +361,7 @@ const iconColorMap: Record&lt;string, string&gt; = <span class="cstat-no" title=
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div&gt;
-        &lt;p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide"&gt;Returning flight &lt;span className="font-normal text-gray-400"&gt;({returnRoute})&lt;/span&gt;&lt;/p&gt;
+        &lt;p className="mb-1 text-xs font-semibold text-gray-700 tracking-wide"&gt;{t('returningFlight')} &lt;span className="font-normal text-gray-400"&gt;({returnRoute})&lt;/span&gt;&lt;/p&gt;
         &lt;div className="grid grid-cols-2 gap-2"&gt;
           {timeOptions.map(<span class="fstat-no" title="function not covered" >(o</span>ption) =&gt; (
 <span class="cstat-no" title="statement not covered" >            &lt;TimeButton</span>
@@ -370,7 +382,7 @@ const iconColorMap: Record&lt;string, string&gt; = <span class="cstat-no" title=
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-17T02:52:25.441Z
+                at 2025-07-03T22:59:16.808Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

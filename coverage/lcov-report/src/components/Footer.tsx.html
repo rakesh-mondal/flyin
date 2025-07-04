@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
@@ -179,9 +179,13 @@
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -297,69 +301,71 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import React from 'react';</span>
 import { Button } from './ui/button';
+<span class="cstat-no" title="statement not covered" >import { useTranslation } from '../translations';</span>
 &nbsp;
 const Footer = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; {</span>
+  const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
   const currentYear = <span class="cstat-no" title="statement not covered" >new Date().getFullYear();</span>
 &nbsp;
   const footerSections = <span class="cstat-no" title="statement not covered" >[</span>
     {
-      title: 'Support',
+      title: t('support'),
       links: [
-        'Coronavirus (COVID-19) FAQs',
-        'Manage your trips',
-        'Contact Customer Service',
-        'Safety resource centre'
+        t('covidFaqs'),
+        t('manageTrips'),
+        t('contactCustomerService'),
+        t('safetyResourceCentre')
       ]
     },
     {
-      title: 'Discover',
+      title: t('discover'),
       links: [
-        'Genius loyalty programme',
-        'Seasonal and holiday deals',
-        'Travel articles',
-        'Flyin.com for Business',
-        'Traveller Review Awards',
-        'Car hire',
-        'Flight finder',
-        'Restaurant reservations',
-        'Flyin.com for Travel Agents'
+        t('geniusLoyalty'),
+        t('seasonalDeals'),
+        t('travelArticles'),
+        t('flyinBusiness'),
+        t('travellerReviewAwards'),
+        t('carHire'),
+        t('flightFinder'),
+        t('restaurantReservations'),
+        t('flyinTravelAgents')
       ]
     },
     {
-      title: 'Terms and settings',
+      title: t('termsAndSettings'),
       links: [
-        'Privacy &amp; cookies',
-        'Terms and conditions',
-        'Grievance officer',
-        'Modern Slavery Statement',
-        'Human Rights Statement'
+        t('privacyCookies'),
+        t('termsConditions'),
+        t('grievanceOfficer'),
+        t('modernSlaveryStatement'),
+        t('humanRightsStatement')
       ]
     },
     {
-      title: 'Partners',
+      title: t('partners'),
       links: [
-        'Extranet login',
-        'Partner help',
-        'List your property',
-        'Become an affiliate'
+        t('extranetLogin'),
+        t('partnerHelp'),
+        t('listProperty'),
+        t('becomeAffiliate')
       ]
     },
     {
-      title: 'About',
+      title: t('about'),
       links: [
-        'About Flyin.com',
-        'How we work',
-        'Sustainability',
-        'Press centre',
-        'Careers',
-        'Investor relations',
-        'Corporate contact'
+        t('aboutFlyin'),
+        t('howWeWork'),
+        t('sustainability'),
+        t('pressCentre'),
+        t('careers'),
+        t('investorRelations'),
+        t('corporateContact')
       ]
     }
   ];
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
-    &lt;footer className="bg-white border-t border-gray-200 mt-auto"&gt;
+    &lt;footer className="bg-white border-t border-gray-200 mt-auto footer-content"&gt;
       &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"&gt;
         {/* Main footer content */}
         &lt;div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-8"&gt;
@@ -368,7 +374,7 @@ const Footer = <span class="cstat-no" title="statement not covered" ><span class
               &lt;h3 className="font-semibold text-gray-900 text-sm uppercase tracking-wide"&gt;
                 {section.title}
               &lt;/h3&gt;
-              &lt;ul className="space-y-3"&gt;
+              &lt;ul className="space-y-3 footer-links"&gt;
                 {section.links.map(<span class="fstat-no" title="function not covered" >(l</span>ink, linkIndex) =&gt; (
 <span class="cstat-no" title="statement not covered" >                  &lt;li key={linkIndex}&gt;</span>
                     &lt;button className="text-sm text-gray-600 hover:text-primary transition-colors duration-200 text-left"&gt;
@@ -383,7 +389,7 @@ const Footer = <span class="cstat-no" title="statement not covered" ><span class
 &nbsp;
         {/* Currency selector */}
         &lt;div className="flex items-center justify-start mb-8"&gt;
-          &lt;div className="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2 border border-gray-200"&gt;
+          &lt;div className="flex items-center space-x-2 bg-gray-50 rounded-lg px-3 py-2 border border-gray-200 footer-currency"&gt;
             &lt;div className="w-6 h-4 bg-gradient-to-b from-orange-500 via-white to-green-500 rounded-sm flex items-center justify-center"&gt;
               &lt;div className="w-3 h-3 rounded-full bg-blue-600 flex items-center justify-center"&gt;
                 &lt;div className="w-2 h-2 rounded-full bg-white flex items-center justify-center"&gt;
@@ -397,12 +403,12 @@ const Footer = <span class="cstat-no" title="statement not covered" ><span class
 &nbsp;
         {/* Bottom section */}
         &lt;div className="pt-8 border-t border-gray-200"&gt;
-          &lt;div className="text-center"&gt;
+          &lt;div className="text-center content-text"&gt;
             &lt;p className="text-xs text-gray-600"&gt;
-              Flyin.com is part of Flyin Holdings Inc., the world leader in online travel and related services.
+              {t('flyinDescription')}
             &lt;/p&gt;
             &lt;p className="text-xs text-gray-600 mt-1"&gt;
-              Copyright © 1996–{currentYear} Flyin.com™. All rights reserved.
+              {t('copyright').replace('{year}', currentYear.toString())}
             &lt;/p&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -418,7 +424,7 @@ const Footer = <span class="cstat-no" title="statement not covered" ><span class
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-17T02:52:25.441Z
+                at 2025-07-03T22:59:16.808Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

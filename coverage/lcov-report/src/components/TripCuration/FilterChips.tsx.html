@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/95</span>
+                <span class='fraction'>0/102</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/79</span>
+                <span class='fraction'>0/86</span>
             </div>
         
             
@@ -849,7 +849,14 @@
 <a name='L784'></a><a href='#L784'>784</a>
 <a name='L785'></a><a href='#L785'>785</a>
 <a name='L786'></a><a href='#L786'>786</a>
-<a name='L787'></a><a href='#L787'>787</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L787'></a><a href='#L787'>787</a>
+<a name='L788'></a><a href='#L788'>788</a>
+<a name='L789'></a><a href='#L789'>789</a>
+<a name='L790'></a><a href='#L790'>790</a>
+<a name='L791'></a><a href='#L791'>791</a>
+<a name='L792'></a><a href='#L792'>792</a>
+<a name='L793'></a><a href='#L793'>793</a>
+<a name='L794'></a><a href='#L794'>794</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -858,22 +865,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -883,6 +880,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -907,6 +919,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1642,7 +1656,9 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 <span class="cstat-no" title="statement not covered" >import FlightTimings from './FlightTimings';</span>
 <span class="cstat-no" title="statement not covered" >import PriceAlertsModal from './PriceAlertsModal';</span>
-<span class="cstat-no" title="statement not covered" >import { cn } from '@/lib/utils';</span>
+<span class="cstat-no" title="statement not covered" >import { cn, formatNumber } from '@/lib/utils';</span>
+<span class="cstat-no" title="statement not covered" >import { useTranslation } from '@/translations';</span>
+<span class="cstat-no" title="statement not covered" >import { useLanguage } from '@/hooks/useLanguage';</span>
 <span class="cstat-no" title="statement not covered" >import './FilterChips.css';</span>
 &nbsp;
 interface FilterChipsProps {
@@ -1668,6 +1684,9 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
   selectedStops = <span class="branch-0 cbranch-no" title="branch not covered" >[],</span>
   onStopsChange = <span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >() =</span>&gt; {},</span>
 }: FilterChipsProps) =&gt; {
+  const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
+  const { language } = <span class="cstat-no" title="statement not covered" >useLanguage();</span>
+  const isArabic = <span class="cstat-no" title="statement not covered" >language === 'ar';</span>
   const [isPriceAlertsModalOpen, setIsPriceAlertsModalOpen] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
   const [priceRange, setPriceRange] = <span class="cstat-no" title="statement not covered" >useState({ min: 4873, max: 62000 });</span>
   const [stopoverDuration, setStopoverDuration] = <span class="cstat-no" title="statement not covered" >useState({ min: 30, max: 1290 });</span>
@@ -1696,7 +1715,9 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
   const formatDuration = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(m</span>inutes: number) =&gt; {</span>
     const hours = <span class="cstat-no" title="statement not covered" >Math.floor(minutes / 60);</span>
     const mins = <span class="cstat-no" title="statement not covered" >minutes % 60;</span>
-<span class="cstat-no" title="statement not covered" >    return `${hours}h ${mins}m`;</span>
+    const hoursStr = <span class="cstat-no" title="statement not covered" >formatNumber(hours, isArabic);</span>
+    const minsStr = <span class="cstat-no" title="statement not covered" >formatNumber(mins, isArabic);</span>
+<span class="cstat-no" title="statement not covered" >    return `${hoursStr}h ${minsStr}m`;</span>
   };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
@@ -1710,7 +1731,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
           }}
         &gt;
           &lt;Bell className="h-4 w-4 text-gray-600" /&gt;
-          &lt;span className="text-sm font-semibold text-gray-900"&gt;Get Price Alerts&lt;/span&gt;
+          &lt;span className="text-sm font-semibold text-gray-900"&gt;{t('getPriceAlerts')}&lt;/span&gt;
         &lt;/button&gt;
       &lt;/div&gt;
 &nbsp;
@@ -1718,10 +1739,10 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="px-4 py-3 border-b border-gray-200"&gt;
         &lt;div className="flex items-center justify-between"&gt;
           &lt;div className="text-base"&gt;
-            &lt;span className="font-semibold text-gray-900"&gt;1577&lt;/span&gt;
-            &lt;span className="text-gray-500"&gt; of &lt;/span&gt;
-            &lt;span className="font-semibold text-gray-900"&gt;2000&lt;/span&gt;
-            &lt;span className="text-gray-500"&gt; flights&lt;/span&gt;
+            &lt;span className="font-semibold text-gray-900"&gt;{formatNumber(1577, isArabic)}&lt;/span&gt;
+            &lt;span className="text-gray-500"&gt; {t('of')} &lt;/span&gt;
+            &lt;span className="font-semibold text-gray-900"&gt;{formatNumber(2000, isArabic)}&lt;/span&gt;
+            &lt;span className="text-gray-500"&gt; {t('flightsCount')}&lt;/span&gt;
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -1730,7 +1751,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Recommended&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('recommended')}&lt;/h3&gt;
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -1741,7 +1762,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               /&gt;
               &lt;Plane className="h-4 w-4 text-gray-500 mr-2" /&gt;
-              &lt;span className="text-sm text-gray-700"&gt;Nonstop&lt;/span&gt;
+              &lt;span className="text-sm text-gray-700"&gt;{t('nonstop')}&lt;/span&gt;
             &lt;/label&gt;
             
             &lt;label className="flex items-center cursor-pointer group"&gt;
@@ -1750,7 +1771,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               /&gt;
               &lt;Luggage className="h-4 w-4 text-gray-500 mr-2" /&gt;
-              &lt;span className="text-sm text-gray-700"&gt;Checked baggage included&lt;/span&gt;
+              &lt;span className="text-sm text-gray-700"&gt;{t('checkedBaggageIncluded')}&lt;/span&gt;
             &lt;/label&gt;
             
             &lt;label className="flex items-center cursor-pointer group"&gt;
@@ -1759,7 +1780,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               /&gt;
               &lt;Tag className="h-4 w-4 text-gray-500 mr-2" /&gt;
-              &lt;span className="text-sm text-gray-700"&gt;Hide budget airlines&lt;/span&gt;
+              &lt;span className="text-sm text-gray-700"&gt;{t('hideBudgetAirlines')}&lt;/span&gt;
             &lt;/label&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -1769,7 +1790,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Stops&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('stops')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -1778,7 +1799,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              toast.success("Stops filter reset");</span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -1792,11 +1813,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
               )}
               onClick={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >handleStopSelect('non-stop')}</span>
             &gt;
-              &lt;span className="text-sm font-medium"&gt;Direct&lt;/span&gt;
+              &lt;span className="text-sm font-medium"&gt;{t('direct')}&lt;/span&gt;
               &lt;span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('non-stop') ? "text-blue-600" : "text-gray-500"
-              )}&gt;₹26,909&lt;/span&gt;
+                              )}&gt;₹{formatNumber('26,909', isArabic)}&lt;/span&gt;
             &lt;/button&gt;
             &lt;button 
               className={cn(
@@ -1807,11 +1828,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
               )}
               onClick={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >handleStopSelect('1-stop')}</span>
             &gt;
-              &lt;span className="text-sm font-medium"&gt;1 stop&lt;/span&gt;
+              &lt;span className="text-sm font-medium"&gt;1 {t('stop')}&lt;/span&gt;
               &lt;span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('1-stop') ? "text-blue-600" : "text-gray-500"
-              )}&gt;₹27,464&lt;/span&gt;
+                              )}&gt;₹{formatNumber('27,464', isArabic)}&lt;/span&gt;
             &lt;/button&gt;
             &lt;button 
               className={cn(
@@ -1822,11 +1843,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
               )}
               onClick={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >handleStopSelect('2-more')}</span>
             &gt;
-              &lt;span className="text-sm font-medium"&gt;2+ stops&lt;/span&gt;
+              &lt;span className="text-sm font-medium"&gt;2+ {t('stops')}&lt;/span&gt;
               &lt;span className={cn(
                 "text-xs mt-0.5",
                 selectedStops.includes('2-more') ? "text-blue-600" : "text-gray-500"
-              )}&gt;₹39,393&lt;/span&gt;
+                              )}&gt;₹{formatNumber('39,393', isArabic)}&lt;/span&gt;
             &lt;/button&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -1836,7 +1857,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Flight Timings&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('flightTimings')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -1845,7 +1866,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof onReturnTimeChange === 'function') <span class="cstat-no" title="statement not covered" >onReturnTimeChange('');</span></span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -1862,7 +1883,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Airlines&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('airlines')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -1871,7 +1892,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              toast.success("Airlines filter reset");</span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -1890,7 +1911,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                     }
                   }}
                 /&gt;
-                &lt;span className="ml-2 text-sm text-gray-700"&gt;Show multi-airline itineraries&lt;/span&gt;
+                &lt;span className="ml-2 text-sm text-gray-700"&gt;{t('showMultiAirlineItineraries')}&lt;/span&gt;
               &lt;/div&gt;
             &lt;/label&gt;
 &nbsp;
@@ -1917,11 +1938,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Emirates
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('emirates')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹52,000&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('52,000', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -1948,11 +1969,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Air India
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('airIndia')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹48,500&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('48,500', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -1979,11 +2000,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Etihad
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('etihad')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹45,200&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('45,200', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -2010,11 +2031,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Vistara
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('vistara')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹39,800&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('39,800', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -2041,11 +2062,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Qatar Airways
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('qatarAirways')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹55,000&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('55,000', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -2072,11 +2093,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Lufthansa
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('lufthansa')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹61,000&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('61,000', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -2103,11 +2124,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                         className="h-4 w-6 object-contain"
                       /&gt;
                       &lt;span className="text-sm text-gray-700 relative"&gt;
-                        Singapore Airlines
-                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;Only&lt;/span&gt;
+                        {t('singaporeAirlines')}
+                        &lt;span className="ml-1 text-xs text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity"&gt;{t('only')}&lt;/span&gt;
                       &lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;span className="text-xs text-gray-500"&gt;₹58,500&lt;/span&gt;
+                                            &lt;span className="text-xs text-gray-500"&gt;₹{formatNumber('58,500', isArabic)}&lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
               &lt;/label&gt;
@@ -2120,7 +2141,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3"&gt;
           &lt;div className="flex items-center justify-between"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Price&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('price')}&lt;/h3&gt;
             &lt;div className="text-xs font-medium" style={{ color: '#194E91' }}&gt;
               ₹{priceRange.min.toLocaleString()} - ₹{priceRange.max.toLocaleString()}
             &lt;/div&gt;
@@ -2162,8 +2183,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
               /&gt;
             &lt;/div&gt;
             &lt;div className="flex justify-between text-sm text-gray-500"&gt;
-              &lt;span&gt;₹ 4,873&lt;/span&gt;
-              &lt;span&gt;₹ 62,000&lt;/span&gt;
+                              &lt;span&gt;₹ {formatNumber('4,873', isArabic)}&lt;/span&gt;
+                &lt;span&gt;₹ {formatNumber('62,000', isArabic)}&lt;/span&gt;
             &lt;/div&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -2173,7 +2194,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Airports&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('airports')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -2181,7 +2202,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              toast.success("Airports filter reset");</span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -2191,11 +2212,11 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
               /&gt;
-              &lt;span className="text-sm text-gray-700"&gt;Return flight arrives at departure&lt;/span&gt;
+              &lt;span className="text-sm text-gray-700"&gt;{t('returnFlightArrivesAtDeparture')}&lt;/span&gt;
             &lt;/label&gt;
             
             &lt;div&gt;
-              &lt;h4 className="text-sm font-semibold text-gray-900 mb-3"&gt;Arriving in Dubai&lt;/h4&gt;
+              &lt;h4 className="text-sm font-semibold text-gray-900 mb-3"&gt;{t('arrivingIn')} Dubai&lt;/h4&gt;
               &lt;div className="space-y-2"&gt;
                 &lt;label className="flex items-center w-full cursor-pointer group"&gt;
                   &lt;div className="flex items-center flex-1"&gt;
@@ -2204,8 +2225,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /&gt;
                     &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                      &lt;span className="text-sm text-gray-700"&gt;SHJ Sharjah International&lt;/span&gt;
-                      &lt;span className="text-xs text-gray-500"&gt;₹ 25,013&lt;/span&gt;
+                      &lt;span className="text-sm text-gray-700"&gt;{t('shjSharjahInternational')}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('25,013', isArabic)}&lt;/span&gt;
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/label&gt;
@@ -2217,8 +2238,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /&gt;
                     &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                      &lt;span className="text-sm text-gray-700"&gt;AUH Zayed International&lt;/span&gt;
-                      &lt;span className="text-xs text-gray-500"&gt;₹ 22,921&lt;/span&gt;
+                      &lt;span className="text-sm text-gray-700"&gt;{t('auhZayedInternational')}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('22,921', isArabic)}&lt;/span&gt;
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/label&gt;
@@ -2230,8 +2251,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /&gt;
                     &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                      &lt;span className="text-sm text-gray-700"&gt;Dubai Etihad Bus Station&lt;/span&gt;
-                      &lt;span className="text-xs text-gray-500"&gt;₹ 34,921&lt;/span&gt;
+                      &lt;span className="text-sm text-gray-700"&gt;{t('dubaiEtihadBusStation')}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('34,921', isArabic)}&lt;/span&gt;
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/label&gt;
@@ -2243,8 +2264,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /&gt;
                     &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                      &lt;span className="text-sm text-gray-700"&gt;Dubai Emirates Bus Station&lt;/span&gt;
-                      &lt;span className="text-xs text-gray-500"&gt;₹ 38,425&lt;/span&gt;
+                      &lt;span className="text-sm text-gray-700"&gt;{t('dubaiEmiratesBusStation')}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('38,425', isArabic)}&lt;/span&gt;
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/label&gt;
@@ -2256,8 +2277,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                       className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /&gt;
                     &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                      &lt;span className="text-sm text-gray-700"&gt;DXB International&lt;/span&gt;
-                      &lt;span className="text-xs text-gray-500"&gt;₹ 42,153&lt;/span&gt;
+                      &lt;span className="text-sm text-gray-700"&gt;{t('dxbInternational')}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('42,153', isArabic)}&lt;/span&gt;
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/label&gt;
@@ -2271,7 +2292,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Duration&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('duration')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -2281,14 +2302,14 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              toast.success("Duration filter reset");</span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
           &lt;div className="space-y-4"&gt;
             &lt;div&gt;
               &lt;div className="flex items-center justify-between mb-2"&gt;
-                &lt;span className="text-sm text-gray-700"&gt;Stopover Duration&lt;/span&gt;
+                &lt;span className="text-sm text-gray-700"&gt;{t('stopoverDuration')}&lt;/span&gt;
                 &lt;span className="text-xs font-medium" style={{ color: '#194E91' }}&gt;
                   {formatDuration(stopoverDuration.min)} - {formatDuration(stopoverDuration.max)}
                 &lt;/span&gt;
@@ -2327,14 +2348,14 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 /&gt;
               &lt;/div&gt;
               &lt;div className="flex justify-between text-sm text-gray-500 mt-1"&gt;
-                &lt;span&gt;0h 30m&lt;/span&gt;
-                &lt;span&gt;21h 30m&lt;/span&gt;
+                &lt;span&gt;{formatNumber('0', isArabic)}h {formatNumber('30', isArabic)}m&lt;/span&gt;
+                &lt;span&gt;{formatNumber('21', isArabic)}h {formatNumber('30', isArabic)}m&lt;/span&gt;
               &lt;/div&gt;
             &lt;/div&gt;
 &nbsp;
             &lt;div&gt;
               &lt;div className="flex items-center justify-between mb-2"&gt;
-                &lt;span className="text-sm text-gray-700"&gt;Total Duration&lt;/span&gt;
+                &lt;span className="text-sm text-gray-700"&gt;{t('totalDuration')}&lt;/span&gt;
                 &lt;span className="text-xs font-medium" style={{ color: '#194E91' }}&gt;
                   &amp;lt; {formatDuration(totalDuration)}
                 &lt;/span&gt;
@@ -2359,8 +2380,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                 /&gt;
               &lt;/div&gt;
               &lt;div className="flex justify-between text-sm text-gray-500 mt-1"&gt;
-                &lt;span&gt;3h 0m&lt;/span&gt;
-                &lt;span&gt;27h 30m&lt;/span&gt;
+                &lt;span&gt;{formatNumber('3', isArabic)}h {formatNumber('0', isArabic)}m&lt;/span&gt;
+                &lt;span&gt;{formatNumber('27', isArabic)}h {formatNumber('30', isArabic)}m&lt;/span&gt;
               &lt;/div&gt;
             &lt;/div&gt;
           &lt;/div&gt;
@@ -2371,7 +2392,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
       &lt;div className="border-b border-gray-200"&gt;
         &lt;div className="w-full px-4 py-3 flex items-center justify-between"&gt;
           &lt;div className="flex items-center"&gt;
-            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;Aircrafts&lt;/h3&gt;
+            &lt;h3 className="text-sm font-semibold text-gray-900"&gt;{t('aircrafts')}&lt;/h3&gt;
           &lt;/div&gt;
           &lt;button 
             className="text-xs font-medium text-primary hover:text-[#194E91]"
@@ -2379,7 +2400,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              toast.success("Aircrafts filter reset");</span>
             }}
           &gt;
-            Reset
+            {t('reset')}
           &lt;/button&gt;
         &lt;/div&gt;
         &lt;div className="px-4 pb-3"&gt;
@@ -2391,8 +2412,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                   className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 /&gt;
                 &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                  &lt;span className="text-sm text-gray-700"&gt;Large aircraft&lt;/span&gt;
-                  &lt;span className="text-xs text-gray-500"&gt;₹ 24,853&lt;/span&gt;
+                  &lt;span className="text-sm text-gray-700"&gt;{t('largeAircraft')}&lt;/span&gt;
+                  &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('24,853', isArabic)}&lt;/span&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             &lt;/label&gt;
@@ -2404,8 +2425,8 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
                   className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 /&gt;
                 &lt;div className="ml-2 flex items-center justify-between flex-1"&gt;
-                  &lt;span className="text-sm text-gray-700"&gt;Midsize aircraft&lt;/span&gt;
-                  &lt;span className="text-xs text-gray-500"&gt;₹ 22,921&lt;/span&gt;
+                  &lt;span className="text-sm text-gray-700"&gt;{t('midsizeAircraft')}&lt;/span&gt;
+                  &lt;span className="text-xs text-gray-500"&gt;₹ {formatNumber('22,921', isArabic)}&lt;/span&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             &lt;/label&gt;
@@ -2428,7 +2449,7 @@ const FilterChips = <span class="cstat-no" title="statement not covered" ><span 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-17T02:52:25.441Z
+                at 2025-07-03T22:59:16.808Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

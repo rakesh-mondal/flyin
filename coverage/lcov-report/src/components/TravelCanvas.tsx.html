@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/70</span>
+                <span class='fraction'>0/74</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/64</span>
+                <span class='fraction'>0/68</span>
             </div>
         
             
@@ -300,7 +300,11 @@
 <a name='L235'></a><a href='#L235'>235</a>
 <a name='L236'></a><a href='#L236'>236</a>
 <a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -308,6 +312,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -332,14 +338,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,6 +352,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -545,6 +553,8 @@
 <span class="cstat-no" title="statement not covered" >import { cn } from '@/lib/utils';</span>
 <span class="cstat-no" title="statement not covered" >import { GlowEffect } from './ui/glow-effect';</span>
 <span class="cstat-no" title="statement not covered" >import DualModeSearch from './DualModeSearch';</span>
+<span class="cstat-no" title="statement not covered" >import { useLanguage } from '../hooks/useLanguage';</span>
+<span class="cstat-no" title="statement not covered" >import { useTranslation } from '../translations';</span>
 &nbsp;
 // Custom SearchButton component with state management
 const SearchButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; {</span>
@@ -577,10 +587,10 @@ const SearchButton = <span class="cstat-no" title="statement not covered" ><span
 };
 &nbsp;
 const flightSuggestions = <span class="cstat-no" title="statement not covered" >[</span>
-  { id: 1, title: 'Cultural Dubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Trending', departure: 'JFK' },
-  { id: 2, title: 'Magical Istanbul', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'For You', departure: 'LGA' },
-  { id: 3, title: 'Ancient Cairo', image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Popular', departure: 'JFK' },
-  { id: 4, title: 'Magical Doha', image: 'https://images.unsplash.com/photos/a-kdjff86zE?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Trending', departure: 'EWR' },
+  { id: 1, titleKey: 'culturalDubai', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Trending', departure: 'JFK' },
+  { id: 2, titleKey: 'magicalIstanbul', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'For You', departure: 'LGA' },
+  { id: 3, titleKey: 'ancientCairo', image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Popular', departure: 'JFK' },
+  { id: 4, titleKey: 'magicalDoha', image: 'https://images.unsplash.com/photos/a-kdjff86zE?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80', type: 'Trending', departure: 'EWR' },
 ];
 &nbsp;
 // Search intent examples for rotating placeholder
@@ -592,6 +602,8 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
 ];
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function <span class="fstat-no" title="function not covered" >T</span>ravelCanvas(</span>{ onSearch }: { onSearch: (query: string) =&gt; void }) {
+  const { isRTL } = <span class="cstat-no" title="statement not covered" >useLanguage();</span>
+  const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
   const [query, setQuery] = <span class="cstat-no" title="statement not covered" >useState('');</span>
   const [isSearchFocused, setIsSearchFocused] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
   const [placeholderIndex, setPlaceholderIndex] = <span class="cstat-no" title="statement not covered" >useState(0);</span>
@@ -646,7 +658,7 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
 <span class="cstat-no" title="statement not covered" >    &lt;form </span>
       onSubmit={handleSubmit} 
       className={cn(
-        "w-full transition-all duration-300",
+        "w-full transition-all duration-300 search-form",
         isSearchFocused ? "scale-105" : ""
       )}
     &gt;
@@ -733,11 +745,11 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
       {/* Main content */}
       &lt;div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-gray-900 pb-6"&gt;
         {/* Personalized greeting */}
-        &lt;h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center"&gt;
-          Hello Rakesh,
+        &lt;h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center content-text"&gt;
+          {t('userGreeting').replace('{name}', 'Rakesh')}
         &lt;/h1&gt;
-        &lt;p className="mb-6 sm:mb-8 text-center text-base sm:text-lg md:text-xl font-light opacity-90"&gt;
-          Where's your next flight taking you?
+        &lt;p className="mb-6 sm:mb-8 text-center text-base sm:text-lg md:text-xl font-light opacity-90 content-text"&gt;
+          {t('whereIsYourNextFlight')} {t('takingYou')}
         &lt;/p&gt;
 &nbsp;
         {/* Dual-mode Search Component */}
@@ -747,7 +759,7 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
 &nbsp;
         {/* Flight Suggestions */}
         &lt;div className="mt-8 sm:mt-12 w-full max-w-5xl overflow-hidden px-0 sm:px-4"&gt;
-          &lt;h2 className="mb-4 text-lg sm:text-xl font-medium text-gray-900 px-4 sm:px-0"&gt;Discover Middle Eastern Experiences&lt;/h2&gt;
+          &lt;h2 className="mb-4 text-lg sm:text-xl font-medium text-gray-900 px-4 sm:px-0 content-text"&gt;{t('discoverMiddleEastern')}&lt;/h2&gt;
           &lt;div className="relative w-full"&gt;
             {/* Left gradient fade */}
             &lt;div className="absolute left-0 top-0 z-10 h-full w-8 sm:w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"&gt;&lt;/div&gt;
@@ -757,11 +769,11 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
               {flightSuggestions.map(<span class="fstat-no" title="function not covered" >suggestion </span>=&gt; (
 <span class="cstat-no" title="statement not covered" >                &lt;SuggestionCard </span>
                   key={suggestion.id}
-                  title={suggestion.title}
+                  title={t(suggestion.titleKey)}
                   image={suggestion.image}
                   type={suggestion.type}
-                  departure={`From ${suggestion.departure}`}
-                  onClick={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >onSearch(suggestion.title)}</span>
+                  departure={`${t('from')} ${suggestion.departure}`}
+                  onClick={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >onSearch(t(suggestion.titleKey))}</span>
                 /&gt;
               ))}
             &lt;/div&gt;
@@ -781,7 +793,7 @@ const searchIntents = <span class="cstat-no" title="statement not covered" >[</s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-17T02:52:25.441Z
+                at 2025-07-03T22:59:16.808Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
