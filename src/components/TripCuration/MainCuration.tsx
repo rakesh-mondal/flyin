@@ -2488,9 +2488,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                     </TooltipTrigger>
                                     {shouldShowRedDot(option) && (
                                       <TooltipContent className="bg-black text-white border-gray-600">
-                                        <p>Alternative nearby airports available</p>
-                                        <p className="text-xs text-gray-300 mt-1">
-                                          JFK area: LGA, EWR • DXB area: DWC, SHJ
+                                        <p className="text-xs">
+                                          {option.departureCode}: {getCityByCode(option.departureCode)?.airportName || 'Airport'}
                                         </p>
                                       </TooltipContent>
                                     )}
