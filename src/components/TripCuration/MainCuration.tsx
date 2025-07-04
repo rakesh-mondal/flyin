@@ -754,9 +754,8 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
   // Helper function to identify Qatar Airways flight for more fare options
   const isQatarFlightForMoreOptions = (option: any) => {
-    const isQatar = option.airlineName === 'Qatar Airways' && 
-           option.departureTime === '19:00' && 
-           option.arrivalTime === '05:30';
+    // Now works with ANY Qatar Airways flight, not just specific times
+    const isQatar = option.airlineName === 'Qatar Airways';
     
     // Debug logging for Qatar Airways detection
     if (option.airlineName === 'Qatar Airways') {
@@ -765,8 +764,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
         departureTime: option.departureTime,
         arrivalTime: option.arrivalTime,
         isQatar,
-        expectedDeparture: '19:00',
-        expectedArrival: '05:30'
+        willShowMoreOptions: isQatar
       });
     }
     
@@ -2414,7 +2412,9 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                 <TooltipProvider key={idx}>
                                   <button
                                     className={cn(
-                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px] flex flex-col",
+                                      "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all flex flex-col",
+                                      // Qatar Airways cards get special height
+                                      isQatarFlightForMoreOptions(option) ? "h-[102px]" : "h-[100px]",
                                       option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                                     )}
                                     onClick={() => handleManualOutboundSelect(option)}
@@ -2688,7 +2688,7 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
 
                                     {/* Bottom Row: More fare options available - Centered for Qatar Airways only */}
                                     {isQatarFlightForMoreOptions(option) && (
-                                      <div className="flex justify-center pt-1 bg-gray-100 rounded-b-md -mx-3 -mb-2 px-3 pb-2">
+                                      <div className="flex justify-center pt-1 bg-gray-100 rounded-b-md -mx-3 -mb-2 px-3 pb-1">
                                         <span
                                           className={cn(
                                             "text-blue-600 text-xs font-medium hover:underline cursor-pointer",
@@ -2718,137 +2718,79 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                               );
                             })}
 
-                            {/* Alternative Fare Options - Expandable Section for Qatar Airways */}
-                            {sortedOutboundFlights.map((option, idx) => {
+                            {/* Simple Alternative Fare Options - Expandable Section */}
+                            {outboundFlights.map((option, idx) => {
                               const flightId = getFlightId(option);
                               const isExpanded = expandedFareOptions.includes(flightId);
                               const isQatarFlight = isQatarFlightForMoreOptions(option);
                               
-                              console.log('Checking expandable section:', { 
-                                airline: option.airlineName, 
-                                flightId, 
-                                isQatarFlight, 
-                                isExpanded, 
-                                expandedFareOptions 
+                              console.log('🔍 Expansion check:', {
+                                airline: option.airlineName,
+                                flightId,
+                                isQatarFlight,
+                                isExpanded,
+                                expandedFareOptions
                               });
                               
                               if (!isQatarFlight || !isExpanded) {
                                 return null;
                               }
                               
-                              console.log(`🚀 Rendering expandable section for Qatar Airways!`, {
-                                flightId,
-                                isExpanded,
-                                alternativeOptionsCount: getAlternativeFareOptions().length
-                              });
+                              // Simple mock alternative airlines with same price
+                              const mockAlternatives = [
+                                {
+                                  name: 'Turkish Airlines',
+                                  logo: 'https://airhex.com/images/airline-logos/turkish-airlines.png',
+                                  time: '19:15 → 05:45',
+                                  stops: '1 stop',
+                                  price: option.price
+                                },
+                                {
+                                  name: 'Lufthansa',
+                                  logo: 'https://airhex.com/images/airline-logos/lufthansa.png', 
+                                  time: '18:45 → 05:15',
+                                  stops: '1 stop',
+                                  price: option.price
+                                },
+                                {
+                                  name: 'Emirates',
+                                  logo: 'https://airhex.com/images/airline-logos/emirates.png',
+                                  time: '20:30 → 06:30', 
+                                  stops: '1 stop',
+                                  price: option.price
+                                }
+                              ];
                               
                               return (
-                                <div key={`alt-${idx}`} className="ml-4 border-l-2 border-blue-200 pl-4 space-y-2">
+                                <div key={`alt-${idx}`} className="ml-4 border-l-2 border-blue-200 pl-4 space-y-2 mt-2">
                                   <div className="text-xs font-medium text-blue-600 mb-2">
                                     Alternative fare options (same price)
                                   </div>
-                                  {getAlternativeFareOptions().map((altOption, altIdx) => {
-                                    const altLayoverTag = getLayoverTagType(altOption.layover);
-                                    console.log(`🛫 Rendering alternative flight ${altIdx}:`, {
-                                      airline: altOption.airlineName,
-                                      times: `${altOption.departureTime} → ${altOption.arrivalTime}`,
-                                      price: altOption.price
-                                    });
-                                    return (
-                                      <TooltipProvider key={altIdx}>
-                                        <button
-                                          className={cn(
-                                            "rounded-md border px-3 py-2 min-w-[180px] text-left transition-all h-[100px]",
-                                            option._key === selectedOutboundKey ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                                          )}
-                                          onClick={() => {
-                                            handleTripSelect({ 
-                                              outbound: altOption, 
-                                              inbound: null, 
-                                              totalPrice: parseInt(altOption.price.replace(/[^0-9]/g, '') || '0', 10),
-                                              isOneWay: true 
-                                            });
-                                          }}
-                                        >
-                                          <div className="flex items-center gap-2 py-1">
-                                            <img src={altOption.airlineLogo} alt={altOption.airlineName} className="h-6 w-6 object-contain bg-white border rounded flex-shrink-0" />
-                                            <div className="flex-1 min-w-0">
-                                              <div className="flex items-center gap-2 flex-wrap">
-                                                {/* Time and Airport Codes Section */}
-                                                <div className="flex items-center gap-2">
-                                                  <div className="flex flex-col items-start">
-                                                    <span className="text-base font-bold text-black">
-                                                      {formatTime(altOption.departureTime)}
-                                                    </span>
-                                                    <div className="text-xs text-gray-500 font-medium">
-                                                      {altOption.departureCode}
-                                                    </div>
-                                                  </div>
-                                                  <span className="text-base font-bold text-black mx-1">→</span>
-                                                  <div className="flex flex-col items-start">
-                                                    <span className="text-base font-bold text-black">
-                                                      {formatTime(altOption.arrivalTime)}
-                                                    </span>
-                                                    <div className="text-xs text-gray-500 font-medium">
-                                                      {altOption.arrivalCode}
-                                                    </div>
-                                                  </div>
-                                                  {altOption.stops === '1 stop' && (
-                                                    <span className={cn("text-sm font-normal text-black", isRTL ? "mr-2" : "ml-2")}>
-                                                      {t('via')} {altOption.layover?.includes('Istanbul') ? 'IST' : altOption.layover?.includes('Frankfurt') ? 'FRA' : 'DXB'}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                                {/* Layover Tag */}
-                                                {altLayoverTag && (
-                                                  <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                      <div className={cn("cursor-help", isRTL ? "mr-1" : "ml-1")}>
-                                                        {altLayoverTag.tag}
-                                                      </div>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="bg-black text-white border-black">
-                                                      <p className="text-xs">{t('layover')}: {altOption.layover}</p>
-                                                    </TooltipContent>
-                                                  </Tooltip>
-                                                )}
-                                              </div>
-                                              <div className="flex items-center gap-1 text-xs text-gray-500 overflow-hidden">
-                                                <span className="flex-shrink-0">{translateAirline(altOption.airlineName)}</span>
-                                                <span className="flex-shrink-0">· {t(altOption.stops) || altOption.stops}</span>
-                                              </div>
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                              <div className="flex items-center justify-between gap-3">
-                                                <div className={cn("text-right", isArabic ? "text-left" : "text-right")}>
-                                                  {altOption.originalPrice && (
-                                                    <div className="text-xs text-gray-500 line-through">
-                                                      ₹{formatNumber(altOption.originalPrice, isArabic)}
-                                                    </div>
-                                                  )}
-                                                  <div className="text-base font-bold text-black">₹{formatNumber(altOption.price, isArabic)}</div>
-                                                </div>
-                                                <Button 
-                                                  className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white font-semibold rounded-lg px-4 py-1 text-xs transition-colors duration-200 flex-shrink-0"
-                                                  onClick={(e) => { 
-                                                    e.stopPropagation(); 
-                                                    handleTripSelect({ 
-                                                      outbound: altOption, 
-                                                      inbound: null, 
-                                                      totalPrice: parseInt(altOption.price.replace(/[^0-9]/g, '') || '0', 10),
-                                                      isOneWay: true 
-                                                    });
-                                                  }}
-                                                >
-                                                  {t('bookNow')}
-                                                </Button>
-                                              </div>
-                                            </div>
+                                  {mockAlternatives.map((alt, altIdx) => (
+                                    <div
+                                      key={altIdx}
+                                      className="rounded-md border border-gray-200 bg-white p-3 hover:bg-gray-50 cursor-pointer transition-all"
+                                      onClick={() => {
+                                        console.log(`Selected alternative: ${alt.name}`);
+                                      }}
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                          <img src={alt.logo} alt={alt.name} className="h-6 w-6 object-contain" />
+                                          <div>
+                                            <div className="text-sm font-medium text-gray-900">{alt.name}</div>
+                                            <div className="text-xs text-gray-500">{alt.time} • {alt.stops}</div>
                                           </div>
-                                        </button>
-                                      </TooltipProvider>
-                                    );
-                                  })}
+                                        </div>
+                                        <div className="text-right">
+                                          <div className="text-sm font-bold text-black">₹{formatNumber(alt.price, isArabic)}</div>
+                                          <button className="bg-[#194E91] hover:bg-[#FFC107] hover:text-[#194E91] text-white text-xs px-3 py-1 rounded-lg mt-1 transition-colors">
+                                            Book
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
                                 </div>
                               );
                             })}
@@ -2896,50 +2838,12 @@ export default function MainCuration({ searchQuery, onBack, onViewTrip, isAiSear
                                               <span className="text-base font-bold text-black">
                                                 {formatTime(option.departureTime)}
                                               </span>
-                                                                            {isOneWay && (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
-                                        {option.departureCode}
-                                        {isDifferentAirport(option.departureCode, searchParams.destination) && (
-                                          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                                        )}
-                                      </div>
-                                    </TooltipTrigger>
-                                    {isDifferentAirport(option.departureCode, searchParams.destination) && (
-                                      <TooltipContent>
-                                        <p>Nearby airport</p>
-                                      </TooltipContent>
-                                    )}
-                                  </Tooltip>
-                                </TooltipProvider>
-                              )}
                                             </div>
                                             <span className="text-base font-bold text-black mx-1">→</span>
                                             <div className="flex flex-col items-start">
                                               <span className="text-base font-bold text-black">
                                                 {formatTime(option.arrivalTime)}
                                               </span>
-                                                                            {isOneWay && (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
-                                        {option.arrivalCode}
-                                        {isDifferentAirport(option.arrivalCode, searchParams.origin) && (
-                                          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                                        )}
-                                      </div>
-                                    </TooltipTrigger>
-                                    {isDifferentAirport(option.arrivalCode, searchParams.origin) && (
-                                      <TooltipContent>
-                                        <p>Nearby airport</p>
-                                      </TooltipContent>
-                                    )}
-                                  </Tooltip>
-                                </TooltipProvider>
-                              )}
                                             </div>
                                             {/* Via text and layover icons inline with times */}
                                             {option.stops === '1 stop' && (
